@@ -70,6 +70,9 @@ function Register() {
               paddingBottom="10px">
               Registrarse
             </Button>
+            <Text paddingTop='10px'>
+                            ¿Ya tienes cuenta? Iniciar Sesión
+                        </Text>
           </div>
         </div>
       </div>
