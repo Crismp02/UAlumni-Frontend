@@ -53,7 +53,7 @@ function LandingPage() {
               color="black"
               textAlign="center"
               as="b"
-              paddingTop="15px"
+              paddingTop={["2px", "2px", "2px", "10px"]}
               marginTop="10px"
               marginBottom="10px"
               style={{
@@ -72,10 +72,7 @@ function LandingPage() {
               px="20px"
               paddingBottom="40px"
             >
-              UAlumni es una plataforma que te ayuda a encontrar el empleo
-              ideal, de acuerdo a tus habilidades y experiencia.En UAlumni
-              encontrarás ofertas de empleo de las mejores empresas del país,
-              así como recursos para prepararte para tu búsqueda laboral.
+              UAlumni es una plataforma digital que conecta a egresados UCAB con el mercado laboral. Los egresados pueden crear sus perfiles profesionales y buscar oportunidades laborales. Los reclutadores, por su parte, pueden acceder a los perfiles de los egresados y encontrar profesionales con las habilidades y experiencia que necesitan, con el sello ucabista garantizado.
             </Text>
           </Box>
         </Box>
