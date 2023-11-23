@@ -4,17 +4,17 @@ import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LandingPage from "./cores/landingpage/LandingPage";
+import ListarEgresados from "./cores/listarEgresados/ListarEgresados";
 
-//Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LandingPage/>,
   },
   {
-    path: "/landing",
-    element: <div>Landing Page</div>,
-  },
+    path: "/listarEgresados",
+    element: <ListarEgresados/>,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
