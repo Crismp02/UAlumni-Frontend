@@ -5,6 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LandingPage from "./cores/landingpage/LandingPage";
 import Login from "./cores/login/Login";
+import Register from "./cores/register/Register";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
@@ -15,7 +16,12 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login/>,
+  },
+  {
+    path: "/register",
+    element: <Register/>,
   }
+
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
