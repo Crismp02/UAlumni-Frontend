@@ -1,6 +1,6 @@
 import EgresadoCard from "../../components/EgresadoCard";
 import FiltrosEgresados from "../../components/FiltrosEgresados";
-import NavBarReclutador from "../../components/NavbarReclutador";
+import NavBar from "../../components/Navbar";
 import { Text, Center, Box } from "@chakra-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
 
@@ -9,7 +9,7 @@ function ListarEgresados(){
     const [isLargerThan900] = useMediaQuery("(min-width: 900px)");
     return(
         <div>
-            <NavBarReclutador/>
+            <NavBar/>
             <Text
               fontSize={["lg", "lg", "xl", "4xl"]}
               color="black"
