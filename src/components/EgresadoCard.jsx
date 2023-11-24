@@ -21,7 +21,7 @@ function  EgresadoCard(){
           padding="2px"
         >
           <Box
-            w={["125px", "175px", "270px", "395px", "500px", "550px"]}
+            w={["115px", "165px", "260px", "385px", "490px", "540px"]}
             m="auto"
             p={5}
             display="flex"
@@ -32,7 +32,7 @@ function  EgresadoCard(){
             <Text>Carrera</Text>
           </Box>
           <Box
-            w={["125px", "175px", "270px", "395px", "500px", "550px"]}
+            w={["135px", "185px", "280px", "405px", "510px", "560px"]}
             m="auto"
             p={5}
             display="flex"
@@ -47,11 +47,11 @@ function  EgresadoCard(){
             display="flex"
             flexDirection={["column", "column", "row", "row"]}
           >
-           <Tag backgroundColor="#FBC430" marginLeft="5px">Sample Tag</Tag>
-           <Tag backgroundColor="#FBC430" marginLeft="5px">Sample Tag</Tag>
-           {isLargerThan1000 && <Tag backgroundColor="#FBC430" marginLeft="5px">Sample Tag</Tag>}
-           {isLargerThan800 && <Tag backgroundColor="#FBC430" marginLeft="5px">Sample Tag</Tag>}
-           {isLargerThan1300 && <Tag backgroundColor="#FBC430" marginLeft="5px">Sample Tag</Tag>}
+           <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">Sample Tag</Tag>
+           <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">Sample Tag</Tag>
+           {isLargerThan1000 && <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">Sample Tag</Tag>}
+           {isLargerThan800 && <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">Sample Tag</Tag>}
+           {isLargerThan1300 && <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">Sample Tag</Tag>}
            <Text marginLeft="10px">...</Text>
 
           </Box>

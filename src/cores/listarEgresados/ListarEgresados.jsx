@@ -29,10 +29,10 @@ function ListarEgresados(){
             </Text>
             <FiltrosEgresados/>
             <Center>
-              <Box w={["90%", "80%", "70%", "80%",]} h="40rem" backgroundColor="#F5F5F5" marginBottom="10px" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
+              <Box w={["90%", "80%", "70%", "80%",]} h={["50rem","50rem"]} backgroundColor="#F5F5F5" marginBottom="10px" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
               <EgresadoCard/>
               <EgresadoCard/>
-              {isLargerThan800 && <EgresadoCard/>}
+              <EgresadoCard/>
               {isLargerThan900 && <EgresadoCard/>}
               </Box> 
             </Center>
