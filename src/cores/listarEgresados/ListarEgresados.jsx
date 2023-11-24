@@ -1,5 +1,5 @@
-import EgresadoCard from "../../components/EgresadoCard";
-import FiltrosEgresados from "../../components/FiltrosEgresados";
+import EgresadoCard from "./EgresadoCard"
+import FiltrosEgresados from "./FiltrosEgresados";
 import NavBar from "../../components/Navbar";
 import { Text, Center, Box } from "@chakra-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
