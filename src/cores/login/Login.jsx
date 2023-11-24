@@ -35,7 +35,7 @@ function Login() {
                         width={{ base: "100%", md: "50%" }}
                         padding={{ base: "20px"}}
                     >
-                        <Image src="src\images\egresados.jpeg" alt='Imagen Ucabista' width="100%" height="auto"/>
+                        <Image src="src\images\egresados.jpg" alt='Imagen Ucabista' width="100%" height="auto"/>
                     </Box>
 
                     <Box 
