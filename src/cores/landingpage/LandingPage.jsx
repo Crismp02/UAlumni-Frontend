@@ -10,11 +10,14 @@ import {
   Flex,
   Grid,
   GridItem,
+  useMediaQuery
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import Footer from "../../components/Footer";
 
 function LandingPage() {
+  const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
+  const [isLargerThan700] = useMediaQuery("(min-width: 700px)");
   return (
     <div>
       <NavBar />
@@ -65,15 +68,25 @@ function LandingPage() {
             >
               UALUMNI
             </Text>
-            <Text
+            {isLargerThan600 ? <Text
               fontSize={["small", "md", "md", "md"]}
               color="black"
               textAlign="center"
               px="20px"
-              paddingBottom="40px"
+              paddingBottom="10px"
             >
+              
               UAlumni es una plataforma digital que conecta a egresados UCAB con el mercado laboral. Los egresados pueden crear sus perfiles profesionales y buscar oportunidades laborales. Los reclutadores, por su parte, pueden acceder a los perfiles de los egresados y encontrar profesionales con las habilidades y experiencia que necesitan, con el sello ucabista garantizado.
-            </Text>
+            </Text> : <Text
+              fontSize={["small", "md", "md", "md"]}
+              color="black"
+              textAlign="center"
+              px="20px"
+              paddingBottom="10px"
+            >
+              
+UAlumni es una plataforma digital que conecta egresados UCAB con empresas que buscan profesionales ucabistas.
+            </Text>}
           </Box>
         </Box>
       </Box>
@@ -86,9 +99,11 @@ function LandingPage() {
           flexDirection: "column",
         }}
       >
-        <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
+        {isLargerThan700 ? <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
           ¿QUIÉN SOY?
-        </Text>
+        </Text> : <Text fontSize="2xl" textAlign="center" as="b" paddingTop="30px">
+          ¿QUIÉN SOY?
+        </Text>}
         <Grid
           justifyContent="center"
           paddingTop="40px"
@@ -137,10 +152,13 @@ function LandingPage() {
           paddingBottom: "40px",
         }}
       >
-        <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
+        {isLargerThan700 ? <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
           ¿DE QUÉ CARRERA ES EL PROFESIONAL QUE BUSCAS?
-        </Text>
-        <Stack p={{ base: 4, md: "20 20 10 20" }}>
+        </Text> : <Text fontSize="2xl" textAlign="center" as="b" paddingTop="20px">
+          ¿DE QUÉ CARRERA ES EL PROFESIONAL QUE BUSCAS?
+        </Text>}
+
+        <Stack p={{ base: 2, md: "20 20 5 20" }}>
           <Flex direction="row" justifyContent="center" wrap="wrap">
             <Box my={2} mx={8}>
               <Button
@@ -192,11 +210,6 @@ function LandingPage() {
                 EDUCACIÓN
               </Button>
             </Box>
-          </Flex>
-        </Stack>
-
-        <Stack p={{ base: 4, md: "20 20 10 20" }}>
-          <Flex direction="row" justifyContent="center" wrap="wrap">
             <Box my={2} mx={8}>
               <Button
                 backgroundColor="#37B4E3"
@@ -238,9 +251,8 @@ function LandingPage() {
               </Button>
             </Box>
           </Flex>
-        </Stack>
+        </Stack>   
       </div>
-
       <Footer />
     </div>
   );
