@@ -15,7 +15,7 @@ function Register() {
         backgroundColor="#F5F5F5"
       >
         <Box
-          width={{ base: "100%", md: "50%" }}
+          width={{ base: "100%", md: "50%", lg: "70%" }}
           display="flex"
           flexDirection={{ base: "column", md: "row" }}
           backgroundColor="#fff"
@@ -23,7 +23,7 @@ function Register() {
         >
           <Box
             width={{ base: "100%", md: "50%" }}
-            padding={{ base: "20px", md: "40px" }}
+            padding={{ base: "20px"}}
           >
             <Image src="src/images/egresados.jpeg" alt='Imagen Ucabista' width="100%" height="auto" />
           </Box>
