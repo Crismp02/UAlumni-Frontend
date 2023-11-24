@@ -16,37 +16,36 @@ function Login() {
     return (
         <div>
             <NavBar/>
-            <div style={{
-                backgroundColor: "#F5F5F5",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh"
-            }}>
-                <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    backgroundColor: "#FFFFFF",
-                    width: "80%",
-                    height: "80%",
-                    border: "1px solid #ccc",
-                }}>
-                    <div style={{
-                        width: "50%",
-                        padding: "20px"
-                    }}>
-                        <Image src="src\images\egresados.jpeg" alt='Imagen Ucabista'/>
-                    </div>
+            <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100vh" 
+                paddingX={{ base: "20px", md: "0" }} 
+                backgroundColor="#F5F5F5"
+            >
+                <Box
+                    width={{ base: "100%", md: "70%", lg: "80%" }}
+                    display="flex"
+                    flexDirection={{ base: "column", md: "row" }}
+                    backgroundColor="#fff"
+                    border="1px solid #ccc"
+                >
+                    <Box 
+                        width={{ base: "100%", md: "50%" }}
+                        padding={{ base: "20px"}}
+                    >
+                        <Image src="src\images\egresados.jpeg" alt='Imagen Ucabista' width="100%" height="auto"/>
+                    </Box>
 
-                    <div style={{
-                        width: "50%",
-                        padding: "20px",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}>
+                    <Box 
+                        width={{ base: "100%", md: "50%" }}
+                        padding={{ base: "20px", md: "40px" }}
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                    >
                          <Text 
                             fontSize='4xl' textAlign='center' as='b' paddingBottom='50px'
                             style={{
@@ -68,7 +67,8 @@ function Login() {
                         <Input variant='filled' type='password'/>
                         <Button 
                             backgroundColor="#007935" 
-                            color='white'  _hover={{ bg: "#025024" }} 
+                            color='white' 
+                            _hover={{ bg: "#025024" }} 
                             width={{ base: "100%", sm: "60%", md: "50%" }} 
                             marginTop="20px"
                             paddingTop="10px"
@@ -89,9 +89,9 @@ function Login() {
                                 Regístrate
                             </Link>
                         </Text>
-                    </div>
-                </div>
-            </div>
+                    </Box>
+                </Box>
+            </Box>
         </div>
     )   
 }

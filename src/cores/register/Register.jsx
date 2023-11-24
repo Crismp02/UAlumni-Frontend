@@ -15,7 +15,7 @@ function Register() {
         backgroundColor="#F5F5F5"
       >
         <Box
-          width={{ base: "100%", md: "50%", lg: "70%" }}
+          width={{ base: "100%", md: "70%", lg: "80%" }}
           display="flex"
           flexDirection={{ base: "column", md: "row" }}
           backgroundColor="#fff"
@@ -43,15 +43,15 @@ function Register() {
                               }}>
               REGÍSTRATE
             </Text>
-            <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px'>
+            <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px' alignSelf='start'>
               Correo UCAB
             </Text>
             <Input variant='filled' />
-            <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px'>
+            <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px' alignSelf='start'>
               Contraseña
             </Text>
             <Input variant='filled' type='password' />
-            <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px'>
+            <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px' alignSelf='start'>
               Confirmar Contraseña
             </Text>
             <Input variant='filled' type='password' />
@@ -68,7 +68,8 @@ function Register() {
             </Button>
             <Text paddingTop='10px'>
               ¿Ya tienes cuenta?{" "}
-              <Link to='/login' style={{
+              <Link to='/login' 
+                    style={{
                                     textDecoration: "underline",
                                     textDecorationColor: "green",
                                     display: "inline", 
