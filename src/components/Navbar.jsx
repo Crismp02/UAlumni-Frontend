@@ -10,12 +10,18 @@ function NavBar(){
         </Box>
         {isLargerThan700 ? <Flex>
           <Box marginLeft="2rem">
+            <Text fontSize="md" as='b'>FAQ</Text>
+          </Box>
+          <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>EGRESADO</Text>
           </Box>
           <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>RECLUTADOR</Text>
           </Box>
         </Flex> : <Flex>
+        <Box marginLeft="2rem">
+            <Text fontSize="12px" as='b'>FAQ</Text>
+          </Box>
           <Box marginLeft="2rem">
             <Text fontSize="12px" as='b'>EGRESADO</Text>
           </Box>
