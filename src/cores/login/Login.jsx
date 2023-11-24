@@ -9,6 +9,7 @@ import {
   } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { Input } from '@chakra-ui/react'
+import { Link } from 'react-router-dom'
 
 
 function Login() {
@@ -46,7 +47,15 @@ function Login() {
                         alignItems: "center",
                         justifyContent: "center",
                     }}>
-                         <Text fontSize='4xl' textAlign='center' as='b' paddingBottom='50px'>
+                         <Text 
+                            fontSize='4xl' textAlign='center' as='b' paddingBottom='50px'
+                            style={{
+                                textDecoration: "underline",
+                                textDecorationColor: "green",
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                         >
                             INICIA SESIÓN
                         </Text>
                         <Text fontSize='2xl' textAlign='start' alignSelf='start' as='b' paddingBottom='10px' paddingTop='10px'>
@@ -56,18 +65,29 @@ function Login() {
                         <Text fontSize='2xl' as='b' alignSelf='start' paddingBottom='10px' paddingTop='10px'>
                             Contraseña
                         </Text>
-                        <Input variant='filled'/>
+                        <Input variant='filled' type='password'/>
                         <Button 
                             backgroundColor="#007935" 
                             color='white'  _hover={{ bg: "#025024" }} 
-                            width="20%" 
+                            width={{ base: "100%", sm: "60%", md: "50%" }} 
                             marginTop="20px"
                             paddingTop="10px"
                             paddingBottom="10px">
                             Iniciar sesión
                         </Button>
                         <Text paddingTop='10px'>
-                            ¿Aún no tienes cuenta? Regístrate
+                            ¿Aún no tienes cuenta? 
+                            <Link to='/register'
+                                style={{
+                                    textDecoration: "underline",
+                                    textDecorationColor: "green",
+                                    display: "inline", 
+                                    justifyContent: "center",
+                                    marginLeft: "5px",
+                                }}
+                            >
+                                Regístrate
+                            </Link>
                         </Text>
                     </div>
                 </div>

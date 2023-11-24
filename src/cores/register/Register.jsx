@@ -9,6 +9,7 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/react";
+import { Link } from 'react-router-dom'
 
 function Register() {
   return (
@@ -45,7 +46,15 @@ function Register() {
             alignItems: "center",
             justifyContent: "center",
           }}>
-            <Text fontSize='4xl' textAlign='center' as='b' paddingBottom='50px'>
+            <Text 
+                fontSize='4xl' textAlign='center' as='b' paddingBottom='50px'
+                style={{
+                  textDecoration: "underline",
+                  textDecorationColor: "green",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+            >
               REGÍSTRATE
             </Text>
             <Text fontSize='2xl' textAlign='start' alignSelf='start' as='b' paddingBottom='10px' paddingTop='10px'>
@@ -71,8 +80,18 @@ function Register() {
               Registrarse
             </Button>
             <Text paddingTop='10px'>
-                            ¿Ya tienes cuenta? Iniciar Sesión
-                        </Text>
+                            ¿Ya tienes cuenta? 
+                            <Link to='/login'
+                            style={{
+                              textDecoration: "underline",
+                              textDecorationColor: "green",
+                              display: "inline", 
+                              justifyContent: "center",
+                              marginLeft: "5px",
+                          }}>
+                              Inicia sesión
+                            </Link>
+            </Text>
           </div>
         </div>
       </div>
