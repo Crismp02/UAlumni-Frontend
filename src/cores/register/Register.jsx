@@ -1,8 +1,14 @@
+import React from "react";
 import NavBar from "../../components/Navbar";
-import { Text, Image, Input, Button, Box } from "@chakra-ui/react";
+import { Text, Image, Input, Button, Box, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { Link } from 'react-router-dom'
+import {ViewIcon, ViewOffIcon} from '@chakra-ui/icons'
 
 function Register() {
+
+  const [show, setShow] = React.useState(false)
+  const handleClick = () => setShow(!show) 
+
   return (
     <div>
       <NavBar />
@@ -46,15 +52,29 @@ function Register() {
             <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px' alignSelf='start'>
               Correo UCAB
             </Text>
-            <Input variant='filled' />
+            <Input variant='filled' placeholder='Ingrese su correo UCAB'/>
             <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px' alignSelf='start'>
               Contraseña
             </Text>
-            <Input variant='filled' type='password' />
+            <InputGroup>
+                <Input variant='filled' type={show ? 'text' : 'password'} placeholder='Ingrese su contraseña'/>
+                    <InputRightElement width={{sm:'10%',md:'10%'}}>
+                        <Button h='1.75 rem' size='sm' onClick={handleClick}>
+                            {show ? <ViewOffIcon/> : <ViewIcon/>}
+                        </Button>
+                    </InputRightElement>
+                </InputGroup>
             <Text fontSize='2xl' as='b' paddingBottom='10px' paddingTop='10px' alignSelf='start'>
               Confirmar Contraseña
             </Text>
-            <Input variant='filled' type='password' />
+            <InputGroup>
+                <Input variant='filled' type={show ? 'text' : 'password'} placeholder='Vuelva a ingresar su contraseña'/>
+                    <InputRightElement width={{sm:'10%',md:'10%'}}>
+                        <Button h='1.75 rem' size='sm' onClick={handleClick}>
+                            {show ? <ViewOffIcon/> : <ViewIcon/>}
+                        </Button>
+                    </InputRightElement>
+            </InputGroup>
             <Button
               backgroundColor="#007935"
               color='white'

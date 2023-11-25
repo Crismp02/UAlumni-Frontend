@@ -10,7 +10,7 @@ import Register from "./cores/register/Register";
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
   {
-    path: "/landing",
+    path: "/",
     element: <LandingPage/>,
   },
   {

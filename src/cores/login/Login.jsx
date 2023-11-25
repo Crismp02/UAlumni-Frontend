@@ -1,18 +1,22 @@
+import React from "react";
 import NavBar from "../../components/Navbar";
 import {
     Text, 
     Image,
-    Flex,
     Box,
-    Grid,
-    GridItem,
+    InputGroup,
+    Input,
+    InputRightElement,
+    Button,
   } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
-import { Input } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import {ViewIcon, ViewOffIcon} from '@chakra-ui/icons'
 
 
 function Login() {
+    const [show, setShow] = React.useState(false)
+    const handleClick = () => setShow(!show)
+
     return (
         <div>
             <NavBar/>
@@ -60,11 +64,18 @@ function Login() {
                         <Text fontSize='2xl' textAlign='start' alignSelf='start' as='b' paddingBottom='10px' paddingTop='10px'>
                             Correo UCAB
                         </Text>
-                        <Input variant='filled'/>
+                        <Input variant='filled' placeholder='Ingrese su correo UCAB'/>
                         <Text fontSize='2xl' as='b' alignSelf='start' paddingBottom='10px' paddingTop='10px'>
                             Contraseña
                         </Text>
-                        <Input variant='filled' type='password'/>
+                        <InputGroup>
+                            <Input variant='filled' type={show ? 'text' : 'password'} placeholder='Ingrese su contraseña'/>
+                            <InputRightElement width={{sm:'10%',md:'10%'}}>
+                                <Button h='1.75 rem' size='sm' onClick={handleClick}>
+                                    {show ? <ViewOffIcon/> : <ViewIcon/>}
+                                </Button>
+                            </InputRightElement>
+                        </InputGroup>
                         <Button 
                             backgroundColor="#007935" 
                             color='white' 
