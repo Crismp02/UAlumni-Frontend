@@ -5,8 +5,7 @@ import { Text, Center, Box } from "@chakra-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
 
 function ListarEgresados(){
-    const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
-    const [isLargerThan900] = useMediaQuery("(min-width: 900px)");
+    const [isLargerThan770] = useMediaQuery("(min-width: 770px)");
     return(
         <div>
             <NavBar/>
@@ -33,7 +32,7 @@ function ListarEgresados(){
               <EgresadoCard/>
               <EgresadoCard/>
               <EgresadoCard/>
-              {isLargerThan900 && <EgresadoCard/>}
+              {isLargerThan770 && <EgresadoCard/>}
               </Box> 
             </Center>
             </div>

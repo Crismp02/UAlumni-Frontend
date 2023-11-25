@@ -3,7 +3,7 @@ import { Flex, Box, Text, useMediaQuery } from "@chakra-ui/react"
 import { Link } from 'react-router-dom';
 
 function NavBar(){
-  const [isLargerThan700] = useMediaQuery("(min-width: 700px)");
+  const [isLargerThan550] = useMediaQuery("(min-width: 550px)");
     return (
       <Flex
         as="nav"
@@ -18,7 +18,7 @@ function NavBar(){
             Logo
           </Text>
         </Box>
-        {isLargerThan700 ? (
+        {isLargerThan550 ? (
           <Flex>
             <Flex>
             <Box marginLeft="2rem">
@@ -42,19 +42,19 @@ function NavBar(){
           </Flex>
         ) : (
           <Flex>
-            <Box marginLeft="2rem">
-                <Text fontSize="12px" as="b">
+            <Box marginLeft="1rem">
+                <Text fontSize="11px" as="b">
                   FAQ
                 </Text>
               </Box>
-            <Box marginLeft="2rem">
-              <Text fontSize="12px" as="b">
+            <Box marginLeft="1rem">
+              <Text fontSize="11px" as="b">
                 EGRESADO
               </Text>
             </Box>
-            <Box marginLeft="2rem">
+            <Box marginLeft="1rem">
               <Link to="/listarEgresados">
-                <Text fontSize="12px" as="b">
+                <Text fontSize="11px" as="b">
                   RECLUTADOR
                 </Text>
               </Link>
