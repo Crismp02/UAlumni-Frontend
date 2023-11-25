@@ -4,6 +4,10 @@ import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LandingPage from "./cores/landingpage/LandingPage";
+import Login from "./cores/login/Login";
+import Register from "./cores/register/Register";
+import ListarEgresados from "./cores/listarEgresados/ListarEgresados";
+import PerfilEgresado from "./cores/perfilEgresado/PerfilEgresado";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
@@ -12,8 +16,20 @@ const router = createBrowserRouter([
     element: <LandingPage/>,
   },
   {
-    path: "/landing",
-    element: <div>Landing Page</div>,
+    path: "/login",
+    element: <Login/>,
+  },
+  {
+    path: "/register",
+    element: <Register/>,
+  },
+  {
+    path: "/listarEgresados",
+    element: <ListarEgresados/>,
+  },
+  {
+    path: "/perfilEgresado",
+    element: <PerfilEgresado/>,
   },
 ]);
 
