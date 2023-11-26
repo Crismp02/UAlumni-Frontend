@@ -48,7 +48,7 @@ function PerfilEgresado() {
           marginRight="20px"
           marginBottom="20px"
         >
-          <Text fontWeight="bold" fontSize="xl" marginBottom="4" margin="10">
+          <Text fontWeight="bold" fontSize="xl" marginLeft="10" marginRight="10" marginTop="10" marginBottom="0">
             Experiencia Laboral
           </Text>
           <Box
@@ -56,7 +56,7 @@ function PerfilEgresado() {
             padding="4"
             border="1px solid #ccc"
             borderRadius="8px"
-            margin="10"
+            marginLeft="10" marginRight="10" marginTop="5" marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
           >
             <Box
@@ -79,7 +79,7 @@ function PerfilEgresado() {
             </Text>
           </Box>
 
-          <Text fontWeight="bold" fontSize="xl" marginBottom="4" margin="10">
+          <Text fontWeight="bold" fontSize="xl" marginLeft="10" marginRight="10" marginTop="10" marginBottom="0">
             Educación
           </Text>
           <Box
@@ -87,7 +87,7 @@ function PerfilEgresado() {
             padding="4"
             border="1px solid #ccc"
             borderRadius="8px"
-            margin="10"
+            marginLeft="10" marginRight="10" marginTop="5" marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
           >
             <Box
@@ -109,13 +109,13 @@ function PerfilEgresado() {
             </Box>
           </Box>
 
-          <Text fontWeight="bold" fontSize="xl" marginBottom="4" margin="10">
+          <Text fontWeight="bold" fontSize="xl" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
             Habilidades
           </Text>
-          <Text fontSize="lg" fontWeight="bold" margin="10">
+          <Text fontSize="lg" fontWeight="bold" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
             Técnicas
           </Text>
-          <Box display="flex" flexDirection="row" flexWrap="wrap" margin="10">
+          <Box display="flex" flexDirection="row" flexWrap="wrap" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
             <Box padding="2" marginBottom="2" marginRight="2">
               <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
                 Habilidad 1
@@ -168,7 +168,7 @@ function PerfilEgresado() {
             </Box>
           </Box>
 
-          <Text fontWeight="bold" fontSize="xl" marginBottom="4" margin="10">
+          <Text fontWeight="bold" fontSize="xl" margin="10" marginRight="10" marginTop="5" marginBottom="5">
             Idiomas
           </Text>
           <Box
@@ -176,7 +176,7 @@ function PerfilEgresado() {
             padding="4"
             border="1px solid #ccc"
             borderRadius="8px"
-            margin="10"
+            marginLeft="10" marginRight="10" marginTop="5" marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
           >
             <Box display="flex" alignItems="center" marginBottom="4">
@@ -193,7 +193,7 @@ function PerfilEgresado() {
             </Box>
           </Box>
 
-          <Text fontWeight="bold" fontSize="xl" marginBottom="4" margin="10">
+          <Text fontWeight="bold" fontSize="xl" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
             Certificados
           </Text>
           <Box
@@ -201,7 +201,7 @@ function PerfilEgresado() {
             padding="4"
             border="1px solid #ccc"
             borderRadius="8px"
-            margin="10"
+            marginLeft="10" marginRight="10" marginTop="5" marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
           >
             <Box
@@ -220,7 +220,7 @@ function PerfilEgresado() {
             </Text>
           </Box>
 
-          <Text fontWeight="bold" fontSize="xl" marginBottom="4" margin="10">
+          <Text fontWeight="bold" fontSize="xl" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
             INFORMACIÓN DE CONTACTO
           </Text>
           <Box
@@ -228,7 +228,7 @@ function PerfilEgresado() {
               justifyContent="space-between"
               alignItems="center"
               marginBottom="4"
-              margin="10"
+              marginLeft="10" marginRight="10" marginTop="5" marginBottom="5"
             >
           <Text
             bg="#007935"
