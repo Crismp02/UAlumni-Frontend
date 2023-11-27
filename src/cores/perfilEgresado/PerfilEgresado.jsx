@@ -3,8 +3,19 @@ import NavBarEgresados from "../../components/NavBarEgresados";
 import Footer from "../../components/Footer";
 import { Box, Text, Flex, Center, Button } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon, EditIcon } from "@chakra-ui/icons";
+import { useState } from 'react';
+import { VStack } from '@chakra-ui/react';
+import CustomSwitch from './Switch'; // Asegúrate de importar correctamente el 
+
+
 
 function PerfilEgresado() {
+  const [switchValue, setSwitchValue] = useState(false);
+
+  const handleSwitchChange = () => {
+    setSwitchValue(!switchValue);
+  };
+
   return (
     <div>
       <NavBarEgresados />
@@ -28,8 +39,9 @@ function PerfilEgresado() {
       </Text>
 
       <Flex justifyContent="flex-end" alignItems="center" marginBottom="5px">
-        <ViewIcon marginRight="20px" />
-        <EditIcon marginRight="20px" />
+        <VStack spacing={4} marginRight="20px">
+      <CustomSwitch isChecked={switchValue} onChange={handleSwitchChange} />
+      </VStack>
       </Flex>
 
       <Box display="flex" justifyContent="space-between">
@@ -65,10 +77,13 @@ function PerfilEgresado() {
               alignItems="center"
               marginBottom="4"
             >
+
               <Text fontWeight="bold">Nombre de la Empresa</Text>
               <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
                 Posición
               </Text>
+              <EditIcon marginRight="5px" />
+
             </Box>
             <Text fontSize="md" marginBottom="2">
               Fecha Inicio - Fecha Final
@@ -110,15 +125,71 @@ function PerfilEgresado() {
           </Box>
 
           <Text fontWeight="bold" fontSize="xl" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
-            Habilidades
+            HABILIDADES
           </Text>
           <Text fontSize="lg" fontWeight="bold" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
-            Técnicas
+            TÉCNICAS
           </Text>
           <Box display="flex" flexDirection="row" flexWrap="wrap" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
             <Box padding="2" marginBottom="2" marginRight="2">
               <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
                 Habilidad 1
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 2
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 3
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 4
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 5
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 6
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 7
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 8
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 9
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 10
+              </Text>
+            </Box>
+          </Box>
+
+          <Text fontSize="lg" fontWeight="bold" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
+            BLANDAS
+          </Text>
+          <Box display="flex" flexDirection="row" flexWrap="wrap" marginLeft="10" marginRight="10" marginTop="5" marginBottom="5">
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 100000
               </Text>
             </Box>
             <Box padding="2" marginBottom="2" marginRight="2">
@@ -227,7 +298,6 @@ function PerfilEgresado() {
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              marginBottom="4"
               marginLeft="10" marginRight="10" marginTop="5" marginBottom="5"
             >
           <Text
