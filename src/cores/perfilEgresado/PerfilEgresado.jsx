@@ -42,8 +42,6 @@ function PerfilEgresado() {
         </VStack>
       </Flex>
 
-      
-
       <Box display="flex" justifyContent="space-between">
         <Box
           width="45%"
@@ -54,12 +52,12 @@ function PerfilEgresado() {
           marginLeft="20px"
         >
           <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      width="100%"
-      marginTop="10"
-    >
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            width="100%"
+            marginTop="10"
+          >
             <Circle
               size="100px"
               bg="gray.500"
@@ -70,7 +68,7 @@ function PerfilEgresado() {
             >
               {/* Ícono de persona */}
             </Circle>
-            </Box>
+          </Box>
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -134,7 +132,16 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
+            position="relative"
           >
+            <EditIcon
+              position="absolute"
+              top="15px"
+              right="20px"
+              color="blue.500"
+              boxSize={4}
+              cursor="pointer"
+            />
             <Box
               display="flex"
               justifyContent="space-between"
@@ -178,6 +185,9 @@ function PerfilEgresado() {
             </Text>
           </Box>
         </Box>
+
+
+
         <Box
           width="55%"
           bg="#D9D9D9"
@@ -185,16 +195,15 @@ function PerfilEgresado() {
           marginRight="20px"
           marginBottom="20px"
         >
-          <Text
+           <Text 
             fontWeight="bold"
             fontSize="xl"
             marginLeft="10"
             marginRight="10"
             marginTop="10"
-            marginBottom="0"
-          >
-            Experiencia Laboral
-          </Text>
+            marginBottom="0">
+              Experiencia Laboral
+            </Text>
           <Box
             bg="white"
             padding="4"
@@ -205,18 +214,32 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            position="relative"
           >
+            <EditIcon
+              position="absolute"
+              top="15px"
+              right="20px"
+              color="blue.500"
+              boxSize={4}
+              cursor="pointer"
+            />
+
+           
+
             <Box
               display="flex"
               justifyContent="space-between"
               alignItems="center"
               marginBottom="4"
+              marginTop="10"
             >
               <Text fontWeight="bold">Nombre de la Empresa</Text>
               <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
                 Posición
               </Text>
             </Box>
+
             <Text fontSize="md" marginBottom="2">
               Fecha Inicio - Fecha Final
             </Text>
@@ -226,45 +249,59 @@ function PerfilEgresado() {
             </Text>
           </Box>
 
-          <Text
+          <Text 
             fontWeight="bold"
             fontSize="xl"
             marginLeft="10"
             marginRight="10"
             marginTop="10"
-            marginBottom="0"
-          >
-            Educación
-          </Text>
+            marginBottom="0">
+        Educación
+      </Text>
+
           <Box
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
-          >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="4"
-            >
-              <Text fontWeight="bold">Grado</Text>
-              <Text marginRight="4">Año Final</Text>
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="2"
-            >
-              <Text marginRight="4">Universidad Católica Andrés Bello</Text>
-            </Box>
-          </Box>
+      bg="white"
+      padding="4"
+      border="1px solid #ccc"
+      borderRadius="8px"
+      marginLeft="10"
+      marginRight="10"
+      marginTop="5"
+      marginBottom="5"
+      boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
+      position="relative"
+    >
+      {/* Icono de editar en la esquina superior derecha */}
+      <EditIcon
+        position="absolute"
+        top="15px"
+        right="15px"
+        color="blue.500"
+        boxSize={4}
+        cursor="pointer"
+      />
+
+      
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom="4"
+      >
+        <Text fontWeight="bold" marginTop="8">Grado</Text>
+        <Text marginRight="4" marginTop="8">Año Final</Text>
+      </Box>
+
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        marginBottom="2"
+      >
+        <Text marginRight="4">Universidad Católica Andrés Bello</Text>
+      </Box>
+    </Box>
 
           <Text
             fontWeight="bold"
@@ -418,6 +455,8 @@ function PerfilEgresado() {
             </Box>
           </Box>
 
+          
+
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -438,8 +477,20 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            position="relative"
           >
+            <EditIcon
+              position="absolute"
+              top="15px"
+              right="20px"
+              color="blue.500"
+              boxSize={4}
+              cursor="pointer"
+            />
+            
             <Box display="flex" alignItems="center" marginBottom="4">
+              
+              
               <Text fontWeight="bold">Idioma</Text>
               <Text
                 bg="#FBC430"
@@ -473,12 +524,22 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            position="relative"
           >
+            <EditIcon
+              position="absolute"
+              top="15px"
+              right="20px"
+              color="blue.500"
+              boxSize={4}
+              cursor="pointer"
+            />
             <Box
               display="flex"
               justifyContent="space-between"
               alignItems="center"
               marginBottom="4"
+              marginTop="10"
             >
               <Text fontWeight="bold">Título Certificado</Text>
               <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
