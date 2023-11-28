@@ -1,7 +1,7 @@
 import React from "react";
 import NavBarEgresados from "../../components/NavBarEgresados";
 import Footer from "../../components/Footer";
-import { Box, Text, Flex, Center, Button, Circle } from "@chakra-ui/react";
+import { Box, Text, Flex, Center, Button } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon, EditIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { VStack } from "@chakra-ui/react";
@@ -42,33 +42,16 @@ function PerfilEgresado() {
         </VStack>
       </Flex>
 
-      <Box display="flex" justifyContent="space-between">
+      <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
         <Box
-          width="45%"
-          bg="#D9D9D9"
+          width={{ base: "100%", md: "45%" }}
+          bg="#F5F5F5"
           height="100%"
-          marginRight="20px"
-          marginBottom="20px"
-          marginLeft="20px"
+          marginRight={{ base: "0", md: "20px" }}
+          marginBottom={{ base: "20px", md: "0" }}
+          marginLeft={{ base: "0", md: "20px" }}
         >
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            width="100%"
-            marginTop="10"
-          >
-            <Circle
-              size="100px"
-              bg="gray.500"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              borderRadius="50%"
-            >
-              {/* Ícono de persona */}
-            </Circle>
-          </Box>
+          
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -189,8 +172,8 @@ function PerfilEgresado() {
 
 
         <Box
-          width="55%"
-          bg="#D9D9D9"
+          width={{ base: "100%", md: "55%" }}
+          bg="#F5F5F5"
           height="100%"
           marginRight="20px"
           marginBottom="20px"
@@ -315,7 +298,6 @@ function PerfilEgresado() {
           </Text>
           <Text
             fontSize="lg"
-            fontWeight="bold"
             marginLeft="10"
             marginRight="10"
             marginTop="5"
@@ -386,7 +368,6 @@ function PerfilEgresado() {
 
           <Text
             fontSize="lg"
-            fontWeight="bold"
             marginLeft="10"
             marginRight="10"
             marginTop="5"
