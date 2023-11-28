@@ -1,8 +1,28 @@
 import React from "react";
 import NavBarEgresados from "../../components/NavBarEgresados";
 import Footer from "../../components/Footer";
-import { Box, Text, Flex, Center, Button } from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Text,
+  Flex,
+  Center,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Textarea,
+  Input,
+} from "@chakra-ui/react";
+import {
+  ViewIcon,
+  ViewOffIcon,
+  EditIcon,
+  DeleteIcon,
+  AddIcon,
+} from "@chakra-ui/icons";
 import { useState } from "react";
 import { VStack } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
@@ -13,6 +33,84 @@ function PerfilEgresado() {
   const handleSwitchChange = () => {
     setSwitchValue(!switchValue);
   };
+
+  // mostrar iconos de editar
+
+  const [showIcons, setShowIcons] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [cardToDelete, setCardToDelete] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  // ejemplo de tarjeta con contenido
+  const [cardContent, setCardContent] = useState([
+    {
+      id: 1,
+      empresa: "Corporación XYZ",
+      posicion: "Posición",
+      fechaInicio: "01/01/2020",
+      fechaFinal: "01/01/2022",
+      descripcion:
+        "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
+    },
+  ]);
+  const [cardIdToEdit, setCardIdToEdit] = useState(null);
+
+  const handleEditClick = () => {
+    setShowIcons(!showIcons);
+    setEditMode(!editMode);
+  };
+
+  const handleDeleteClick = (cardId) => {
+    setCardToDelete(cardId);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    // Aquí se eliminas la tarjeta utilizando el ID almacenado en cardToDelete
+    console.log("Eliminar tarjeta con ID:", cardToDelete);
+    // Lógica para eliminar la tarjeta... en proceso
+
+    // Cerrar el modal y limpiar el estado
+    setShowDeleteModal(false);
+    setCardToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    // Cancelar la eliminación, cerrar el modal y limpiar el estado
+    setShowDeleteModal(false);
+    setCardToDelete(null);
+  };
+
+  // Modal de edición
+  const handleEditCard = (cardId) => {
+    setCardIdToEdit(cardId);
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = () => {
+    // Lógica para guardar la edición de la tarjeta utilizando cardIdToEdit
+    console.log("Editar tarjeta con ID:", cardIdToEdit);
+
+    setShowEditModal(false); // Cerrar el modal de edición después de guardar los cambios
+    setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
+  };
+
+  const handleCancelEdit = () => {
+    setShowEditModal(false); // Cancelar la edición y cerrar el modal
+    setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
+  };
+
+  const handleEditInputChange = (cardId, field, value) => {
+    // Copiar el array de tarjetas
+    const updatedCards = cardContent.map((card) =>
+      card.id === cardId ? { ...card, [field]: value } : card
+    );
+  
+    // Actualizar el estado con las tarjetas actualizadas
+    setCardContent(updatedCards);
+  };
+  
 
   return (
     <div>
@@ -51,7 +149,6 @@ function PerfilEgresado() {
           marginBottom={{ base: "20px", md: "0" }}
           marginLeft={{ base: "0", md: "20px" }}
         >
-          
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -168,401 +265,512 @@ function PerfilEgresado() {
             </Text>
           </Box>
         </Box>
-
-
-
-        <Box
-          width={{ base: "100%", md: "55%" }}
-          bg="#F5F5F5"
-          height="100%"
-          marginRight="20px"
-          marginBottom="20px"
-        >
-           <Text 
-            fontWeight="bold"
-            fontSize="xl"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="10"
-            marginBottom="0">
-              Experiencia Laboral
-            </Text>
+        {cardContent.map((card) => (
           <Box
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            key={card.id}
+            width={{ base: "100%", md: "55%" }}
+            bg="#F5F5F5"
+            marginBottom="20px"
             position="relative"
-          >
-            <EditIcon
-              position="absolute"
-              top="15px"
-              right="20px"
-              color="blue.500"
-              boxSize={4}
-              cursor="pointer"
-            />
-
-           
-
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="4"
-              marginTop="10"
-            >
-              <Text fontWeight="bold">Nombre de la Empresa</Text>
-              <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-                Posición
-              </Text>
-            </Box>
-
-            <Text fontSize="md" marginBottom="2">
-              Fecha Inicio - Fecha Final
-            </Text>
-            <Text>
-              En este cargo como Jefe de Comunicaciones en la Corporación XYZ,
-              logró aumentar el tráfico web en un 20%.
-            </Text>
-          </Box>
-
-          <Text 
-            fontWeight="bold"
-            fontSize="xl"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="10"
-            marginBottom="0">
-        Educación
-      </Text>
-
-          <Box
-      bg="white"
-      padding="4"
-      border="1px solid #ccc"
-      borderRadius="8px"
-      marginLeft="10"
-      marginRight="10"
-      marginTop="5"
-      marginBottom="5"
-      boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
-      position="relative"
-    >
-      {/* Icono de editar en la esquina superior derecha */}
-      <EditIcon
-        position="absolute"
-        top="15px"
-        right="15px"
-        color="blue.500"
-        boxSize={4}
-        cursor="pointer"
-      />
-
-      
-
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom="4"
-      >
-        <Text fontWeight="bold" marginTop="8">Grado</Text>
-        <Text marginRight="4" marginTop="8">Año Final</Text>
-      </Box>
-
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom="2"
-      >
-        <Text marginRight="4">Universidad Católica Andrés Bello</Text>
-      </Box>
-    </Box>
-
-          <Text
-            fontWeight="bold"
-            fontSize="xl"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            HABILIDADES
-          </Text>
-          <Text
-            fontSize="lg"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            TÉCNICAS
-          </Text>
-          <Box
-            display="flex"
-            flexDirection="row"
-            flexWrap="wrap"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 1
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 2
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 3
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 4
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 5
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 6
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 7
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 8
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 9
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 10
-              </Text>
-            </Box>
-          </Box>
-
-          <Text
-            fontSize="lg"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            BLANDAS
-          </Text>
-          <Box
-            display="flex"
-            flexDirection="row"
-            flexWrap="wrap"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 100000
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 2
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 3
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 4
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 5
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 6
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 7
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 8
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 9
-              </Text>
-            </Box>
-            <Box padding="2" marginBottom="2" marginRight="2">
-              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                Habilidad 10
-              </Text>
-            </Box>
-          </Box>
-
-          
-
-          <Text
-            fontWeight="bold"
-            fontSize="xl"
-            margin="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            Idiomas
-          </Text>
-          <Box
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-            position="relative"
-          >
-            <EditIcon
-              position="absolute"
-              top="15px"
-              right="20px"
-              color="blue.500"
-              boxSize={4}
-              cursor="pointer"
-            />
-            
-            <Box display="flex" alignItems="center" marginBottom="4">
-              
-              
-              <Text fontWeight="bold">Idioma</Text>
-              <Text
-                bg="#FBC430"
-                color="black"
-                padding="2"
-                borderRadius="8"
-                marginLeft="5"
-              >
-                Nivel
-              </Text>
-            </Box>
-          </Box>
-
-          <Text
-            fontWeight="bold"
-            fontSize="xl"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            Certificados
-          </Text>
-          <Box
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-            position="relative"
-          >
-            <EditIcon
-              position="absolute"
-              top="15px"
-              right="20px"
-              color="blue.500"
-              boxSize={4}
-              cursor="pointer"
-            />
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="4"
-              marginTop="10"
-            >
-              <Text fontWeight="bold">Título Certificado</Text>
-              <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-                CIAP
-              </Text>
-            </Box>
-            <Text fontSize="md" marginBottom="2">
-              Fecha Emisión
-            </Text>
-          </Box>
-
-          <Text
-            fontWeight="bold"
-            fontSize="xl"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-          >
-            INFORMACIÓN DE CONTACTO
-          </Text>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
           >
             <Text
-              bg="#007935"
-              color="white"
-              padding="4"
-              borderRadius="4"
-              cursor="pointer"
-              _hover={{ bg: "#005e28" }}
+              fontWeight="bold"
+              fontSize="xl"
+              marginLeft="10"
+              marginTop="10"
+              marginBottom="0"
+              display="flex"
+              alignItems="center"
             >
-              Descargar CV
+              Experiencia Laboral
+              {editMode ? (
+                <AddIcon color="green.500" position="absolute" right="45px" />
+              ) : (
+                <EditIcon
+                  position="absolute"
+                  right="45px"
+                  color="blue.500"
+                  onClick={handleEditClick}
+                />
+              )}
             </Text>
+
+            <Box
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            >
+              {/* Icono de editar y borrar en la esquina superior derecha de la tarjeta */}
+              <EditIcon
+                position="absolute"
+                right="60px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIcons ? "block" : "none"}
+                onClick={() => handleEditCard(card.id)} // Pasar el ID de la tarjeta que se va a editar
+              />
+
+              <DeleteIcon
+                position="absolute"
+                right="80px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIcons ? "block" : "none"}
+                onClick={() => handleDeleteClick(card.id)}
+              />
+
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4"
+                marginTop="10"
+              >
+                <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="4"
+              marginTop="3"
+            >
+              <Text fontWeight="bold">{card.empresa}</Text>
+              
+            </Box>
+                <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+                  {card.posicion}
+                </Text>
+              </Box>
+
+              <Text fontSize="md" marginBottom="2">
+                {card.descripcion}
+              </Text>
+
+              <Text fontSize="md" marginBottom="2">
+                {card.fechaInicio} - {card.fechaFinal}
+              </Text>
+             
+            </Box>
+
+            {/* Modal de confirmación para eliminar */}
+            <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Confirmar Eliminación</ModalHeader>
+                <ModalBody>
+                  ¿Estás seguro de que deseas eliminar esta tarjeta?
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    colorScheme="red"
+                    mr={3}
+                    onClick={handleConfirmDelete}
+                  >
+                    Eliminar
+                  </Button>
+                  <Button variant="ghost" onClick={handleCancelDelete}>
+                    Cancelar
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
+            {/* Modal de edición */}
+            <Modal isOpen={showEditModal && card.id === cardIdToEdit} onClose={handleCancelEdit}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Editar Contenido</ModalHeader>
+        <ModalBody>
+          {/* Input para editar empresa */}
+          <Input
+            value={card.empresa}
+            onChange={(e) => handleEditInputChange(card.id, 'empresa', e.target.value)}
+            placeholder="Editar empresa..."
+            size="lg"
+            marginBottom="4"
+          />
+          <Input
+            value={card.posicion}
+            onChange={(e) => handleEditInputChange(card.id, 'posicion', e.target.value)}
+            placeholder="Editar Posición..."
+            size="lg"
+            marginBottom="4"
+          />
+          <Input
+            value={card.fechaInicio}
+            onChange={(e) => handleEditInputChange(card.id, 'fechaInicio', e.target.value)}
+            placeholder="Editar Fecha de inicio..."
+            size="lg"
+            marginBottom="4"
+            type="date"
+          />
+          <Input
+            value={card.fechaFinal}
+            onChange={(e) => handleEditInputChange(card.id, 'fechaFinal', e.target.value)}
+            placeholder="Editar Fecha Final..."
+            size="lg"
+            marginBottom="4"
+            type="date"
+          />
+          <Textarea
+            value={card.descripcion}
+            onChange={(e) => handleEditInputChange(card.id, 'descripcion', e.target.value)}
+            placeholder="Editar Posición..."
+            size="lg"
+            marginBottom="4"
+          />
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="blue" mr={3} onClick={() => handleSaveEdit(card.id)}>
+            Guardar
+          </Button>
+          <Button variant="ghost" onClick={handleCancelEdit}>
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
+            {/* Fin de la experiencia laboral */}
+
+            <Text
+              fontWeight="bold"
+              fontSize="xl"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="10"
+              marginBottom="0"
+            >
+              Educación
+            </Text>
+
+            <Box
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
+              position="relative"
+            >
+              {/* Icono de editar en la esquina superior derecha */}
+              <EditIcon
+                position="absolute"
+                top="15px"
+                right="15px"
+                color="blue.500"
+                boxSize={4}
+                cursor="pointer"
+              />
+
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4"
+              >
+                <Text fontWeight="bold" marginTop="8">
+                  Grado
+                </Text>
+                <Text marginRight="4" marginTop="8">
+                  Año Final
+                </Text>
+              </Box>
+
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="2"
+              >
+                <Text marginRight="4">Universidad Católica Andrés Bello</Text>
+              </Box>
+            </Box>
+
+            <Text
+              fontWeight="bold"
+              fontSize="xl"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              HABILIDADES
+            </Text>
+            <Text
+              fontSize="lg"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              TÉCNICAS
+            </Text>
+            <Box
+              display="flex"
+              flexDirection="row"
+              flexWrap="wrap"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 1
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 2
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 3
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 4
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 5
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 6
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 7
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 8
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 9
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 10
+                </Text>
+              </Box>
+            </Box>
+
+            <Text
+              fontSize="lg"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              BLANDAS
+            </Text>
+            <Box
+              display="flex"
+              flexDirection="row"
+              flexWrap="wrap"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 100000
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 2
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 3
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 4
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 5
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 6
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 7
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 8
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 9
+                </Text>
+              </Box>
+              <Box padding="2" marginBottom="2" marginRight="2">
+                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                  Habilidad 10
+                </Text>
+              </Box>
+            </Box>
+
+            <Text
+              fontWeight="bold"
+              fontSize="xl"
+              margin="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              Idiomas
+            </Text>
+            <Box
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+              position="relative"
+            >
+              <EditIcon
+                position="absolute"
+                top="15px"
+                right="20px"
+                color="blue.500"
+                boxSize={4}
+                cursor="pointer"
+              />
+
+              <Box display="flex" alignItems="center" marginBottom="4">
+                <Text fontWeight="bold">Idioma</Text>
+                <Text
+                  bg="#FBC430"
+                  color="black"
+                  padding="2"
+                  borderRadius="8"
+                  marginLeft="5"
+                >
+                  Nivel
+                </Text>
+              </Box>
+            </Box>
+
+            <Text
+              fontWeight="bold"
+              fontSize="xl"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              Certificados
+            </Text>
+            <Box
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+              position="relative"
+            >
+              <EditIcon
+                position="absolute"
+                top="15px"
+                right="20px"
+                color="blue.500"
+                boxSize={4}
+                cursor="pointer"
+              />
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4"
+                marginTop="10"
+              >
+                <Text fontWeight="bold">Título Certificado</Text>
+                <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+                  CIAP
+                </Text>
+              </Box>
+              <Text fontSize="md" marginBottom="2">
+                Fecha Emisión
+              </Text>
+            </Box>
+
+            <Text
+              fontWeight="bold"
+              fontSize="xl"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              INFORMACIÓN DE CONTACTO
+            </Text>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+            >
+              <Text
+                bg="#007935"
+                color="white"
+                padding="4"
+                borderRadius="4"
+                cursor="pointer"
+                _hover={{ bg: "#005e28" }}
+              >
+                Descargar CV
+              </Text>
+            </Box>
           </Box>
-        </Box>
+        ))}
       </Box>
 
       <Footer />
