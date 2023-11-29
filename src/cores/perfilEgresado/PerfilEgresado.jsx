@@ -417,8 +417,6 @@ function PerfilEgresado() {
                 {card.fechaInicio} - {card.fechaFinal}
               </Text>
             </Box>
-            // Luego, el modal para agregar tarjetas se ajustará según el tipo
-            seleccionado
             <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
               <ModalOverlay />
               <ModalContent>
