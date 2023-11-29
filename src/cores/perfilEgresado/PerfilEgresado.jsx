@@ -31,11 +31,14 @@ function PerfilEgresado() {
   // mostrar iconos de editar
 
   const [showIcons, setShowIcons] = useState(false);
+  const [showIconsEducacion, setShowIconsEducacion] = useState(false);
 
   const [editMode, setEditMode] = useState(true);
   const [editModeEducacion, setEditModeEducacion] = useState(true);
 
-  const [showIconsEducacion, setShowIconsEducacion] = useState(false);
+  const [showAddButton, setShowAddButton] = useState(false); 
+  const [showEditButton, setShowEditButton] = useState(true);
+
 
   // Define el estado para el tipo de tarjeta y el estado del modal
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
@@ -44,6 +47,7 @@ function PerfilEgresado() {
   // Función genérica para manejar la apertura del modal para agregar tarjetas
   const handleAddClick = (cardType) => {
     setCardTypeToAdd(cardType);
+    setShowAddButton(false);
     setShowAddModal(true);
   };
 
@@ -76,10 +80,12 @@ function PerfilEgresado() {
   const [cardIdToEdit, setCardIdToEdit] = useState(null);
   const [cardIdToEditEducacion, setCardIdToEditEducacion] = useState(null);
 
-  const handleEditClick = (setShowIcons, setEditMode) => {
-    console.log("mostrar iconos de editar");
-    setShowIcons((prevIcons) => !prevIcons);
-    setEditMode((prevMode) => !prevMode);
+  // para mostrar iconos de editar y borrar al seleccionar el modo edicion
+  const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
+    setShowIconsFunc((prevIcons) => !prevIcons);
+    setEditModeFunc((prevMode) => !prevMode);
+    setShowAddButton(true); // Mostrar el botón de agregar después de editar
+    setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
   const handleDeleteClick = (cardId) => {
@@ -589,10 +595,7 @@ function PerfilEgresado() {
                   position="absolute"
                   right="45px"
                   color="blue.500"
-                  onClick={handleEditClick(
-                    setShowIconsEducacion,
-                    setEditModeEducacion
-                  )}
+                  onClick={() => handleEditClick(setShowIconsEducacion, setEditModeEducacion)}
                 />
               ) : (
                 <AddIcon
@@ -636,7 +639,9 @@ function PerfilEgresado() {
                     size="lg"
                     marginBottom="4"
                   />
+                  Fecha Final
                   <Input
+                    type="date"
                     value={card.anioFinal}
                     onChange={(e) =>
                       handleEditInputChange(
