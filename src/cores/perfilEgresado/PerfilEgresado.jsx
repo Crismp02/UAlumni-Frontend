@@ -1,11 +1,11 @@
 import React from "react";
 import NavBarEgresados from "../../components/NavBarEgresados";
 import Footer from "../../components/Footer";
+import EducacionCard from "./EducacionCard";
 import {
   Box,
   Text,
   Flex,
-  Center,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -16,13 +16,7 @@ import {
   Textarea,
   Input,
 } from "@chakra-ui/react";
-import {
-  ViewIcon,
-  ViewOffIcon,
-  EditIcon,
-  DeleteIcon,
-  AddIcon,
-} from "@chakra-ui/icons";
+import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { VStack } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
@@ -37,10 +31,34 @@ function PerfilEgresado() {
   // mostrar iconos de editar
 
   const [showIcons, setShowIcons] = useState(false);
-  const [editMode, setEditMode] = useState(false);
+
+  const [editMode, setEditMode] = useState(true);
+  const [editModeEducacion, setEditModeEducacion] = useState(true);
+
+  const [showIconsEducacion, setShowIconsEducacion] = useState(false);
+
+  // Define el estado para el tipo de tarjeta y el estado del modal
+  const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  // Función genérica para manejar la apertura del modal para agregar tarjetas
+  const handleAddClick = (cardType) => {
+    setCardTypeToAdd(cardType);
+    setShowAddModal(true);
+  };
+
+  const [cardContentEducacion, setCardContentEducacion] = useState([
+    {
+      id: 1,
+      grado: "Grado",
+      anioFinal: "01/01/2023",
+    },
+  ]);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditModalEducacion, setShowEditModalEducacion] = useState(false);
 
   // ejemplo de tarjeta con contenido
   const [cardContent, setCardContent] = useState([
@@ -54,11 +72,14 @@ function PerfilEgresado() {
         "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
     },
   ]);
-  const [cardIdToEdit, setCardIdToEdit] = useState(null);
 
-  const handleEditClick = () => {
-    setShowIcons(!showIcons);
-    setEditMode(!editMode);
+  const [cardIdToEdit, setCardIdToEdit] = useState(null);
+  const [cardIdToEditEducacion, setCardIdToEditEducacion] = useState(null);
+
+  const handleEditClick = (setShowIcons, setEditMode) => {
+    console.log("mostrar iconos de editar");
+    setShowIcons((prevIcons) => !prevIcons);
+    setEditMode((prevMode) => !prevMode);
   };
 
   const handleDeleteClick = (cardId) => {
@@ -82,35 +103,68 @@ function PerfilEgresado() {
     setCardToDelete(null);
   };
 
-  // Modal de edición
+  // Modal de edición Experiencial Laboral
   const handleEditCard = (cardId) => {
+    console.log("editar tarjeta con ID:", cardId);
     setCardIdToEdit(cardId);
     setShowEditModal(true);
   };
 
-  const handleSaveEdit = () => {
-    // Lógica para guardar la edición de la tarjeta utilizando cardIdToEdit
-    console.log("Editar tarjeta con ID:", cardIdToEdit);
-
-    setShowEditModal(false); // Cerrar el modal de edición después de guardar los cambios
-    setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
+  // Modal de edición Educación
+  const handleEditCardEducacion = (cardId) => {
+    console.log("editar tarjeta con ID:", cardId);
+    setCardIdToEditEducacion(cardId);
+    setShowEditModalEducacion(true);
   };
 
-  const handleCancelEdit = () => {
-    setShowEditModal(false); // Cancelar la edición y cerrar el modal
-    setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
+  const handleSaveEdit = (cardId) => {
+    if (cardId === cardIdToEdit) {
+      setShowEditModal(false); // Cerrar el modal de edición después de guardar los cambios
+      setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
+    }
+    if (cardId === cardIdToEditEducacion) {
+      setShowEditModalEducacion(false); // Cerrar el modal de educación después de guardar los cambios
+      setCardIdToEditEducacion(null); // Limpiar el estado del ID de la tarjeta de educación
+    }
+  };
+
+  const handleCancelEdit = (cardId) => {
+    console.log(cardIdToEditEducacion, "cardIdToEditEducacion");
+    if (cardId === cardIdToEdit) {
+      setShowEditModal(false); // Cerrar el modal de edición
+      setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
+    }
+    if (cardId === cardIdToEditEducacion) {
+      setShowEditModalEducacion(false); // Cerrar el modal de educación
+      setCardIdToEditEducacion(null); // Limpiar el estado del ID de la tarjeta de educación
+    }
   };
 
   const handleEditInputChange = (cardId, field, value) => {
-    // Copiar el array de tarjetas
-    const updatedCards = cardContent.map((card) =>
-      card.id === cardId ? { ...card, [field]: value } : card
-    );
-  
-    // Actualizar el estado con las tarjetas actualizadas
-    setCardContent(updatedCards);
+    let updatedCards;
+
+    if (cardId === cardIdToEdit) {
+      updatedCards = cardContent.map((card) =>
+        card.id === cardId ? { ...card, [field]: value } : card
+      );
+      setCardContent(updatedCards);
+    }
+
+    if (cardId === cardIdToEditEducacion) {
+      // Otra lógica si se trata de tarjetas de educación
+      // Por ejemplo:
+      updatedCards = cardContentEducacion.map((card) =>
+        card.id === cardId ? { ...card, [field]: value } : card
+      );
+      setCardContentEducacion(updatedCards);
+    }
+
+    // Puedes agregar más lógica según los distintos tipos de tarjetas si es necesario
   };
-  
+
+  const handleEducacionEditMode = () => {
+    setEditModeEducacion(!editModeEducacion);
+  };
 
   return (
     <div>
@@ -284,17 +338,22 @@ function PerfilEgresado() {
             >
               Experiencia Laboral
               {editMode ? (
-                <AddIcon color="green.500" position="absolute" right="45px" />
-              ) : (
                 <EditIcon
+                  cursor="pointer"
                   position="absolute"
                   right="45px"
                   color="blue.500"
-                  onClick={handleEditClick}
+                  onClick={() => handleEditClick(setShowIcons, setEditMode)}
                 />
+              ) : (
+                <AddIcon
+                  cursor="pointer"
+                  color="green.500"
+                  position="absolute"
+                  right="45px"
+                  onClick={() => handleAddClick('Experiencia Laboral')}                />
               )}
             </Text>
-
             <Box
               bg="white"
               padding="4"
@@ -305,6 +364,8 @@ function PerfilEgresado() {
               marginTop="5"
               marginBottom="5"
               boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+              onMouseEnter={() => setShowIcons(true)}
+              onMouseLeave={() => setShowIcons(false)}
             >
               {/* Icono de editar y borrar en la esquina superior derecha de la tarjeta */}
               <EditIcon
@@ -314,7 +375,7 @@ function PerfilEgresado() {
                 boxSize={4}
                 cursor="pointer"
                 display={showIcons ? "block" : "none"}
-                onClick={() => handleEditCard(card.id)} // Pasar el ID de la tarjeta que se va a editar
+                onClick={() => handleEditCard(card.id)}
               />
 
               <DeleteIcon
@@ -335,15 +396,14 @@ function PerfilEgresado() {
                 marginTop="10"
               >
                 <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="4"
-              marginTop="3"
-            >
-              <Text fontWeight="bold">{card.empresa}</Text>
-              
-            </Box>
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  marginBottom="4"
+                  marginTop="3"
+                >
+                  <Text fontWeight="bold">{card.empresa}</Text>
+                </Box>
                 <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
                   {card.posicion}
                 </Text>
@@ -356,9 +416,55 @@ function PerfilEgresado() {
               <Text fontSize="md" marginBottom="2">
                 {card.fechaInicio} - {card.fechaFinal}
               </Text>
-             
             </Box>
-
+            // Luego, el modal para agregar tarjetas se ajustará según el tipo
+            seleccionado
+            <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+                <ModalBody>
+                  {/* campos correspondientes al tipo de tarjeta */}
+                  {cardTypeToAdd === "Educación" && (
+                    <>
+                      <Input placeholder="Grado" marginBottom="10px" />
+                      Fecha
+                      <Input type="date" placeholder="Fecha" marginBottom="10px" />
+                      {/* ... Otros campos específicos de Educación ... */}
+                    </>
+                  )}
+                  {cardTypeToAdd === "Experiencia Laboral" && (
+                    <>
+                      <Input placeholder="Nombre Empresa" marginBottom="10px" />
+                      <Input placeholder="Posición" marginBottom="10px" />
+                      <Textarea placeholder="Descripción..." marginBottom="10px" />
+                      Fecha Inicio
+                      <Input type="date" placeholder="Posición" marginBottom="10px" />
+                      Fecha Final
+                      <Input type="date" placeholder="Posición" marginBottom="10px" />
+                      {/* ... Otros campos específicos de Experiencia Laboral ... */}
+                    </>
+                  )}
+                  {/*Mas tipos de tarjetas ... */}
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    colorScheme="blue"
+                    mr={
+                      3
+                    } /* Agrega lógica para guardar según el tipo de tarjeta */
+                  >
+                    Guardar
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowAddModal(false)}
+                  >
+                    Cancelar
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
             {/* Modal de confirmación para eliminar */}
             <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
               <ModalOverlay />
@@ -381,65 +487,95 @@ function PerfilEgresado() {
                 </ModalFooter>
               </ModalContent>
             </Modal>
-
             {/* Modal de edición */}
-            <Modal isOpen={showEditModal && card.id === cardIdToEdit} onClose={handleCancelEdit}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Editar Contenido</ModalHeader>
-        <ModalBody>
-          {/* Input para editar empresa */}
-          <Input
-            value={card.empresa}
-            onChange={(e) => handleEditInputChange(card.id, 'empresa', e.target.value)}
-            placeholder="Editar empresa..."
-            size="lg"
-            marginBottom="4"
-          />
-          <Input
-            value={card.posicion}
-            onChange={(e) => handleEditInputChange(card.id, 'posicion', e.target.value)}
-            placeholder="Editar Posición..."
-            size="lg"
-            marginBottom="4"
-          />
-          <Input
-            value={card.fechaInicio}
-            onChange={(e) => handleEditInputChange(card.id, 'fechaInicio', e.target.value)}
-            placeholder="Editar Fecha de inicio..."
-            size="lg"
-            marginBottom="4"
-            type="date"
-          />
-          <Input
-            value={card.fechaFinal}
-            onChange={(e) => handleEditInputChange(card.id, 'fechaFinal', e.target.value)}
-            placeholder="Editar Fecha Final..."
-            size="lg"
-            marginBottom="4"
-            type="date"
-          />
-          <Textarea
-            value={card.descripcion}
-            onChange={(e) => handleEditInputChange(card.id, 'descripcion', e.target.value)}
-            placeholder="Editar Posición..."
-            size="lg"
-            marginBottom="4"
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={() => handleSaveEdit(card.id)}>
-            Guardar
-          </Button>
-          <Button variant="ghost" onClick={handleCancelEdit}>
-            Cancelar
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+            <Modal
+              isOpen={showEditModal && card.id === cardIdToEdit}
+              onClose={handleCancelEdit}
+            >
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Editar Contenido</ModalHeader>
+                <ModalBody>
+                  {/* Input para editar empresa */}
+                  <Input
+                    value={card.empresa}
+                    onChange={(e) =>
+                      handleEditInputChange(card.id, "empresa", e.target.value)
+                    }
+                    placeholder="Editar empresa..."
+                    size="lg"
+                    marginBottom="4"
+                  />
+                  <Input
+                    value={card.posicion}
+                    onChange={(e) =>
+                      handleEditInputChange(card.id, "posicion", e.target.value)
+                    }
+                    placeholder="Editar Posición..."
+                    size="lg"
+                    marginBottom="4"
+                  />
 
+                  <Input
+                    value={card.fechaInicio}
+                    onChange={(e) =>
+                      handleEditInputChange(
+                        card.id,
+                        "fechaInicio",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Editar Fecha de inicio..."
+                    size="lg"
+                    marginBottom="4"
+                    type="date"
+                  />
+                  <Input
+                    value={card.fechaFinal}
+                    onChange={(e) =>
+                      handleEditInputChange(
+                        card.id,
+                        "fechaFinal",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Editar Fecha Final..."
+                    size="lg"
+                    marginBottom="4"
+                    type="date"
+                  />
+                  <Textarea
+                    value={card.descripcion}
+                    onChange={(e) =>
+                      handleEditInputChange(
+                        card.id,
+                        "descripcion",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Editar Posición..."
+                    size="lg"
+                    marginBottom="4"
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    colorScheme="blue"
+                    mr={3}
+                    onClick={() => handleSaveEdit(card.id)}
+                  >
+                    Guardar
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleCancelEdit(card.id)}
+                  >
+                    Cancelar
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
             {/* Fin de la experiencia laboral */}
-
             <Text
               fontWeight="bold"
               fontSize="xl"
@@ -449,54 +585,90 @@ function PerfilEgresado() {
               marginBottom="0"
             >
               Educación
+              {editModeEducacion ? (
+                <EditIcon
+                  cursor="pointer"
+                  position="absolute"
+                  right="45px"
+                  color="blue.500"
+                  onClick={handleEditClick(
+                    setShowIconsEducacion,
+                    setEditModeEducacion
+                  )}
+                />
+              ) : (
+                <AddIcon
+                  cursor="pointer"
+                  color="green.500"
+                  position="absolute"
+                  right="45px"
+                  onClick={() => handleAddClick('Educación')}
+                />
+              )}
             </Text>
-
-            <Box
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
-              position="relative"
-            >
-              {/* Icono de editar en la esquina superior derecha */}
-              <EditIcon
-                position="absolute"
-                top="15px"
-                right="15px"
-                color="blue.500"
-                boxSize={4}
-                cursor="pointer"
+            {cardContentEducacion.map((card) => (
+              <EducacionCard
+                key={card.id}
+                grado={card.grado}
+                anioFinal={card.anioFinal}
+                card={card} // Pasar el objeto card completo
+                showIconsEducacion={showIconsEducacion} // Pasar el estado showIconsEducacion
+                handleEditCardEducacion={handleEditCardEducacion}
+                handleDeleteClick={handleDeleteClick}
               />
-
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                marginBottom="4"
-              >
-                <Text fontWeight="bold" marginTop="8">
-                  Grado
-                </Text>
-                <Text marginRight="4" marginTop="8">
-                  Año Final
-                </Text>
-              </Box>
-
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                marginBottom="2"
-              >
-                <Text marginRight="4">Universidad Católica Andrés Bello</Text>
-              </Box>
-            </Box>
-
+            ))}
+            {/* Modal de edición Educación */}
+            <Modal
+              isOpen={
+                showEditModalEducacion && card.id === cardIdToEditEducacion
+              }
+              onClose={() => handleCancelEdit(card.id)} // Pasar el ID de la tarjeta al cerrar el modal
+            >
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Editar Educación</ModalHeader>
+                <ModalBody>
+                  {/* Input para editar contenido de educación */}
+                  <Input
+                    value={card.grado}
+                    onChange={(e) =>
+                      handleEditInputChange(card.id, "grado", e.target.value)
+                    }
+                    placeholder="Editar Grado..."
+                    size="lg"
+                    marginBottom="4"
+                  />
+                  <Input
+                    value={card.anioFinal}
+                    onChange={(e) =>
+                      handleEditInputChange(
+                        card.id,
+                        "anioFinal",
+                        e.target.value
+                      )
+                    }
+                    placeholder="Editar año final..."
+                    size="lg"
+                    marginBottom="4"
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    colorScheme="blue"
+                    mr={3}
+                    onClick={() => handleSaveEdit(card.id)}
+                  >
+                    Guardar
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleCancelEdit(card.id)}
+                  >
+                    Cancelar
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
             <Text
               fontWeight="bold"
               fontSize="xl"
@@ -576,7 +748,6 @@ function PerfilEgresado() {
                 </Text>
               </Box>
             </Box>
-
             <Text
               fontSize="lg"
               marginLeft="10"
@@ -646,7 +817,6 @@ function PerfilEgresado() {
                 </Text>
               </Box>
             </Box>
-
             <Text
               fontWeight="bold"
               fontSize="xl"
@@ -691,7 +861,6 @@ function PerfilEgresado() {
                 </Text>
               </Box>
             </Box>
-
             <Text
               fontWeight="bold"
               fontSize="xl"
@@ -738,7 +907,6 @@ function PerfilEgresado() {
                 Fecha Emisión
               </Text>
             </Box>
-
             <Text
               fontWeight="bold"
               fontSize="xl"
