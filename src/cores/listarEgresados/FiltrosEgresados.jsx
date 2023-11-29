@@ -7,21 +7,23 @@ import {
   DrawerOverlay,
   DrawerContent,
   useDisclosure,
-  Input,
-  Text,
-  List,
-  ListItem,
-  Box,
-  Tag,
-  TagLabel,
-  Stack,
-  Flex,
   IconButton,
   useMediaQuery,
   Tooltip,
+  Input,
+  Box,
+  Text,
+  List,
+  ListItem,
+  Select,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
+import FiltrarNombre from "./FiltrarNombre";
+import FiltrarSkills from "./FiltrarSkills";
+import FiltrarPositions from "./FiltrarPositions";
+import FiltrarCarreras from "./FiltrarCarreras";
+import FiltrosButtons from "./FiltrosButtons";
 
 function FiltrosEgresados() {
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
@@ -56,7 +58,7 @@ function FiltrosEgresados() {
     /*Busqueda por habilidades*/
   }
   const [value, setValue] = useState("");
-  const [list, setList] = useState([]);
+
   const handleChange = (event) => setValue(event.target.value);
   const handleAdd = () => {
     setList((oldList) => [...oldList, value]);
@@ -64,6 +66,25 @@ function FiltrosEgresados() {
   };
   const handleRemove = (indexToRemove) => {
     setList((oldList) => oldList.filter((_, index) => index !== indexToRemove));
+  };
+  
+  const [categoria, setCategoria] = useState("");
+  const [habilidad, setHabilidad] = useState("");
+  const [list, setList] = useState([]);
+
+  const habilidades = {
+    frontend: ["React", "Vue", "Angular"],
+    backend: ["Node.js", "Python", "Ruby"],
+    diseño: ["Photoshop", "Illustrator", "Figma"],
+  };
+  const handleHabilidadChange = (e) => {
+    setHabilidad(e.target.value);
+    if (e.target.value !== "" && !list.some(item => item.habilidad === e.target.value)) {
+      setList([...list, { categoria, habilidad: e.target.value }]);
+    }
+  };
+  const handleRemoveHabilidad = (index) => {
+    setList(list.filter((_, i) => i !== index));
   };
 
   {
@@ -123,6 +144,7 @@ function FiltrosEgresados() {
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
+
   const handleSubmit = () => {
     if (isDisabled) {
       return;
@@ -141,6 +163,8 @@ function FiltrosEgresados() {
     setValueName("");
     setValue("");
     setList([]);
+    setCategoria("");
+    setHabilidad("");
     setValuePos("");
     setListPos([]);
     setSelectedTags({});
@@ -173,315 +197,92 @@ function FiltrosEgresados() {
 
           <DrawerBody>
             {/*Busqueda por nombre*/}
-            <Text marginBottom="10px" marginTop="10px">
-              Nombre:
-            </Text>
-            {isLargerThan435 ? (
-              <>
-                <Input
-                  value={valueName}
-                  onChange={handleChangeName}
-                  placeholder="Buscar egresado por nombre"
-                  size="md"
-                  marginBottom="30px"
-                />
-              </>
-            ) : (
-              <>
-                {" "}
-                <Input
-                  value={valueName}
-                  onChange={handleChangeName}
-                  placeholder="Buscar egresado por nombre"
-                  size="sm"
-                  fontSize="10px"
-                  marginBottom="30px"
-                />
-              </>
-            )}
-
+            <FiltrarNombre
+              valueName={valueName}
+              handleChangeName={handleChangeName}
+            />
             {/*Busqueda por habilidad*/}
+            <FiltrarSkills
+              list={list}
+              categoria={categoria}
+              setCategoria={setCategoria}
+              habilidad={habilidad}
+              habilidades={habilidades}
+              handleHabilidadChange={handleHabilidadChange}
+              handleRemoveHabilidad={handleRemoveHabilidad}
+            />
+             {/*Busqueda por posiciones de interes
             <Text marginBottom="10px">Habilidades:</Text>
-            <Box display="flex" flexDirection="row" alignItems="center">
-              {isLargerThan435 ? (
-                <>
-                  <Input
-                    value={value}
-                    onChange={handleChange}
-                    placeholder="Buscar egresado por habilidad"
-                    size="md"
-                  />
-                  <Button
-                    onClick={handleAdd}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>{" "}
-                </>
-              ) : (
-                <>
-                  <Input
-                    value={value}
-                    onChange={handleChange}
-                    placeholder="Buscar egresado por habilidad"
-                    fontSize="10px"
-                    size="sm"
-                  />{" "}
-                  <Button
-                    onClick={handleAdd}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    size="sm"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>{" "}
-                </>
-              )}
-            </Box>
-            <List
-              mt={2}
-              border="1px"
-              borderColor="#E2E8F0"
-              minH="70px"
-              marginBottom="30px"
-              padding="10px"
-            >
-              {list.map((item, index) => (
-                <ListItem key={index}>
-                  {item}
-                  <Button
-                    onClick={() => handleRemove(index)}
-                    mt={1}
-                    marginLeft="20px"
-                    marginBottom="8px"
-                    backgroundColor="#EDF2F6"
-                    color="black"
-                    size="xs"
-                  >
-                    x
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
-
+            <Select placeholder="Categorías de las habilidades"
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}>
+              <option value="frontend">Frontend</option>
+              <option value="backend">Backend</option>
+              <option value="diseño">Diseño</option>
+            </Select>
+            {categoria && (
+        <Select
+          placeholder="Habilidad"
+          value={habilidad}
+          onChange={handleHabilidadChange}
+          marginTop="10px"
+        >
+          {habilidades[categoria].map((hab) => (
+            <option key={hab} value={hab}>
+              {hab}
+            </option>
+          ))}
+        </Select>
+      )}
+<List mt={2}
+          border="1px"
+          borderColor="#E2E8F0"
+          minH="70px"
+          marginBottom="30px"
+          padding="10px">
+      {list.map((item, index) => (
+        <ListItem key={index}>
+          {item.categoria}: {item.habilidad}
+          <Button
+            onClick={() => handleRemoveHabilidad(index)}
+            mt={1}
+            marginLeft="20px"
+            marginBottom="8px"
+            backgroundColor="#EDF2F6"
+            color="black"
+            size="xs"
+          >
+            x
+          </Button>
+        </ListItem>
+        
+      ))}
+      </List>*/}
+      
             {/*Busqueda por posiciones de interes*/}
-            <Text marginBottom="10px">Posiciones de interés:</Text>
-            <Box display="flex" flexDirection="row" alignItems="center">
-              {isLargerThan435 ? (
-                <>
-                  {" "}
-                  <Input
-                    value={valuePos}
-                    onChange={handleChangePos}
-                    placeholder="Buscar egresado por posición de interés"
-                    size="md"
-                  />
-                  <Button
-                    onClick={handleAddPos}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {" "}
-                  <Input
-                    value={valuePos}
-                    onChange={handleChangePos}
-                    placeholder="Buscar egresado por posición de interés"
-                    fontSize="10px"
-                    size="sm"
-                  />
-                  <Button
-                    onClick={handleAddPos}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    size="sm"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>
-                </>
-              )}
-            </Box>
-            <List
-              mt={2}
-              border="1px"
-              borderColor="#E2E8F0"
-              minH="70px"
-              marginBottom="30px"
-              padding="10px"
-            >
-              {listPos.map((item, index) => (
-                <ListItem key={index}>
-                  {item}
-                  <Button
-                    onClick={() => handleRemovePos(index)}
-                    mt={1}
-                    marginLeft="20px"
-                    marginBottom="8px"
-                    backgroundColor="#EDF2F6"
-                    color="black"
-                    size="xs"
-                  >
-                    x
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
-
+            <FiltrarPositions
+              valuePos={valuePos}
+              handleChangePos={handleChangePos}
+              handleAddPos={handleAddPos}
+              listPos={listPos}
+              handleRemovePos={handleRemovePos}
+            />
             {/*Busqueda por carreras:*/}
-            <Text marginBottom="10px">Carreras:</Text>
-            {isLargerThan435 ? (
-              <Stack p={{ base: 4, md: "20 20 10 20" }}>
-                <Flex direction="row" justifyContent="center" wrap="wrap">
-                  {labels.map((label) => (
-                    <Tag
-                      key={label}
-                      size="md"
-                      colorScheme="blue"
-                      variant={
-                        selectedCarrera === label || selectedTags[label]
-                          ? "solid"
-                          : "outline"
-                      }
-                      onClick={() => handleClick(label)}
-                      marginRight="10px"
-                      marginBottom="10px"
-                    >
-                      <TagLabel>{label}</TagLabel>
-                    </Tag>
-                  ))}
-                </Flex>
-              </Stack>
-            ) : (
-              <Stack p={{ base: 4, md: "20 20 10 20" }}>
-                <Flex direction="row" justifyContent="center" wrap="wrap">
-                  {labels.map((label) => (
-                    <Tag
-                      key={label}
-                      size="sm"
-                      fontSize="11px"
-                      colorScheme="blue"
-                      variant={
-                        selectedCarrera === label || selectedTags[label]
-                          ? "solid"
-                          : "outline"
-                      }
-                      onClick={() => handleClick(label)}
-                      marginRight="10px"
-                      marginBottom="10px"
-                    >
-                      <TagLabel>{label}</TagLabel>
-                    </Tag>
-                  ))}
-                </Flex>
-              </Stack>
-            )}
-
-            <Flex justifyContent="flex-end">
-              {isLargerThan435 ? (
-                <>
-                  <Button
-                    onClick={handleReset}
-                    mt={2}
-                    variant="outline"
-                    backgroundColor="white"
-                    borderWidth="2px"
-                    borderColor="#007935"
-                    color="#007935"
-                    as="b"
-                    marginRight="10px"
-                  >
-                    RESTAURAR FILTROS
-                  </Button>
-                  <Tooltip
-                    label="Para buscar, complete al menos un filtro"
-                    isOpen={isDisabled && isHovering}
-                  >
-                    <Button
-                      onClick={() => {
-                        handleSubmit();
-                        onClose();
-                      }}
-                      isDisabled={isDisabled}
-                      onMouseEnter={() => setIsHovering(true)}
-                      onMouseLeave={() => setIsHovering(false)}
-                      mt={2}
-                      backgroundColor="#007935"
-                      color="white"
-                      as="b"
-                      _hover={{ bg: "#025024" }}
-                    >
-                      BUSCAR
-                    </Button>
-                  </Tooltip>
-                </>
-              ) : (
-                <>
-                  <Button
-                    onClick={handleReset}
-                    mt={2}
-                    variant="outline"
-                    backgroundColor="white"
-                    borderWidth="2px"
-                    borderColor="#007935"
-                    color="#007935"
-                    as="b"
-                    marginRight="10px"
-                    fontSize="12px"
-                    size="sm"
-                  >
-                    RESTAURAR FILTROS
-                  </Button>
-                  <Tooltip
-                    label="Para buscar, complete al menos un filtro"
-                    isOpen={isDisabled && isHovering}
-                  >
-                    <Button
-                      onClick={() => {
-                        handleSubmit();
-                        onClose();
-                      }}
-                      isDisabled={isDisabled}
-                      onMouseEnter={() => setIsHovering(true)}
-                      onMouseLeave={() => setIsHovering(false)}
-                      mt={2}
-                      backgroundColor="#007935"
-                      color="white"
-                      as="b"
-                      _hover={{ bg: "#025024" }}
-                      fontSize="12px"
-                      size="sm"
-                    >
-                      BUSCAR
-                    </Button>{" "}
-                  </Tooltip>
-                </>
-              )}
-            </Flex>
+            <FiltrarCarreras
+              labels={labels}
+              selectedCarrera={selectedCarrera}
+              selectedTags={selectedTags}
+              handleClick={handleClick}
+            />
+              {/*Botones de búsqueda y reset*/}
+            <FiltrosButtons
+              handleReset={handleReset}
+              handleSubmit={handleSubmit}
+              isDisabled={isDisabled}
+              isHovering={isHovering}
+              setIsHovering={setIsHovering}
+              onClose={onClose}/>
+            
           </DrawerBody>
         </DrawerContent>
       </Drawer>
