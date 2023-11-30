@@ -160,7 +160,6 @@ function FiltrosEgresados() {
 
   const handleReset = () => {
     setValueName("");
-    setValue("");
     setList([]);
     setCategoria("");
     setHabilidad("");
