@@ -8,14 +8,7 @@ import {
   DrawerContent,
   useDisclosure,
   IconButton,
-  useMediaQuery,
-  Tooltip,
-  Input,
-  Box,
-  Text,
-  List,
-  ListItem,
-  Select,
+  Checkbox,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
@@ -26,7 +19,6 @@ import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "./FiltrosButtons";
 
 function FiltrosEgresados() {
-  const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
   const [isHovering, setIsHovering] = useState(false);
 
   // Obtén la carrera de la URL
@@ -57,17 +49,6 @@ function FiltrosEgresados() {
   {
     /*Busqueda por habilidades*/
   }
-  const [value, setValue] = useState("");
-
-  const handleChange = (event) => setValue(event.target.value);
-  const handleAdd = () => {
-    setList((oldList) => [...oldList, value]);
-    setValue("");
-  };
-  const handleRemove = (indexToRemove) => {
-    setList((oldList) => oldList.filter((_, index) => index !== indexToRemove));
-  };
-  
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
@@ -79,8 +60,21 @@ function FiltrosEgresados() {
   };
   const handleHabilidadChange = (e) => {
     setHabilidad(e.target.value);
-    if (e.target.value !== "" && !list.some(item => item.habilidad === e.target.value)) {
+    if (
+      e.target.value !== "" &&
+      !list.some((item) => item.habilidad === e.target.value)
+    ) {
       setList([...list, { categoria, habilidad: e.target.value }]);
+    }
+  };
+
+  const handleAddCategoria = () => {
+    if (
+      categoria !== "" &&
+      !list.some((item) => item.categoria === categoria)
+    ) {
+      setList((oldList) => [...oldList, { categoria, habilidad: "" }]);
+      setCategoria("");
     }
   };
   const handleRemoveHabilidad = (index) => {
@@ -94,8 +88,10 @@ function FiltrosEgresados() {
   const [listPos, setListPos] = useState([]);
   const handleChangePos = (event) => setValuePos(event.target.value);
   const handleAddPos = () => {
-    setListPos((oldList) => [...oldList, valuePos]);
-    setValuePos("");
+    if (valuePos.trim() !== "") {
+      setListPos((oldList) => [...oldList, valuePos]);
+      setValuePos("");
+    }
   };
   const handleRemovePos = (indexToRemove) => {
     setListPos((oldList) =>
@@ -137,13 +133,15 @@ function FiltrosEgresados() {
   {
     /*Botones de búsqueda y reset*/
   }
+  const [exactMatch, setExactMatch] = useState(false);
+
+  const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
   const isDisabled =
     !valueName &&
     list.length === 0 &&
     listPos.length === 0 &&
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
-
 
   const handleSubmit = () => {
     if (isDisabled) {
@@ -155,6 +153,7 @@ function FiltrosEgresados() {
       skills: list,
       positionsOfInterest: listPos,
       carrers: carrersToSend,
+      exactMatch,
     };
     console.log(data);
   };
@@ -208,57 +207,11 @@ function FiltrosEgresados() {
               setCategoria={setCategoria}
               habilidad={habilidad}
               habilidades={habilidades}
+              handleAddCategoria={handleAddCategoria}
               handleHabilidadChange={handleHabilidadChange}
               handleRemoveHabilidad={handleRemoveHabilidad}
             />
-             {/*Busqueda por posiciones de interes
-            <Text marginBottom="10px">Habilidades:</Text>
-            <Select placeholder="Categorías de las habilidades"
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}>
-              <option value="frontend">Frontend</option>
-              <option value="backend">Backend</option>
-              <option value="diseño">Diseño</option>
-            </Select>
-            {categoria && (
-        <Select
-          placeholder="Habilidad"
-          value={habilidad}
-          onChange={handleHabilidadChange}
-          marginTop="10px"
-        >
-          {habilidades[categoria].map((hab) => (
-            <option key={hab} value={hab}>
-              {hab}
-            </option>
-          ))}
-        </Select>
-      )}
-<List mt={2}
-          border="1px"
-          borderColor="#E2E8F0"
-          minH="70px"
-          marginBottom="30px"
-          padding="10px">
-      {list.map((item, index) => (
-        <ListItem key={index}>
-          {item.categoria}: {item.habilidad}
-          <Button
-            onClick={() => handleRemoveHabilidad(index)}
-            mt={1}
-            marginLeft="20px"
-            marginBottom="8px"
-            backgroundColor="#EDF2F6"
-            color="black"
-            size="xs"
-          >
-            x
-          </Button>
-        </ListItem>
-        
-      ))}
-      </List>*/}
-      
+
             {/*Busqueda por posiciones de interes*/}
             <FiltrarPositions
               valuePos={valuePos}
@@ -274,15 +227,25 @@ function FiltrosEgresados() {
               selectedTags={selectedTags}
               handleClick={handleClick}
             />
-              {/*Botones de búsqueda y reset*/}
+            {/*Filtros exactos:*/}
+            <Checkbox
+              marginBottom="10px"
+              marginTop="10px"
+              isChecked={exactMatch}
+              as="b"
+              onChange={handleCheckboxChange}
+            >
+              Filtrar por coincidencia exacta
+            </Checkbox>
+            {/*Botones de búsqueda y reset*/}
             <FiltrosButtons
               handleReset={handleReset}
               handleSubmit={handleSubmit}
               isDisabled={isDisabled}
               isHovering={isHovering}
               setIsHovering={setIsHovering}
-              onClose={onClose}/>
-            
+              onClose={onClose}
+            />
           </DrawerBody>
         </DrawerContent>
       </Drawer>
