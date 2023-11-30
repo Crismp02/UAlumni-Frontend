@@ -14,8 +14,22 @@ import {
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import Footer from "../../components/Footer";
+import { useEffect } from "react";
 
 function LandingPage() {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetch("http://localhost:3000/soft-skills?page=1&per-page=1")
+        const response = await data.json()
+        console.log(response)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  
+    fetchData()
+  }, []) 
   const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
   const [isLargerThan700] = useMediaQuery("(min-width: 700px)");
   return (
@@ -68,25 +82,33 @@ function LandingPage() {
             >
               UALUMNI
             </Text>
-            {isLargerThan600 ? <Text
-              fontSize={["small", "md", "md", "md"]}
-              color="black"
-              textAlign="center"
-              px="20px"
-              paddingBottom="10px"
-            >
-              
-              UAlumni es una plataforma digital que conecta a egresados UCAB con el mercado laboral. Los egresados pueden crear sus perfiles profesionales y buscar oportunidades laborales. Los reclutadores, por su parte, pueden acceder a los perfiles de los egresados y encontrar profesionales con las habilidades y experiencia que necesitan, con el sello ucabista garantizado.
-            </Text> : <Text
-              fontSize={["small", "md", "md", "md"]}
-              color="black"
-              textAlign="center"
-              px="20px"
-              paddingBottom="10px"
-            >
-              
-UAlumni es una plataforma digital que conecta egresados UCAB con empresas que buscan profesionales ucabistas.
-            </Text>}
+            {isLargerThan600 ? (
+              <Text
+                fontSize={["small", "md", "md", "md"]}
+                color="black"
+                textAlign="center"
+                px="20px"
+                paddingBottom="10px"
+              >
+                UAlumni es una plataforma digital que conecta a egresados UCAB
+                con el mercado laboral. Los egresados pueden crear sus perfiles
+                profesionales y buscar oportunidades laborales. Los
+                reclutadores, por su parte, pueden acceder a los perfiles de los
+                egresados y encontrar profesionales con las habilidades y
+                experiencia que necesitan, con el sello ucabista garantizado.
+              </Text>
+            ) : (
+              <Text
+                fontSize={["small", "md", "md", "md"]}
+                color="black"
+                textAlign="center"
+                px="20px"
+                paddingBottom="10px"
+              >
+                UAlumni es una plataforma digital que conecta egresados UCAB con
+                empresas que buscan profesionales ucabistas.
+              </Text>
+            )}
           </Box>
         </Box>
       </Box>
@@ -99,11 +121,15 @@ UAlumni es una plataforma digital que conecta egresados UCAB con empresas que bu
           flexDirection: "column",
         }}
       >
-        {isLargerThan700 ? <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
-          ¿QUIÉN SOY?
-        </Text> : <Text fontSize="2xl" textAlign="center" as="b" paddingTop="30px">
-          ¿QUIÉN SOY?
-        </Text>}
+        {isLargerThan700 ? (
+          <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
+            ¿QUIÉN SOY?
+          </Text>
+        ) : (
+          <Text fontSize="2xl" textAlign="center" as="b" paddingTop="30px">
+            ¿QUIÉN SOY?
+          </Text>
+        )}
         <Grid
           justifyContent="center"
           paddingTop="40px"
@@ -152,11 +178,15 @@ UAlumni es una plataforma digital que conecta egresados UCAB con empresas que bu
           paddingBottom: "40px",
         }}
       >
-        {isLargerThan700 ? <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
-          ¿DE QUÉ CARRERA ES EL PROFESIONAL QUE BUSCAS?
-        </Text> : <Text fontSize="2xl" textAlign="center" as="b" paddingTop="20px">
-          ¿DE QUÉ CARRERA ES EL PROFESIONAL QUE BUSCAS?
-        </Text>}
+        {isLargerThan700 ? (
+          <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">
+            ¿DE QUÉ CARRERA ES EL PROFESIONAL QUE BUSCAS?
+          </Text>
+        ) : (
+          <Text fontSize="2xl" textAlign="center" as="b" paddingTop="20px">
+            ¿DE QUÉ CARRERA ES EL PROFESIONAL QUE BUSCAS?
+          </Text>
+        )}
 
         <Stack p={{ base: 2, md: "20 20 5 20" }}>
           <Flex direction="row" justifyContent="center" wrap="wrap">
@@ -251,7 +281,7 @@ UAlumni es una plataforma digital que conecta egresados UCAB con empresas que bu
               </Button>
             </Box>
           </Flex>
-        </Stack>   
+        </Stack>
       </div>
       <Footer />
     </div>
