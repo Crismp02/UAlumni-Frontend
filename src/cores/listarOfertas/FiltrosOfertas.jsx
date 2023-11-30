@@ -20,13 +20,19 @@ import {
   IconButton,
   useMediaQuery,
   Tooltip,
+  Checkbox,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
+import FiltrarNombre from "./FiltrarNombre";
+import FiltrarSkills from "./FiltrarSkills";
+import FiltrarPositions from "./FiltrarPositions";
+import FiltrosButtons from "./FiltrosButtons";
 
 function FiltrosOfertas() {
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
   const [isHovering, setIsHovering] = useState(false);
+
 
   {
     /*Const del Drawer*/
@@ -41,18 +47,41 @@ function FiltrosOfertas() {
   const handleChangeName = (event) => setValueName(event.target.value);
 
   {
-    /*Busqueda por habilidades*/
+    /*Busqueda por habilidades categoria*/
   }
-  const [value, setValue] = useState("");
+
+  const [categoria, setCategoria] = useState("");
+  const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
-  const handleChange = (event) => setValue(event.target.value);
-  const handleAdd = () => {
-    setList((oldList) => [...oldList, value]);
-    setValue("");
+
+  const habilidades = {
+    frontend: ["React", "Vue", "Angular"],
+    backend: ["Node.js", "Python", "Ruby"],
+    diseño: ["Photoshop", "Illustrator", "Figma"],
   };
-  const handleRemove = (indexToRemove) => {
-    setList((oldList) => oldList.filter((_, index) => index !== indexToRemove));
+  const handleHabilidadChange = (e) => {
+    setHabilidad(e.target.value);
+    if (
+      e.target.value !== "" &&
+      !list.some((item) => item.habilidad === e.target.value)
+    ) {
+      setList([...list, { categoria, habilidad: e.target.value }]);
+    }
   };
+
+  const handleAddCategoria = () => {
+    if (
+      categoria !== "" &&
+      !list.some((item) => item.categoria === categoria)
+    ) {
+      setList((oldList) => [...oldList, { categoria, habilidad: "" }]);
+      setCategoria("");
+    }
+  };
+  const handleRemoveHabilidad = (index) => {
+    setList(list.filter((_, i) => i !== index));
+  };
+
 
   {
     /*Busqueda por posición de interés*/
@@ -81,6 +110,10 @@ function FiltrosOfertas() {
   {
     /*Botones de búsqueda y reset*/
   }
+  const [exactMatch, setExactMatch] = useState(false);
+
+  const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
+
   const isDisabled =
     !valueName &&
     list.length === 0 &&
@@ -96,6 +129,7 @@ function FiltrosOfertas() {
       name: valueName,
       skills: list,
       positionsOfInterest: listPos,
+      exactMatch,
       category: selectedOption,
 
     };
@@ -104,11 +138,12 @@ function FiltrosOfertas() {
 
   const handleReset = () => {
     setValueName("");
-    setValue("");
     setList([]);
+    setCategoria("");
+    setHabilidad("");
     setValuePos("");
     setListPos([]);
-    setSelectedOption('');
+    setSelectedOption("");
   };
 
   return (
@@ -137,274 +172,67 @@ function FiltrosOfertas() {
 
           <DrawerBody>
             {/*Busqueda por nombre*/}
-            <Text marginBottom="10px" marginTop="10px">
-              Nombre:
-            </Text>
-            {isLargerThan435 ? (
-              <>
-                <Input
-                  value={valueName}
-                  onChange={handleChangeName}
-                  placeholder="Buscar empresa por nombre"
-                  size="md"
-                  marginBottom="30px"
-                />
-              </>
-            ) : (
-              <>
-                {" "}
-                <Input
-                  value={valueName}
-                  onChange={handleChangeName}
-                  placeholder="Buscar empresa por nombre"
-                  size="sm"
-                  fontSize="10px"
-                  marginBottom="30px"
-                />
-              </>
-            )}
+            <FiltrarNombre
+              valueName={valueName}
+              handleChangeName={handleChangeName}
+            />
 
             {/*Busqueda por habilidad*/}
-            <Text marginBottom="10px">Habilidades:</Text>
-            <Box display="flex" flexDirection="row" alignItems="center">
-              {isLargerThan435 ? (
-                <>
-                  <Input
-                    value={value}
-                    onChange={handleChange}
-                    placeholder="Buscar empresa por habilidad"
-                    size="md"
-                  />
-                  <Button
-                    onClick={handleAdd}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>{" "}
-                </>
-              ) : (
-                <>
-                  <Input
-                    value={value}
-                    onChange={handleChange}
-                    placeholder="Buscar empresa por habilidad"
-                    fontSize="10px"
-                    size="sm"
-                  />{" "}
-                  <Button
-                    onClick={handleAdd}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    size="sm"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>{" "}
-                </>
-              )}
-            </Box>
-            <List
-              mt={2}
-              border="1px"
-              borderColor="#E2E8F0"
-              minH="70px"
-              marginBottom="30px"
-              padding="10px"
-            >
-              {list.map((item, index) => (
-                <ListItem key={index}>
-                  {item}
-                  <Button
-                    onClick={() => handleRemove(index)}
-                    mt={1}
-                    marginLeft="20px"
-                    marginBottom="8px"
-                    backgroundColor="#EDF2F6"
-                    color="black"
-                    size="xs"
-                  >
-                    x
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
+            <FiltrarSkills
+              list={list}
+              categoria={categoria}
+              setCategoria={setCategoria}
+              habilidad={habilidad}
+              habilidades={habilidades}
+              handleAddCategoria={handleAddCategoria}
+              handleHabilidadChange={handleHabilidadChange}
+              handleRemoveHabilidad={handleRemoveHabilidad}
+            />
 
             {/*Busqueda por posiciones de interes*/}
-            <Text marginBottom="10px">Posiciones de interés:</Text>
-            <Box display="flex" flexDirection="row" alignItems="center">
-              {isLargerThan435 ? (
-                <>
-                  {" "}
-                  <Input
-                    value={valuePos}
-                    onChange={handleChangePos}
-                    placeholder="Buscar empresa por posición de interés"
-                    size="md"
-                  />
-                  <Button
-                    onClick={handleAddPos}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {" "}
-                  <Input
-                    value={valuePos}
-                    onChange={handleChangePos}
-                    placeholder="Buscar empresa por posición de interés"
-                    fontSize="10px"
-                    size="sm"
-                  />
-                  <Button
-                    onClick={handleAddPos}
-                    mt={2}
-                    marginLeft="10px"
-                    marginBottom="8px"
-                    backgroundColor="#007935"
-                    color="white"
-                    as="b"
-                    size="sm"
-                    _hover={{ bg: "#025024" }}
-                  >
-                    +
-                  </Button>
-                </>
-              )}
-            </Box>
-            <List
-              mt={2}
-              border="1px"
-              borderColor="#E2E8F0"
-              minH="70px"
-              marginBottom="30px"
-              padding="10px"
-            >
-              {listPos.map((item, index) => (
-                <ListItem key={index}>
-                  {item}
-                  <Button
-                    onClick={() => handleRemovePos(index)}
-                    mt={1}
-                    marginLeft="20px"
-                    marginBottom="8px"
-                    backgroundColor="#EDF2F6"
-                    color="black"
-                    size="xs"
-                  >
-                    x
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
+            <FiltrarPositions
+              valuePos={valuePos}
+              handleChangePos={handleChangePos}
+              handleAddPos={handleAddPos}
+              listPos={listPos}
+              handleRemovePos={handleRemovePos}
+            />
 
-            {/*Busqueda por carreras:*/}
+            {/*Busqueda por categorías:*/}
             <Text marginBottom="10px">Categorías:</Text>
-            <Select placeholder='Seleccione una categoría' value={selectedOption} onChange={handleChangeCategory}>
-  <option value='Contratos temporales'>Contratos temporales</option>
-  <option value='Contratos fijos'>Contratos fijos</option>
-  <option value='Contratos indefinidos'>Contratos indefinidos</option>
-</Select>
+            <Select
+              placeholder="Seleccione una categoría"
+              fontSize={["12px", "sm"]}
+              value={selectedOption}
+              onChange={handleChangeCategory}
+            >
+              <option value="Contratos temporales">Contratos temporales</option>
+              <option value="Contratos fijos">Contratos fijos</option>
+              <option value="Contratos indefinidos">
+                Contratos indefinidos
+              </option>
+            </Select>
 
-            <Flex justifyContent="flex-end">
-              {isLargerThan435 ? (
-                <>
-                  <Button
-                    onClick={handleReset}
-                    mt={2}
-                    variant="outline"
-                    backgroundColor="white"
-                    borderWidth="2px"
-                    borderColor="#007935"
-                    color="#007935"
-                    as="b"
-                    marginRight="10px"
-                  >
-                    RESTAURAR FILTROS
-                  </Button>
-                  <Tooltip
-                    label="Para buscar, complete al menos un filtro"
-                    isOpen={isDisabled && isHovering}
-                  >
-                    <Button
-                      onClick={() => {
-                        handleSubmit();
-                        onClose();
-                      }}
-                      isDisabled={isDisabled}
-                      onMouseEnter={() => setIsHovering(true)}
-                      onMouseLeave={() => setIsHovering(false)}
-                      mt={2}
-                      backgroundColor="#007935"
-                      color="white"
-                      as="b"
-                      _hover={{ bg: "#025024" }}
-                    >
-                      BUSCAR
-                    </Button>
-                  </Tooltip>
-                </>
-              ) : (
-                <>
-                  <Button
-                    onClick={handleReset}
-                    mt={2}
-                    variant="outline"
-                    backgroundColor="white"
-                    borderWidth="2px"
-                    borderColor="#007935"
-                    color="#007935"
-                    as="b"
-                    marginRight="10px"
-                    fontSize="12px"
-                    size="sm"
-                  >
-                    RESTAURAR FILTROS
-                  </Button>
-                  <Tooltip
-                    label="Para buscar, complete al menos un filtro"
-                    isOpen={isDisabled && isHovering}
-                  >
-                    <Button
-                      onClick={() => {
-                        handleSubmit();
-                        onClose();
-                      }}
-                      isDisabled={isDisabled}
-                      onMouseEnter={() => setIsHovering(true)}
-                      onMouseLeave={() => setIsHovering(false)}
-                      mt={2}
-                      backgroundColor="#007935"
-                      color="white"
-                      as="b"
-                      _hover={{ bg: "#025024" }}
-                      fontSize="12px"
-                      size="sm"
-                    >
-                      BUSCAR
-                    </Button>{" "}
-                  </Tooltip>
-                </>
-              )}
-            </Flex>
+            {/*Filtros exactos:*/}
+            <Checkbox
+              marginBottom="10px"
+              marginTop="30px"
+              isChecked={exactMatch}
+              as="b"
+              onChange={handleCheckboxChange}
+            >
+              Filtrar por coincidencia exacta
+            </Checkbox>
+
+            {/*Botones de búsqueda y reset*/}
+            <FiltrosButtons
+              handleReset={handleReset}
+              handleSubmit={handleSubmit}
+              isDisabled={isDisabled}
+              isHovering={isHovering}
+              setIsHovering={setIsHovering}
+              onClose={onClose}
+            />
           </DrawerBody>
         </DrawerContent>
       </Drawer>
