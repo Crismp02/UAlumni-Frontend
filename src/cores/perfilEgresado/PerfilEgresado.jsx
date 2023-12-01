@@ -16,7 +16,7 @@ import {
   Textarea,
   Input,
 } from "@chakra-ui/react";
-import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, AddIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { VStack } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
@@ -28,17 +28,20 @@ function PerfilEgresado() {
     setSwitchValue(!switchValue);
   };
 
-  // mostrar iconos de editar
+  // mostrar iconos de editar y borrar
 
   const [showIcons, setShowIcons] = useState(false);
   const [showIconsEducacion, setShowIconsEducacion] = useState(false);
+  const [showIconsTecnicas, setShowIconsTecnicas] = useState(false);
+
+  const [showDeleteIcon, setShowDeleteIcon] = useState(false);
 
   const [editMode, setEditMode] = useState(true);
   const [editModeEducacion, setEditModeEducacion] = useState(true);
+  const [editModeTecnicas, setEditModeTecnicas] = useState(true);
 
-  const [showAddButton, setShowAddButton] = useState(false); 
+  const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
-
 
   // Define el estado para el tipo de tarjeta y el estado del modal
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
@@ -51,20 +54,27 @@ function PerfilEgresado() {
     setShowAddModal(true);
   };
 
-  const [cardContentEducacion, setCardContentEducacion] = useState([
-    {
-      id: 1,
-      grado: "Grado",
-      anioFinal: "01/01/2023",
-    },
-  ]);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditModalEducacion, setShowEditModalEducacion] = useState(false);
 
-  // ejemplo de tarjeta con contenido
+  const [cardIdToEdit, setCardIdToEdit] = useState(null);
+  const [cardIdToEditEducacion, setCardIdToEditEducacion] = useState(null);
+
+  const [cardContentEducacion, setCardContentEducacion] = useState([
+    {
+      id: 1,
+      grado: "Licenciatura",
+      anioFinal: "2023",
+    },
+    {
+      id: 2,
+      grado: "Grado",
+      anioFinal: "2023",
+    },
+  ]);
+
   const [cardContent, setCardContent] = useState([
     {
       id: 1,
@@ -74,11 +84,18 @@ function PerfilEgresado() {
       fechaFinal: "01/01/2022",
       descripcion:
         "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
-    },
+    }
   ]);
 
-  const [cardIdToEdit, setCardIdToEdit] = useState(null);
-  const [cardIdToEditEducacion, setCardIdToEditEducacion] = useState(null);
+  const [selectedSkill, setSelectedSkill] = useState(null);
+
+  const handleMouseEnterHabilidades = (skill) => {
+    setSelectedSkill(skill);
+  };
+
+  const handleMouseLeaveHabilidades = () => {
+    setSelectedSkill(null);
+  };
 
   // para mostrar iconos de editar y borrar al seleccionar el modo edicion
   const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
@@ -109,67 +126,71 @@ function PerfilEgresado() {
     setCardToDelete(null);
   };
 
+  const [editingCard, setEditingCard] = useState({
+    empresa: "",
+    posicion: "",
+    // Otros campos que puedas tener en la tarjeta
+  });
+
+  const [editingCardEducacion, setEditingCardEducacion] = useState({
+    empresa: "",
+    posicion: "",
+    // Otros campos que puedas tener en la tarjeta
+  });
+
   // Modal de edición Experiencial Laboral
-  const handleEditCard = (cardId) => {
-    console.log("editar tarjeta con ID:", cardId);
-    setCardIdToEdit(cardId);
+  const handleEditInputChange = (field, value) => {
+    console.log(value);
+    setEditingCard((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  const handleEditCard = (cardToEdit) => {
+    setEditingCard(cardToEdit);
     setShowEditModal(true);
   };
 
   // Modal de edición Educación
-  const handleEditCardEducacion = (cardId) => {
-    console.log("editar tarjeta con ID:", cardId);
-    setCardIdToEditEducacion(cardId);
+  const handleEditCardEducacion = (cardToEdit) => {
+    console.log(cardToEdit)
+    setCardIdToEditEducacion(cardToEdit);
     setShowEditModalEducacion(true);
   };
 
-  const handleSaveEdit = (cardId) => {
-    if (cardId === cardIdToEdit) {
-      setShowEditModal(false); // Cerrar el modal de edición después de guardar los cambios
-      setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
-    }
-    if (cardId === cardIdToEditEducacion) {
-      setShowEditModalEducacion(false); // Cerrar el modal de educación después de guardar los cambios
-      setCardIdToEditEducacion(null); // Limpiar el estado del ID de la tarjeta de educación
-    }
+  const handleSaveEdit = () => {
+    const updatedContent = cardContent.map(card => {
+      if (card.id === editingCard.id) {
+        const updatedFields = { ...card }; // Crear una copia del objeto actual
+  
+        // Actualizar solo los campos que han cambiado en editingCard
+        Object.keys(editingCard).forEach(field => {
+          if (card[field] !== editingCard[field]) {
+            updatedFields[field] = editingCard[field];
+          }
+        });
+  
+        return updatedFields;
+      }
+      return card;
+    });
+  
+    setCardContent(updatedContent);
+    setShowEditModal(false);
   };
+  
 
-  const handleCancelEdit = (cardId) => {
-    console.log(cardIdToEditEducacion, "cardIdToEditEducacion");
-    if (cardId === cardIdToEdit) {
-      setShowEditModal(false); // Cerrar el modal de edición
-      setCardIdToEdit(null); // Limpiar el estado del ID de la tarjeta
-    }
-    if (cardId === cardIdToEditEducacion) {
-      setShowEditModalEducacion(false); // Cerrar el modal de educación
-      setCardIdToEditEducacion(null); // Limpiar el estado del ID de la tarjeta de educación
-    }
-  };
 
-  const handleEditInputChange = (cardId, field, value) => {
-    let updatedCards;
 
-    if (cardId === cardIdToEdit) {
-      updatedCards = cardContent.map((card) =>
-        card.id === cardId ? { ...card, [field]: value } : card
-      );
-      setCardContent(updatedCards);
-    }
-
-    if (cardId === cardIdToEditEducacion) {
-      // Otra lógica si se trata de tarjetas de educación
-      // Por ejemplo:
-      updatedCards = cardContentEducacion.map((card) =>
-        card.id === cardId ? { ...card, [field]: value } : card
-      );
-      setCardContentEducacion(updatedCards);
-    }
-
-    // Puedes agregar más lógica según los distintos tipos de tarjetas si es necesario
-  };
-
-  const handleEducacionEditMode = () => {
-    setEditModeEducacion(!editModeEducacion);
+  const handleCancelEdit = () => {
+    // Cancelar la edición, cerrar el modal y limpiar el estado
+    // modal experiencia laboral
+    setCardIdToEditEducacion(null); // Restablecer a null o un valor inicial
+    setShowEditModalEducacion(false); // Ocultar el modal de edición
+    // modal educacion
+    setCardIdToEdit(null); // Restablecer a null o un valor inicial
+    setShowEditModal(false); // Ocultar el modal de edición
   };
 
   return (
@@ -321,46 +342,48 @@ function PerfilEgresado() {
               experiencia. Me apasiona crear experiencias visuales que impacten
               a las personas. Creo que el diseño gráfico es una herramienta
               poderosa que puede usarse para comunicar ideas de una manera
-              efectiva
+              efectiva.
             </Text>
           </Box>
         </Box>
-        {cardContent.map((card) => (
-          <Box
-            key={card.id}
-            width={{ base: "100%", md: "55%" }}
-            bg="#F5F5F5"
-            marginBottom="20px"
-            position="relative"
+        {/* inicio box exp laboral */}
+        <Box
+          width={{ base: "100%", md: "55%" }}
+          bg="#F5F5F5"
+          marginBottom="20px"
+          position="relative"
+        >
+          <Text
+            fontWeight="bold"
+            fontSize="xl"
+            marginLeft="10"
+            marginTop="10"
+            marginBottom="0"
+            display="flex"
+            alignItems="center"
           >
-            <Text
-              fontWeight="bold"
-              fontSize="xl"
-              marginLeft="10"
-              marginTop="10"
-              marginBottom="0"
-              display="flex"
-              alignItems="center"
-            >
-              Experiencia Laboral
-              {editMode ? (
-                <EditIcon
-                  cursor="pointer"
-                  position="absolute"
-                  right="45px"
-                  color="blue.500"
-                  onClick={() => handleEditClick(setShowIcons, setEditMode)}
-                />
-              ) : (
-                <AddIcon
-                  cursor="pointer"
-                  color="green.500"
-                  position="absolute"
-                  right="45px"
-                  onClick={() => handleAddClick('Experiencia Laboral')}                />
-              )}
-            </Text>
+            Experiencia Laboral
+            {editMode ? (
+              <EditIcon
+                cursor="pointer"
+                position="absolute"
+                right="45px"
+                color="blue.500"
+                onClick={() => handleEditClick(setShowIcons, setEditMode)}
+              />
+            ) : (
+              <AddIcon
+                cursor="pointer"
+                color="green.500"
+                position="absolute"
+                right="45px"
+                onClick={() => handleAddClick("Experiencia Laboral")}
+              />
+            )}
+          </Text>
+          {cardContent.map((card) => (
             <Box
+              key={card.id}
               bg="white"
               padding="4"
               border="1px solid #ccc"
@@ -381,7 +404,7 @@ function PerfilEgresado() {
                 boxSize={4}
                 cursor="pointer"
                 display={showIcons ? "block" : "none"}
-                onClick={() => handleEditCard(card.id)}
+                onClick={() => handleEditCard(card)}
               />
 
               <DeleteIcon
@@ -423,525 +446,562 @@ function PerfilEgresado() {
                 {card.fechaInicio} - {card.fechaFinal}
               </Text>
             </Box>
-            <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
-                <ModalBody>
-                  {/* campos correspondientes al tipo de tarjeta */}
-                  {cardTypeToAdd === "Educación" && (
-                    <>
-                      <Input placeholder="Grado" marginBottom="10px" />
-                      Fecha
-                      <Input type="date" placeholder="Fecha" marginBottom="10px" />
-                      {/* ... Otros campos específicos de Educación ... */}
-                    </>
-                  )}
-                  {cardTypeToAdd === "Experiencia Laboral" && (
-                    <>
-                      <Input placeholder="Nombre Empresa" marginBottom="10px" />
-                      <Input placeholder="Posición" marginBottom="10px" />
-                      <Textarea placeholder="Descripción..." marginBottom="10px" />
-                      Fecha Inicio
-                      <Input type="date" placeholder="Posición" marginBottom="10px" />
-                      Fecha Final
-                      <Input type="date" placeholder="Posición" marginBottom="10px" />
-                      {/* ... Otros campos específicos de Experiencia Laboral ... */}
-                    </>
-                  )}
-                  {/*Mas tipos de tarjetas ... */}
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    colorScheme="blue"
-                    mr={
-                      3
-                    } /* Agrega lógica para guardar según el tipo de tarjeta */
-                  >
-                    Guardar
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setShowAddModal(false)}
-                  >
-                    Cancelar
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-            {/* Modal de confirmación para eliminar */}
-            <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Confirmar Eliminación</ModalHeader>
-                <ModalBody>
-                  ¿Estás seguro de que deseas eliminar esta tarjeta?
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    colorScheme="red"
-                    mr={3}
-                    onClick={handleConfirmDelete}
-                  >
-                    Eliminar
-                  </Button>
-                  <Button variant="ghost" onClick={handleCancelDelete}>
-                    Cancelar
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-            {/* Modal de edición */}
-            <Modal
-              isOpen={showEditModal && card.id === cardIdToEdit}
-              onClose={handleCancelEdit}
-            >
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Editar Contenido</ModalHeader>
-                <ModalBody>
-                  {/* Input para editar empresa */}
-                  <Input
-                    value={card.empresa}
-                    onChange={(e) =>
-                      handleEditInputChange(card.id, "empresa", e.target.value)
-                    }
-                    placeholder="Editar empresa..."
-                    size="lg"
-                    marginBottom="4"
-                  />
-                  <Input
-                    value={card.posicion}
-                    onChange={(e) =>
-                      handleEditInputChange(card.id, "posicion", e.target.value)
-                    }
-                    placeholder="Editar Posición..."
-                    size="lg"
-                    marginBottom="4"
-                  />
+          ))}
+          {/* Cierre de box */}
 
-                  <Input
-                    value={card.fechaInicio}
-                    onChange={(e) =>
-                      handleEditInputChange(
-                        card.id,
-                        "fechaInicio",
-                        e.target.value
-                      )
-                    }
-                    placeholder="Editar Fecha de inicio..."
-                    size="lg"
-                    marginBottom="4"
-                    type="date"
-                  />
-                  <Input
-                    value={card.fechaFinal}
-                    onChange={(e) =>
-                      handleEditInputChange(
-                        card.id,
-                        "fechaFinal",
-                        e.target.value
-                      )
-                    }
-                    placeholder="Editar Fecha Final..."
-                    size="lg"
-                    marginBottom="4"
-                    type="date"
-                  />
-                  <Textarea
-                    value={card.descripcion}
-                    onChange={(e) =>
-                      handleEditInputChange(
-                        card.id,
-                        "descripcion",
-                        e.target.value
-                      )
-                    }
-                    placeholder="Editar Posición..."
-                    size="lg"
-                    marginBottom="4"
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    colorScheme="blue"
-                    mr={3}
-                    onClick={() => handleSaveEdit(card.id)}
-                  >
-                    Guardar
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleCancelEdit(card.id)}
-                  >
-                    Cancelar
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-            {/* Fin de la experiencia laboral */}
-            <Text
-              fontWeight="bold"
-              fontSize="xl"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="10"
-              marginBottom="0"
+          {/* Modal de edición Experiencia Laboral*/}
+          <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Editar Experiencia Laboral</ModalHeader>
+              <ModalBody>
+                {editingCard && (
+                  <>
+                    <Input
+                      value={editingCard.empresa}
+                      onChange={(e) =>
+                        handleEditInputChange("empresa", e.target.value)
+                      }
+                      placeholder="Editar empresa..."
+                      size="lg"
+                      marginBottom="4"
+                    />
+                    <Input
+                      value={editingCard.posicion}
+                      onChange={(e) =>
+                        handleEditInputChange("posicion", e.target.value)
+                      }
+                      placeholder="Editar posición..."
+                      size="lg"
+                      marginBottom="4"
+                    />
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={() => handleSaveEdit(editingCard.id)}
+                >
+                  Guardar
+                </Button>
+                <Button variant="ghost" onClick={handleCancelEdit}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          {/* Modal de confirmación para eliminar */}
+          <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Confirmar Eliminación</ModalHeader>
+              <ModalBody>
+                ¿Estás seguro de que deseas eliminar esta tarjeta?
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
+                  Eliminar
+                </Button>
+                <Button variant="ghost" onClick={handleCancelDelete}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          {/* Fin de la experiencia laboral */}
+
+          <Text
+            fontWeight="bold"
+            fontSize="xl"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="10"
+            marginBottom="0"
+          >
+            Educación
+            {editModeEducacion ? (
+              <EditIcon
+                cursor="pointer"
+                position="absolute"
+                right="45px"
+                color="blue.500"
+                onClick={() =>
+                  handleEditClick(setShowIconsEducacion, setEditModeEducacion)
+                }
+              />
+            ) : (
+              <AddIcon
+                cursor="pointer"
+                color="green.500"
+                position="absolute"
+                right="45px"
+                onClick={() => handleAddClick("Educación")}
+              />
+            )}
+          </Text>
+          {cardContentEducacion.map((card) => (
+            <EducacionCard
+              key={card.id}
+              grado={card.grado}
+              anioFinal={card.anioFinal}
+              card={card}
+              showIconsEducacion={showIconsEducacion}
+              handleEditCardEducacion={handleEditCardEducacion}
+              handleDeleteClick={handleDeleteClick}
+            />
+          ))}
+
+          {/* Modal de edición Educación */}
+          <Modal isOpen={showEditModalEducacion} onClose={handleCancelEdit}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Editar Educación</ModalHeader>
+              <ModalBody>
+                {/* Verificar si hay una tarjeta en edición */}
+                {editingCard && (
+                  <>
+                    <Input
+                      value={editingCard.grado}
+                      onChange={(e) =>
+                        setEditingCard({
+                          ...editingCard,
+                          grado: e.target.value,
+                        })
+                      }
+                      placeholder="Editar Grado..."
+                      size="lg"
+                      marginBottom="4"
+                    />
+                    <Input
+                      type="date"
+                      value={editingCard.anioFinal}
+                      onChange={(e) =>
+                        setEditingCard({
+                          ...editingCard,
+                          anioFinal: e.target.value,
+                        })
+                      }
+                      placeholder="Editar año final..."
+                      size="lg"
+                      marginBottom="4"
+                    />
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={() => handleSaveEdit(editingCard.id)}
+                >
+                  Guardar
+                </Button>
+                <Button variant="ghost" onClick={handleCancelEdit}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          {/*Modal agregar educacion*/}
+          <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+              <ModalBody>
+                {/* campos correspondientes al tipo de tarjeta */}
+                {cardTypeToAdd === "Educación" && (
+                  <>
+                    <Input placeholder="Grado" marginBottom="10px" />
+                    Fecha
+                    <Input
+                      type="date"
+                      placeholder="Fecha"
+                      marginBottom="10px"
+                    />
+                    {/* ... Otros campos específicos de Educación ... */}
+                  </>
+                )}
+                {cardTypeToAdd === "Experiencia Laboral" && (
+                  <>
+                    <Input placeholder="Nombre Empresa" marginBottom="10px" />
+                    <Input placeholder="Posición" marginBottom="10px" />
+                    <Textarea
+                      placeholder="Descripción..."
+                      marginBottom="10px"
+                    />
+                    Fecha Inicio
+                    <Input
+                      type="date"
+                      placeholder="Posición"
+                      marginBottom="10px"
+                    />
+                    Fecha Final
+                    <Input
+                      type="date"
+                      placeholder="Posición"
+                      marginBottom="10px"
+                    />
+                    {/* ... Otros campos específicos de Experiencia Laboral ... */}
+                  </>
+                )}
+                {cardTypeToAdd === "Técnicas" && (
+                  <>
+                    <Input
+                      placeholder="Habilidad Técnica"
+                      marginBottom="10px"
+                    />
+                  </>
+                )}
+                {/*Mas tipos de tarjetas ... */}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={
+                    3
+                  } /* Agrega lógica para guardar según el tipo de tarjeta */
+                >
+                  Guardar
+                </Button>
+                <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          <Text
+            fontWeight="bold"
+            fontSize="xl"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            HABILIDADES
+          </Text>
+          <Text
+            fontSize="lg"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            TÉCNICAS
+            {editModeTecnicas ? (
+              <EditIcon
+                cursor="pointer"
+                position="absolute"
+                right="45px"
+                color="blue.500"
+                onClick={() =>
+                  handleEditClick(setShowIconsTecnicas, setEditModeTecnicas)
+                }
+              />
+            ) : (
+              <AddIcon
+                cursor="pointer"
+                color="green.500"
+                position="absolute"
+                right="45px"
+                onClick={() => handleAddClick("Técnicas")}
+              />
+            )}
+          </Text>
+          <Box
+            display="flex"
+            flexDirection="row"
+            flexWrap="wrap"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            <Box
+              position="relative"
+              padding="2"
+              marginBottom="2"
+              marginRight="2"
+              cursor="pointer"
+              onMouseEnter={() => handleMouseEnterHabilidades("Habilidad 1")}
+              onMouseLeave={handleMouseLeaveHabilidades}
             >
-              Educación
-              {editModeEducacion ? (
-                <EditIcon
-                  cursor="pointer"
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 1
+              </Text>
+              {showDeleteIcon && (
+                <CloseIcon
+                  color="black"
                   position="absolute"
-                  right="45px"
-                  color="blue.500"
-                  onClick={() => handleEditClick(setShowIconsEducacion, setEditModeEducacion)}
-                />
-              ) : (
-                <AddIcon
+                  top="0px"
+                  right="0px"
+                  fontSize="16px"
                   cursor="pointer"
-                  color="green.500"
-                  position="absolute"
-                  right="45px"
-                  onClick={() => handleAddClick('Educación')}
+                  onClick={() => {
+                    // Agregar lógica para eliminar la habilidad
+                    console.log("Eliminar habilidad");
+                  }}
                 />
               )}
-            </Text>
-            {cardContentEducacion.map((card) => (
-              <EducacionCard
-                key={card.id}
-                grado={card.grado}
-                anioFinal={card.anioFinal}
-                card={card} // Pasar el objeto card completo
-                showIconsEducacion={showIconsEducacion} // Pasar el estado showIconsEducacion
-                handleEditCardEducacion={handleEditCardEducacion}
-                handleDeleteClick={handleDeleteClick}
-              />
-            ))}
-            {/* Modal de edición Educación */}
-            <Modal
-              isOpen={
-                showEditModalEducacion && card.id === cardIdToEditEducacion
-              }
-              onClose={() => handleCancelEdit(card.id)} // Pasar el ID de la tarjeta al cerrar el modal
-            >
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>Editar Educación</ModalHeader>
-                <ModalBody>
-                  {/* Input para editar contenido de educación */}
-                  <Input
-                    value={card.grado}
-                    onChange={(e) =>
-                      handleEditInputChange(card.id, "grado", e.target.value)
-                    }
-                    placeholder="Editar Grado..."
-                    size="lg"
-                    marginBottom="4"
-                  />
-                  Fecha Final
-                  <Input
-                    type="date"
-                    value={card.anioFinal}
-                    onChange={(e) =>
-                      handleEditInputChange(
-                        card.id,
-                        "anioFinal",
-                        e.target.value
-                      )
-                    }
-                    placeholder="Editar año final..."
-                    size="lg"
-                    marginBottom="4"
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button
-                    colorScheme="blue"
-                    mr={3}
-                    onClick={() => handleSaveEdit(card.id)}
-                  >
-                    Guardar
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleCancelEdit(card.id)}
-                  >
-                    Cancelar
-                  </Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-            <Text
-              fontWeight="bold"
-              fontSize="xl"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              HABILIDADES
-            </Text>
-            <Text
-              fontSize="lg"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              TÉCNICAS
-            </Text>
-            <Box
-              display="flex"
-              flexDirection="row"
-              flexWrap="wrap"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 1
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 2
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 3
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 4
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 5
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 6
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 7
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 8
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 9
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 10
-                </Text>
-              </Box>
             </Box>
-            <Text
-              fontSize="lg"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              BLANDAS
-            </Text>
-            <Box
-              display="flex"
-              flexDirection="row"
-              flexWrap="wrap"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 100000
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 2
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 3
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 4
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 5
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 6
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 7
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 8
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 9
-                </Text>
-              </Box>
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  Habilidad 10
-                </Text>
-              </Box>
-            </Box>
-            <Text
-              fontWeight="bold"
-              fontSize="xl"
-              margin="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              Idiomas
-            </Text>
-            <Box
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-              position="relative"
-            >
-              <EditIcon
-                position="absolute"
-                top="15px"
-                right="20px"
-                color="blue.500"
-                boxSize={4}
-                cursor="pointer"
-              />
-
-              <Box display="flex" alignItems="center" marginBottom="4">
-                <Text fontWeight="bold">Idioma</Text>
-                <Text
-                  bg="#FBC430"
-                  color="black"
-                  padding="2"
-                  borderRadius="8"
-                  marginLeft="5"
-                >
-                  Nivel
-                </Text>
-              </Box>
-            </Box>
-            <Text
-              fontWeight="bold"
-              fontSize="xl"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              Certificados
-            </Text>
-            <Box
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-              position="relative"
-            >
-              <EditIcon
-                position="absolute"
-                top="15px"
-                right="20px"
-                color="blue.500"
-                boxSize={4}
-                cursor="pointer"
-              />
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                marginBottom="4"
-                marginTop="10"
-              >
-                <Text fontWeight="bold">Título Certificado</Text>
-                <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-                  CIAP
-                </Text>
-              </Box>
-              <Text fontSize="md" marginBottom="2">
-                Fecha Emisión
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 2
               </Text>
             </Box>
-            <Text
-              fontWeight="bold"
-              fontSize="xl"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-            >
-              INFORMACIÓN DE CONTACTO
-            </Text>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 3
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 4
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 5
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 6
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 7
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 8
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 9
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 10
+              </Text>
+            </Box>
+          </Box>
+          <Text
+            fontSize="lg"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            BLANDAS
+          </Text>
+          <Box
+            display="flex"
+            flexDirection="row"
+            flexWrap="wrap"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+            cursor="pointer"
+            onMouseEnter={handleMouseEnterHabilidades}
+            onMouseLeave={handleMouseLeaveHabilidades}
+          >
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 100000
+              </Text>
+              {showDeleteIcon && (
+                <CloseIcon
+                  color="black"
+                  position="absolute"
+                  top="0px"
+                  right="0px"
+                  fontSize="16px"
+                  cursor="pointer"
+                  onClick={() => {
+                    // Agregar lógica para eliminar la habilidad
+                    console.log("Eliminar habilidad");
+                  }}
+                />
+              )}
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 2
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 3
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 4
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 5
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 6
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 7
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 8
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 9
+              </Text>
+            </Box>
+            <Box padding="2" marginBottom="2" marginRight="2">
+              <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+                Habilidad 10
+              </Text>
+            </Box>
+          </Box>
+          <Text
+            fontWeight="bold"
+            fontSize="xl"
+            margin="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            Idiomas
+          </Text>
+          <Box
+            bg="white"
+            padding="4"
+            border="1px solid #ccc"
+            borderRadius="8px"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            position="relative"
+          >
+            <EditIcon
+              position="absolute"
+              top="15px"
+              right="20px"
+              color="blue.500"
+              boxSize={4}
+              cursor="pointer"
+            />
+
+            <Box display="flex" alignItems="center" marginBottom="4">
+              <Text fontWeight="bold">Idioma</Text>
+              <Text
+                bg="#FBC430"
+                color="black"
+                padding="2"
+                borderRadius="8"
+                marginLeft="5"
+              >
+                Nivel
+              </Text>
+            </Box>
+          </Box>
+          <Text
+            fontWeight="bold"
+            fontSize="xl"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            Certificados
+          </Text>
+          <Box
+            bg="white"
+            padding="4"
+            border="1px solid #ccc"
+            borderRadius="8px"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            position="relative"
+          >
+            <EditIcon
+              position="absolute"
+              top="15px"
+              right="20px"
+              color="blue.500"
+              boxSize={4}
+              cursor="pointer"
+            />
             <Box
               display="flex"
               justifyContent="space-between"
               alignItems="center"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
+              marginBottom="4"
+              marginTop="10"
             >
-              <Text
-                bg="#007935"
-                color="white"
-                padding="4"
-                borderRadius="4"
-                cursor="pointer"
-                _hover={{ bg: "#005e28" }}
-              >
-                Descargar CV
+              <Text fontWeight="bold">Título Certificado</Text>
+              <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+                CIAP
               </Text>
             </Box>
+            <Text fontSize="md" marginBottom="2">
+              Fecha Emisión
+            </Text>
           </Box>
-        ))}
+          <Text
+            fontWeight="bold"
+            fontSize="xl"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            INFORMACIÓN DE CONTACTO
+          </Text>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+          >
+            <Text
+              bg="#007935"
+              color="white"
+              padding="4"
+              borderRadius="4"
+              cursor="pointer"
+              _hover={{ bg: "#005e28" }}
+            >
+              Descargar CV
+            </Text>
+          </Box>
+        </Box>
       </Box>
 
       <Footer />

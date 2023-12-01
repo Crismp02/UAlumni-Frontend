@@ -31,7 +31,7 @@ const EducacionCard = ({ grado, anioFinal, card, showIconsEducacion, handleEditC
         boxSize={4}
         cursor="pointer"
         display={showIconsEducacion ? 'block' : 'none'}
-        onClick={() => handleEditCardEducacion(card.id)}
+        onClick={() => handleEditCardEducacion(card)}
       />
 
       <DeleteIcon
