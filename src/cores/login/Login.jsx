@@ -2,21 +2,17 @@ import React from "react";
 import { useState } from "react";
 import NavBar from "../../components/Navbar";
 import {
-  Text,
   Image,
   Box,
-  InputGroup,
-  Input,
-  InputRightElement,
-  Button,
-  FormControl,
-  FormErrorMessage,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { loginUser } from "../../services/auth/Auth.services";
+import LoginForm from "./LoginForm";
 
 function Login() {
+  const [isLarger920] = useMediaQuery("(min-width: 920px)");
+  const [isLarger1010] = useMediaQuery("(min-width: 1010px)");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -59,127 +55,45 @@ function Login() {
         backgroundColor="#F5F5F5"
       >
         <Box
-          width={{ base: "100%", md: "70%", lg: "80%" }}
+          width={{ base: "100%", sm: "80%", md: "60%", lg: "60%" }}
           display="flex"
-          flexDirection={{ base: "column", md: "row" }}
-          backgroundColor="#fff"
+          flexDirection={isLarger920 ? "row" : "column"}
+          backgroundColor="#007935"
           border="1px solid #ccc"
         >
           <Box
-            width={{ base: "100%", md: "50%" }}
-            padding={{ base: "20px" }}
-            alignSelf="center"
+            width={isLarger920 ? "50%" : "100%"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
           >
             <Image
-              src="src\images\egresadosBiblioteca1.jpg"
+              src="src\images\loginImage.jpg"
               alt="Imagen Ucabista"
               width="100%"
-              height="auto"
+              height="100%"
+              objectFit="cover"
             />
           </Box>
 
           <Box
-            width={{ base: "100%", md: "50%" }}
+            width={isLarger920 ? "50%" : "100%"}
             padding={{ base: "20px", md: "40px" }}
             display="flex"
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
           >
-            <form onSubmit={handleSubmit}>
-              <FormControl isInvalid={!isEmailValid}>
-                <Text
-                  fontSize="4xl"
-                  textAlign="center"
-                  as="b"
-                  paddingBottom="30px"
-                  style={{
-                    textDecoration: "underline",
-                    textDecorationColor: "green",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  INICIAR SESIÓN
-                </Text>
-                <Text
-                  fontSize="xl"
-                  textAlign="start"
-                  alignSelf="start"
-                  as="b"
-                  paddingBottom="10px"
-                  paddingTop="10px"
-                >
-                  Correo UCAB
-                </Text>
-                <Input
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  placeholder="Ingrese su correo UCAB"
-                  marginBottom="10px"
-                />
-                <FormErrorMessage>
-                  {isEmailValid ? "" : "El correo debe ser un correo UCAB"}
-                </FormErrorMessage>
-              </FormControl>
-              <Text
-                fontSize="xl"
-                as="b"
-                alignSelf="start"
-                paddingBottom="10px"
-                paddingTop="10px"
-              >
-                Contraseña
-              </Text>
-              <InputGroup>
-                <Input
-                  type={show ? "text" : "password"}
-                  placeholder="Ingrese su contraseña"
-                  onChange={(e) => setPassword(e.target.value)}
-                  sx={{
-                    "::-ms-reveal": {
-                      display: "none",
-                    },
-                  }}
-                />
-                <InputRightElement width={{ sm: "10%", md: "10%" }}>
-                  <Button h="1.75 rem" size="sm" onClick={handleClick}>
-                    {show ? <ViewOffIcon /> : <ViewIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <Box textAlign="center">
-                <Button
-                  backgroundColor="#007935"
-                  color="white"
-                  _hover={{ bg: "#025024" }}
-                  width={{ base: "100%", sm: "60%", md: "50%" }}
-                  marginTop="20px"
-                  paddingTop="10px"
-                  paddingBottom="10px"
-                  type="submit"
-                >
-                  Iniciar sesión
-                </Button>
-              </Box>
-            </form>
-            <Text paddingTop="10px" textAlign="center">
-              ¿Aún no tienes cuenta?
-              <Link
-                to="/register"
-                style={{
-                  textDecoration: "underline",
-                  textDecorationColor: "green",
-                  display: "inline",
-                  justifyContent: "center",
-                  marginLeft: "5px",
-                }}
-              >
-                Regístrate
-              </Link>
-            </Text>
+            <LoginForm
+              isLarger1010={isLarger1010}
+              handleSubmit={handleSubmit}
+              isEmailValid={isEmailValid}
+              email={email}
+              handleEmailChange={handleEmailChange}
+              show={show}
+              setPassword={setPassword}
+              handleClick={handleClick}
+            />
           </Box>
         </Box>
       </Box>

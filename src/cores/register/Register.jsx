@@ -1,12 +1,17 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import NavBar from "../../components/Navbar";
-import { Text, Image, Input, Button, Box, InputGroup, InputRightElement,
-         FormControl, FormErrorMessage} from "@chakra-ui/react";
-import { Link } from 'react-router-dom'
-import {ViewIcon, ViewOffIcon} from '@chakra-ui/icons'
-import  {registerUser}  from "../../services/auth/Auth.services";
+import {
+  Image,
+  Box,
+  useMediaQuery,
+} from "@chakra-ui/react";
+import { registerUser } from "../../services/auth/Auth.services";
+import RegisterForm from "./RegisterForm";
 
 function Register() {
+  const [isLarger920] = useMediaQuery("(min-width: 920px)");
+  const [isLarger1010] = useMediaQuery("(min-width: 1010px)");
+
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [password, setPassword] = useState("");
@@ -39,7 +44,7 @@ function Register() {
       } catch (error) {
         console.error(error);
       }
-    } 
+    }
   };
 
   const [show, setShow] = React.useState(false);
@@ -60,193 +65,53 @@ function Register() {
         backgroundColor="#F5F5F5"
       >
         <Box
-          width={{ base: "100%", md: "70%", lg: "80%" }}
+          width={{ base: "100%", sm: "80%", md: "60%", lg: "60%" }}
           display="flex"
-          flexDirection={{ base: "column", md: "row" }}
-          backgroundColor="#fff"
+          flexDirection={isLarger920 ? "row" : "column"}
+          backgroundColor="#007935"
           border="1px solid #ccc"
         >
-          <Box width={{ base: "100%", md: "50%" }} padding={{ base: "20px" }} display="flex" flexDirection="column" justifyContent="center">
+          <Box
+            width={isLarger920 ? "50%" : "100%"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
             <Image
-              src="src/images/egresadosModulos.jpg"
+              src="src\images\loginImage.jpg"
               alt="Imagen Ucabista"
               width="100%"
-              height="auto"
+              height="100%"
+              objectFit="cover"
             />
           </Box>
 
           <Box
-            textAlign="start"
-            width={{ base: "100%", md: "50%" }}
+            width={isLarger920 ? "50%" : "100%"}
             padding={{ base: "20px", md: "40px" }}
             display="flex"
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
           >
-            <form onSubmit={handleSubmit}>
-              <FormControl isInvalid={!isEmailValid}>
-                <Text
-                  fontSize="4xl"
-                  textAlign="center"
-                  as="b"
-                  paddingBottom="30px"
-                  style={{
-                    textDecoration: "underline",
-                    textDecorationColor: "green",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  REGÍSTRATE
-                </Text>
-                <Text
-                  fontSize="xl"
-                  as="b"
-                  paddingBottom="10px"
-                  paddingTop="10px"
-                  textAlign="start"
-                  alignSelf="start"
-                >
-                  Nombre
-                </Text>
-                <Input
-                id="nombre"
-                  type="text"
-                  placeholder="Nombre"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  marginBottom="20px"
-                />
-                <Text
-                  fontSize="xl"
-                  as="b"
-                  paddingBottom="10px"
-                  textAlign="start"
-                  alignSelf="start"
-                >
-                  Apellido
-                </Text>
-                <Input
-                id="apellido"
-                  type="text"
-                  placeholder="Apellido"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  marginBottom="20px"
-                />
-                <Text
-                  fontSize="xl"
-                  as="b"
-                  paddingBottom="10px"
-                  paddingTop="10px"
-                  textAlign="start"
-                  alignSelf="start"
-                >
-                  Correo UCAB
-                </Text>
-                <Input
-                id="correo"
-                  name="email"
-                  type="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  placeholder="Ingrese su correo UCAB"
-                  marginBottom="20px"
-                />
-                <FormErrorMessage>
-                  {isEmailValid ? "" : "El correo debe ser un correo UCAB"}
-                </FormErrorMessage>
-              </FormControl>
-              <Text
-                fontSize="xl"
-                as="b"
-                paddingBottom="10px"
-                paddingTop="10px"
-                alignSelf="start"
-              >
-                Contraseña
-              </Text>
-              <InputGroup>
-                <Input
-                  id="contraseña"
-                  onChange={(e) => setPassword(e.target.value)}
-                  marginBottom="20px"
-                  type={show ? "text" : "password"}
-                  inputMode="none"
-                  sx={{
-                    "::-ms-reveal": {
-                      display: "none",
-                    },
-                  }}
-                  placeholder="Ingrese su contraseña"
-                />
-                <InputRightElement width={{ sm: "10%", md: "10%" }}>
-                  <Button h="1.75 rem" size="sm" onClick={handleClick}>
-                    {show ? <ViewOffIcon /> : <ViewIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <Text
-                fontWeight="bold"
-                fontSize="xl"
-                as="b"
-                paddingBottom="10px"
-                paddingTop="10px"
-                alignSelf="start"
-              >
-                Confirmar contraseña
-              </Text>
-              <InputGroup>
-                <Input
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                  id="confirmarContraseña"
-                  marginBottom="20px"
-                  type={show2 ? "text" : "password"}
-                  inputMode="none"
-                  sx={{
-                    "::-ms-reveal": {
-                      display: "none",
-                    },
-                  }}
-                  placeholder="Vuelva a ingresar su contraseña"
-                />
-                <InputRightElement width={{ sm: "10%", md: "10%" }}>
-                  <Button h="1.75 rem" size="sm" onClick={handleClick2}>
-                    {show2 ? <ViewOffIcon /> : <ViewIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <Box textAlign="center">
-                <Button
-                  backgroundColor="#007935"
-                  color="white"
-                  _hover={{ bg: "#025024" }}
-                  width={{ base: "70%", md: "60%" }}
-                  marginTop="20px"
-                  paddingTop="10px"
-                  paddingBottom="10px"
-                  type="submit"
-                >
-                  Registrarse
-                </Button>
-              </Box>
-            </form>
-            <Text paddingTop="10px" textAlign="center">
-              ¿Ya tienes cuenta?{" "}
-              <Link
-                to="/login"
-                style={{
-                  textDecoration: "underline",
-                  textDecorationColor: "green",
-                  display: "inline",
-                  justifyContent: "center",
-                  marginLeft: "5px",
-                }}
-              >
-                Inicia Sesión
-              </Link>
-            </Text>
+            <RegisterForm
+              isLarger1010={isLarger1010}
+              handleSubmit={handleSubmit}
+              isEmailValid={isEmailValid}
+              email={email}
+              handleEmailChange={handleEmailChange}
+              show={show}
+              setPassword={setPassword}
+              handleClick={handleClick}
+              show2={show2}
+              handleClick2={handleClick2}
+              firstName={firstName}
+              setFirstName={setFirstName}
+              lastName={lastName}
+              setLastName={setLastName}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={setConfirmPassword}
+            />
           </Box>
         </Box>
       </Box>

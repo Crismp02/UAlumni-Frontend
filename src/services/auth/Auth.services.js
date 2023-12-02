@@ -51,3 +51,21 @@ export const loginUser = async (email, password) => {
     toast.error(`Error: ${error.message}`);
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/auth/logout', {
+      method: 'POST',
+      credentials: 'include', // Esto es necesario para que las cookies se envíen con la solicitud
+    });
+
+    if (response.ok) { 
+      toast.success('Has cerrado sesión con éxito');    
+    } else {
+      const data = await response.json();
+      throw new Error(data.message); 
+    }
+  } catch (error) {
+    toast.error(`Error: ${error.message}`);
+  }
+};
