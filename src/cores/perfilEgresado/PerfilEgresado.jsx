@@ -1,7 +1,6 @@
 import React from "react";
 import NavBarEgresados from "../../components/NavBarEgresados";
 import Footer from "../../components/Footer";
-import EducacionCard from "./EducacionCard";
 import {
   Box,
   Text,
@@ -59,7 +58,7 @@ function PerfilEgresado() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditModalEducacion, setShowEditModalEducacion] = useState(false);
 
-  const [cardIdToEdit, setCardIdToEdit] = useState(null);
+  const [cardIdToEditExpLaboral, setcardIdToEditExpLaboral] = useState(null);
   const [cardIdToEditEducacion, setCardIdToEditEducacion] = useState(null);
 
   const [cardContentEducacion, setCardContentEducacion] = useState([
@@ -74,6 +73,12 @@ function PerfilEgresado() {
       anioFinal: "2023",
     },
   ]);
+  // Estado temporal para los cambios en Educacion
+  const [tempEditingCardEducacion, setTempEditingCardEducacion] = useState({
+    grado: "",
+    anioFinal: "",
+    // Otros campos que puedas tener en la tarjeta
+  });
 
   const [cardContent, setCardContent] = useState([
     {
@@ -84,7 +89,7 @@ function PerfilEgresado() {
       fechaFinal: "01/01/2022",
       descripcion:
         "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
-    }
+    },
   ]);
 
   const [selectedSkill, setSelectedSkill] = useState(null);
@@ -133,15 +138,14 @@ function PerfilEgresado() {
   });
 
   const [editingCardEducacion, setEditingCardEducacion] = useState({
-    empresa: "",
-    posicion: "",
+    grado: "",
+    anioFinal: "",
     // Otros campos que puedas tener en la tarjeta
   });
 
   // Modal de edición Experiencial Laboral
-  const handleEditInputChange = (field, value) => {
-    console.log(value);
-    setEditingCard((prevState) => ({
+  const handleEditInputChange = (field, value, setState) => {
+    setState((prevState) => ({
       ...prevState,
       [field]: value,
     }));
@@ -153,32 +157,28 @@ function PerfilEgresado() {
   };
 
   // Modal de edición Educación
-  const handleEditCardEducacion = (cardToEdit) => {
-    console.log(cardToEdit)
-    setCardIdToEditEducacion(cardToEdit);
+  const handleEditCardEducacion = (card) => {
+    setCardIdToEditEducacion(card.id);
+    setEditingCardEducacion({
+      ...card, // Actualiza el estado con los datos de la tarjeta de educación seleccionada
+    });
     setShowEditModalEducacion(true);
   };
 
-  const handleSaveEdit = () => {
-    const updatedContent = cardContent.map(card => {
-      if (card.id === editingCard.id) {
-        const updatedFields = { ...card }; // Crear una copia del objeto actual
-  
-        // Actualizar solo los campos que han cambiado en editingCard
-        Object.keys(editingCard).forEach(field => {
-          if (card[field] !== editingCard[field]) {
-            updatedFields[field] = editingCard[field];
-          }
-        });
-  
-        return updatedFields;
-      }
-      return card;
-    });
-  
-    setCardContent(updatedContent);
-    setShowEditModal(false);
-  };
+const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
+  const updatedContent = content.map(card => {
+    if (card.id === editedCard.id) {
+      return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
+    }
+    return card;
+  });
+
+  setContent(updatedContent);
+  setShowEditModal(false);
+};
+
+
+
   
 
 
@@ -189,7 +189,7 @@ function PerfilEgresado() {
     setCardIdToEditEducacion(null); // Restablecer a null o un valor inicial
     setShowEditModalEducacion(false); // Ocultar el modal de edición
     // modal educacion
-    setCardIdToEdit(null); // Restablecer a null o un valor inicial
+    setcardIdToEditExpLaboral(null); // Restablecer a null o un valor inicial
     setShowEditModal(false); // Ocultar el modal de edición
   };
 
@@ -393,8 +393,6 @@ function PerfilEgresado() {
               marginTop="5"
               marginBottom="5"
               boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-              onMouseEnter={() => setShowIcons(true)}
-              onMouseLeave={() => setShowIcons(false)}
             >
               {/* Icono de editar y borrar en la esquina superior derecha de la tarjeta */}
               <EditIcon
@@ -428,7 +426,6 @@ function PerfilEgresado() {
                   display="flex"
                   justifyContent="space-between"
                   alignItems="center"
-                  marginBottom="4"
                   marginTop="3"
                 >
                   <Text fontWeight="bold">{card.empresa}</Text>
@@ -437,7 +434,6 @@ function PerfilEgresado() {
                   {card.posicion}
                 </Text>
               </Box>
-
               <Text fontSize="md" marginBottom="2">
                 {card.descripcion}
               </Text>
@@ -460,7 +456,7 @@ function PerfilEgresado() {
                     <Input
                       value={editingCard.empresa}
                       onChange={(e) =>
-                        handleEditInputChange("empresa", e.target.value)
+                        handleEditInputChange("empresa", e.target.value, setEditingCard)
                       }
                       placeholder="Editar empresa..."
                       size="lg"
@@ -469,11 +465,41 @@ function PerfilEgresado() {
                     <Input
                       value={editingCard.posicion}
                       onChange={(e) =>
-                        handleEditInputChange("posicion", e.target.value)
+                        handleEditInputChange("posicion", e.target.value, setEditingCard)
                       }
                       placeholder="Editar posición..."
                       size="lg"
                       marginBottom="4"
+                    />
+                    <Textarea
+                      value={editingCard.descripcion}
+                      onChange={(e) =>
+                        handleEditInputChange("descripcion", e.target.value, setEditingCard)
+                      }
+                      placeholder="Editar Descripción..."
+                      size="lg"
+                      marginBottom="4"
+                    />
+                    Fecha Inicio
+                    <Input
+                      value={editingCard.fechaInicio}
+                      onChange={(e) =>
+                        handleEditInputChange("fechaInicio", e.target.value, setEditingCard)
+                      }
+                      size="lg"
+                      marginBottom="4"
+                      type="date"
+                    />
+                    Fecha Final
+                    <Input
+                      value={editingCard.fechaFinal}
+                      onChange={(e) =>
+                        handleEditInputChange("fechaFinal", e.target.value, setEditingCard)
+                      }
+                      size="lg"
+                      marginBottom="4"
+                      type="date"
+
                     />
                   </>
                 )}
@@ -482,7 +508,7 @@ function PerfilEgresado() {
                 <Button
                   colorScheme="blue"
                   mr={3}
-                  onClick={() => handleSaveEdit(editingCard.id)}
+                  onClick={() => handleSaveEdit(editingCard, cardContent, setCardContent, setShowEditModal)}
                 >
                   Guardar
                 </Button>
@@ -493,24 +519,7 @@ function PerfilEgresado() {
             </ModalContent>
           </Modal>
 
-          {/* Modal de confirmación para eliminar */}
-          <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Confirmar Eliminación</ModalHeader>
-              <ModalBody>
-                ¿Estás seguro de que deseas eliminar esta tarjeta?
-              </ModalBody>
-              <ModalFooter>
-                <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
-                  Eliminar
-                </Button>
-                <Button variant="ghost" onClick={handleCancelDelete}>
-                  Cancelar
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+          
 
           {/* Fin de la experiencia laboral */}
 
@@ -543,17 +552,69 @@ function PerfilEgresado() {
               />
             )}
           </Text>
+{/* inicio de tarjeta de educacion */}
           {cardContentEducacion.map((card) => (
-            <EducacionCard
-              key={card.id}
-              grado={card.grado}
-              anioFinal={card.anioFinal}
-              card={card}
-              showIconsEducacion={showIconsEducacion}
-              handleEditCardEducacion={handleEditCardEducacion}
-              handleDeleteClick={handleDeleteClick}
-            />
-          ))}
+                    <Box
+                bg="white"
+                padding="4"
+                border="1px solid #ccc"
+                borderRadius="8px"
+                marginLeft="10"
+                marginRight="10"
+                marginTop="5"
+                marginBottom="5"
+                boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
+                position="relative"
+              >
+
+                {/* Iconos de edición y eliminación */}
+                <EditIcon
+                  position="absolute"
+                  right="20px"
+                  color="gray.500"
+                  boxSize={4}
+                  cursor="pointer"
+                  display={showIconsEducacion ? 'block' : 'none'}
+                  onClick={() => handleEditCardEducacion(card)}
+                />
+
+                <DeleteIcon
+                  position="absolute"
+                  right="40px"
+                  color="gray.500"
+                  boxSize={4}
+                  cursor="pointer"
+                  display={showIconsEducacion ? 'block' : 'none'}
+                  onClick={() => handleDeleteClick(card.id)}
+                />
+                  
+                
+
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  marginBottom="4"
+                >
+                  <Text fontWeight="bold" marginTop="8">
+                    {card.grado}
+                  </Text>
+                  <Text marginRight="4" marginTop="8">
+                    {card.anioFinal}
+                  </Text>
+                </Box>
+
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  marginBottom="2"
+                >
+                  <Text marginRight="4">Universidad Católica Andrés Bello</Text>
+                </Box>
+              </Box>
+              ))}
+          {/* cierre de tarjeta de educacion */}
 
           {/* Modal de edición Educación */}
           <Modal isOpen={showEditModalEducacion} onClose={handleCancelEdit}>
@@ -562,15 +623,12 @@ function PerfilEgresado() {
               <ModalHeader>Editar Educación</ModalHeader>
               <ModalBody>
                 {/* Verificar si hay una tarjeta en edición */}
-                {editingCard && (
+                {editingCardEducacion && (
                   <>
                     <Input
-                      value={editingCard.grado}
+                      value={editingCardEducacion.grado}
                       onChange={(e) =>
-                        setEditingCard({
-                          ...editingCard,
-                          grado: e.target.value,
-                        })
+                        handleEditInputChange("grado", e.target.value, setEditingCardEducacion)
                       }
                       placeholder="Editar Grado..."
                       size="lg"
@@ -578,12 +636,9 @@ function PerfilEgresado() {
                     />
                     <Input
                       type="date"
-                      value={editingCard.anioFinal}
+                      value={editingCardEducacion.anioFinal}
                       onChange={(e) =>
-                        setEditingCard({
-                          ...editingCard,
-                          anioFinal: e.target.value,
-                        })
+                        handleEditInputChange("anioFinal", e.target.value, setEditingCardEducacion)
                       }
                       placeholder="Editar año final..."
                       size="lg"
@@ -596,7 +651,9 @@ function PerfilEgresado() {
                 <Button
                   colorScheme="blue"
                   mr={3}
-                  onClick={() => handleSaveEdit(editingCard.id)}
+                  onClick={() => {
+                    handleSaveEdit(editingCardEducacion, cardContentEducacion, setCardContentEducacion, setShowEditModalEducacion);
+                  }}
                 >
                   Guardar
                 </Button>
@@ -674,7 +731,7 @@ function PerfilEgresado() {
               </ModalFooter>
             </ModalContent>
           </Modal>
-
+{/* Texto Principal Habilidades */}
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -1002,6 +1059,24 @@ function PerfilEgresado() {
             </Text>
           </Box>
         </Box>
+        {/* Modal de confirmación para eliminar */}
+          <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Confirmar Eliminación</ModalHeader>
+              <ModalBody>
+                ¿Estás seguro de que deseas eliminar?
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
+                  Eliminar
+                </Button>
+                <Button variant="ghost" onClick={handleCancelDelete}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
       </Box>
 
       <Footer />
