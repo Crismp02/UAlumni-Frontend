@@ -582,9 +582,14 @@ function PerfilEgresado() {
             ) : (
               <AddIcon
                 cursor="pointer"
-                color="green.500"
+                color="white"
                 position="absolute"
                 right="45px"
+                bg="#007935"
+                borderRadius="10px"
+                width="57px"
+                height="43px" 
+                padding="8px"
                 onClick={() => handleAddClick("Portafolio")}
               />
             )}
@@ -808,6 +813,7 @@ function PerfilEgresado() {
             alignItems="center"
           >
             EXPERIENCIA LABORAL
+            
             {editMode ? (
               <EditIcon
                 cursor="pointer"
@@ -818,13 +824,18 @@ function PerfilEgresado() {
               />
             ) : (
               <AddIcon
+                onClick={() => handleAddClick("Experiencia Laboral")}
                 cursor="pointer"
-                color="green.500"
+                color="white"
                 position="absolute"
                 right="45px"
-                onClick={() => handleAddClick("Experiencia Laboral")}
+                bg="#007935"
+                borderRadius="10px"
+                width="57px"
+                height="43px" 
+                padding="8px"
               />
-            )}
+              )}
           </Text>
           {/* Inicio Exp Laboral */}
           {cardContent.map((card) => (
@@ -1015,9 +1026,14 @@ function PerfilEgresado() {
             ) : (
               <AddIcon
                 cursor="pointer"
-                color="green.500"
+                color="white"
                 position="absolute"
                 right="45px"
+                bg="#007935"
+                borderRadius="10px"
+                width="57px"
+                height="43px" 
+                padding="8px"
                 onClick={() => handleAddClick("Educación")}
               />
             )}
@@ -1179,9 +1195,14 @@ function PerfilEgresado() {
             ) : (
               <AddIcon
                 cursor="pointer"
-                color="green.500"
+                color="white"
                 position="absolute"
                 right="45px"
+                bg="#007935"
+                borderRadius="10px"
+                width="57px"
+                height="43px" 
+                padding="8px"
                 onClick={() => handleAddClick("Técnicas")}
               />
             )}
@@ -1376,9 +1397,14 @@ function PerfilEgresado() {
             ) : (
               <AddIcon
                 cursor="pointer"
-                color="green.500"
+                color="white"
                 position="absolute"
                 right="45px"
+                bg="#007935"
+                borderRadius="10px"
+                width="57px"
+                height="43px" 
+                padding="8px"
                 onClick={() => handleAddClick("Idioma")}
               />
             )}
@@ -1445,13 +1471,13 @@ function PerfilEgresado() {
                   <>
                     <Select
                       value={editingCardIdiomas.idioma || ""}
-                      onChange={(e) => {
-                        handleFieldChange(
+                      onChange={(e) =>
+                        handleEditInputChange(
                           "idioma",
                           e.target.value,
                           setEditingCardIdiomas
-                        );
-                      }}
+                        )
+                      }
                       size="lg"
                       marginBottom="4"
                     >
@@ -1465,7 +1491,7 @@ function PerfilEgresado() {
                     <Select
                       value={editingCardIdiomas.nivel || ""}
                       onChange={(e) =>
-                        handleFieldChange(
+                        handleEditInputChange(
                           "nivel",
                           e.target.value,
                           setEditingCardIdiomas
@@ -1531,9 +1557,14 @@ function PerfilEgresado() {
             ) : (
               <AddIcon
                 cursor="pointer"
-                color="green.500"
+                color="white"
                 position="absolute"
                 right="45px"
+                bg="#007935"
+                borderRadius="10px"
+                width="57px"
+                height="43px" 
+                padding="8px"
                 onClick={() => handleAddClick("Certificado")}
               />
             )}
