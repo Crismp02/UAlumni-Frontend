@@ -403,8 +403,8 @@ function PerfilEgresado() {
     setShowEditModalPortafolios(true);
   };
 
-  const handleEditCardSobremi = (card) => {
-    setEditingCardSobremi(card);
+  const handleEditCardSobremi = () => {
+    setEditingCardSobremi(cardContentSobremi[0]);
     setShowEditModalSobremi(true);
   };
 
@@ -442,7 +442,6 @@ function PerfilEgresado() {
 
     setShowIconsSobremi(false);
     setEditModeSobremi(true);
-
   };
 
   const handleCancelEdit = () => {
@@ -490,8 +489,13 @@ function PerfilEgresado() {
       </Text>
 
       <Flex justifyContent="flex-end" alignItems="center" marginBottom="5px">
-      {switchValue && (
-          <Text fontSize="sm" color="black" marginRight="10px" fontWeight="bold">
+        {switchValue && (
+          <Text
+            fontSize="sm"
+            color="black"
+            marginRight="10px"
+            fontWeight="bold"
+          >
             Perfil visible
           </Text>
         )}
@@ -710,23 +714,16 @@ function PerfilEgresado() {
           >
             <Text fontWeight="bold" marginLeft="10">
               Sobre Mí
-              {editMode ? (
-                <EditIcon
+              <EditIcon
                   cursor="pointer"
                   position="absolute"
                   right="45px"
                   color="blue.500"
-                  onClick={() => handleEditClick(setShowIcons, setEditMode)}
+                  onClick={handleEditCardSobremi}
                 />
-              ) : (
-                <AddIcon
-                  cursor="pointer"
-                  color="green.500"
-                  position="absolute"
-                  right="45px"
-                  onClick={() => handleAddClick("Acerca de Mí")}
-                />
-              )}
+
+             
+                
             </Text>
           </Box>
           {cardContentSobremi.map((card) => (
@@ -737,31 +734,62 @@ function PerfilEgresado() {
               marginBottom="2"
               key={card.id}
             >
-              <EditIcon
-                position="absolute"
-                right="60px"
-                color="gray.500"
-                boxSize={4}
-                cursor="pointer"
-                display={showIconsSobremi ? "block" : "none"}
-                onClick={() => handleEditCardSobremi(card)}
-              />
-
-              <DeleteIcon
-                position="absolute"
-                right="80px"
-                color="gray.500"
-                boxSize={4}
-                cursor="pointer"
-                display={showIconsSobremi ? "block" : "none"}
-                onClick={() => handleDeleteClick(card.id, "cardContentSobremi")}
-              />
+               
 
               <Text marginLeft="10" marginRight="10" marginBottom="10">
                 {card.descripcion}
               </Text>
             </Box>
           ))}
+          {/* Modal de edición Certificados */}
+          <Modal isOpen={showEditModalSobremi} onClose={handleCancelEdit}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Editar Sobre mí</ModalHeader>
+              <ModalBody>
+                {/* Verificar si hay una tarjeta en edición */}
+                {editingCardSobremi && (
+                  <>
+                    <Textarea
+                      value={editingCardSobremi.descripcion}
+                      onChange={(e) =>
+                        handleEditInputChange(
+                          "descripcion",
+                          e.target.value,
+                          setEditingCardSobremi
+                        )
+                      }
+                      placeholder="Cuéntanos un poco sobre de ti"
+                      size="lg"
+                      marginBottom="4"
+                      height="200px" // Aquí se establece la altura del Textarea
+                    />
+
+                    
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={() => {
+                    handleSaveEdit(
+                      editingCardSobremi,
+                      cardContentSobremi,
+                      setCardContentSobremi,
+                      setShowEditModalSobremi
+                    );
+                  }}
+                >
+                  Guardar
+                </Button>
+                <Button variant="ghost" onClick={handleCancelEdit}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </Box>
         {/* inicio de 2do Box */}
         <Box
@@ -1415,16 +1443,15 @@ function PerfilEgresado() {
                 {/* Verificar si hay una tarjeta en edición */}
                 {editingCardIdiomas && (
                   <>
-                    
                     <Select
                       value={editingCardIdiomas.idioma || ""}
-                      onChange={(e) =>
+                      onChange={(e) => {
                         handleFieldChange(
                           "idioma",
                           e.target.value,
                           setEditingCardIdiomas
-                        )
-                      }
+                        );
+                      }}
                       size="lg"
                       marginBottom="4"
                     >
@@ -1434,20 +1461,25 @@ function PerfilEgresado() {
                         </option>
                       ))}
                     </Select>
-                    <Input
-                      type="text"
-                      value={editingCardIdiomas.nivel}
+
+                    <Select
+                      value={editingCardIdiomas.nivel || ""}
                       onChange={(e) =>
-                        handleEditInputChange(
+                        handleFieldChange(
                           "nivel",
                           e.target.value,
                           setEditingCardIdiomas
                         )
                       }
-                      placeholder="Editar Idioma..."
                       size="lg"
                       marginBottom="4"
-                    />
+                    >
+                      {niveles.map((nivel) => (
+                        <option key={nivel} value={nivel}>
+                          {nivel}
+                        </option>
+                      ))}
+                    </Select>
                   </>
                 )}
               </ModalBody>
@@ -1460,7 +1492,8 @@ function PerfilEgresado() {
                       editingCardIdiomas,
                       cardContentIdiomas,
                       setCardContentIdiomas,
-                      setShowEditModalIdiomas
+                      setShowEditModalIdiomas,
+                      "Idiomas"
                     );
                   }}
                 >
@@ -1673,49 +1706,49 @@ function PerfilEgresado() {
               {/* campos correspondientes al tipo de tarjeta */}
               {cardTypeToAdd === "Educación" && (
                 <>
-                  <Input 
-                  value={additionalFields.grado || ""}
-                  onChange={(e) =>
-                      handleFieldChange("grado", e.target.value)
-                    }
-                  placeholder="Grado" 
-                  marginBottom="10px" 
+                  <Input
+                    value={additionalFields.grado || ""}
+                    onChange={(e) => handleFieldChange("grado", e.target.value)}
+                    placeholder="Grado"
+                    marginBottom="10px"
                   />
                   Fecha
-                  <Input 
-                  value={additionalFields.anioFinal || ""}
-                  onChange={(e) =>
+                  <Input
+                    value={additionalFields.anioFinal || ""}
+                    onChange={(e) =>
                       handleFieldChange("anioFinal", e.target.value)
                     }
-                  type="date" 
-                  marginBottom="10px" />
+                    type="date"
+                    marginBottom="10px"
+                  />
                 </>
               )}
               {cardTypeToAdd === "Experiencia Laboral" && (
                 <>
-                  <Input 
-                  placeholder="Nombre Empresa"
-                  marginBottom="10px"
-                  value={additionalFields.empresa || ""}
-                  onChange={(e) =>
+                  <Input
+                    placeholder="Nombre Empresa"
+                    marginBottom="10px"
+                    value={additionalFields.empresa || ""}
+                    onChange={(e) =>
                       handleFieldChange("empresa", e.target.value)
                     }
-                  
                   />
-                  <Input 
-                  value={additionalFields.posicion || ""}
-                  onChange={(e) =>
-                    handleFieldChange("posicion", e.target.value)
-                  }
-                  placeholder="Posición" 
-                  marginBottom="10px" />
-                  <Textarea 
-                  value={additionalFields.descripcion || ""}
-                  onChange={(e) =>
-                    handleFieldChange("descripcion", e.target.value)
-                  }
-                  placeholder="Descripción..." 
-                  marginBottom="10px" />
+                  <Input
+                    value={additionalFields.posicion || ""}
+                    onChange={(e) =>
+                      handleFieldChange("posicion", e.target.value)
+                    }
+                    placeholder="Posición"
+                    marginBottom="10px"
+                  />
+                  <Textarea
+                    value={additionalFields.descripcion || ""}
+                    onChange={(e) =>
+                      handleFieldChange("descripcion", e.target.value)
+                    }
+                    placeholder="Descripción..."
+                    marginBottom="10px"
+                  />
                   Fecha Inicio
                   <Input
                     value={additionalFields.fechaInicio || ""}
@@ -1798,16 +1831,19 @@ function PerfilEgresado() {
               {cardTypeToAdd === "Portafolio" && (
                 <>
                   <Input
-                    onChange={(e) => handleFieldChange("titulo", e.target.value)}
+                    onChange={(e) =>
+                      handleFieldChange("titulo", e.target.value)
+                    }
                     value={additionalFields.titulo || ""}
                     placeholder="Titulo del portafolio"
                     marginBottom="10px"
                   />
-                  <Input 
+                  <Input
                     onChange={(e) => handleFieldChange("url", e.target.value)}
                     value={additionalFields.url || ""}
-                    placeholder="URL del portafolio" 
-                    marginBottom="10px" />
+                    placeholder="URL del portafolio"
+                    marginBottom="10px"
+                  />
                 </>
               )}
               {cardTypeToAdd === "Técnicas" && (
