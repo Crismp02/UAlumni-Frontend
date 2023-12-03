@@ -55,6 +55,9 @@ function PerfilEgresado() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [cardToDelete, setCardToDelete] = useState(null);
+  const [cardTypeToDelete, setCardTypeToDelete] = useState('cardContent');
+
+
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditModalEducacion, setShowEditModalEducacion] = useState(false);
 
@@ -73,12 +76,6 @@ function PerfilEgresado() {
       anioFinal: "2023",
     },
   ]);
-  // Estado temporal para los cambios en Educacion
-  const [tempEditingCardEducacion, setTempEditingCardEducacion] = useState({
-    grado: "",
-    anioFinal: "",
-    // Otros campos que puedas tener en la tarjeta
-  });
 
   const [cardContent, setCardContent] = useState([
     {
@@ -91,6 +88,11 @@ function PerfilEgresado() {
         "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
     },
   ]);
+
+  const cardStates = {
+    cardContent: cardContent,
+    cardContentEducacion: cardContentEducacion,
+  };
 
   const [selectedSkill, setSelectedSkill] = useState(null);
 
@@ -110,20 +112,48 @@ function PerfilEgresado() {
     setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
-  const handleDeleteClick = (cardId) => {
-    setCardToDelete(cardId);
-    setShowDeleteModal(true);
+  const handleDeleteClick = (cardId, cardType) => {
+    if (cardId) {
+      setCardToDelete(cardId);
+      setCardTypeToDelete(cardType);
+      setShowDeleteModal(true);
+    } else {
+      console.error("ID de tarjeta es nulos.");
+    }
   };
+  
+  
+  
 
-  const handleConfirmDelete = () => {
-    // Aquí se eliminas la tarjeta utilizando el ID almacenado en cardToDelete
-    console.log("Eliminar tarjeta con ID:", cardToDelete);
-    // Lógica para eliminar la tarjeta... en proceso
+ 
 
-    // Cerrar el modal y limpiar el estado
-    setShowDeleteModal(false);
-    setCardToDelete(null);
+  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
+
+    if (cardToDelete !== null && cardTypeToDelete !== null) {
+      let updatedCardContent = [];
+      if (cardTypeToDelete === 'cardContent') {
+        updatedCardContent = cardContent.filter(item => item.id !== cardToDelete);
+        setCardContent(updatedCardContent);
+      } else if (cardTypeToDelete === 'cardContentEducacion') {
+        updatedCardContent = cardContentEducacion.filter(item => item.id !== cardToDelete);
+        setCardContentEducacion(updatedCardContent);
+      } else {
+        console.error("Tipo de tarjeta no reconocido.");
+        return;
+      }
+  
+      // Cerrar el modal y limpiar el estado
+      setShowDeleteModal(false);
+      setCardToDelete(null);
+  
+    } else {
+      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+    }
   };
+  
+  
+  
+  
 
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
@@ -176,11 +206,6 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
   setContent(updatedContent);
   setShowEditModal(false);
 };
-
-
-
-  
-
 
 
   const handleCancelEdit = () => {
@@ -412,7 +437,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 boxSize={4}
                 cursor="pointer"
                 display={showIcons ? "block" : "none"}
-                onClick={() => handleDeleteClick(card.id)}
+                onClick={() => handleDeleteClick(card.id, 'cardContent')}
               />
 
               <Box
@@ -555,6 +580,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
 {/* inicio de tarjeta de educacion */}
           {cardContentEducacion.map((card) => (
                     <Box
+                    key={card.id}
                 bg="white"
                 padding="4"
                 border="1px solid #ccc"
@@ -585,7 +611,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                   boxSize={4}
                   cursor="pointer"
                   display={showIconsEducacion ? 'block' : 'none'}
-                  onClick={() => handleDeleteClick(card.id)}
+                  onClick={() => handleDeleteClick(card.id, 'cardContentEducacion')}
                 />
                   
                 
@@ -1068,7 +1094,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 ¿Estás seguro de que deseas eliminar?
               </ModalBody>
               <ModalFooter>
-                <Button colorScheme="red" mr={3} onClick={handleConfirmDelete}>
+              <Button colorScheme="red" mr={3} onClick={() => handleConfirmDelete(cardToDelete, cardTypeToDelete)}>
                   Eliminar
                 </Button>
                 <Button variant="ghost" onClick={handleCancelDelete}>
