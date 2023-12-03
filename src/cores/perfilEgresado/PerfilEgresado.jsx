@@ -69,12 +69,7 @@ function PerfilEgresado() {
       id: 1,
       grado: "Licenciatura",
       anioFinal: "2023",
-    },
-    {
-      id: 2,
-      grado: "Grado",
-      anioFinal: "2023",
-    },
+    }
   ]);
 
   const [cardContent, setCardContent] = useState([
@@ -89,10 +84,7 @@ function PerfilEgresado() {
     },
   ]);
 
-  const cardStates = {
-    cardContent: cardContent,
-    cardContentEducacion: cardContentEducacion,
-  };
+  
 
   const [selectedSkill, setSelectedSkill] = useState(null);
 
