@@ -223,7 +223,17 @@ function PerfilEgresado() {
     // Lógica para agregar datos según el tipo de tarjeta actual
     switch (cardTypeToAdd) {
       case "Educación":
-        // Lógica para agregar datos de Educación a newCardContent
+        newCardContent = [
+          ...cardContentEducacion,
+          {
+            id: cardContentEducacion.length + 1, // Generar un nuevo ID
+            grado: additionalFields.grado,
+            anioFinal: additionalFields.anioFinal,
+          },
+        ];
+        setCardContentEducacion(newCardContent);
+        setShowIconsEducacion(false);
+        setEditModeEducacion(true);
         break;
       case "Experiencia Laboral":
         newCardContent = [
@@ -374,6 +384,30 @@ function PerfilEgresado() {
 
     setContent(updatedContent);
     setShowEditModal(false);
+
+    // agregar cada uno de los estados de edicion
+    setShowIcons(false);
+    setEditMode(true);
+
+    setShowIconsEducacion(false);
+    setEditModeEducacion(true);
+
+    setShowIconsIdiomas(false);
+    setEditModeIdiomas(true);
+
+    setShowIconsCertificados(false);
+    setEditModeCertificados(true);
+
+    setShowIconsPortafolios(false);
+    setEditModePortafolios(true);
+
+    setShowIconsSobremi(false);
+    setEditModeSobremi(true);
+
+    
+
+
+
   };
 
   const handleCancelEdit = () => {
@@ -1599,9 +1633,22 @@ function PerfilEgresado() {
               {/* campos correspondientes al tipo de tarjeta */}
               {cardTypeToAdd === "Educación" && (
                 <>
-                  <Input placeholder="Grado" marginBottom="10px" />
+                  <Input 
+                  value={additionalFields.grado || ""}
+                  onChange={(e) =>
+                      handleFieldChange("grado", e.target.value)
+                    }
+                  placeholder="Grado" 
+                  marginBottom="10px" 
+                  />
                   Fecha
-                  <Input type="date" placeholder="Fecha" marginBottom="10px" />
+                  <Input 
+                  value={additionalFields.anioFinal || ""}
+                  onChange={(e) =>
+                      handleFieldChange("anioFinal", e.target.value)
+                    }
+                  type="date" 
+                  marginBottom="10px" />
                 </>
               )}
               {cardTypeToAdd === "Experiencia Laboral" && (
