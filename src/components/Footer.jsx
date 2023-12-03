@@ -146,7 +146,7 @@ function Footer() {
         display="flex"
         flexDirection="column"
         paddingRight={["0px", "100px"]}
-        paddingLeft={["20px", "0px"]}
+        paddingLeft={["20px", "20px"]}
         paddingBottom="20px"
         padding="10px"
       >
