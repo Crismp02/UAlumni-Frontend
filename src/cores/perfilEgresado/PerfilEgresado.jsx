@@ -235,6 +235,18 @@ function PerfilEgresado() {
         setShowIconsEducacion(false);
         setEditModeEducacion(true);
         break;
+      case "Sobre Mí":
+        newCardContent = [
+          ...cardContentSobremi,
+          {
+            id: cardContentSobremi.length + 1, // Generar un nuevo ID
+            descripcion: additionalFields.descripcion,
+          },
+        ];
+        setCardContentSobremi(newCardContent);
+        setShowIconsSobremi(false);
+        setEditModeSobremi(true);
+        break;
       case "Experiencia Laboral":
         newCardContent = [
           ...cardContent,
@@ -277,6 +289,20 @@ function PerfilEgresado() {
         setCardContentCertificados(newCardContent);
         setShowIconsCertificados(false);
         setEditModeCertificados(true);
+
+        break;
+      case "Portafolio":
+        newCardContent = [
+          ...cardContentPortafolios,
+          {
+            id: cardContentPortafolios.length + 1, // Generar un nuevo ID
+            titulo: additionalFields.titulo,
+            url: additionalFields.url,
+          },
+        ];
+        setCardContentPortafolios(newCardContent);
+        setShowIconsPortafolios(false);
+        setEditModePortafolios(true);
 
         break;
       // Agrega lógica para otros tipos de tarjetas si es necesario
@@ -404,10 +430,6 @@ function PerfilEgresado() {
     setShowIconsSobremi(false);
     setEditModeSobremi(true);
 
-    
-
-
-
   };
 
   const handleCancelEdit = () => {
@@ -463,7 +485,7 @@ function PerfilEgresado() {
       <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
         <Box
           width={{ base: "100%", md: "45%" }}
-          bg="#F5F5F5"
+          bg="#F3FAF7"
           height="100%"
           marginRight={{ base: "0", md: "20px" }}
           marginBottom={{ base: "20px", md: "0" }}
@@ -739,7 +761,7 @@ function PerfilEgresado() {
             display="flex"
             alignItems="center"
           >
-            Experiencia Laboral
+            EXPERIENCIA LABORAL
             {editMode ? (
               <EditIcon
                 cursor="pointer"
@@ -933,7 +955,7 @@ function PerfilEgresado() {
             marginTop="10"
             marginBottom="0"
           >
-            Educación
+            ESTUDIOS REALIZADOS
             {editModeEducacion ? (
               <EditIcon
                 cursor="pointer"
@@ -1294,7 +1316,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            Idiomas
+            IDIOMAS
             {editModeIdiomas ? (
               <EditIcon
                 cursor="pointer"
@@ -1441,7 +1463,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            Certificados
+            CERTIFICADOS
             {editModeCertificados ? (
               <EditIcon
                 cursor="pointer"
@@ -1749,8 +1771,8 @@ function PerfilEgresado() {
                   Fecha
                   <Input
                     onChange={(e) => handleFieldChange("fecha", e.target.value)}
+                    value={additionalFields.fecha || ""}
                     type="date"
-                    placeholder="Fecha"
                     marginBottom="10px"
                   />
                 </>
@@ -1758,10 +1780,16 @@ function PerfilEgresado() {
               {cardTypeToAdd === "Portafolio" && (
                 <>
                   <Input
+                    onChange={(e) => handleFieldChange("titulo", e.target.value)}
+                    value={additionalFields.titulo || ""}
                     placeholder="Titulo del portafolio"
                     marginBottom="10px"
                   />
-                  <Input placeholder="URL del portafolio" marginBottom="10px" />
+                  <Input 
+                    onChange={(e) => handleFieldChange("url", e.target.value)}
+                    value={additionalFields.url || ""}
+                    placeholder="URL del portafolio" 
+                    marginBottom="10px" />
                 </>
               )}
               {cardTypeToAdd === "Técnicas" && (
