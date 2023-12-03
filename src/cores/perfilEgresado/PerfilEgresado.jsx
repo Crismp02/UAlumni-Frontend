@@ -28,9 +28,9 @@ function PerfilEgresado() {
   };
 
   // mostrar iconos de editar y borrar
-
   const [showIcons, setShowIcons] = useState(false);
   const [showIconsEducacion, setShowIconsEducacion] = useState(false);
+  const [showIconsIdiomas, setShowIconsIdiomas] = useState(false);
   const [showIconsTecnicas, setShowIconsTecnicas] = useState(false);
 
   const [showDeleteIcon, setShowDeleteIcon] = useState(false);
@@ -38,6 +38,9 @@ function PerfilEgresado() {
   const [editMode, setEditMode] = useState(true);
   const [editModeEducacion, setEditModeEducacion] = useState(true);
   const [editModeTecnicas, setEditModeTecnicas] = useState(true);
+  const [editModeIdiomas, setEditModeIdiomas] = useState(true);
+
+  
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
@@ -60,9 +63,11 @@ function PerfilEgresado() {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditModalEducacion, setShowEditModalEducacion] = useState(false);
+  const [showEditModalIdiomas, setShowEditModalIdiomas] = useState(false);
 
   const [cardIdToEditExpLaboral, setcardIdToEditExpLaboral] = useState(null);
   const [cardIdToEditEducacion, setCardIdToEditEducacion] = useState(null);
+  const [cardIdToEditIdiomas, setCardIdToEditIdiomas] = useState(null);
 
   const [cardContentEducacion, setCardContentEducacion] = useState([
     {
@@ -81,6 +86,13 @@ function PerfilEgresado() {
       fechaFinal: "01/01/2022",
       descripcion:
         "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
+    },
+  ]);
+  const [cardContentIdiomas, setCardContentIdiomas] = useState([
+    {
+      id: 1,
+      idioma: "Inglés",
+      nivel: "Intermedio",
     },
   ]);
 
@@ -129,6 +141,9 @@ function PerfilEgresado() {
       } else if (cardTypeToDelete === 'cardContentEducacion') {
         updatedCardContent = cardContentEducacion.filter(item => item.id !== cardToDelete);
         setCardContentEducacion(updatedCardContent);
+      }else if (cardTypeToDelete === 'cardContentIdiomas') {
+        updatedCardContent = cardContentIdiomas.filter(item => item.id !== cardToDelete);
+        setCardContentIdiomas(updatedCardContent);
       } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
@@ -165,6 +180,12 @@ function PerfilEgresado() {
     // Otros campos que puedas tener en la tarjeta
   });
 
+  const [editingCardIdiomas, setEditingCardIdiomas] = useState({
+    idioma: "",
+    nivel: "",
+    // Otros campos que puedas tener en la tarjeta
+  });
+
   // Modal de edición Experiencial Laboral
   const handleEditInputChange = (field, value, setState) => {
     setState((prevState) => ({
@@ -185,6 +206,11 @@ function PerfilEgresado() {
       ...card, // Actualiza el estado con los datos de la tarjeta de educación seleccionada
     });
     setShowEditModalEducacion(true);
+  };
+
+  const handleEditCardIdiomas = (card) => {
+    setEditingCardIdiomas(card);
+    setShowEditModalIdiomas(true);
   };
 
 const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
@@ -208,6 +234,9 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
     // modal educacion
     setcardIdToEditExpLaboral(null); // Restablecer a null o un valor inicial
     setShowEditModal(false); // Ocultar el modal de edición
+
+    setcardIdToEditIdiomas(null); // Restablecer a null o un valor inicial
+    setShowEditModalIdiomas(false); // Ocultar el modal de edición
   };
 
   return (
@@ -572,7 +601,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
 {/* inicio de tarjeta de educacion */}
           {cardContentEducacion.map((card) => (
                     <Box
-                    key={card.id}
+                key={card.id}
                 bg="white"
                 padding="4"
                 border="1px solid #ccc"
@@ -682,73 +711,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
             </ModalContent>
           </Modal>
 
-          {/*Modal agregar educacion*/}
-          <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
-              <ModalBody>
-                {/* campos correspondientes al tipo de tarjeta */}
-                {cardTypeToAdd === "Educación" && (
-                  <>
-                    <Input placeholder="Grado" marginBottom="10px" />
-                    Fecha
-                    <Input
-                      type="date"
-                      placeholder="Fecha"
-                      marginBottom="10px"
-                    />
-                    {/* ... Otros campos específicos de Educación ... */}
-                  </>
-                )}
-                {cardTypeToAdd === "Experiencia Laboral" && (
-                  <>
-                    <Input placeholder="Nombre Empresa" marginBottom="10px" />
-                    <Input placeholder="Posición" marginBottom="10px" />
-                    <Textarea
-                      placeholder="Descripción..."
-                      marginBottom="10px"
-                    />
-                    Fecha Inicio
-                    <Input
-                      type="date"
-                      placeholder="Posición"
-                      marginBottom="10px"
-                    />
-                    Fecha Final
-                    <Input
-                      type="date"
-                      placeholder="Posición"
-                      marginBottom="10px"
-                    />
-                    {/* ... Otros campos específicos de Experiencia Laboral ... */}
-                  </>
-                )}
-                {cardTypeToAdd === "Técnicas" && (
-                  <>
-                    <Input
-                      placeholder="Habilidad Técnica"
-                      marginBottom="10px"
-                    />
-                  </>
-                )}
-                {/*Mas tipos de tarjetas ... */}
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={
-                    3
-                  } /* Agrega lógica para guardar según el tipo de tarjeta */
-                >
-                  Guardar
-                </Button>
-                <Button variant="ghost" onClick={() => setShowAddModal(false)}>
-                  Cancelar
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+          
 {/* Texto Principal Habilidades */}
           <Text
             fontWeight="bold"
@@ -965,8 +928,30 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
             marginBottom="5"
           >
             Idiomas
+            {editModeIdiomas ? (
+              <EditIcon
+                cursor="pointer"
+                position="absolute"
+                right="45px"
+                color="blue.500"
+                onClick={() =>
+                  handleEditClick(setShowIconsIdiomas, setEditModeIdiomas)
+                }
+              />
+            ) : (
+              <AddIcon
+                cursor="pointer"
+                color="green.500"
+                position="absolute"
+                right="45px"
+                onClick={() => handleAddClick("Idioma")}
+              />
+            )}
           </Text>
+          {/* Inicio box de Idiomas */}
+          {cardContentIdiomas.map((card) => (
           <Box
+            key={card.id}
             bg="white"
             padding="4"
             border="1px solid #ccc"
@@ -978,17 +963,29 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
             boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
             position="relative"
           >
-            <EditIcon
-              position="absolute"
-              top="15px"
-              right="20px"
-              color="blue.500"
-              boxSize={4}
-              cursor="pointer"
-            />
+             {/* Iconos de edición y eliminación */}
+             <EditIcon
+                  position="absolute"
+                  right="20px"
+                  color="gray.500"
+                  boxSize={4}
+                  cursor="pointer"
+                  display={showIconsIdiomas ? 'block' : 'none'}
+                  onClick={() => handleEditCardIdiomas(card)}
+                />
+
+                <DeleteIcon
+                  position="absolute"
+                  right="40px"
+                  color="gray.500"
+                  boxSize={4}
+                  cursor="pointer"
+                  display={showIconsIdiomas ? 'block' : 'none'}
+                  onClick={() => handleDeleteClick(card.id, 'cardContentIdiomas')}
+                />
 
             <Box display="flex" alignItems="center" marginBottom="4">
-              <Text fontWeight="bold">Idioma</Text>
+              <Text fontWeight="bold">{card.idioma}</Text>
               <Text
                 bg="#FBC430"
                 color="black"
@@ -996,10 +993,60 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 borderRadius="8"
                 marginLeft="5"
               >
-                Nivel
+                {card.nivel}
               </Text>
             </Box>
           </Box>
+          ))}
+          {/* Fin box de Idiomas */}
+          {/* Modal de edición Idiomas */}
+          <Modal isOpen={showEditModalIdiomas} onClose={handleCancelEdit}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Editar Idioma</ModalHeader>
+              <ModalBody>
+                {/* Verificar si hay una tarjeta en edición */}
+                {editingCardIdiomas && (
+                  <>
+                    <Input
+                      value={editingCardIdiomas.idioma}
+                      onChange={(e) =>
+                        handleEditInputChange("idioma", e.target.value, setEditingCardIdiomas)
+                      }
+                      placeholder="Editar Idioma..."
+                      size="lg"
+                      marginBottom="4"
+                    />
+                    <Input
+                      type="text"
+                      value={editingCardIdiomas.nivel}
+                      onChange={(e) =>
+                        handleEditInputChange("nivel", e.target.value, setEditingCardIdiomas)
+                      }
+                      placeholder="Editar Idioma..."
+                      size="lg"
+                      marginBottom="4"
+                    />
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={() => {
+                    handleSaveEdit(editingCardIdiomas, cardContentIdiomas, setCardContentIdiomas, setShowEditModalIdiomas);
+                  }}
+                >
+                  Guardar
+                </Button>
+                <Button variant="ghost" onClick={handleCancelEdit}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -1077,6 +1124,79 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
             </Text>
           </Box>
         </Box>
+        {/*Modal agregar campos*/}
+        <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+              <ModalBody>
+                {/* campos correspondientes al tipo de tarjeta */}
+                {cardTypeToAdd === "Educación" && (
+                  <>
+                    <Input placeholder="Grado" marginBottom="10px" />
+                    Fecha
+                    <Input
+                      type="date"
+                      placeholder="Fecha"
+                      marginBottom="10px"
+                    />
+                  </>
+                )}
+                {cardTypeToAdd === "Experiencia Laboral" && (
+                  <>
+                    <Input placeholder="Nombre Empresa" marginBottom="10px" />
+                    <Input placeholder="Posición" marginBottom="10px" />
+                    <Textarea
+                      placeholder="Descripción..."
+                      marginBottom="10px"
+                    />
+                    Fecha Inicio
+                    <Input
+                      type="date"
+                      placeholder="Posición"
+                      marginBottom="10px"
+                    />
+                    Fecha Final
+                    <Input
+                      type="date"
+                      placeholder="Posición"
+                      marginBottom="10px"
+                    />
+                    {/* ... Otros campos específicos de Experiencia Laboral ... */}
+                  </>
+                )}
+                {cardTypeToAdd === "Idioma" && (
+                  <>
+                    <Input placeholder="Idioma" marginBottom="10px" />
+                    <Input placeholder="Nivel" marginBottom="10px" />
+                  </>
+                )}
+                {cardTypeToAdd === "Técnicas" && (
+                  <>
+                    <Input
+                      placeholder="Habilidad Técnica"
+                      marginBottom="10px"
+                    />
+                  </>
+                )}
+
+                {/*Mas tipos de tarjetas ... */}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={
+                    3
+                  } /* Agregar lógica para guardar según el tipo de tarjeta */
+                >
+                  Guardar
+                </Button>
+                <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+                  Cancelar
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         {/* Modal de confirmación para eliminar */}
           <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
             <ModalOverlay />
