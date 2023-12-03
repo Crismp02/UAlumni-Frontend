@@ -490,6 +490,11 @@ function PerfilEgresado() {
       </Text>
 
       <Flex justifyContent="flex-end" alignItems="center" marginBottom="5px">
+      {switchValue && (
+          <Text fontSize="sm" color="black" marginRight="10px" fontWeight="bold">
+            Perfil visible
+          </Text>
+        )}
         <VStack spacing={4} marginRight="20px">
           <CustomSwitch isChecked={switchValue} onChange={handleSwitchChange} />
         </VStack>
