@@ -14,6 +14,7 @@ import {
   Button,
   Textarea,
   Input,
+  Select,
 } from "@chakra-ui/react";
 import { DeleteIcon, AddIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
 import { useState } from "react";
@@ -34,6 +35,7 @@ function PerfilEgresado() {
   const [showIconsTecnicas, setShowIconsTecnicas] = useState(false);
   const [showIconsCertificados, setShowIconsCertificados] = useState(false);
   const [showIconsPortafolios, setShowIconsPortafolios] = useState(false);
+  const [showIconsSobremi, setShowIconsSobremi] = useState(false);
 
   const [showDeleteIcon, setShowDeleteIcon] = useState(false);
 
@@ -43,8 +45,7 @@ function PerfilEgresado() {
   const [editModeIdiomas, setEditModeIdiomas] = useState(true);
   const [editModeCertificados, setEditModeCertificados] = useState(true);
   const [editModePortafolios, setEditModePortafolios] = useState(true);
-
-  
+  const [editModeSobremi, setEditModeSobremi] = useState(true);
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
@@ -62,27 +63,33 @@ function PerfilEgresado() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] = useState('cardContent');
-
+  const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
+  const [formData, setFormData] = useState([]); // Inicializando formData como un array vacío
+  const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showEditModalEducacion, setShowEditModalEducacion] = useState(false);
   const [showEditModalIdiomas, setShowEditModalIdiomas] = useState(false);
-  const [showEditModalCertificados, setShowEditModalCertificados] = useState(false);
-  const [showEditModalPortafolios, setShowEditModalPortafolios] = useState(false);
+  const [showEditModalCertificados, setShowEditModalCertificados] =
+    useState(false);
+  const [showEditModalPortafolios, setShowEditModalPortafolios] =
+    useState(false);
+  const [showEditModalSobremi, setShowEditModalSobremi] = useState(false);
 
   const [cardIdToEditExpLaboral, setcardIdToEditExpLaboral] = useState(null);
   const [cardIdToEditEducacion, setCardIdToEditEducacion] = useState(null);
   const [cardIdToEditIdiomas, setCardIdToEditIdiomas] = useState(null);
-  const [cardIdToEditCertificados, setCardIdToEditCertificados] = useState(null);
+  const [cardIdToEditCertificados, setCardIdToEditCertificados] =
+    useState(null);
   const [cardIdToEditPortafolios, setCardIdToEditPortafolios] = useState(null);
+  const [cardIdToEditSobremi, setCardIdToEditSobremi] = useState(null);
 
   const [cardContentEducacion, setCardContentEducacion] = useState([
     {
       id: 1,
       grado: "Licenciatura",
       anioFinal: "2023",
-    }
+    },
   ]);
 
   const [cardContent, setCardContent] = useState([
@@ -103,6 +110,9 @@ function PerfilEgresado() {
       nivel: "Intermedio",
     },
   ]);
+  const idiomas = ["Inglés", "Español", "Francés"];
+
+  const niveles = ["A1", "A2", "B1", "B2", "C1", "C2"];
   const [cardContentCertificados, setCardContentCertificados] = useState([
     {
       id: 1,
@@ -118,8 +128,13 @@ function PerfilEgresado() {
       url: "wwww.miportafolio.com",
     },
   ]);
-
-  
+  const [cardContentSobremi, setCardContentSobremi] = useState([
+    {
+      id: 1,
+      descripcion:
+        "Soy María, una licenciada en comunicadora social con 2 años de experiencia. Me apasiona crear experiencias visuales que impacten a las personas. Creo que el diseño gráfico es una herramienta poderosa que puede usarse para comunicar ideas de una manera efectiva.",
+    },
+  ]);
 
   const [selectedSkill, setSelectedSkill] = useState(null);
 
@@ -148,46 +163,126 @@ function PerfilEgresado() {
       console.error("ID de tarjeta es nulo.");
     }
   };
-  
-  
-  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
 
+  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       let updatedCardContent = [];
-      if (cardTypeToDelete === 'cardContent') {
-        updatedCardContent = cardContent.filter(item => item.id !== cardToDelete);
+      if (cardTypeToDelete === "cardContent") {
+        updatedCardContent = cardContent.filter(
+          (item) => item.id !== cardToDelete
+        );
         setCardContent(updatedCardContent);
-      } else if (cardTypeToDelete === 'cardContentEducacion') {
-        updatedCardContent = cardContentEducacion.filter(item => item.id !== cardToDelete);
+      } else if (cardTypeToDelete === "cardContentEducacion") {
+        updatedCardContent = cardContentEducacion.filter(
+          (item) => item.id !== cardToDelete
+        );
         setCardContentEducacion(updatedCardContent);
-      }else if (cardTypeToDelete === 'cardContentIdiomas') {
-        updatedCardContent = cardContentIdiomas.filter(item => item.id !== cardToDelete);
+      } else if (cardTypeToDelete === "cardContentIdiomas") {
+        updatedCardContent = cardContentIdiomas.filter(
+          (item) => item.id !== cardToDelete
+        );
         setCardContentIdiomas(updatedCardContent);
-      }else if (cardTypeToDelete === 'cardContentCertificados') {
-        updatedCardContent = cardContentCertificados.filter(item => item.id !== cardToDelete);
+      } else if (cardTypeToDelete === "cardContentCertificados") {
+        updatedCardContent = cardContentCertificados.filter(
+          (item) => item.id !== cardToDelete
+        );
         setCardContentCertificados(updatedCardContent);
-      } else if (cardTypeToDelete === 'cardContentPortafolios') {
-        updatedCardContent = cardContentPortafolios.filter(item => item.id !== cardToDelete);
+      } else if (cardTypeToDelete === "cardContentPortafolios") {
+        updatedCardContent = cardContentPortafolios.filter(
+          (item) => item.id !== cardToDelete
+        );
         setCardContentPortafolios(updatedCardContent);
-      }else {
+      } else if (cardTypeToDelete === "cardContentSobremi") {
+        updatedCardContent = cardContentSobremi.filter(
+          (item) => item.id !== cardToDelete
+        );
+        setCardContentSobremi(updatedCardContent);
+      } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
       }
-  
+
       // Cerrar el modal y limpiar el estado
       setShowDeleteModal(false);
       setCardToDelete(null);
-  
     } else {
       console.error("ID de tarjeta o tipo de tarjeta es nulo.");
     }
   };
-  
-  
+
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
     setShowDeleteModal(false);
     setCardToDelete(null);
+  };
+
+  // logica para agregar datos nuevos al form
+  const handleGuardar = () => {
+    let newCardContent = [];
+
+    // Lógica para agregar datos según el tipo de tarjeta actual
+    switch (cardTypeToAdd) {
+      case "Educación":
+        // Lógica para agregar datos de Educación a newCardContent
+        break;
+      case "Experiencia Laboral":
+        newCardContent = [
+          ...cardContent,
+          {
+            id: cardContent.length + 1, // Generar un nuevo ID
+            empresa: additionalFields.empresa,
+            descripcion: additionalFields.descripcion,
+            posicion: additionalFields.posicion,
+            fechaInicio: additionalFields.fechaInicio,
+            fechaFinal: additionalFields.fechaFinal,
+          },
+        ];
+        setCardContent(newCardContent);
+        setShowIcons(false);
+        setEditMode(true);
+        break;
+      case "Idioma":
+        newCardContent = [
+          ...cardContentIdiomas,
+          {
+            id: cardContentIdiomas.length + 1, // Generar un nuevo ID
+            idioma: additionalFields.idioma,
+            nivel: additionalFields.nivel,
+          },
+        ];
+        setCardContentIdiomas(newCardContent);
+        setShowIconsIdiomas(false);
+        setEditModeIdiomas(true);
+        break;
+      case "Certificado":
+        newCardContent = [
+          ...cardContentCertificados,
+          {
+            id: cardContentCertificados.length + 1, // Generar un nuevo ID
+            titulo: additionalFields.titulo,
+            curso: additionalFields.curso,
+            fecha: additionalFields.fecha,
+          },
+        ];
+        setCardContentCertificados(newCardContent);
+        setShowIconsCertificados(false);
+        setEditModeCertificados(true);
+
+        break;
+      // Agrega lógica para otros tipos de tarjetas si es necesario
+      default:
+        break;
+    }
+
+    // Restablecer los campos adicionales después de guardar
+    setAdditionalFields({});
+    // CERRAR MODAL DE AGREGAR
+    setShowAddModal(false);
+  };
+
+  const handleFieldChange = (fieldName, value) => {
+    // Actualizar solo el campo correspondiente en additionalFields
+    setAdditionalFields({ ...additionalFields, [fieldName]: value });
   };
 
   const [editingCard, setEditingCard] = useState({
@@ -214,6 +309,11 @@ function PerfilEgresado() {
   const [editingCardPortafolios, setEditingCardPortafolios] = useState({
     titulo: "",
     fecha: "",
+    // Otros campos que puedas tener en la tarjeta
+  });
+
+  const [editingCardSobremi, setEditingCardSobremi] = useState({
+    descripcion: "",
     // Otros campos que puedas tener en la tarjeta
   });
 
@@ -254,19 +354,27 @@ function PerfilEgresado() {
     setShowEditModalPortafolios(true);
   };
 
-const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
-  
-  const updatedContent = content.map(card => {
-    if (card.id === editedCard.id) {
-      return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
-    }
-    return card;
-  });
+  const handleEditCardSobremi = (card) => {
+    setEditingCardSobremi(card);
+    setShowEditModalSobremi(true);
+  };
 
-  setContent(updatedContent);
-  setShowEditModal(false);
-};
+  const handleSaveEdit = (
+    editedCard,
+    content,
+    setContent,
+    setShowEditModal
+  ) => {
+    const updatedContent = content.map((card) => {
+      if (card.id === editedCard.id) {
+        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
+      }
+      return card;
+    });
 
+    setContent(updatedContent);
+    setShowEditModal(false);
+  };
 
   const handleCancelEdit = () => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
@@ -274,14 +382,20 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
     setCardIdToEditEducacion(null); // Restablecer a null o un valor inicial
     setShowEditModalEducacion(false); // Ocultar el modal de edición
     // modal educacion
-    setcardIdToEditExpLaboral(null); // Restablecer a null o un valor inicial
-    setShowEditModal(false); // Ocultar el modal de edición
+    setcardIdToEditExpLaboral(null);
+    setShowEditModal(false);
 
-    setcardIdToEditIdiomas(null); // Restablecer a null o un valor inicial
-    setShowEditModalIdiomas(false); // Ocultar el modal de edición
-    
-    setCardIdToEditCertificados(null); // Restablecer a null o un valor inicial
-    setShowEditModalCertificados(false); // Ocultar el modal de edición
+    setCardIdToEditIdiomas(null);
+    setShowEditModalIdiomas(false);
+
+    setCardIdToEditCertificados(null);
+    setShowEditModalCertificados(false);
+
+    setCardIdToEditPortafolios(null);
+    setShowEditModalPortafolios(false);
+
+    setCardIdToEditSobremi(null);
+    setShowEditModalSobremi(false);
   };
 
   return (
@@ -322,7 +436,6 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
           marginLeft={{ base: "0", md: "20px" }}
           position="relative"
         >
-          
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -382,7 +495,10 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 right="45px"
                 color="blue.500"
                 onClick={() =>
-                  handleEditClick(setShowIconsPortafolios, setEditModePortafolios)
+                  handleEditClick(
+                    setShowIconsPortafolios,
+                    setEditModePortafolios
+                  )
                 }
               />
             ) : (
@@ -391,10 +507,9 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 color="green.500"
                 position="absolute"
                 right="45px"
-                onClick={() => handleAddClick("Educación")}
+                onClick={() => handleAddClick("Portafolio")}
               />
-            )}        
-                
+            )}
           </Text>
           {cardContentPortafolios.map((card) => (
             <Box
@@ -427,7 +542,9 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 boxSize={4}
                 cursor="pointer"
                 display={showIconsPortafolios ? "block" : "none"}
-                onClick={() => handleDeleteClick(card.id, 'cardContentPortafolios')}
+                onClick={() =>
+                  handleDeleteClick(card.id, "cardContentPortafolios")
+                }
               />
 
               <Box
@@ -435,7 +552,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 justifyContent="space-between"
                 alignItems="center"
                 marginBottom="4"
-                marginTop="10"
+                marginTop="5"
               >
                 <Box
                   display="flex"
@@ -463,7 +580,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCardPortafolios.titulo}
                       onChange={(e) =>
-                        handleEditInputChange("titulo", e.target.value, setEditingCardPortafolios)
+                        handleEditInputChange(
+                          "titulo",
+                          e.target.value,
+                          setEditingCardPortafolios
+                        )
                       }
                       placeholder="Editar Portafolio..."
                       size="lg"
@@ -472,20 +593,31 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCardPortafolios.url}
                       onChange={(e) =>
-                        handleEditInputChange("url", e.target.value, setEditingCardPortafolios)
+                        handleEditInputChange(
+                          "url",
+                          e.target.value,
+                          setEditingCardPortafolios
+                        )
                       }
                       placeholder="Editar Url..."
                       size="lg"
                       marginBottom="4"
                     />
-                   </>
+                  </>
                 )}
               </ModalBody>
               <ModalFooter>
                 <Button
                   colorScheme="blue"
                   mr={3}
-                  onClick={() => handleSaveEdit(editingCardPortafolios, cardContentPortafolios, setCardContentPortafolios, setShowEditModalPortafolios)}
+                  onClick={() =>
+                    handleSaveEdit(
+                      editingCardPortafolios,
+                      cardContentPortafolios,
+                      setCardContentPortafolios,
+                      setShowEditModalPortafolios
+                    )
+                  }
                 >
                   Guardar
                 </Button>
@@ -504,22 +636,58 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
           >
             <Text fontWeight="bold" marginLeft="10">
               Sobre Mí
+              {editMode ? (
+                <EditIcon
+                  cursor="pointer"
+                  position="absolute"
+                  right="45px"
+                  color="blue.500"
+                  onClick={() => handleEditClick(setShowIcons, setEditMode)}
+                />
+              ) : (
+                <AddIcon
+                  cursor="pointer"
+                  color="green.500"
+                  position="absolute"
+                  right="45px"
+                  onClick={() => handleAddClick("Acerca de Mí")}
+                />
+              )}
             </Text>
           </Box>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            marginBottom="2"
-          >
-            <Text marginLeft="10" marginRight="10" marginBottom="10">
-              Soy María, una licenciada en comunicadora social con 2 años de
-              experiencia. Me apasiona crear experiencias visuales que impacten
-              a las personas. Creo que el diseño gráfico es una herramienta
-              poderosa que puede usarse para comunicar ideas de una manera
-              efectiva.
-            </Text>
-          </Box>
+          {cardContentSobremi.map((card) => (
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="2"
+              key={card.id}
+            >
+              <EditIcon
+                position="absolute"
+                right="60px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsSobremi ? "block" : "none"}
+                onClick={() => handleEditCardSobremi(card)}
+              />
+
+              <DeleteIcon
+                position="absolute"
+                right="80px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsSobremi ? "block" : "none"}
+                onClick={() => handleDeleteClick(card.id, "cardContentSobremi")}
+              />
+
+              <Text marginLeft="10" marginRight="10" marginBottom="10">
+                {card.descripcion}
+              </Text>
+            </Box>
+          ))}
         </Box>
         {/* inicio de 2do Box */}
         <Box
@@ -588,7 +756,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 boxSize={4}
                 cursor="pointer"
                 display={showIcons ? "block" : "none"}
-                onClick={() => handleDeleteClick(card.id, 'cardContent')}
+                onClick={() => handleDeleteClick(card.id, "cardContent")}
               />
 
               <Box
@@ -596,7 +764,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 justifyContent="space-between"
                 alignItems="center"
                 marginBottom="4"
-                marginTop="10"
+                marginTop="7"
               >
                 <Box
                   display="flex"
@@ -632,7 +800,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCard.empresa}
                       onChange={(e) =>
-                        handleEditInputChange("empresa", e.target.value, setEditingCard)
+                        handleEditInputChange(
+                          "empresa",
+                          e.target.value,
+                          setEditingCard
+                        )
                       }
                       placeholder="Editar empresa..."
                       size="lg"
@@ -641,7 +813,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCard.posicion}
                       onChange={(e) =>
-                        handleEditInputChange("posicion", e.target.value, setEditingCard)
+                        handleEditInputChange(
+                          "posicion",
+                          e.target.value,
+                          setEditingCard
+                        )
                       }
                       placeholder="Editar posición..."
                       size="lg"
@@ -650,7 +826,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Textarea
                       value={editingCard.descripcion}
                       onChange={(e) =>
-                        handleEditInputChange("descripcion", e.target.value, setEditingCard)
+                        handleEditInputChange(
+                          "descripcion",
+                          e.target.value,
+                          setEditingCard
+                        )
                       }
                       placeholder="Editar Descripción..."
                       size="lg"
@@ -660,7 +840,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCard.fechaInicio}
                       onChange={(e) =>
-                        handleEditInputChange("fechaInicio", e.target.value, setEditingCard)
+                        handleEditInputChange(
+                          "fechaInicio",
+                          e.target.value,
+                          setEditingCard
+                        )
                       }
                       size="lg"
                       marginBottom="4"
@@ -670,12 +854,15 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCard.fechaFinal}
                       onChange={(e) =>
-                        handleEditInputChange("fechaFinal", e.target.value, setEditingCard)
+                        handleEditInputChange(
+                          "fechaFinal",
+                          e.target.value,
+                          setEditingCard
+                        )
                       }
                       size="lg"
                       marginBottom="4"
                       type="date"
-
                     />
                   </>
                 )}
@@ -684,7 +871,14 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 <Button
                   colorScheme="blue"
                   mr={3}
-                  onClick={() => handleSaveEdit(editingCard, cardContent, setCardContent, setShowEditModal)}
+                  onClick={() =>
+                    handleSaveEdit(
+                      editingCard,
+                      cardContent,
+                      setCardContent,
+                      setShowEditModal
+                    )
+                  }
                 >
                   Guardar
                 </Button>
@@ -694,8 +888,6 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
               </ModalFooter>
             </ModalContent>
           </Modal>
-
-          
 
           {/* Fin de la experiencia laboral */}
 
@@ -728,69 +920,68 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
               />
             )}
           </Text>
-{/* inicio de tarjeta de educacion */}
+          {/* inicio de tarjeta de educacion */}
           {cardContentEducacion.map((card) => (
-                    <Box
-                key={card.id}
-                bg="white"
-                padding="4"
-                border="1px solid #ccc"
-                borderRadius="8px"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="5"
-                marginBottom="5"
-                boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
-                position="relative"
+            <Box
+              key={card.id}
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0)"
+              position="relative"
+            >
+              {/* Iconos de edición y eliminación */}
+              <EditIcon
+                position="absolute"
+                right="20px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsEducacion ? "block" : "none"}
+                onClick={() => handleEditCardEducacion(card)}
+              />
+
+              <DeleteIcon
+                position="absolute"
+                right="40px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsEducacion ? "block" : "none"}
+                onClick={() =>
+                  handleDeleteClick(card.id, "cardContentEducacion")
+                }
+              />
+
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4"
               >
-
-                {/* Iconos de edición y eliminación */}
-                <EditIcon
-                  position="absolute"
-                  right="20px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIconsEducacion ? 'block' : 'none'}
-                  onClick={() => handleEditCardEducacion(card)}
-                />
-
-                <DeleteIcon
-                  position="absolute"
-                  right="40px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIconsEducacion ? 'block' : 'none'}
-                  onClick={() => handleDeleteClick(card.id, 'cardContentEducacion')}
-                />
-                  
-                
-
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  marginBottom="4"
-                >
-                  <Text fontWeight="bold" marginTop="8">
-                    {card.grado}
-                  </Text>
-                  <Text marginRight="4" marginTop="8">
-                    {card.anioFinal}
-                  </Text>
-                </Box>
-
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  marginBottom="2"
-                >
-                  <Text marginRight="4">Universidad Católica Andrés Bello</Text>
-                </Box>
+                <Text fontWeight="bold" marginTop="8">
+                  {card.grado}
+                </Text>
+                <Text marginRight="4" marginTop="8">
+                  {card.anioFinal}
+                </Text>
               </Box>
-              ))}
+
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="2"
+              >
+                <Text marginRight="4">Universidad Católica Andrés Bello</Text>
+              </Box>
+            </Box>
+          ))}
           {/* cierre de tarjeta de educacion */}
 
           {/* Modal de edición Educación */}
@@ -805,7 +996,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCardEducacion.grado}
                       onChange={(e) =>
-                        handleEditInputChange("grado", e.target.value, setEditingCardEducacion)
+                        handleEditInputChange(
+                          "grado",
+                          e.target.value,
+                          setEditingCardEducacion
+                        )
                       }
                       placeholder="Editar Grado..."
                       size="lg"
@@ -815,7 +1010,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                       type="date"
                       value={editingCardEducacion.anioFinal}
                       onChange={(e) =>
-                        handleEditInputChange("anioFinal", e.target.value, setEditingCardEducacion)
+                        handleEditInputChange(
+                          "anioFinal",
+                          e.target.value,
+                          setEditingCardEducacion
+                        )
                       }
                       placeholder="Editar año final..."
                       size="lg"
@@ -829,7 +1028,12 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                   colorScheme="blue"
                   mr={3}
                   onClick={() => {
-                    handleSaveEdit(editingCardEducacion, cardContentEducacion, setCardContentEducacion, setShowEditModalEducacion);
+                    handleSaveEdit(
+                      editingCardEducacion,
+                      cardContentEducacion,
+                      setCardContentEducacion,
+                      setShowEditModalEducacion
+                    );
                   }}
                 >
                   Guardar
@@ -841,8 +1045,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
             </ModalContent>
           </Modal>
 
-          
-{/* Texto Principal Habilidades */}
+          {/* Texto Principal Habilidades */}
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -1080,53 +1283,53 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
           </Text>
           {/* Inicio box de Idiomas */}
           {cardContentIdiomas.map((card) => (
-          <Box
-            key={card.id}
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-            position="relative"
-          >
-             {/* Iconos de edición y eliminación */}
-             <EditIcon
-                  position="absolute"
-                  right="20px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIconsIdiomas ? 'block' : 'none'}
-                  onClick={() => handleEditCardIdiomas(card)}
-                />
+            <Box
+              key={card.id}
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+              position="relative"
+            >
+              {/* Iconos de edición y eliminación */}
+              <EditIcon
+                position="absolute"
+                right="20px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsIdiomas ? "block" : "none"}
+                onClick={() => handleEditCardIdiomas(card)}
+              />
 
-                <DeleteIcon
-                  position="absolute"
-                  right="40px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIconsIdiomas ? 'block' : 'none'}
-                  onClick={() => handleDeleteClick(card.id, 'cardContentIdiomas')}
-                />
+              <DeleteIcon
+                position="absolute"
+                right="40px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsIdiomas ? "block" : "none"}
+                onClick={() => handleDeleteClick(card.id, "cardContentIdiomas")}
+              />
 
-            <Box display="flex" alignItems="center" marginBottom="4">
-              <Text fontWeight="bold">{card.idioma}</Text>
-              <Text
-                bg="#FBC430"
-                color="black"
-                padding="2"
-                borderRadius="8"
-                marginLeft="5"
-              >
-                {card.nivel}
-              </Text>
+              <Box display="flex" alignItems="center" marginBottom="4">
+                <Text fontWeight="bold">{card.idioma}</Text>
+                <Text
+                  bg="#FBC430"
+                  color="black"
+                  padding="2"
+                  borderRadius="8"
+                  marginLeft="5"
+                >
+                  {card.nivel}
+                </Text>
+              </Box>
             </Box>
-          </Box>
           ))}
           {/* Fin box de Idiomas */}
           {/* Modal de edición Idiomas */}
@@ -1138,20 +1341,34 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 {/* Verificar si hay una tarjeta en edición */}
                 {editingCardIdiomas && (
                   <>
-                    <Input
-                      value={editingCardIdiomas.idioma}
+                    
+                    <Select
+                      value={editingCardIdiomas.idioma || ""}
                       onChange={(e) =>
-                        handleEditInputChange("idioma", e.target.value, setEditingCardIdiomas)
+                        handleFieldChange(
+                          "idioma",
+                          e.target.value,
+                          setEditingCardIdiomas
+                        )
                       }
-                      placeholder="Editar Idioma..."
                       size="lg"
                       marginBottom="4"
-                    />
+                    >
+                      {idiomas.map((idioma) => (
+                        <option key={idioma} value={idioma}>
+                          {idioma}
+                        </option>
+                      ))}
+                    </Select>
                     <Input
                       type="text"
                       value={editingCardIdiomas.nivel}
                       onChange={(e) =>
-                        handleEditInputChange("nivel", e.target.value, setEditingCardIdiomas)
+                        handleEditInputChange(
+                          "nivel",
+                          e.target.value,
+                          setEditingCardIdiomas
+                        )
                       }
                       placeholder="Editar Idioma..."
                       size="lg"
@@ -1165,7 +1382,12 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                   colorScheme="blue"
                   mr={3}
                   onClick={() => {
-                    handleSaveEdit(editingCardIdiomas, cardContentIdiomas, setCardContentIdiomas, setShowEditModalIdiomas);
+                    handleSaveEdit(
+                      editingCardIdiomas,
+                      cardContentIdiomas,
+                      setCardContentIdiomas,
+                      setShowEditModalIdiomas
+                    );
                   }}
                 >
                   Guardar
@@ -1176,7 +1398,7 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
               </ModalFooter>
             </ModalContent>
           </Modal>
-          
+
           <Text
             fontWeight="bold"
             fontSize="xl"
@@ -1193,7 +1415,10 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                 right="45px"
                 color="blue.500"
                 onClick={() =>
-                  handleEditClick(setShowIconsCertificados, setEditModeCertificados)
+                  handleEditClick(
+                    setShowIconsCertificados,
+                    setEditModeCertificados
+                  )
                 }
               />
             ) : (
@@ -1207,58 +1432,60 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
             )}
           </Text>
           {cardContentCertificados.map((card) => (
-          <Box
-            key={card.id}
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-            position="relative"
-          >
-             {/* Iconos de edición y eliminación */}
-             <EditIcon
-                  position="absolute"
-                  right="20px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIconsCertificados ? 'block' : 'none'}
-                  onClick={() => handleEditCardCertificados(card)}
-                />
-
-                <DeleteIcon
-                  position="absolute"
-                  right="40px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIconsCertificados ? 'block' : 'none'}
-                  onClick={() => handleDeleteClick(card.id, 'cardContentCertificados')}
-                />
             <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="4"
-              marginTop="10"
+              key={card.id}
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+              position="relative"
             >
-              <Text fontWeight="bold">{card.titulo}</Text>
-              <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-                {card.curso}
+              {/* Iconos de edición y eliminación */}
+              <EditIcon
+                position="absolute"
+                right="20px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsCertificados ? "block" : "none"}
+                onClick={() => handleEditCardCertificados(card)}
+              />
+
+              <DeleteIcon
+                position="absolute"
+                right="40px"
+                color="gray.500"
+                boxSize={4}
+                cursor="pointer"
+                display={showIconsCertificados ? "block" : "none"}
+                onClick={() =>
+                  handleDeleteClick(card.id, "cardContentCertificados")
+                }
+              />
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                marginBottom="4"
+                marginTop="10"
+              >
+                <Text fontWeight="bold">{card.titulo}</Text>
+                <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+                  {card.curso}
+                </Text>
+              </Box>
+              <Text fontSize="md" marginBottom="2">
+                {card.fecha}
               </Text>
             </Box>
-            <Text fontSize="md" marginBottom="2">
-              {card.fecha}
-            </Text>
-          </Box>
           ))}
 
-            {/* Modal de edición Certificados */}
+          {/* Modal de edición Certificados */}
           <Modal isOpen={showEditModalCertificados} onClose={handleCancelEdit}>
             <ModalOverlay />
             <ModalContent>
@@ -1270,7 +1497,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCardCertificados.titulo}
                       onChange={(e) =>
-                        handleEditInputChange("titulo", e.target.value, setEditingCardCertificados)
+                        handleEditInputChange(
+                          "titulo",
+                          e.target.value,
+                          setEditingCardCertificados
+                        )
                       }
                       placeholder="Editar Titulo..."
                       size="lg"
@@ -1279,7 +1510,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                     <Input
                       value={editingCardCertificados.curso}
                       onChange={(e) =>
-                        handleEditInputChange("curso", e.target.value, setEditingCardCertificados)
+                        handleEditInputChange(
+                          "curso",
+                          e.target.value,
+                          setEditingCardCertificados
+                        )
                       }
                       placeholder="Editar Curso..."
                       size="lg"
@@ -1290,7 +1525,11 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                       type="date"
                       value={editingCardCertificados.fecha}
                       onChange={(e) =>
-                        handleEditInputChange("fecha", e.target.value, setEditingCardCertificados)
+                        handleEditInputChange(
+                          "fecha",
+                          e.target.value,
+                          setEditingCardCertificados
+                        )
                       }
                       size="lg"
                       marginBottom="4"
@@ -1303,7 +1542,12 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
                   colorScheme="blue"
                   mr={3}
                   onClick={() => {
-                    handleSaveEdit(editingCardCertificados, cardContentCertificados, setCardContentCertificados, setShowEditModalCertificados);
+                    handleSaveEdit(
+                      editingCardCertificados,
+                      cardContentCertificados,
+                      setCardContentCertificados,
+                      setShowEditModalCertificados
+                    );
                   }}
                 >
                   Guardar
@@ -1348,106 +1592,174 @@ const handleSaveEdit = (editedCard, content, setContent, setShowEditModal) => {
         </Box>
         {/*Modal agregar campos*/}
         <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
-              <ModalBody>
-                {/* campos correspondientes al tipo de tarjeta */}
-                {cardTypeToAdd === "Educación" && (
-                  <>
-                    <Input placeholder="Grado" marginBottom="10px" />
-                    Fecha
-                    <Input
-                      type="date"
-                      placeholder="Fecha"
-                      marginBottom="10px"
-                    />
-                  </>
-                )}
-                {cardTypeToAdd === "Experiencia Laboral" && (
-                  <>
-                    <Input placeholder="Nombre Empresa" marginBottom="10px" />
-                    <Input placeholder="Posición" marginBottom="10px" />
-                    <Textarea
-                      placeholder="Descripción..."
-                      marginBottom="10px"
-                    />
-                    Fecha Inicio
-                    <Input
-                      type="date"
-                      placeholder="Posición"
-                      marginBottom="10px"
-                    />
-                    Fecha Final
-                    <Input
-                      type="date"
-                      placeholder="Posición"
-                      marginBottom="10px"
-                    />
-                    {/* ... Otros campos específicos de Experiencia Laboral ... */}
-                  </>
-                )}
-                {cardTypeToAdd === "Idioma" && (
-                  <>
-                    <Input placeholder="Idioma" marginBottom="10px" />
-                    <Input placeholder="Nivel" marginBottom="10px" />
-                  </>
-                )}
-                {cardTypeToAdd === "Certificado" && (
-                  <>
-                    <Input placeholder="Certificado" marginBottom="10px" />
-                    Fecha
-                    <Input
-                      type="date"
-                      placeholder="Fecha"
-                      marginBottom="10px"
-                    />
-                  </>
-                )}
-                {cardTypeToAdd === "Técnicas" && (
-                  <>
-                    <Input
-                      placeholder="Habilidad Técnica"
-                      marginBottom="10px"
-                    />
-                  </>
-                )}
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+            <ModalBody>
+              {/* campos correspondientes al tipo de tarjeta */}
+              {cardTypeToAdd === "Educación" && (
+                <>
+                  <Input placeholder="Grado" marginBottom="10px" />
+                  Fecha
+                  <Input type="date" placeholder="Fecha" marginBottom="10px" />
+                </>
+              )}
+              {cardTypeToAdd === "Experiencia Laboral" && (
+                <>
+                  <Input 
+                  placeholder="Nombre Empresa"
+                  marginBottom="10px"
+                  value={additionalFields.empresa || ""}
+                  onChange={(e) =>
+                      handleFieldChange("empresa", e.target.value)
+                    }
+                  
+                  />
+                  <Input 
+                  value={additionalFields.posicion || ""}
+                  onChange={(e) =>
+                    handleFieldChange("posicion", e.target.value)
+                  }
+                  placeholder="Posición" 
+                  marginBottom="10px" />
+                  <Textarea 
+                  value={additionalFields.descripcion || ""}
+                  onChange={(e) =>
+                    handleFieldChange("descripcion", e.target.value)
+                  }
+                  placeholder="Descripción..." 
+                  marginBottom="10px" />
+                  Fecha Inicio
+                  <Input
+                    value={additionalFields.fechaInicio || ""}
+                    onChange={(e) =>
+                      handleFieldChange("fechaInicio", e.target.value)
+                    }
+                    type="date"
+                    placeholder="Posición"
+                    marginBottom="10px"
+                  />
+                  Fecha Final
+                  <Input
+                    value={additionalFields.fechaFinal || ""}
+                    onChange={(e) =>
+                      handleFieldChange("fechaFinal", e.target.value)
+                    }
+                    type="date"
+                    placeholder="Posición"
+                    marginBottom="10px"
+                  />
+                  {/* ... Otros campos específicos de Experiencia Laboral ... */}
+                </>
+              )}
+              {cardTypeToAdd === "Idioma" && (
+                <>
+                  <Select
+                    value={additionalFields.idioma || ""}
+                    onChange={(e) =>
+                      handleFieldChange("idioma", e.target.value)
+                    }
+                    placeholder="Selecciona un idioma"
+                    marginBottom="10px"
+                  >
+                    {idiomas.map((idioma) => (
+                      <option key={idioma} value={idioma}>
+                        {idioma}
+                      </option>
+                    ))}
+                  </Select>
 
-                {/*Mas tipos de tarjetas ... */}
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={
-                    3
-                  } /* Agregar lógica para guardar según el tipo de tarjeta */
-                >
-                  Guardar
-                </Button>
-                <Button variant="ghost" onClick={() => setShowAddModal(false)}>
-                  Cancelar
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+                  <Select
+                    value={additionalFields.nivel || ""}
+                    onChange={(e) => handleFieldChange("nivel", e.target.value)}
+                    placeholder="Selecciona un nivel"
+                    marginBottom="10px"
+                  >
+                    {niveles.map((nivel) => (
+                      <option key={nivel} value={nivel}>
+                        {nivel}
+                      </option>
+                    ))}
+                  </Select>
+                </>
+              )}
+              {cardTypeToAdd === "Certificado" && (
+                <>
+                  <Input
+                    value={additionalFields.titulo || ""}
+                    onChange={(e) =>
+                      handleFieldChange("titulo", e.target.value)
+                    }
+                    placeholder="Certificado"
+                    marginBottom="10px"
+                  />
+                  <Input
+                    onChange={(e) => handleFieldChange("curso", e.target.value)}
+                    value={additionalFields.curso || ""}
+                    placeholder="Curso"
+                    marginBottom="10px"
+                  />
+                  Fecha
+                  <Input
+                    onChange={(e) => handleFieldChange("fecha", e.target.value)}
+                    type="date"
+                    placeholder="Fecha"
+                    marginBottom="10px"
+                  />
+                </>
+              )}
+              {cardTypeToAdd === "Portafolio" && (
+                <>
+                  <Input
+                    placeholder="Titulo del portafolio"
+                    marginBottom="10px"
+                  />
+                  <Input placeholder="URL del portafolio" marginBottom="10px" />
+                </>
+              )}
+              {cardTypeToAdd === "Técnicas" && (
+                <>
+                  <Input placeholder="Habilidad Técnica" marginBottom="10px" />
+                </>
+              )}
+              {cardTypeToAdd === "Acerca de Mí" && (
+                <>
+                  <Textarea placeholder="Descripción" marginBottom="10px" />
+                </>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
+                Guardar
+              </Button>
+              <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
         {/* Modal de confirmación para eliminar */}
-          <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Confirmar Eliminación</ModalHeader>
-              <ModalBody>
-                ¿Estás seguro de que deseas eliminar?
-              </ModalBody>
-              <ModalFooter>
-              <Button colorScheme="red" mr={3} onClick={() => handleConfirmDelete(cardToDelete, cardTypeToDelete)}>
-                  Eliminar
-                </Button>
-                <Button variant="ghost" onClick={handleCancelDelete}>
-                  Cancelar
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+        <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Confirmar Eliminación</ModalHeader>
+            <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="red"
+                mr={3}
+                onClick={() =>
+                  handleConfirmDelete(cardToDelete, cardTypeToDelete)
+                }
+              >
+                Eliminar
+              </Button>
+              <Button variant="ghost" onClick={handleCancelDelete}>
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
 
       <Footer />
