@@ -172,31 +172,44 @@ function PerfilEgresado() {
           (item) => item.id !== cardToDelete
         );
         setCardContent(updatedCardContent);
+        // agregar cada uno de los estados de edicion
+        setShowIcons(false);
+        setEditMode(true);
       } else if (cardTypeToDelete === "cardContentEducacion") {
         updatedCardContent = cardContentEducacion.filter(
           (item) => item.id !== cardToDelete
         );
         setCardContentEducacion(updatedCardContent);
+        setShowIconsEducacion(false);
+        setEditModeEducacion(true);
       } else if (cardTypeToDelete === "cardContentIdiomas") {
         updatedCardContent = cardContentIdiomas.filter(
           (item) => item.id !== cardToDelete
         );
         setCardContentIdiomas(updatedCardContent);
+        setShowIconsIdiomas(false);
+        setEditModeIdiomas(true);
       } else if (cardTypeToDelete === "cardContentCertificados") {
         updatedCardContent = cardContentCertificados.filter(
           (item) => item.id !== cardToDelete
         );
         setCardContentCertificados(updatedCardContent);
+        setShowIconsCertificados(false);
+        setEditModeCertificados(true);
       } else if (cardTypeToDelete === "cardContentPortafolios") {
         updatedCardContent = cardContentPortafolios.filter(
           (item) => item.id !== cardToDelete
         );
         setCardContentPortafolios(updatedCardContent);
+        setShowIconsPortafolios(false);
+        setEditModePortafolios(true);
       } else if (cardTypeToDelete === "cardContentSobremi") {
         updatedCardContent = cardContentSobremi.filter(
           (item) => item.id !== cardToDelete
         );
         setCardContentSobremi(updatedCardContent);
+        setShowIconsSobremi(false);
+        setEditModeSobremi(true);
       } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
@@ -523,13 +536,13 @@ function PerfilEgresado() {
             marginBottom="5"
           >
             <Text
-              bg="#007935"
-              color="white"
+              bg="#FBC430"
+              color="black"
               padding="4"
               borderRadius="4"
               cursor="pointer"
               fontWeight="BOLD"
-              _hover={{ bg: "#005e28" }}
+              _hover={{ bg: "#FBC930" }}
             >
               Cantidad de Descargas CV
             </Text>
