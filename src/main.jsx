@@ -8,20 +8,38 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LandingPage from "./cores/landingpage/LandingPage";
 import Login from "./cores/login/Login";
 import Register from "./cores/register/Register";
+import UnProtectedRoutes from "./cores/login/UnProtectedRoutes";
+import ProtectedRoutes from "./cores/login/ProtectedRoutes";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage/>,
+    element: <UnProtectedRoutes/>,
+    children: [
+      {
+        path: "/",
+        element: <LandingPage/>,
+      },
+      {
+        path: "/login",
+        element: <Login/>,
+      },
+      {
+        path: "/register",
+        element: <Register/>,
+      },
+    ]
   },
-  {
-    path: "/login",
-    element: <Login/>,
-  },
-  {
-    path: "/register",
-    element: <Register/>,
+  { 
+    path: "/",
+    element: <ProtectedRoutes/>,
+    children: [
+      {
+        path: "/",
+        element: <div>Profile</div>,
+      },
+    ]
   }
 
 ]);
