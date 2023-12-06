@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 function ProtectedRoutes() {
   const navigate = useNavigate();
-  const cookieValue = true;
+  const cookieValue = false;
   if (!cookieValue) {
     return navigate("/");
   }

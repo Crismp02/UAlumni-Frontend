@@ -3,7 +3,7 @@ import { useNavigate, Outlet } from "react-router-dom";
 
 function UnProtectedRoutes() {
   const navigate = useNavigate();
-  const cookieValue = true;
+  const cookieValue = false;
   if (cookieValue) {
     return navigate("/profile");
   }
