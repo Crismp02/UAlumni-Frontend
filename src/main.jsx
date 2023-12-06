@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
@@ -12,42 +12,41 @@ import UnProtectedRoutes from "./cores/login/UnProtectedRoutes";
 import ProtectedRoutes from "./cores/login/ProtectedRoutes";
 
 //Rutas de ejemplo, se pueden cambiar
+console.log(document.cookie)
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <UnProtectedRoutes/>,
+    element: <UnProtectedRoutes />,
     children: [
       {
         path: "/",
-        element: <LandingPage/>,
+        element: <LandingPage />,
       },
       {
         path: "/login",
-        element: <Login/>,
+        element: <Login />,
       },
       {
         path: "/register",
-        element: <Register/>,
+        element: <Register />,
       },
-    ]
+    ],
   },
-  { 
+  {
     path: "/",
-    element: <ProtectedRoutes/>,
+    element: <ProtectedRoutes />,
     children: [
       {
-        path: "/",
+        path: "/profile",
         element: <div>Profile</div>,
       },
-    ]
-  }
-
+    ],
+  },
 ]);
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider>
-    <ToastContainer />
+      <ToastContainer />
       <RouterProvider router={router} />
     </ChakraProvider>
   </React.StrictMode>
