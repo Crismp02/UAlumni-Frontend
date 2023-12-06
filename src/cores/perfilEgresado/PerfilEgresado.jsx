@@ -89,6 +89,7 @@ function PerfilEgresado() {
       id: 1,
       grado: "Licenciatura",
       anioFinal: "2023",
+      institucion: 'Universidad Católica Andrés Bello'
     },
   ]);
 
@@ -242,6 +243,7 @@ function PerfilEgresado() {
             id: cardContentEducacion.length + 1, // Generar un nuevo ID
             grado: additionalFields.grado,
             anioFinal: additionalFields.anioFinal,
+            institucion: additionalFields.institucion,
           },
         ];
         setCardContentEducacion(newCardContent);
@@ -342,6 +344,7 @@ function PerfilEgresado() {
   const [editingCardEducacion, setEditingCardEducacion] = useState({
     grado: "",
     anioFinal: "",
+    institucion: ""
   });
 
   const [editingCardIdiomas, setEditingCardIdiomas] = useState({
@@ -565,7 +568,7 @@ function PerfilEgresado() {
             textAlign="left"
             fontWeight="BOLD"
           >
-            PORTAFOLIO
+            Portafolio
             {editModePortafolios ? (
               <EditIcon
                 cursor="pointer"
@@ -812,7 +815,7 @@ function PerfilEgresado() {
             display="flex"
             alignItems="center"
           >
-            EXPERIENCIA LABORAL
+            Experiencia Laboral
             
             {editMode ? (
               <EditIcon
@@ -1012,7 +1015,7 @@ function PerfilEgresado() {
             marginTop="10"
             marginBottom="0"
           >
-            ESTUDIOS REALIZADOS
+            Estudios Realizados
             {editModeEducacion ? (
               <EditIcon
                 cursor="pointer"
@@ -1089,14 +1092,15 @@ function PerfilEgresado() {
                   {card.anioFinal}
                 </Text>
               </Box>
-
               <Box
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
-                marginBottom="2"
+                marginBottom="4"
               >
-                <Text marginRight="4">Universidad Católica Andrés Bello</Text>
+                <Text marginRight="4">
+                  {card.institucion}
+                </Text>
               </Box>
             </Box>
           ))}
@@ -1138,6 +1142,19 @@ function PerfilEgresado() {
                       size="lg"
                       marginBottom="4"
                     />
+                    <Input 
+                      value={editingCardEducacion.institucion}
+                      onChange={(e) =>
+                        handleEditInputChange(
+                          "institucion",
+                          e.target.value,
+                          setEditingCardEducacion
+                        )
+                      }
+                      placeholder="Editar Institucion..."
+                      size="lg"
+                      marginBottom="4"
+                    />
                   </>
                 )}
               </ModalBody>
@@ -1172,7 +1189,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            HABILIDADES
+            Habilidades
           </Text>
           <Text
             fontSize="lg"
@@ -1181,7 +1198,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            TÉCNICAS
+            Técnicas
             {editModeTecnicas ? (
               <EditIcon
                 cursor="pointer"
@@ -1296,7 +1313,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            BLANDAS
+            Blandas
           </Text>
           <Box
             display="flex"
@@ -1383,7 +1400,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            IDIOMAS
+            Idiomas
             {editModeIdiomas ? (
               <EditIcon
                 cursor="pointer"
@@ -1540,7 +1557,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            CERTIFICADOS
+            Certificados
             {editModeCertificados ? (
               <EditIcon
                 cursor="pointer"
@@ -1705,7 +1722,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            INFORMACIÓN DE CONTACTO
+            Información de Contacto
           </Text>
           <Box
             display="flex"
@@ -1737,10 +1754,18 @@ function PerfilEgresado() {
               {/* campos correspondientes al tipo de tarjeta */}
               {cardTypeToAdd === "Educación" && (
                 <>
+                  Grado
                   <Input
                     value={additionalFields.grado || ""}
                     onChange={(e) => handleFieldChange("grado", e.target.value)}
                     placeholder="Grado"
+                    marginBottom="10px"
+                  />
+                  Institucion
+                  <Input
+                    value={additionalFields.institucion || ""}
+                    onChange={(e) => handleFieldChange("institucion", e.target.value)}
+                    placeholder="Institucion"
                     marginBottom="10px"
                   />
                   Fecha

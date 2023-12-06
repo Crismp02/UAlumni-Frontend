@@ -8,6 +8,7 @@ import Login from "./cores/login/Login";
 import Register from "./cores/register/Register";
 import ListarEgresados from "./cores/listarEgresados/ListarEgresados";
 import PerfilEgresado from "./cores/perfilEgresado/PerfilEgresado";
+import PerfilEgresadoReclutador from "./cores/perfilEgresadoReclutador/PerfilEgresadoReclutador";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/perfilEgresado",
     element: <PerfilEgresado/>,
+  },
+  {
+    path: "/perfilEgresadoReclutador",
+    element: <PerfilEgresadoReclutador/>,
   },
 ]);
 
