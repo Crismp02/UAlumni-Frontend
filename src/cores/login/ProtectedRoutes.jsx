@@ -1,12 +1,14 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
 function ProtectedRoutes() {
   const navigate = useNavigate();
-  const cookieValue = false;
-  if (!cookieValue) {
-    return navigate("/");
-  }
+  const cookieValue = true;
+  useEffect(() => {
+    if (!cookieValue) {
+      return navigate("/");
+    }
+  })
   return <Outlet />;
 }
 

@@ -10,6 +10,7 @@ import Login from "./cores/login/Login";
 import Register from "./cores/register/Register";
 import UnProtectedRoutes from "./cores/login/UnProtectedRoutes";
 import ProtectedRoutes from "./cores/login/ProtectedRoutes";
+import PerfilEgresado from "./cores/perfilEgresado/PerfilEgresado";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/profile",
-        element: <div>Profile</div>,
+        element: <PerfilEgresado/>,
       },
     ],
   },
@@ -50,3 +51,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </ChakraProvider>
   </React.StrictMode>
 );
+
