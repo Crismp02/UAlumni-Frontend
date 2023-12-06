@@ -7,10 +7,12 @@ import {
 } from "@chakra-ui/react";
 import { registerUser } from "../../services/auth/Auth.services";
 import RegisterForm from "./RegisterForm";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [isLarger920] = useMediaQuery("(min-width: 920px)");
   const [isLarger1010] = useMediaQuery("(min-width: 1010px)");
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -41,6 +43,7 @@ function Register() {
       try {
         const data = await registerUser(email, firstName, lastName, password);
         console.log(data);
+        navigate("/login")
       } catch (error) {
         console.error(error);
       }

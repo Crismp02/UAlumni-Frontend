@@ -10,9 +10,10 @@ import Login from "./cores/login/Login";
 import Register from "./cores/register/Register";
 import UnProtectedRoutes from "./cores/login/UnProtectedRoutes";
 import ProtectedRoutes from "./cores/login/ProtectedRoutes";
+import { CookiesProvider } from "react-cookie";
 
 //Rutas de ejemplo, se pueden cambiar
-console.log(document.cookie)
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -47,7 +48,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ChakraProvider>
       <ToastContainer />
-      <RouterProvider router={router} />
+      <CookiesProvider>
+        <RouterProvider router={router} />
+      </CookiesProvider>
     </ChakraProvider>
   </React.StrictMode>
 );
