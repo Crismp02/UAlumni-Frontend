@@ -1,17 +1,9 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 
-function ProtectedRoutes({ cookie }) {
-  const [cookies, setCookie] = useCookies();
-  console.log(cookies);
-  const user = "ualumni-session";
-
-  let cookieValue = document.cookie.replace(
-    /(?:(?:^|.;\s)ualumni-session\s=\s([^;]).$)|^.*$/,
-    "$1"
-  );
+function ProtectedRoutes() {
   const navigate = useNavigate();
+  const cookieValue = true;
   if (!cookieValue) {
     return navigate("/");
   }
