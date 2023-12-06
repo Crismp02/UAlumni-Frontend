@@ -34,7 +34,7 @@ export const loginUser = async (email, password) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ 
-        alumniEmail: email, 
+        email: email, 
         password: password 
       }),
       credentials: 'include', // Esto es necesario para que las cookies se envíen con la solicitud
