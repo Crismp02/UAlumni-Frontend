@@ -69,3 +69,21 @@ export const logoutUser = async () => {
     toast.error(`Error: ${error.message}`);
   }
 };
+
+export const checkAuthStatus = async () => {
+  try {
+    const response = await fetch('http://localhost:3000/auth/status', {
+      method: 'GET',
+      credentials: 'include', 
+    });
+
+    const data = await response.json();
+    if (response.ok) {     
+      return data;
+    } else {
+      throw new Error(data.message); 
+    }
+  } catch (error) {
+    toast.error(`Error: ${error.message}`);
+  }
+}

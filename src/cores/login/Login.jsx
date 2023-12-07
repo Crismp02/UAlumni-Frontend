@@ -10,6 +10,7 @@ import { loginUser } from "../../services/auth/Auth.services";
 import LoginForm from "./LoginForm";
 import { useNavigate } from "react-router-dom";
 
+
 function Login() {
   const navigate = useNavigate();
 
@@ -37,7 +38,9 @@ function Login() {
       try {
         const data = await loginUser(email, password);
         console.log(data);
-        navigate("/profile")
+        if (data){
+          navigate("/profile")
+        }
       } catch (error) {
         console.error(error);
       }
