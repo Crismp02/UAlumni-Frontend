@@ -3,26 +3,24 @@ import { Box, Text, Tag, useMediaQuery} from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 
-const EgresadoCard2 = ({ egresado}) =>{
-
+const EgresadoCard2 = ({ egresado }) =>{
+  if (!egresado) {
+    return null; // o puedes retornar un componente de carga o similar
+  }
     const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
     const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
     const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
-    let skillsArray =[];
+
+    const { names, associatedAlumni } = egresado;
+    const skillsArray = associatedAlumni?.resume?.technicalSkills || [];
+
     let namesArray =[];
     // const egresadoArray =[];
     
-
+    //console.log("EGRESADO",egresado);
   
 
-    //Verificar si 'egresado' es un objeto y tiene las propiedades esperadas:
-    if (typeof egresado === 'object' && 'associatedAlumni' in egresado && typeof egresado.associatedAlumni === 'object') {
-        //Obtener nombres del egresado actual
-        namesArray.push(egresado.names);
-        // Obtener habilidades técnicas del egresado actual
-        skillsArray = egresado.associatedAlumni.resume.technicalSkills;
-    }
-    console.log("EUREKA",namesArray);
+    //Verificar si 'egresado' es un objeto y tiene las propiedades esperadas: 
   return (
     <div>
             <Box
@@ -45,14 +43,10 @@ const EgresadoCard2 = ({ egresado}) =>{
           flexDirection="column"
           paddingTop="0px"
         > 
-          { namesArray.map((index) =>(
-          <Text key={index} as="b" fontSize={["sm", "sm", "md", "md"]}>
-            {/* namesArray[0] */}
-          </Text>))}
-          <Text >
-          CARERA
-          {/* {egresado.data.items[0].career} */}
-          </Text>
+          {/*  */} 
+          <Text as="b" fontSize={["sm", "sm", "md", "md"]}>
+        {names}
+      </Text>
         </Box>
         <Box
           w={["135px", "185px", "280px", "405px", "510px", "560px"]}

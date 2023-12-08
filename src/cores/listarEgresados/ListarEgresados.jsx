@@ -20,11 +20,10 @@ function ListarEgresados() {
         } 
         const data = await response.json(); 
 
-        if (Array.isArray(data.data)) {
+        if (Array.isArray(data.data.items)) {
           // Actualiza el estado con los egresados obtenidos
           setEgresados(data.data.items); 
     }
-   // setTechnicalSkills(data.data.technicalSkills);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -65,16 +64,8 @@ fetchEgresados();}, []);
           alignItems="center"
         >
           {egresados.map((egresado, index) => (
-            //<>
-            //<div>
-             // <h2> JAJAJAJAJAJAJJAAJ</h2>
-            //</div>
-            <EgresadoCard2
-              key={index}
-              egresado={egresado}
-            />
-            //</>
-          ))}
+  egresado && <EgresadoCard2 key={index} egresado={egresado} />
+))}
           {isLargerThan770 && <EgresadoCard2 />}
         </Box>
       </Center>
