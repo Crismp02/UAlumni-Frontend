@@ -1,28 +1,31 @@
+
 import { Box, Text, Tag, useMediaQuery} from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 
-function EgresadoCard({ egresado}) {
+const EgresadoCard2 = ({ egresado}) =>{
 
-  console.log("EGRESADOS CARD");
-  console.log(egresado);
-  // Definir el uso de useMediaQuery para distintos tamaños
-  const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
-  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
-  const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
+    const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
+    const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
+    const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
+    let skillsArray =[];
+    let namesArray =[];
+    // const egresadoArray =[];
+    
 
-  // Definir la validación de props
-  EgresadoCard.propTypes = {
-    egresado: PropTypes.object.isRequired,
-  };
+  
 
-  // Obtener habilidades técnicas del egresado actual
-  const skillsArray = egresado.data.items[0].asociatedAlumni.resume.technicalSkills || [];
-
-
+    //Verificar si 'egresado' es un objeto y tiene las propiedades esperadas:
+    if (typeof egresado === 'object' && 'associatedAlumni' in egresado && typeof egresado.associatedAlumni === 'object') {
+        //Obtener nombres del egresado actual
+        namesArray.push(egresado.names);
+        // Obtener habilidades técnicas del egresado actual
+        skillsArray = egresado.associatedAlumni.resume.technicalSkills;
+    }
+    console.log("EUREKA",namesArray);
   return (
     <div>
-      <Box
+            <Box
         w={["250px", "350px", "540px", "790px", "1000px", "1100px"]}
         m="auto"
         p={5}
@@ -41,11 +44,15 @@ function EgresadoCard({ egresado}) {
           display="flex"
           flexDirection="column"
           paddingTop="0px"
-        >
-          <Text as="b" fontSize={["sm", "sm", "md", "md"]}>
-            {egresado.data.items[0].names}
+        > 
+          { namesArray.map((index) =>(
+          <Text key={index} as="b" fontSize={["sm", "sm", "md", "md"]}>
+            {/* namesArray[0] */}
+          </Text>))}
+          <Text >
+          CARERA
+          {/* {egresado.data.items[0].career} */}
           </Text>
-          <Text>{egresado.data.items[0].career}</Text>
         </Box>
         <Box
           w={["135px", "185px", "280px", "405px", "510px", "560px"]}
@@ -93,5 +100,10 @@ function EgresadoCard({ egresado}) {
       </Box>
     </div>
   );
-}
-export default EgresadoCard;
+};
+
+// Definir la validación de props
+EgresadoCard2.propTypes = {
+    egresado: PropTypes.object.isRequired,
+};
+export default EgresadoCard2;
