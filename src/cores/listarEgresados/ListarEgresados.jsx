@@ -19,7 +19,6 @@ function ListarEgresados() {
           throw new Error("Error al obtener los egresados"); 
         } 
         const data = await response.json(); 
-        console.log(data);
 
         if (Array.isArray(data.data.items)) {
           // Actualiza el estado con los egresados obtenidos
