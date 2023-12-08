@@ -4,23 +4,28 @@ import PropTypes from "prop-types";
 
 
 const EgresadoCard2 = ({ egresado }) =>{
-  if (!egresado) {
-    return null; // o puedes retornar un componente de carga o similar
-  }
+ 
     const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
     const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
     const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
 
-    const { names, associatedAlumni } = egresado;
+  if (!egresado) {
+      return null; // o puedes retornar un componente de carga o similar
+    }
+    const { names , surnames, associatedAlumni } = egresado;
     const skillsArray = associatedAlumni?.resume?.technicalSkills || [];
 
-    let namesArray =[];
-    // const egresadoArray =[];
-    
-    //console.log("EGRESADO",egresado);
-  
+    let skillsToShow;
+    if (isLargerThan1300) {
+      skillsToShow = skillsArray.slice(0, 4);
+    } else if (isLargerThan800) {
+      skillsToShow = skillsArray.slice(0, 3);
+    } else if (isLargerThan1000) {
+      skillsToShow = skillsArray.slice(0, 2);
+    } else {
+      skillsToShow = skillsArray.slice(0, 1);
+    }
 
-    //Verificar si 'egresado' es un objeto y tiene las propiedades esperadas: 
   return (
     <div>
             <Box
@@ -45,7 +50,7 @@ const EgresadoCard2 = ({ egresado }) =>{
         > 
           {/*  */} 
           <Text as="b" fontSize={["sm", "sm", "md", "md"]}>
-        {names}
+        {names} {surnames}
       </Text>
         </Box>
         <Box
@@ -65,26 +70,11 @@ const EgresadoCard2 = ({ egresado }) =>{
             display="flex"
             flexDirection={["column", "column", "row", "row"]}
           >
-            {skillsArray.map((skill, index) => (
+              {skillsToShow.map((skill, index) => (
               <Tag key={index} backgroundColor="#FBC430" marginLeft="5px" padding="6px">
                 {skill.skillName}
               </Tag>
             ))}
-            {isLargerThan1000 && (
-              <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">
-                {skillsArray[1] && skillsArray[1].skillName}
-              </Tag>
-            )}
-            {isLargerThan800 && (
-              <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">
-                {skillsArray[2] && skillsArray[2].skillName}
-              </Tag>
-            )}
-            {isLargerThan1300 && (
-              <Tag backgroundColor="#FBC430" marginLeft="5px" padding="6px">
-                {skillsArray[3] && skillsArray[3].skillName}
-              </Tag>
-            )}
             <Text marginLeft="10px">...</Text>
           </Box>
           <Text textAlign="right" fontSize={["sm", "sm", "md", "md"]}>

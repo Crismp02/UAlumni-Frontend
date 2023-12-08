@@ -19,6 +19,7 @@ function ListarEgresados() {
           throw new Error("Error al obtener los egresados"); 
         } 
         const data = await response.json(); 
+        console.log(data);
 
         if (Array.isArray(data.data.items)) {
           // Actualiza el estado con los egresados obtenidos
@@ -64,8 +65,8 @@ fetchEgresados();}, []);
           alignItems="center"
         >
           {egresados.map((egresado, index) => (
-  egresado && <EgresadoCard2 key={index} egresado={egresado} />
-))}
+          egresado && <EgresadoCard2 key={index} egresado={egresado} />
+        ))}
           {isLargerThan770 && <EgresadoCard2 />}
         </Box>
       </Center>
