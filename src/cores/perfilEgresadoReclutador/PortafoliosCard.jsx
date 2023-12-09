@@ -12,30 +12,45 @@ import {
   Textarea,
   Box,
   Flex,
-} from "@chakra-ui/react"; 
-import { AddIcon, EditIcon, DeleteIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
+  IconButton,
+  VStack
+} from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
+import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
-const ContactoCard = ({ cardContent, setCardContent }) => {
- 
+const PortafoliosCard = ({
+  cardContentPortafolios,
+  setCardContentPortafolios,
+}) => {
+  const [switchValue, setSwitchValue] = useState(false);
 
+  const handleSwitchChange = () => {
+    setSwitchValue(!switchValue);
+  };
+  
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
+  const [cardTypeToDelete, setCardTypeToDelete] = useState(
+    "cardContentPortafolios"
+  );
   const [showIcons, setShowIcons] = useState(false);
-  const [cardIdToEditContacto, setcardIdToEditContacto] = useState(null);
-
+  const [cardIdToEdit, setcardIdToEdit] = useState(null);
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
 
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
 
+  const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
- 
+  const handleFieldChange = (fieldName, value) => {
+    // Actualizar solo el campo correspondiente en additionalFields
+    setAdditionalFields({ ...additionalFields, [fieldName]: value });
+  };
 
   const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
     setShowIconsFunc((prevIcons) => !prevIcons);
@@ -49,7 +64,7 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setShowEditModal(true);
   };
 
-  // Modal de edición Contacto
+  // Modal de edición Experiencial Laboral
   const handleEditInputChange = (field, value, setState) => {
     setState((prevState) => ({
       ...prevState,
@@ -64,7 +79,8 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setShowEditModal
   ) => {
 
-    if (editedCard.tlf.trim() === '' || editedCard.direccion.trim() === '') {
+    // Validar que los campos no estén vacíos
+    if (editedCard.titulo.trim() === '' || editedCard.url.trim() === '') {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
@@ -84,7 +100,53 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setEditMode(true);
   };
 
+  // Función genérica para manejar la apertura del modal para agregar tarjetas
+  const handleAddClick = (cardType) => {
+    setCardTypeToAdd(cardType);
+    setShowAddButton(false);
+    setShowAddModal(true);
+  };
 
+  const handleGuardar = () => {
+
+    // Validar que los campos no estén vacíos antes de guardar
+    if (additionalFields.titulo.trim() === '' || additionalFields.url.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
+    let newCardContent = [];
+
+    // Lógica para agregar datos según el tipo de tarjeta actual
+    switch (cardTypeToAdd) {
+      case "Portafolios":
+        newCardContent = [
+          ...cardContentPortafolios,
+          {
+            id: cardContentPortafolios.length + 1, // Generar un nuevo ID
+            titulo: additionalFields.titulo,
+            descripcion: additionalFields.descripcion,
+            url: additionalFields.url,
+            fechaInicio: additionalFields.fechaInicio,
+            fechaFinal: additionalFields.fechaFinal,
+          },
+        ];
+        setCardContentPortafolios(newCardContent);
+        setShowIcons(false);
+        setEditMode(true);
+        break;
+
+      // Agrega lógica para otros tipos de tarjetas si es necesario
+      default:
+        break;
+    }
+
+    // Restablecer los campos adicionales después de guardar
+    setAdditionalFields({});
+    // CERRAR MODAL DE AGREGAR
+    setShowAddModal(false);
+  };
 
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
@@ -107,11 +169,11 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
   const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       let updatedCardContent = [];
-      if (cardTypeToDelete === "cardContent") {
-        updatedCardContent = cardContent.filter(
+      if (cardTypeToDelete === "cardContentPortafolios") {
+        updatedCardContent = cardContentPortafolios.filter(
           (item) => item.id !== cardToDelete
         );
-        setCardContent(updatedCardContent);
+        setCardContentPortafolios(updatedCardContent);
         // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
@@ -130,7 +192,7 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
 
   const handleCancelEdit = () => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
-    setcardIdToEditContacto(null);
+    setcardIdToEdit(null);
     setShowEditModal(false);
   };
 
@@ -145,17 +207,12 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
         display="flex"
         alignItems="center"
       >
-        Contacto
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditCard(cardContent[0])}
-          />
+        Portafolios
       </Text>
 
+      {cardContentPortafolios.map((card) => (
         <Box
+          key={card.id}
           bg="white"
           padding="4"
           border="1px solid #ccc"
@@ -166,63 +223,43 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
           marginBottom="5"
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
-          <Flex>
-            <PhoneIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].tlf}</Text>
+          <Flex justifyContent="space-between">
+            <Text fontWeight="bold">{card.titulo}</Text>
           </Flex>
+          <Text>{card.url}</Text>
         </Box>
-        <Box
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          <Flex>
-            <InfoIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].direccion}</Text>
-          </Flex>
-        </Box>
+      ))}
 
-      {/* Modal de edición Contacto*/}
+      {/* Modal de edición Portafolios*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Contacto</ModalHeader>
+          <ModalHeader>Editar Portafolios</ModalHeader>
           <ModalBody>
             {editingCard && (
               <>
                 <Input
-                  value={editingCard.tlf}
+                  value={editingCard.titulo}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "tlf",
+                      "titulo",
                       e.target.value,
                       setEditingCard
                     )
                   }
-                  placeholder="Editar teléfono..."
+                  placeholder="Editar titulo..."
                   size="lg"
                   marginBottom="4"
                 />
-                <Textarea
-                  value={editingCard.direccion}
+                <Input
+                  value={editingCard.url}
                   onChange={(e) =>
-                    handleEditInputChange(
-                      "direccion",
-                      e.target.value,
-                      setEditingCard
-                    )
+                    handleEditInputChange("url", e.target.value, setEditingCard)
                   }
-                  placeholder="Editar dirección..."
+                  placeholder="Editar Url..."
                   size="lg"
                   marginBottom="4"
                 />
-               
               </>
             )}
           </ModalBody>
@@ -233,8 +270,8 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
               onClick={() =>
                 handleSaveEdit(
                   editingCard,
-                  cardContent,
-                  setCardContent,
+                  cardContentPortafolios,
+                  setCardContentPortafolios,
                   setShowEditModal
                 )
               }
@@ -248,6 +285,41 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
         </ModalContent>
       </Modal>
 
+      {/*Modal agregar campos*/}
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+          <ModalBody>
+            {/* campos correspondientes al tipo de tarjeta */}
+            {cardTypeToAdd === "Portafolios" && (
+              <>
+                <Input
+                  value={additionalFields.titulo || ""}
+                  onChange={(e) => handleFieldChange("titulo", e.target.value)}
+                  placeholder="Título"
+                  marginBottom="10px"
+                />
+
+                <Input
+                  value={additionalFields.url || ""}
+                  onChange={(e) => handleFieldChange("url", e.target.value)}
+                  placeholder="Url del portafolio"
+                  marginBottom="10px"
+                />
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
+              Guardar
+            </Button>
+            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       {/* Modal de confirmación para eliminar */}
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
@@ -274,4 +346,4 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
   );
 };
 
-export default ContactoCard;
+export default PortafoliosCard;

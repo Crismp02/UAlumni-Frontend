@@ -9,20 +9,15 @@ import {
   ModalBody,
   Button,
   Input,
+  Textarea,
   Box,
   Flex,
-  Select,
-  IconButton,
   VStack,
+  IconButton
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
-import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
-import CustomSwitch from "./Switch";
+import { AddIcon, EditIcon, DeleteIcon, CalendarIcon } from "@chakra-ui/icons";
 
-const CertificadosCard = ({
-  cardContentCertificados,
-  setCardContentCertificados,
-  cursos,
-}) => {
+const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleSwitchChange = () => {
@@ -31,11 +26,9 @@ const CertificadosCard = ({
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] = useState(
-    "cardContentCertificados"
-  );
+  const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
   const [showIcons, setShowIcons] = useState(false);
-  const [cardIdToEdit, setcardIdToEdit] = useState(null);
+  const [cardIdToEditExpLaboral, setcardIdToEditExpLaboral] = useState(null);
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
@@ -66,7 +59,7 @@ const CertificadosCard = ({
     setShowEditModal(true);
   };
 
-  // Modal de edición Certificados
+  // Modal de edición Experiencial Laboral
   const handleEditInputChange = (field, value, setState) => {
     setState((prevState) => ({
       ...prevState,
@@ -82,7 +75,7 @@ const CertificadosCard = ({
   ) => {
 
     // Validar que los campos no estén vacíos
-    if (editedCard.curso.trim() === '' || editedCard.fecha.trim() === '') {
+    if (editedCard.empresa.trim() === '' || editedCard.posicion.trim() === '' || editedCard.descripcion.trim() === '' || editedCard.fechaInicio.trim() === '' || editedCard.fechaFinal.trim() === '') {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
@@ -112,7 +105,7 @@ const CertificadosCard = ({
   const handleGuardar = () => {
 
     // Validar que los campos no estén vacíos antes de guardar
-  if (additionalFields.curso.trim() === '' || additionalFields.fecha.trim() === '') {
+  if (additionalFields.empresa.trim() === '' || additionalFields.posicion.trim() === '' || additionalFields.descripcion.trim() === '' || additionalFields.fechaInicio.trim() === '' || additionalFields.fechaFinal.trim() === '') {
     // Mostrar un mensaje de error o manejar la situación según lo desees
     console.error('Los campos no pueden estar vacíos');
     return;
@@ -122,17 +115,19 @@ const CertificadosCard = ({
 
     // Lógica para agregar datos según el tipo de tarjeta actual
     switch (cardTypeToAdd) {
-      case "Certificados":
+      case "Experiencia Laboral":
         newCardContent = [
-          ...cardContentCertificados,
+          ...cardContent,
           {
-            id: cardContentCertificados.length + 1, // Generar un nuevo ID
-            curso: additionalFields.curso,
-            curso: additionalFields.curso,
-            fecha: additionalFields.fecha,
+            id: cardContent.length + 1, // Generar un nuevo ID
+            empresa: additionalFields.empresa,
+            descripcion: additionalFields.descripcion,
+            posicion: additionalFields.posicion,
+            fechaInicio: additionalFields.fechaInicio,
+            fechaFinal: additionalFields.fechaFinal,
           },
         ];
-        setCardContentCertificados(newCardContent);
+        setCardContent(newCardContent);
         setShowIcons(false);
         setEditMode(true);
         break;
@@ -169,11 +164,11 @@ const CertificadosCard = ({
   const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       let updatedCardContent = [];
-      if (cardTypeToDelete === "cardContentCertificados") {
-        updatedCardContent = cardContentCertificados.filter(
+      if (cardTypeToDelete === "cardContent") {
+        updatedCardContent = cardContent.filter(
           (item) => item.id !== cardToDelete
         );
-        setCardContentCertificados(updatedCardContent);
+        setCardContent(updatedCardContent);
         // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
@@ -192,10 +187,8 @@ const CertificadosCard = ({
 
   const handleCancelEdit = () => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
-    setcardIdToEdit(null);
+    setcardIdToEditExpLaboral(null);
     setShowEditModal(false);
-    setShowIcons(false);
-    setEditMode(true);
   };
 
   return (
@@ -209,124 +202,126 @@ const CertificadosCard = ({
         display="flex"
         alignItems="center"
       >
-        Certificados
-        {editMode ? (
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditClick(setShowIcons, setEditMode)}
-          />
-        ) : (
-          <AddIcon
-            onClick={() => handleAddClick("Certificados")}
-            cursor="pointer"
-            color="white"
-            position="absolute"
-            right="45px"
-            bg="#007935"
-            borderRadius="10px"
-            width="42px"
-            height="33px"
-            padding="8px"
-          />
-        )}
+        Experiencia Laboral
       </Text>
 
-      {cardContentCertificados.map((card) => (
-        <Box
-          key={card.id}
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          {showIcons && (
-            <Flex justifyContent="flex-end" marginBottom="10px">
-              <IconButton
-                aria-label="Editar"
-                icon={<EditIcon />}
-                colorScheme="blue"
-                marginRight="5px"
-                onClick={() => handleEditCard(card)}
-              />
-              <IconButton
-                aria-label="Eliminar"
-                icon={<DeleteIcon />}
-                colorScheme="red"
-                marginLeft="5px"
-                onClick={() =>
-                  handleDeleteClick(card.id, "cardContentCertificados")
-                }
-              />
-            </Flex>
-          )}
-          <Flex justifyContent="space-between">
-            <Text fontWeight="bold">{card.curso}</Text>
-            <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-              CIAP
-            </Text>
-          </Flex>
-          <Text>{card.fecha}</Text>
-          <Flex alignItems="center" marginTop="10px">
-            <CustomSwitch
-              isChecked={switchValue}
-              onChange={handleSwitchChange}
-            />
-            {switchValue && (
-              <Text
-                fontSize="sm"
-                color="black"
-                marginLeft="10px"
-                fontWeight="bold"
-                alignItems="center"
-              >
-                Visible
-              </Text>
-            )}
-          </Flex>
-        </Box>
-      ))}
+  {cardContent.map((card) => (
+  <Box
+    key={card.id}
+    bg="white"
+    padding="4"
+    border="1px solid #ccc"
+    borderRadius="8px"
+    marginLeft="10"
+    marginRight="10"
+    marginTop="5"
+    marginBottom="5"
+    boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+  >
+    {showIcons && (
+      <Flex justifyContent="flex-end" marginBottom="10px">
+        <IconButton
+          aria-label="Editar"
+          icon={<EditIcon />}
+          colorScheme="blue"
+          marginRight="5px"
+          onClick={() => handleEditCard(card)}
+        />
+        <IconButton
+          aria-label="Eliminar"
+          icon={<DeleteIcon />}
+          colorScheme="red"
+          marginLeft="5px"
+          onClick={() => handleDeleteClick(card.id, "cardContent")}
+        />
+      </Flex>
+    )}
+    <Flex justifyContent="space-between" alignItems="center">
+      <Text fontWeight="bold">{card.empresa}</Text>
+      <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+        {card.posicion}
+      </Text>
+    </Flex>
 
-      {/* Modal de edición Certificados*/}
+    <Flex justifyContent="space-between" alignItems="center" marginTop="5px">
+      <Text>{card.descripcion}</Text>
+    </Flex>
+    <Flex justifyContent="space-between" alignItems="center" marginTop="5px">
+      <Text>
+        {card.fechaInicio} - {card.fechaFinal} <CalendarIcon color="blue.500" marginLeft="5px" />
+      </Text>
+    </Flex>
+  </Box>
+))}
+
+
+      {/* Modal de edición Experiencia Laboral*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Certificados</ModalHeader>
+          <ModalHeader>Editar Experiencia Laboral</ModalHeader>
           <ModalBody>
             {editingCard && (
               <>
-                <Select
-                  value={editingCard.curso}
+                <Input
+                  value={editingCard.empresa}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "curso",
+                      "empresa",
                       e.target.value,
                       setEditingCard
                     )
                   }
-                  placeholder="Editar Curso..."
+                  placeholder="Editar empresa..."
                   size="lg"
                   marginBottom="4"
-                >
-                  {cursos.map((curso) => (
-                    <option key={curso} value={curso}>
-                      {curso}
-                    </option>
-                  ))}
-                </Select>
-                Fecha
+                />
                 <Input
-                  value={editingCard.fecha}
+                  value={editingCard.posicion}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "fecha",
+                      "posicion",
+                      e.target.value,
+                      setEditingCard
+                    )
+                  }
+                  placeholder="Editar posición..."
+                  size="lg"
+                  marginBottom="4"
+                />
+                <Textarea
+                  value={editingCard.descripcion}
+                  onChange={(e) =>
+                    handleEditInputChange(
+                      "descripcion",
+                      e.target.value,
+                      setEditingCard
+                    )
+                  }
+                  placeholder="Editar Descripción..."
+                  size="lg"
+                  marginBottom="4"
+                />
+                Fecha Inicio
+                <Input
+                  value={editingCard.fechaInicio}
+                  onChange={(e) =>
+                    handleEditInputChange(
+                      "fechaInicio",
+                      e.target.value,
+                      setEditingCard
+                    )
+                  }
+                  size="lg"
+                  marginBottom="4"
+                  type="date"
+                />
+                Fecha Final
+                <Input
+                  value={editingCard.fechaFinal}
+                  onChange={(e) =>
+                    handleEditInputChange(
+                      "fechaFinal",
                       e.target.value,
                       setEditingCard
                     )
@@ -345,8 +340,8 @@ const CertificadosCard = ({
               onClick={() =>
                 handleSaveEdit(
                   editingCard,
-                  cardContentCertificados,
-                  setCardContentCertificados,
+                  cardContent,
+                  setCardContent,
                   setShowEditModal
                 )
               }
@@ -367,28 +362,70 @@ const CertificadosCard = ({
           <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
-            {cardTypeToAdd === "Certificados" && (
+            {cardTypeToAdd === "Experiencia Laboral" && (
               <>
-                Curso
-                <Select
-                  value={additionalFields.curso || ""}
-                  onChange={(e) => handleFieldChange("curso", e.target.value)}
-                  placeholder="Agregar Curso"
-                  marginBottom="10px"
-                >
-                  {cursos.map((curso) => (
-                    <option key={curso} value={curso}>
-                      {curso}
-                    </option>
-                  ))}
-                </Select>
-                fecha
                 <Input
-                  value={additionalFields.fecha || ""}
-                  onChange={(e) => handleFieldChange("fecha", e.target.value)}
+                  value={additionalFields.grado || ""}
+                  onChange={(e) => handleFieldChange("grado", e.target.value)}
+                  placeholder="Grado"
+                  marginBottom="10px"
+                />
+                Fecha
+                <Input
+                  value={additionalFields.anioFinal || ""}
+                  onChange={(e) =>
+                    handleFieldChange("anioFinal", e.target.value)
+                  }
                   type="date"
                   marginBottom="10px"
                 />
+              </>
+            )}
+            {cardTypeToAdd === "Experiencia Laboral" && (
+              <>
+                <Input
+                  placeholder="Nombre Empresa"
+                  marginBottom="10px"
+                  value={additionalFields.empresa || ""}
+                  onChange={(e) => handleFieldChange("empresa", e.target.value)}
+                />
+                <Input
+                  value={additionalFields.posicion || ""}
+                  onChange={(e) =>
+                    handleFieldChange("posicion", e.target.value)
+                  }
+                  placeholder="Posición"
+                  marginBottom="10px"
+                />
+                <Textarea
+                  value={additionalFields.descripcion || ""}
+                  onChange={(e) =>
+                    handleFieldChange("descripcion", e.target.value)
+                  }
+                  placeholder="Descripción..."
+                  marginBottom="10px"
+                />
+                Fecha Inicio
+                <Input
+                  value={additionalFields.fechaInicio || ""}
+                  onChange={(e) =>
+                    handleFieldChange("fechaInicio", e.target.value)
+                  }
+                  type="date"
+                  placeholder="Posición"
+                  marginBottom="10px"
+                />
+                Fecha Final
+                <Input
+                  value={additionalFields.fechaFinal || ""}
+                  onChange={(e) =>
+                    handleFieldChange("fechaFinal", e.target.value)
+                  }
+                  type="date"
+                  placeholder="Posición"
+                  marginBottom="10px"
+                />
+                {/* ... Otros campos específicos de Experiencia Laboral ... */}
               </>
             )}
           </ModalBody>
@@ -428,4 +465,4 @@ const CertificadosCard = ({
   );
 };
 
-export default CertificadosCard;
+export default ExperienciaLaboralCard;

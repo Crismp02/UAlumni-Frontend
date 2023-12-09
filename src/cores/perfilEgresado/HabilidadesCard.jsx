@@ -59,6 +59,14 @@ const HabilidadesCard = ({
     setContent,
     setShowEditModal
   ) => {
+
+    // Validar que los campos no estén vacíos
+    if (editedCard.habilidad.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('No puede estar vacío');
+      return;
+    }
+
     const updatedContent = content.map((card) => {
       if (card.id === editedCard.id) {
         return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
@@ -81,6 +89,14 @@ const HabilidadesCard = ({
   };
 
   const handleGuardar = () => {
+
+    // Validar que los campos no estén vacíos
+    if (additionalFields.habilidad.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
     let newCardContent = [];
 
     // Lógica para agregar datos según el tipo de tarjeta actual
@@ -204,7 +220,6 @@ const HabilidadesCard = ({
       key={card.id}
       position="relative"
       padding="2"
-      marginBottom="2"
       marginRight="2"
     >
       <Box padding="2" marginBottom="2" marginRight="2">

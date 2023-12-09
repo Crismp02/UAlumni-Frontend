@@ -11,6 +11,7 @@ import Register from "./cores/register/Register";
 import UnProtectedRoutes from "./cores/login/UnProtectedRoutes";
 import ProtectedRoutes from "./cores/login/ProtectedRoutes";
 import PerfilEgresado from "./cores/perfilEgresado/PerfilEgresado";
+import PerfilEgresadoReclutador from "./cores/perfilEgresadoReclutador/PerfilEgresadoReclutador";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
       },
+      {
+        path: "/perfilEgresadoReclutador",
+        element: <PerfilEgresadoReclutador/>,
+      },
     ],
   },
   {
@@ -40,6 +45,10 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <PerfilEgresado/>,
       },
+      {
+        path: "/profileReclutador",
+        element: <PerfilEgresadoReclutador/>,
+      }
     ],
   },
 ]);

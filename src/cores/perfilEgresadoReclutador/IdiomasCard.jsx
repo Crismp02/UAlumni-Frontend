@@ -16,12 +16,12 @@ import {
   VStack,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
-import CustomSwitch from "./Switch";
 
-const CertificadosCard = ({
-  cardContentCertificados,
-  setCardContentCertificados,
-  cursos,
+const IdiomasCard = ({
+  cardContentIdiomas,
+  setCardContentIdiomas,
+  idiomas,
+  niveles,
 }) => {
   const [switchValue, setSwitchValue] = useState(false);
 
@@ -31,9 +31,8 @@ const CertificadosCard = ({
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] = useState(
-    "cardContentCertificados"
-  );
+  const [cardTypeToDelete, setCardTypeToDelete] =
+    useState("cardContentIdiomas");
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEdit, setcardIdToEdit] = useState(null);
 
@@ -66,7 +65,7 @@ const CertificadosCard = ({
     setShowEditModal(true);
   };
 
-  // Modal de edición Certificados
+  // Modal de edición Idiomas
   const handleEditInputChange = (field, value, setState) => {
     setState((prevState) => ({
       ...prevState,
@@ -82,7 +81,7 @@ const CertificadosCard = ({
   ) => {
 
     // Validar que los campos no estén vacíos
-    if (editedCard.curso.trim() === '' || editedCard.fecha.trim() === '') {
+    if (editedCard.idioma.trim() === '' || editedCard.nivel.trim() === '') {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
@@ -112,27 +111,26 @@ const CertificadosCard = ({
   const handleGuardar = () => {
 
     // Validar que los campos no estén vacíos antes de guardar
-  if (additionalFields.curso.trim() === '' || additionalFields.fecha.trim() === '') {
-    // Mostrar un mensaje de error o manejar la situación según lo desees
-    console.error('Los campos no pueden estar vacíos');
-    return;
-  }
+    if (additionalFields.idioma.trim() === '' || additionalFields.nivel.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
 
     let newCardContent = [];
 
     // Lógica para agregar datos según el tipo de tarjeta actual
     switch (cardTypeToAdd) {
-      case "Certificados":
+      case "Idiomas":
         newCardContent = [
-          ...cardContentCertificados,
+          ...cardContentIdiomas,
           {
-            id: cardContentCertificados.length + 1, // Generar un nuevo ID
-            curso: additionalFields.curso,
-            curso: additionalFields.curso,
-            fecha: additionalFields.fecha,
+            id: cardContentIdiomas.length + 1, // Generar un nuevo ID
+            idioma: additionalFields.idioma,
+            nivel: additionalFields.nivel,
           },
         ];
-        setCardContentCertificados(newCardContent);
+        setCardContentIdiomas(newCardContent);
         setShowIcons(false);
         setEditMode(true);
         break;
@@ -169,11 +167,11 @@ const CertificadosCard = ({
   const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       let updatedCardContent = [];
-      if (cardTypeToDelete === "cardContentCertificados") {
-        updatedCardContent = cardContentCertificados.filter(
+      if (cardTypeToDelete === "cardContentIdiomas") {
+        updatedCardContent = cardContentIdiomas.filter(
           (item) => item.id !== cardToDelete
         );
-        setCardContentCertificados(updatedCardContent);
+        setCardContentIdiomas(updatedCardContent);
         // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
@@ -204,37 +202,15 @@ const CertificadosCard = ({
         fontWeight="bold"
         fontSize="xl"
         marginLeft="10"
-        marginTop="10"
+        marginTop="5"
         marginBottom="0"
         display="flex"
         alignItems="center"
       >
-        Certificados
-        {editMode ? (
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditClick(setShowIcons, setEditMode)}
-          />
-        ) : (
-          <AddIcon
-            onClick={() => handleAddClick("Certificados")}
-            cursor="pointer"
-            color="white"
-            position="absolute"
-            right="45px"
-            bg="#007935"
-            borderRadius="10px"
-            width="42px"
-            height="33px"
-            padding="8px"
-          />
-        )}
+        Idiomas
       </Text>
 
-      {cardContentCertificados.map((card) => (
+      {cardContentIdiomas.map((card) => (
         <Box
           key={card.id}
           bg="white"
@@ -247,6 +223,7 @@ const CertificadosCard = ({
           marginBottom="5"
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
+          {/* posicion a la derecha */}
           {showIcons && (
             <Flex justifyContent="flex-end" marginBottom="10px">
               <IconButton
@@ -261,80 +238,66 @@ const CertificadosCard = ({
                 icon={<DeleteIcon />}
                 colorScheme="red"
                 marginLeft="5px"
-                onClick={() =>
-                  handleDeleteClick(card.id, "cardContentCertificados")
-                }
+                onClick={() => handleDeleteClick(card.id, "cardContentIdiomas")}
               />
             </Flex>
           )}
           <Flex justifyContent="space-between">
-            <Text fontWeight="bold">{card.curso}</Text>
+            <Text fontWeight="bold">{card.idioma}</Text>
             <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-              CIAP
+              {card.nivel}
             </Text>
-          </Flex>
-          <Text>{card.fecha}</Text>
-          <Flex alignItems="center" marginTop="10px">
-            <CustomSwitch
-              isChecked={switchValue}
-              onChange={handleSwitchChange}
-            />
-            {switchValue && (
-              <Text
-                fontSize="sm"
-                color="black"
-                marginLeft="10px"
-                fontWeight="bold"
-                alignItems="center"
-              >
-                Visible
-              </Text>
-            )}
           </Flex>
         </Box>
       ))}
 
-      {/* Modal de edición Certificados*/}
+      {/* Modal de edición Idiomas*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Certificados</ModalHeader>
+          <ModalHeader>Editar Idiomas</ModalHeader>
           <ModalBody>
             {editingCard && (
               <>
                 <Select
-                  value={editingCard.curso}
+                  value={editingCard.idioma}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "curso",
+                      "idioma",
                       e.target.value,
                       setEditingCard
                     )
                   }
-                  placeholder="Editar Curso..."
+                  placeholder="Editar Idioma..."
                   size="lg"
                   marginBottom="4"
                 >
-                  {cursos.map((curso) => (
-                    <option key={curso} value={curso}>
-                      {curso}
+                  {idiomas.map((idioma) => (
+                    <option key={idioma} value={idioma}>
+                      {idioma}
                     </option>
                   ))}
                 </Select>
-                Fecha
-                <Input
-                  value={editingCard.fecha}
+
+                <Select
+                  value={editingCard.niveles}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "fecha",
+                      "nivel",
                       e.target.value,
                       setEditingCard
                     )
                   }
+                  placeholder="Editar Nivel..."
                   size="lg"
                   marginBottom="4"
-                  type="date"
-                />
+                >
+                  {niveles.map((nivel) => (
+                    <option key={nivel} value={nivel}>
+                      {nivel}
+                    </option>
+                  ))}
+                </Select>
               </>
             )}
           </ModalBody>
@@ -345,8 +308,8 @@ const CertificadosCard = ({
               onClick={() =>
                 handleSaveEdit(
                   editingCard,
-                  cardContentCertificados,
-                  setCardContentCertificados,
+                  cardContentIdiomas,
+                  setCardContentIdiomas,
                   setShowEditModal
                 )
               }
@@ -367,28 +330,34 @@ const CertificadosCard = ({
           <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
-            {cardTypeToAdd === "Certificados" && (
+            {cardTypeToAdd === "Idiomas" && (
               <>
-                Curso
+                Idioma
                 <Select
-                  value={additionalFields.curso || ""}
-                  onChange={(e) => handleFieldChange("curso", e.target.value)}
-                  placeholder="Agregar Curso"
+                  value={additionalFields.idioma || ""}
+                  onChange={(e) => handleFieldChange("idioma", e.target.value)}
+                  placeholder="Agregar Idioma"
                   marginBottom="10px"
                 >
-                  {cursos.map((curso) => (
-                    <option key={curso} value={curso}>
-                      {curso}
+                  {idiomas.map((idioma) => (
+                    <option key={idioma} value={idioma}>
+                      {idioma}
                     </option>
                   ))}
                 </Select>
-                fecha
-                <Input
-                  value={additionalFields.fecha || ""}
-                  onChange={(e) => handleFieldChange("fecha", e.target.value)}
-                  type="date"
+                Nivel
+                <Select
+                  value={additionalFields.nivel || ""}
+                  onChange={(e) => handleFieldChange("nivel", e.target.value)}
+                  placeholder="Agregar Nivel"
                   marginBottom="10px"
-                />
+                >
+                  {niveles.map((niveles) => (
+                    <option key={niveles} value={niveles}>
+                      {niveles}
+                    </option>
+                  ))}
+                </Select>
               </>
             )}
           </ModalBody>
@@ -428,4 +397,4 @@ const CertificadosCard = ({
   );
 };
 
-export default CertificadosCard;
+export default IdiomasCard;

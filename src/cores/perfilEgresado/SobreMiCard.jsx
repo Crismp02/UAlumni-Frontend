@@ -12,35 +12,24 @@ import {
   Textarea,
   Box,
   Flex,
-} from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
+} from "@chakra-ui/react";
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
-const SobreMiCard = ({ cardContentSobremi, setCardContentSobremi }) => {
- 
-
+const SobremiCard = ({ cardContent, setCardContent }) => {
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEditSobremi, setcardIdToEditSobremi] = useState(null);
 
-
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
 
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
-
-  const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
-
-  const handleFieldChange = (fieldName, value) => {
-    // Actualizar solo el campo correspondiente en additionalFields
-    setAdditionalFields({ ...additionalFields, [fieldName]: value });
-  };
 
   const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
     setShowIconsFunc((prevIcons) => !prevIcons);
@@ -54,7 +43,7 @@ const SobreMiCard = ({ cardContentSobremi, setCardContentSobremi }) => {
     setShowEditModal(true);
   };
 
-  // Modal de edición Experiencial Laboral
+  // Modal de edición Sobre mí
   const handleEditInputChange = (field, value, setState) => {
     setState((prevState) => ({
       ...prevState,
@@ -68,6 +57,13 @@ const SobreMiCard = ({ cardContentSobremi, setCardContentSobremi }) => {
     setContent,
     setShowEditModal
   ) => {
+    // Validar que el campo de descripción no esté vacío
+    if (editedCard.descripcion.trim() === '' || editedCard.descripcion === null) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('La descripción no puede estar vacía');
+      return;
+    }
+
     const updatedContent = content.map((card) => {
       if (card.id === editedCard.id) {
         return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
@@ -80,42 +76,6 @@ const SobreMiCard = ({ cardContentSobremi, setCardContentSobremi }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
-  };
-
-  // Función genérica para manejar la apertura del modal para agregar tarjetas
-  const handleAddClick = (cardType) => {
-    setCardTypeToAdd(cardType);
-    setShowAddButton(false);
-    setShowAddModal(true);
-  };
-
-  const handleGuardar = () => {
-    let newCardContent = [];
-
-    // Lógica para agregar datos según el tipo de tarjeta actual
-    switch (cardTypeToAdd) {
-      case "Sobre Mi":
-        newCardContent = [
-          ...cardContentSobremi,
-          {
-            id: cardContentSobremi.length + 1, // Generar un nuevo ID
-            descripcion: additionalFields.descripcion,
-          },
-        ];
-        setCardContentSobremi(newCardContent);
-        setShowIcons(false);
-        setEditMode(true);
-        break;
-
-      // Agrega lógica para otros tipos de tarjetas si es necesario
-      default:
-        break;
-    }
-
-    // Restablecer los campos adicionales después de guardar
-    setAdditionalFields({});
-    // CERRAR MODAL DE AGREGAR
-    setShowAddModal(false);
   };
 
   const handleCancelDelete = () => {
@@ -140,10 +100,10 @@ const SobreMiCard = ({ cardContentSobremi, setCardContentSobremi }) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       let updatedCardContent = [];
       if (cardTypeToDelete === "cardContent") {
-        updatedCardContent = cardContentSobremi.filter(
+        updatedCardContent = cardContent.filter(
           (item) => item.id !== cardToDelete
         );
-        setCardContentSobremi(updatedCardContent);
+        setCardContent(updatedCardContent);
         // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
@@ -168,87 +128,113 @@ const SobreMiCard = ({ cardContentSobremi, setCardContentSobremi }) => {
 
   return (
     <>
+      <Text
+        fontWeight="bold"
+        fontSize="xl"
+        marginLeft="10"
+        marginTop="10"
+        marginBottom="0"
+        display="flex"
+        alignItems="center"
+      >
+        Sobre mí
+        <EditIcon
+          cursor="pointer"
+          position="absolute"
+          right="45px"
+          color="blue.500"
+          onClick={() => handleEditCard(cardContent[0])}
+        />
+      </Text>
+
       <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom="4"
+        bg="white"
+        padding="4"
+        border="1px solid #ccc"
+        borderRadius="8px"
+        marginLeft="10"
+        marginRight="10"
+        marginTop="5"
+        marginBottom="5"
+        boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
       >
-        <Text fontWeight="bold" marginLeft="10">
-              Sobre Mí
-              <EditIcon
-                  cursor="pointer"
-                  position="absolute"
-                  right="45px"
-                  color="blue.500"
-                  onClick={handleEditCard}
-                />
-            </Text>
+        <Flex>
+          <Text>{cardContent[0].descripcion}</Text>
+        </Flex>
       </Box>
 
-      {cardContentSobremi.map((card) => (
-        <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        marginBottom="2"
-        key={card.id}
-      >
-        <Text marginLeft="10" marginRight="10" marginBottom="10">
-          {card.descripcion}
-        </Text>
-      </Box>
-      ))}
-
-      {/* Modal de edición Sobre mi*/}
+      {/* Modal de edición Sobre mí*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Editar Sobre mí</ModalHeader>
-              <ModalBody>
-                {/* Verificar si hay una tarjeta en edición */}
-                {editingCard && (
-                  <>
-                    <Textarea
-                      value={editingCard.descripcion}
-                      onChange={(e) =>
-                        handleEditInputChange(
-                          "descripcion",
-                          e.target.value,
-                          setEditingCard
-                        )
-                      }
-                      placeholder="Cuéntanos un poco sobre de ti"
-                      size="lg"
-                      marginBottom="4"
-                      height="200px" // Aquí se establece la altura del Textarea
-                    />
-                  </>
-                )}
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  mr={3}
-                  onClick={() => {
-                    handleSaveEdit(
-                      editingCard,
-                      cardContentSobremi,
-                      setCardContentSobremi,
-                      setShowEditModal,
-                    );
-                  }}
-                >
-                  Guardar
-                </Button>
-                <Button variant="ghost" onClick={handleCancelEdit}>
-                  Cancelar
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Editar Sobre Mí</ModalHeader>
+          <ModalBody>
+            {editingCard && (
+              <>
+                <Textarea
+                  value={editingCard.descripcion}
+                  onChange={(e) =>
+                    handleEditInputChange(
+                      "descripcion",
+                      e.target.value,
+                      setEditingCard
+                    )
+                  }
+                  placeholder="Editar Descripción..."
+                  size="lg"
+                  minHeight="200px" // Establece una altura mínima para mostrar el contenido
+                  resize="vertical" // Permite el redimensionamiento vertical si el contenido supera la altura mínima
+                  marginBottom="4"
+                />
+              </>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() =>
+                handleSaveEdit(
+                  editingCard,
+                  cardContent,
+                  setCardContent,
+                  setShowEditModal
+                )
+              }
+            >
+              Guardar
+            </Button>
+            <Button variant="ghost" onClick={handleCancelEdit}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Modal de confirmación para eliminar */}
+      <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Confirmar Eliminación</ModalHeader>
+          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="red"
+              mr={3}
+              onClick={() =>
+                handleConfirmDelete(cardToDelete, cardTypeToDelete)
+              }
+            >
+              Eliminar
+            </Button>
+            <Button variant="ghost" onClick={handleCancelDelete}>
+              Cancelar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
 
-export default SobreMiCard;
+export default SobremiCard;

@@ -12,13 +12,23 @@ import {
   Textarea,
   Box,
   Flex,
+  IconButton,
+  VStack
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import CustomSwitch from "./Switch";
+
 
 const PortafoliosCard = ({
   cardContentPortafolios,
   setCardContentPortafolios,
 }) => {
+  const [switchValue, setSwitchValue] = useState(false);
+
+  const handleSwitchChange = () => {
+    setSwitchValue(!switchValue);
+  };
+  
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [cardTypeToDelete, setCardTypeToDelete] = useState(
@@ -70,6 +80,14 @@ const PortafoliosCard = ({
     setContent,
     setShowEditModal
   ) => {
+
+    // Validar que los campos no estén vacíos
+    if (editedCard.titulo.trim() === '' || editedCard.url.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
     const updatedContent = content.map((card) => {
       if (card.id === editedCard.id) {
         return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
@@ -92,6 +110,14 @@ const PortafoliosCard = ({
   };
 
   const handleGuardar = () => {
+
+    // Validar que los campos no estén vacíos antes de guardar
+    if (additionalFields.titulo.trim() === '' || additionalFields.url.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
     let newCardContent = [];
 
     // Lógica para agregar datos según el tipo de tarjeta actual
@@ -201,8 +227,8 @@ const PortafoliosCard = ({
             right="45px"
             bg="#007935"
             borderRadius="10px"
-            width="57px"
-            height="43px"
+            width="42px"
+            height="33px"
             padding="8px"
           />
         )}
@@ -221,35 +247,47 @@ const PortafoliosCard = ({
           marginBottom="5"
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
-          {/* url a la derecha */}
-          <Flex justifyContent="flex-end">
-            {showIcons && (
-              <Flex marginBottom="10px">
-                <EditIcon
-                  cursor="pointer"
-                  marginRight="5px"
-                  color="blue.500"
-                  display={showIcons ? "block" : "none"}
-                  onClick={() => handleEditCard(card)}
-                />
-                <DeleteIcon
-                  position="absolute"
-                  right="80px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIcons ? "block" : "none"}
-                  onClick={() =>
-                    handleDeleteClick(card.id, "cardContentPortafolios")
-                  }
-                />
-              </Flex>
-            )}
-          </Flex>
+          {showIcons && (
+            <Flex justifyContent="flex-end" marginBottom="10px">
+              <IconButton
+                aria-label="Editar"
+                icon={<EditIcon />}
+                colorScheme="blue"
+                marginRight="5px"
+                onClick={() => handleEditCard(card)}
+              />
+              <IconButton
+                aria-label="Eliminar"
+                icon={<DeleteIcon />}
+                colorScheme="red"
+                marginLeft="5px"
+                onClick={() =>
+                  handleDeleteClick(card.id, "cardContentPortafolios")
+                }
+              />
+            </Flex>
+          )}
           <Flex justifyContent="space-between">
             <Text fontWeight="bold">{card.titulo}</Text>
           </Flex>
           <Text>{card.url}</Text>
+          <Flex alignItems="center" marginTop="10px">
+            <CustomSwitch
+              isChecked={switchValue}
+              onChange={handleSwitchChange}
+            />
+            {switchValue && (
+              <Text
+                fontSize="sm"
+                color="black"
+                marginLeft="10px"
+                fontWeight="bold"
+                alignItems="center"
+              >
+                Visible
+              </Text>
+            )}
+          </Flex>
         </Box>
       ))}
 

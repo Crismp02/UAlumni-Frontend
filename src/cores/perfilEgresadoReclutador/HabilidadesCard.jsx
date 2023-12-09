@@ -12,50 +12,46 @@ import {
   Textarea,
   Box,
   Flex,
-} from "@chakra-ui/react"; 
-import { AddIcon, EditIcon, DeleteIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
+} from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
+import { AddIcon, EditIcon, DeleteIcon, CloseIcon } from "@chakra-ui/icons";
 
-const ContactoCard = ({ cardContent, setCardContent }) => {
- 
-
+const HabilidadesCard = ({
+  cardContentHabilidades,
+  setCardContentHabilidades,
+  tipoHabilidad
+}) => {
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
+  const [cardTypeToDelete, setCardTypeToDelete] = useState(
+    "cardContentHabilidades"
+  );
   const [showIcons, setShowIcons] = useState(false);
-  const [cardIdToEditContacto, setcardIdToEditContacto] = useState(null);
-
+  const [cardIdToEditExpLaboral, setcardIdToEditExpLaboral] = useState(null);
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
 
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editingCard, setEditingCard] = useState(null);
 
+  const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
- 
+  const handleFieldChange = (fieldName, value) => {
+    // Actualizar solo el campo correspondiente en additionalFields
+    setAdditionalFields({ ...additionalFields, [fieldName]: value });
+  };
 
   const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
     setShowIconsFunc((prevIcons) => !prevIcons);
     setEditModeFunc((prevMode) => !prevMode);
     setShowAddButton(true); // Mostrar el botón de agregar después de editar
     setShowEditButton(false); // Ocultar el botón de editar después de editar
+    setShowIcons(true);
   };
 
-  const handleEditCard = (cardToEdit) => {
-    setEditingCard(cardToEdit);
-    setShowEditModal(true);
-  };
-
-  // Modal de edición Contacto
-  const handleEditInputChange = (field, value, setState) => {
-    setState((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
-  };
 
   const handleSaveEdit = (
     editedCard,
@@ -64,9 +60,10 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setShowEditModal
   ) => {
 
-    if (editedCard.tlf.trim() === '' || editedCard.direccion.trim() === '') {
+    // Validar que los campos no estén vacíos
+    if (editedCard.habilidad.trim() === '') {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      console.error('No puede estar vacío');
       return;
     }
 
@@ -84,7 +81,49 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setEditMode(true);
   };
 
+  // Función genérica para manejar la apertura del modal para agregar tarjetas
+  const handleAddClick = (cardType) => {
+    setCardTypeToAdd(cardType);
+    setShowAddButton(false);
+    setShowAddModal(true);
+  };
 
+  const handleGuardar = () => {
+
+    // Validar que los campos no estén vacíos
+    if (additionalFields.habilidad.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
+    let newCardContent = [];
+
+    // Lógica para agregar datos según el tipo de tarjeta actual
+    switch (cardTypeToAdd) {
+      case tipoHabilidad:
+        newCardContent = [
+          ...cardContentHabilidades,
+          {
+            id: cardContentHabilidades.length + 1, // Generar un nuevo ID
+            habilidad: additionalFields.habilidad,
+          },
+        ];
+        setCardContentHabilidades(newCardContent);
+        setEditMode(true);
+        setShowIcons(false);
+
+        break;
+
+      default:
+        break;
+    }
+
+    // Restablecer los campos adicionales después de guardar
+    setAdditionalFields({});
+    // CERRAR MODAL DE AGREGAR
+    setShowAddModal(false);
+  };
 
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
@@ -107,11 +146,11 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
   const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       let updatedCardContent = [];
-      if (cardTypeToDelete === "cardContent") {
-        updatedCardContent = cardContent.filter(
+      if (cardTypeToDelete === "cardContentHabilidades") {
+        updatedCardContent = cardContentHabilidades.filter(
           (item) => item.id !== cardToDelete
         );
-        setCardContent(updatedCardContent);
+        setCardContentHabilidades(updatedCardContent);
         // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
@@ -130,124 +169,88 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
 
   const handleCancelEdit = () => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
-    setcardIdToEditContacto(null);
+    setcardIdToEditExpLaboral(null);
     setShowEditModal(false);
   };
 
   return (
     <>
+      {/* Texto Principal Habilidades */}
+      
       <Text
-        fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
-        display="flex"
-        alignItems="center"
-      >
-        Contacto
-          <EditIcon
-            cursor="pointer"
+  fontSize="lg"
+  marginLeft="10"
+  marginRight="10"
+  marginTop="5"
+>
+  {tipoHabilidad}
+</Text>
+<Box
+  display="flex"
+  flexDirection="row"
+  flexWrap="wrap"
+  marginLeft="10"
+  marginRight="10"
+  marginBottom="5"
+>
+  {cardContentHabilidades.map((card) => (
+    <Box
+      key={card.id}
+      position="relative"
+      padding="2"
+      marginRight="2"
+    >
+      <Box padding="2" marginBottom="2" marginRight="2">
+        <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
+          {card.habilidad}
+        </Text>
+        {showIcons && (
+          <CloseIcon
+            color="black"
             position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditCard(cardContent[0])}
+            top="9px"
+            right="17px"
+            fontSize="16px"
+            cursor="pointer"
+            display={showIcons ? "block" : "none"}
+            onClick={() => handleDeleteClick(card.id, "cardContentHabilidades")}
           />
-      </Text>
+        )}
+      </Box>
+    </Box>
+  ))}
+</Box>
 
-        <Box
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          <Flex>
-            <PhoneIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].tlf}</Text>
-          </Flex>
-        </Box>
-        <Box
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          <Flex>
-            <InfoIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].direccion}</Text>
-          </Flex>
-        </Box>
-
-      {/* Modal de edición Contacto*/}
-      <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
+      {/*Modal agregar campos*/}
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Contacto</ModalHeader>
+          <ModalHeader>Agregar Habilidades {cardTypeToAdd}</ModalHeader>
           <ModalBody>
-            {editingCard && (
+            {/* campos correspondientes al tipo de tarjeta */}
+            {cardTypeToAdd === tipoHabilidad && (
               <>
                 <Input
-                  value={editingCard.tlf}
+                  value={additionalFields.habilidad || ""}
                   onChange={(e) =>
-                    handleEditInputChange(
-                      "tlf",
-                      e.target.value,
-                      setEditingCard
-                    )
+                    handleFieldChange("habilidad", e.target.value)
                   }
-                  placeholder="Editar teléfono..."
-                  size="lg"
-                  marginBottom="4"
+                  placeholder="Habilidad"
+                  marginBottom="10px"
                 />
-                <Textarea
-                  value={editingCard.direccion}
-                  onChange={(e) =>
-                    handleEditInputChange(
-                      "direccion",
-                      e.target.value,
-                      setEditingCard
-                    )
-                  }
-                  placeholder="Editar dirección..."
-                  size="lg"
-                  marginBottom="4"
-                />
-               
               </>
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() =>
-                handleSaveEdit(
-                  editingCard,
-                  cardContent,
-                  setCardContent,
-                  setShowEditModal
-                )
-              }
-            >
+            <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
               Guardar
             </Button>
-            <Button variant="ghost" onClick={handleCancelEdit}>
+            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
               Cancelar
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-
       {/* Modal de confirmación para eliminar */}
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
@@ -274,4 +277,4 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
   );
 };
 
-export default ContactoCard;
+export default HabilidadesCard;

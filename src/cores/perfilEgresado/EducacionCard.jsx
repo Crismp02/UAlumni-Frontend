@@ -11,18 +11,24 @@ import {
   Input,
   Box,
   Flex,
+  IconButton,
+  VStack,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import CustomSwitch from "./Switch";
 
 const EducacionCard = ({ cardContent, setCardContent }) => {
- 
+  const [switchValue, setSwitchValue] = useState(false);
+
+  const handleSwitchChange = () => {
+    setSwitchValue(!switchValue);
+  };
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEditEducacion, setcardIdToEditEducacion] = useState(null);
-
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
@@ -67,6 +73,14 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
     setContent,
     setShowEditModal
   ) => {
+
+    // Validar que los campos no estén vacíos
+    if (editedCard.grado.trim() === '' || editedCard.institucion.trim() === '' || editedCard.anioFinal.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
     const updatedContent = content.map((card) => {
       if (card.id === editedCard.id) {
         return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
@@ -89,6 +103,14 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
   };
 
   const handleGuardar = () => {
+
+    // Validar que los campos no estén vacíos antes de guardar
+    if (additionalFields.grado.trim() === '' || additionalFields.institucion.trim() === '' || additionalFields.anioFinal.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+    return;
+  }
+
     let newCardContent = [];
 
     // Lógica para agregar datos según el tipo de tarjeta actual
@@ -165,6 +187,8 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
     setcardIdToEditEducacion(null);
     setShowEditModal(false);
+    setShowIcons(false);
+    setEditMode(true);
   };
 
   return (
@@ -216,37 +240,48 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
           marginBottom="5"
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
-            {/* institucion a la derecha */}
-            <Flex justifyContent="flex-end">
-            {showIcons && (
-              <Flex marginBottom="10px">
-                <EditIcon
-                  cursor="pointer"
-                  marginRight="5px"
-                  color="blue.500"
-                  display={showIcons ? "block" : "none"}
-                  onClick={() => handleEditCard(card)}
-                />
-                <DeleteIcon
-                  position="absolute"
-                  right="80px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIcons ? "block" : "none"}
-                  onClick={() => handleDeleteClick(card.id, "cardContent")}
-                />
-              </Flex>
-            )}
+          {/* posición a la derecha */}
+          {showIcons && (
+            <Flex justifyContent="flex-end" marginBottom="10px">
+              <IconButton
+                aria-label="Editar"
+                icon={<EditIcon />}
+                colorScheme="blue"
+                marginRight="5px"
+                onClick={() => handleEditCard(card)}
+              />
+              <IconButton
+                aria-label="Eliminar"
+                icon={<DeleteIcon />}
+                colorScheme="red"
+                marginLeft="5px"
+                onClick={() => handleDeleteClick(card.id, "cardContent")}
+              />
             </Flex>
+          )}
           <Flex justifyContent="space-between">
-          
             <Text fontWeight="bold">{card.grado}</Text>
-            
           </Flex>
 
           <Text>{card.institucion}</Text>
           {new Date(card.anioFinal).getFullYear()}
+          <Flex alignItems="center" marginTop="10px">
+            <CustomSwitch
+              isChecked={switchValue}
+              onChange={handleSwitchChange}
+            />
+            {switchValue && (
+              <Text
+                fontSize="sm"
+                color="black"
+                marginLeft="10px"
+                fontWeight="bold"
+                alignItems="center"
+              >
+                Visible
+              </Text>
+            )}
+          </Flex>
         </Box>
       ))}
 
@@ -284,7 +319,6 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
                   size="lg"
                   marginBottom="4"
                 />
-                
                 Fecha de culminación
                 <Input
                   value={editingCard.anioFinal}
@@ -333,7 +367,7 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
             {/* campos correspondientes al tipo de tarjeta */}
             {cardTypeToAdd === "Educación" && (
               <>
-              Grado
+                Grado
                 <Input
                   value={additionalFields.grado || ""}
                   onChange={(e) => handleFieldChange("grado", e.target.value)}
@@ -343,11 +377,12 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
                 Institución
                 <Input
                   value={additionalFields.institucion || ""}
-                  onChange={(e) => handleFieldChange("institucion", e.target.value)}
+                  onChange={(e) =>
+                    handleFieldChange("institucion", e.target.value)
+                  }
                   placeholder="Institución"
                   marginBottom="10px"
                 />
-
                 Fecha Final
                 <Input
                   value={additionalFields.anioFinal || ""}
@@ -359,7 +394,6 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
                 />
               </>
             )}
-            
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={handleGuardar}>

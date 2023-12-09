@@ -12,18 +12,14 @@ import {
   Textarea,
   Box,
   Flex,
-} from "@chakra-ui/react"; 
-import { AddIcon, EditIcon, DeleteIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
+} from "@chakra-ui/react";
 
-const ContactoCard = ({ cardContent, setCardContent }) => {
- 
-
+const SobremiCard = ({ cardContent, setCardContent }) => {
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
   const [showIcons, setShowIcons] = useState(false);
-  const [cardIdToEditContacto, setcardIdToEditContacto] = useState(null);
-
+  const [cardIdToEditSobremi, setcardIdToEditSobremi] = useState(null);
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
@@ -33,9 +29,6 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
-
-
- 
 
   const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
     setShowIconsFunc((prevIcons) => !prevIcons);
@@ -49,7 +42,7 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setShowEditModal(true);
   };
 
-  // Modal de edición Contacto
+  // Modal de edición Sobre mí
   const handleEditInputChange = (field, value, setState) => {
     setState((prevState) => ({
       ...prevState,
@@ -63,10 +56,11 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setContent,
     setShowEditModal
   ) => {
-
-    if (editedCard.tlf.trim() === '' || editedCard.direccion.trim() === '') {
+    
+    // Validar que el campo de descripción no esté vacío
+    if (editedCard.descripcion.trim() === '' || editedCard.descripcion === null) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      console.error('La descripción no puede estar vacía');
       return;
     }
 
@@ -83,8 +77,6 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setShowIcons(false);
     setEditMode(true);
   };
-
-
 
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
@@ -130,7 +122,7 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
 
   const handleCancelEdit = () => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
-    setcardIdToEditContacto(null);
+    setcardIdToEditSobremi(null);
     setShowEditModal(false);
   };
 
@@ -145,84 +137,48 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
         display="flex"
         alignItems="center"
       >
-        Contacto
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditCard(cardContent[0])}
-          />
+        Sobre mí
       </Text>
 
-        <Box
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          <Flex>
-            <PhoneIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].tlf}</Text>
-          </Flex>
-        </Box>
-        <Box
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          <Flex>
-            <InfoIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].direccion}</Text>
-          </Flex>
-        </Box>
+      <Box
+        bg="white"
+        padding="4"
+        border="1px solid #ccc"
+        borderRadius="8px"
+        marginLeft="10"
+        marginRight="10"
+        marginTop="5"
+        marginBottom="5"
+        boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+      >
+        <Flex>
+          <Text>{cardContent[0].descripcion}</Text>
+        </Flex>
+      </Box>
 
-      {/* Modal de edición Contacto*/}
+      {/* Modal de edición Sobre mí*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Contacto</ModalHeader>
+          <ModalHeader>Editar Sobre Mí</ModalHeader>
           <ModalBody>
             {editingCard && (
               <>
-                <Input
-                  value={editingCard.tlf}
-                  onChange={(e) =>
-                    handleEditInputChange(
-                      "tlf",
-                      e.target.value,
-                      setEditingCard
-                    )
-                  }
-                  placeholder="Editar teléfono..."
-                  size="lg"
-                  marginBottom="4"
-                />
                 <Textarea
-                  value={editingCard.direccion}
+                  value={editingCard.descripcion}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "direccion",
+                      "descripcion",
                       e.target.value,
                       setEditingCard
                     )
                   }
-                  placeholder="Editar dirección..."
+                  placeholder="Editar Descripción..."
                   size="lg"
+                  minHeight="200px" // Establece una altura mínima para mostrar el contenido
+                  resize="vertical" // Permite el redimensionamiento vertical si el contenido supera la altura mínima
                   marginBottom="4"
                 />
-               
               </>
             )}
           </ModalBody>
@@ -274,4 +230,4 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
   );
 };
 
-export default ContactoCard;
+export default SobremiCard;

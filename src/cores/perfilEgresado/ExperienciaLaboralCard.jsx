@@ -74,6 +74,14 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
     setContent,
     setShowEditModal
   ) => {
+
+    // Validar que los campos no estén vacíos
+    if (editedCard.empresa.trim() === '' || editedCard.posicion.trim() === '' || editedCard.descripcion.trim() === '' || editedCard.fechaInicio.trim() === '' || editedCard.fechaFinal.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
     const updatedContent = content.map((card) => {
       if (card.id === editedCard.id) {
         return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
@@ -96,6 +104,14 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
   };
 
   const handleGuardar = () => {
+
+    // Validar que los campos no estén vacíos antes de guardar
+  if (additionalFields.empresa.trim() === '' || additionalFields.posicion.trim() === '' || additionalFields.descripcion.trim() === '' || additionalFields.fechaInicio.trim() === '' || additionalFields.fechaFinal.trim() === '') {
+    // Mostrar un mensaje de error o manejar la situación según lo desees
+    console.error('Los campos no pueden estar vacíos');
+    return;
+  }
+
     let newCardContent = [];
 
     // Lógica para agregar datos según el tipo de tarjeta actual

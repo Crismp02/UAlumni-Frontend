@@ -8,12 +8,11 @@ import PortafoliosCard from "./PortafoliosCard";
 import HabilidadesCard from "./HabilidadesCard";
 import ContactoCard from "./ContactoCard";
 import EducacionCard from "./EducacionCard";
-import SobreMiCard from "./SobreMiCard";
+import SobremiCard from "./SobreMiCard";
 
-import { Box, Text, Flex } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, Button  } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import { useState } from "react";
-import { VStack } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
 
 function PerfilEgresado() {
@@ -30,7 +29,7 @@ function PerfilEgresado() {
       anioFinal: "2023",
       institucion: "Universidad Católica Andrés Bello",
     },
-  ]); 
+  ]);
 
   const [cardContentIdiomas, setCardContentIdiomas] = useState([
     {
@@ -195,21 +194,20 @@ function PerfilEgresado() {
               Cantidad de Descargas CV
             </Text>
           </Box>
-          {/* <ContactoCard
-            cardContentContacto={cardContentContacto}
-            setcardContentContacto={setcardContentContacto}
-          /> */}
+          <ContactoCard
+            cardContent={cardContentContacto}
+            setCardContent={setcardContentContacto}
+          />
 
           <PortafoliosCard
             cardContentPortafolios={cardContentPortafolios}
             setCardContentPortafolios={setCardContentPortafolios}
           />
 
-          <SobreMiCard
-            cardContentSobremi={cardContentSobremi}
-            setCardContentSobremi={setCardContentSobremi}
+          <SobremiCard
+            cardContent={cardContentSobremi}
+            setCardContent={setCardContentSobremi}
           />
-
         </Box>
         {/* inicio de 2do Box */}
         <Box
@@ -223,10 +221,10 @@ function PerfilEgresado() {
             setCardContent={setCardContent}
           />
 
-           <EducacionCard
+          <EducacionCard
             cardContent={cardContentEducacion}
             setCardContent={setCardContentEducacion}
-          /> 
+          />
 
           <Text
             fontWeight="bold"
@@ -281,7 +279,7 @@ function PerfilEgresado() {
             marginTop="5"
             marginBottom="5"
           >
-            <Text
+            <Button
               bg="#007935"
               color="white"
               padding="4"
@@ -290,7 +288,7 @@ function PerfilEgresado() {
               _hover={{ bg: "#005e28" }}
             >
               Descargar CV
-            </Text>
+            </Button>
           </Box>
         </Box>
       </Box>

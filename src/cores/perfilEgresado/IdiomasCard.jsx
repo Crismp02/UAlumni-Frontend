@@ -11,16 +11,29 @@ import {
   Input,
   Box,
   Flex,
-  Select
+  Select,
+  IconButton,
+  VStack,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import CustomSwitch from "./Switch";
 
-const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, niveles }) => {
- 
+const IdiomasCard = ({
+  cardContentIdiomas,
+  setCardContentIdiomas,
+  idiomas,
+  niveles,
+}) => {
+  const [switchValue, setSwitchValue] = useState(false);
+
+  const handleSwitchChange = () => {
+    setSwitchValue(!switchValue);
+  };
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContentIdiomas");
+  const [cardTypeToDelete, setCardTypeToDelete] =
+    useState("cardContentIdiomas");
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEdit, setcardIdToEdit] = useState(null);
 
@@ -67,6 +80,14 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
     setContent,
     setShowEditModal
   ) => {
+
+    // Validar que los campos no estén vacíos
+    if (editedCard.idioma.trim() === '' || editedCard.nivel.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
     const updatedContent = content.map((card) => {
       if (card.id === editedCard.id) {
         return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
@@ -89,6 +110,14 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
   };
 
   const handleGuardar = () => {
+
+    // Validar que los campos no estén vacíos antes de guardar
+    if (additionalFields.idioma.trim() === '' || additionalFields.nivel.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+
     let newCardContent = [];
 
     // Lógica para agregar datos según el tipo de tarjeta actual
@@ -164,6 +193,8 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
     // Cancelar la edición, cerrar el modal y limpiar el estado
     setcardIdToEdit(null);
     setShowEditModal(false);
+    setShowIcons(false);
+    setEditMode(true);
   };
 
   return (
@@ -172,7 +203,7 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
         fontWeight="bold"
         fontSize="xl"
         marginLeft="10"
-        marginTop="10"
+        marginTop="5"
         marginBottom="0"
         display="flex"
         alignItems="center"
@@ -195,8 +226,8 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
             right="45px"
             bg="#007935"
             borderRadius="10px"
-            width="57px"
-            height="43px"
+            width="42px"
+            height="33px"
             padding="8px"
           />
         )}
@@ -215,35 +246,47 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
           marginBottom="5"
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
-            {/* posicion a la derecha */}
-            <Flex justifyContent="flex-end">
-            {showIcons && (
-              <Flex marginBottom="10px">
-                <EditIcon
-                  cursor="pointer"
-                  marginRight="5px"
-                  color="blue.500"
-                  display={showIcons ? "block" : "none"}
-                  onClick={() => handleEditCard(card)}
-                />
-                <DeleteIcon
-                  position="absolute"
-                  right="80px"
-                  color="gray.500"
-                  boxSize={4}
-                  cursor="pointer"
-                  display={showIcons ? "block" : "none"}
-                  onClick={() => handleDeleteClick(card.id, "cardContentIdiomas")}
-                />
-              </Flex>
-            )}
+          {/* posicion a la derecha */}
+          {showIcons && (
+            <Flex justifyContent="flex-end" marginBottom="10px">
+              <IconButton
+                aria-label="Editar"
+                icon={<EditIcon />}
+                colorScheme="blue"
+                marginRight="5px"
+                onClick={() => handleEditCard(card)}
+              />
+              <IconButton
+                aria-label="Eliminar"
+                icon={<DeleteIcon />}
+                colorScheme="red"
+                marginLeft="5px"
+                onClick={() => handleDeleteClick(card.id, "cardContentIdiomas")}
+              />
             </Flex>
+          )}
           <Flex justifyContent="space-between">
-          
             <Text fontWeight="bold">{card.idioma}</Text>
             <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-            {card.nivel}
+              {card.nivel}
             </Text>
+          </Flex>
+          <Flex alignItems="center" marginTop="5px">
+            <CustomSwitch
+              isChecked={switchValue}
+              onChange={handleSwitchChange}
+            />
+            {switchValue && (
+              <Text
+                fontSize="sm"
+                color="black"
+                marginLeft="10px"
+                fontWeight="bold"
+                alignItems="center"
+              >
+                Visible
+              </Text>
+            )}
           </Flex>
         </Box>
       ))}
@@ -269,7 +312,7 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
                   size="lg"
                   marginBottom="4"
                 >
-                    {idiomas.map((idioma) => (
+                  {idiomas.map((idioma) => (
                     <option key={idioma} value={idioma}>
                       {idioma}
                     </option>
@@ -289,13 +332,12 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
                   size="lg"
                   marginBottom="4"
                 >
-                    {niveles.map((nivel) => (
+                  {niveles.map((nivel) => (
                     <option key={nivel} value={nivel}>
                       {nivel}
                     </option>
                   ))}
                 </Select>
-
               </>
             )}
           </ModalBody>
@@ -330,20 +372,19 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
             {/* campos correspondientes al tipo de tarjeta */}
             {cardTypeToAdd === "Idiomas" && (
               <>
-              Idioma
+                Idioma
                 <Select
                   value={additionalFields.idioma || ""}
                   onChange={(e) => handleFieldChange("idioma", e.target.value)}
                   placeholder="Agregar Idioma"
                   marginBottom="10px"
                 >
-                    {idiomas.map((idioma) => (
+                  {idiomas.map((idioma) => (
                     <option key={idioma} value={idioma}>
                       {idioma}
                     </option>
                   ))}
                 </Select>
-
                 Nivel
                 <Select
                   value={additionalFields.nivel || ""}
@@ -351,7 +392,7 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
                   placeholder="Agregar Nivel"
                   marginBottom="10px"
                 >
-                    {niveles.map((niveles) => (
+                  {niveles.map((niveles) => (
                     <option key={niveles} value={niveles}>
                       {niveles}
                     </option>
@@ -359,7 +400,6 @@ const IdiomasCard = ({ cardContentIdiomas, setCardContentIdiomas, idiomas, nivel
                 </Select>
               </>
             )}
-           
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
