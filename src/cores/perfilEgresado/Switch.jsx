@@ -9,8 +9,8 @@ const CustomSwitch = ({ isChecked, onChange }) => {
     <Switch
       isChecked={isChecked}
       onChange={onChange}
-      colorScheme="green" // Define el color general del Switch
-      size="lg" // Puedes ajustar el tamaño según tus necesidades
+      colorScheme="green" // Color general del Switch
+      size="lg" 
       css={{
         '& input:checked + div': {
           backgroundColor: checkedTrackColor,
