@@ -1,26 +1,24 @@
 import * as React from "react";
-import { loginUser, logoutUser } from "../services/auth/Auth.services"
+import { loginUser, logoutUser } from "../services/auth/Auth.services";
 
 const authContext = React.createContext();
 
-function useAuth() {
+export function useAuth() {
   const [authed, setAuthed] = React.useState(false);
 
   return {
     authed,
     async login(email, password) {
       try {
-        const response = await loginUser(email, password); 
-        if (response) {
-          setAuthed(true);
-        }
+        const response = await loginUser(email, password);
+        setAuthed(true);
       } catch (error) {
         console.error(error);
       }
     },
     async logout() {
       try {
-        const response = await logoutUser(); 
+        const response = await logoutUser();
         if (response) {
           setAuthed(false);
         }
