@@ -151,8 +151,9 @@ function FiltrosEgresados() {
       const selectedCareers = Object.keys(selectedTags)
         .filter(tag => selectedTags[tag] && tag !== selectedCarrera)
         .map(career => removeAccentsAndSpaces(career.toUpperCase()));
-    
-      const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
+
+      // quitar espacios desactivados
+      // const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
     
       const selectedSkills = list.map(item => `${item.categoria}:${item.habilidad}`);
       const selectedCategories = list.map(item => item.categoria);
@@ -171,7 +172,9 @@ function FiltrosEgresados() {
       const url = constructURL(newFilters);
     
       try {
+        console.log(url)
         const response = await fetch(url);
+        
     
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -230,8 +233,9 @@ function FiltrosEgresados() {
     const selectedCareers = Object.keys(selectedTags)
       .filter(tag => selectedTags[tag] && tag !== selectedCarrera)
       .map(career => removeAccentsAndSpaces(career.toUpperCase()));
-  
-    const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
+    
+      // quitar espacios desactivados
+    // const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
   
     const selectedSkills = list.map(item => `${item.categoria}:${item.habilidad}`);
     const selectedCategories = list.map(item => item.categoria);
