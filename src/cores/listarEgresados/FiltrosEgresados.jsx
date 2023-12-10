@@ -53,11 +53,40 @@ function FiltrosEgresados() {
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
 
-  const habilidades = {
-    frontend: ["React", "Vue", "Angular"],
-    backend: ["Node.js", "Python", "Ruby"],
-    diseño: ["Photoshop", "Illustrator", "Figma"],
-  };
+  // Objeto inicial de habilidades
+  const habilidades = {};
+
+// Función para realizar el fetch y actualizar las habilidades
+const fetchAndUpdateHabilidades = async () => {
+  try {
+    const url = "http://localhost:3000/skill-category";
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+
+    // Actualizar el objeto de habilidades con los datos obtenidos
+    data.items.forEach((item) => {
+      const name = item.name.toLowerCase(); // Convertir el nombre a minúsculas para coincidir con las llaves en el objeto habilidades
+      if (habilidades.hasOwnProperty(name)) {
+        habilidades[name] = item.relatedCareers.map((career) => career.name);
+      }
+    });
+
+    // Verificar la actualización del objeto habilidades
+    console.log("Habilidades actualizadas:", habilidades);
+  } catch (error) {
+    console.error("Hubo un error al obtener los datos:", error);
+  }
+};
+
+// Llamar a la función para obtener y actualizar habilidades
+fetchAndUpdateHabilidades();
+
+  
   const handleHabilidadChange = (e) => {
     setHabilidad(e.target.value);
     if (
