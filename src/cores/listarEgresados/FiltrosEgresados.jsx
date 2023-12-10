@@ -183,7 +183,7 @@ function FiltrosEgresados() {
       const url = constructURL(filters);
     
       try {
-        const response = await fetch("http://localhost:3000/alumni/resume");
+        const response = await fetch(url);
     
         if (!response.ok) {
           throw new Error('Network response was not ok');

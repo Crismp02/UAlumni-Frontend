@@ -12,9 +12,9 @@ function ListarEgresados() {
   const [isLargerThan770] = useMediaQuery("(min-width: 770px)");
 
   useEffect(() => { async function fetchEgresados() { 
-    
+
     try { 
-      const response = await fetch( "http://localhost:3000/alumni/resume"); 
+      const response = await fetch( "http://localhost:3000/alumni"); 
         if (!response.ok) { 
           throw new Error("Error al obtener los egresados"); 
         } 
@@ -29,6 +29,7 @@ function ListarEgresados() {
   } catch (error) {
     console.error("Error:", error);
   }
+  
 }
 
 fetchEgresados();}, []);
