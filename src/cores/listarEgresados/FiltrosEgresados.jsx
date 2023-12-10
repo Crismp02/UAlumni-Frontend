@@ -153,7 +153,7 @@ function FiltrosEgresados() {
         .map(career => removeAccentsAndSpaces(career.toUpperCase()));
 
       // quitar espacios desactivados
-      // const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
+      const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
     
       const selectedSkills = list.map(item => `${item.categoria}:${item.habilidad}`);
       const selectedCategories = list.map(item => item.categoria);
@@ -223,8 +223,9 @@ function FiltrosEgresados() {
   
   // normalizar texto de carreras
   const removeAccentsAndSpaces = (text) => {
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '');
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
   };
+  
   
   const handleChangeName = (event) => {
     const newValue = event.target.value;
@@ -235,7 +236,7 @@ function FiltrosEgresados() {
       .map(career => removeAccentsAndSpaces(career.toUpperCase()));
     
       // quitar espacios desactivados
-    // const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
+    const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
   
     const selectedSkills = list.map(item => `${item.categoria}:${item.habilidad}`);
     const selectedCategories = list.map(item => item.categoria);
