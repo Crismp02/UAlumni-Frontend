@@ -143,20 +143,60 @@ function FiltrosEgresados() {
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
-  const handleSubmit = () => {
-    if (isDisabled) {
-      return;
-    }
-
-    const data = {
-      name: valueName,
-      skills: list,
-      positionsOfInterest: listPos,
-      carrers: carrersToSend,
-      exactMatch,
+    const handleSubmit = async () => {
+      if (isDisabled) {
+        return;
+      }
+    
+      const selectedCareers = Object.keys(selectedTags)
+        .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
+        .map(career => removeAccentsAndSpaces(career.toUpperCase()));
+    
+      const careerParams = [];
+    
+      if (selectedCarrera) {
+        careerParams.push(removeAccentsAndSpaces(selectedCarrera.toUpperCase()));
+      }
+    
+      if (selectedCareers.length > 0) {
+        careerParams.push(...selectedCareers);
+      }
+    
+      const newCarrersString = careerParams.join('&careers=');
+    
+      const selectedSkills = list.map((item) => `${item.categoria}:${item.habilidad}`);
+      const newSkillsString = selectedSkills.join('&skills=');
+    
+      const selectedCategories = list.map((item) => item.categoria);
+      const newCategoriesString = selectedCategories.join('&categories=');
+    
+      const selectedPositions = listPos.join('&positions=');
+    
+      const filters = {
+        name: valueName,
+        careers: newCarrersString,
+        skills: newSkillsString,
+        categories: newCategoriesString,
+        positions: selectedPositions,
+      };
+    
+      const url = constructURL(filters);
+    
+      try {
+        const response = await fetch("http://localhost:3000/alumni/resume");
+    
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+    
+        const data = await response.json();
+        // Usa los datos como necesites
+        console.log('Datos obtenidos:', data);
+      } catch (error) {
+        console.error('Hubo un error al obtener los datos:', error);
+      }
     };
-    console.log(data);
-  };
+    
 
   const handleReset = () => {
     setValueName("");
@@ -171,53 +211,79 @@ function FiltrosEgresados() {
 
   // Maneja el cambio de la URL
   const constructURL = (filters) => {
-    const baseUrl = 'http://localhost:3000/alumni/resume?';
-    const params = new URLSearchParams();
+    const baseUrl = 'http://localhost:3000/alumni/resume';
+    const url = new URL(baseUrl);
   
-    // Agregar los filtros al URLSearchParams
     Object.keys(filters).forEach((key) => {
-      params.set(key, filters[key]);
+      if (Array.isArray(filters[key])) {
+        filters[key].forEach((value) => {
+          url.searchParams.append(key, value);
+        });
+      } else if (key === 'careers') {
+        url.searchParams.append(key, filters[key]);
+      } else {
+        url.searchParams.set(key, filters[key]);
+      }
     });
   
-    return baseUrl + params.toString();
+    return decodeURIComponent(url.toString());
+  };
+  
+  // normalizar texto de carreras
+  const removeAccentsAndSpaces = (text) => {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '');
   };
   
   const handleChangeName = (event) => {
     const newValue = event.target.value;
-    // guardar la carrera seleccionada en el estado
-    const newCarrers = { ...selectedTags, [selectedCarrera]: false};
-    setSelectedTags(newCarrers);
-
-    // delimitar el valor de la carrera seleccionada por &carrers y separar carreras por &carrers=
-
-    const newCarrersString = Object.keys(newCarrers).filter(
-      (tag) => newCarrers[tag]
-    ).join('&careers=');
-
     setValueName(newValue);
-
-    // guardar la categoria seleccionada en el estado
-    const newCategoria = list.map((item) => item.categoria);
-
-    // guardar las habilidades seleccionadas en el estado
-    const newSkills = list.map((item) => item.habilidad);
-    
-
+  
+    const selectedCareers = Object.keys(selectedTags)
+      .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
+      .map(career => removeAccentsAndSpaces(career.toUpperCase())); // Transformar nombres
+  
+    const careerParams = [];
+  
+    if (selectedCarrera) {
+      careerParams.push(removeAccentsAndSpaces(selectedCarrera.toUpperCase()));
+    }
+  
+    if (selectedCareers.length > 0) {
+      careerParams.push(...selectedCareers);
+    }
+  
+    const newCarrersString = careerParams.join('&careers=');
+  
+    const selectedSkills = list.map((item) => `${item.categoria}:${item.habilidad}`);
+    const newSkillsString = selectedSkills.join('&skills=');
+  
+    const selectedCategories = list.map((item) => item.categoria);
+    const newCategoriesString = selectedCategories.join('&categories=');
+  
+    const selectedPositions = listPos.join('&positions=');
   
     const filters = {
       name: newValue,
       careers: newCarrersString,
-      categoria: newCategoria,
-      skills: newSkills,
-      positions: listPos,
+      skills: newSkillsString,
+      categories: newCategoriesString,
+      positions: selectedPositions,
     };
   
     const newUrl = constructURL(filters);
     console.log('URL:', newUrl);
-  
-    // Aquí puedes usar la nueva URL como necesites
-    // Por ejemplo, redirigir o actualizar el historial
   };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
 
@@ -272,15 +338,15 @@ function FiltrosEgresados() {
               listPos={listPos}
               handleRemovePos={handleRemovePos}
             />
+
             {/*Busqueda por carreras:*/}
             <FiltrarCarreras
               labels={labels}
               selectedCarrera={selectedCarrera}
               selectedTags={selectedTags}
               handleClick={handleClick}
-
-
             />
+
             {/*Filtros exactos:*/}
             <Checkbox
               marginBottom="10px"

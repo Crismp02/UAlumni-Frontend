@@ -14,11 +14,13 @@ function ListarEgresados() {
   useEffect(() => { async function fetchEgresados() { 
     
     try { 
-      const response = await fetch( "http://localhost:3000/alumni/resume" ); 
+      const response = await fetch( "http://localhost:3000/alumni/resume"); 
         if (!response.ok) { 
           throw new Error("Error al obtener los egresados"); 
         } 
         const data = await response.json(); 
+        console.log("mis datos")
+        console.log(data)
 
         if (Array.isArray(data.data.items)) {
           // Actualiza el estado con los egresados obtenidos
