@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Modal,
@@ -9,22 +9,36 @@ import {
   ModalBody,
   Button,
   Input,
-  Textarea,
   Box,
   Flex,
   IconButton,
-  VStack
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
+import { AddPortfolioItem, DeletePortfolioItem, EditPortfolioItem, getPortfolio, getPortfolioItem } from "../../services/auth/MeProfile.services";
 
 
 const PortafoliosCard = ({
   cardContentPortafolios,
   setCardContentPortafolios,
-  cardData,
 }) => {
   const [switchValue, setSwitchValue] = useState(false);
+
+  const [cardData, setCardData] = useState([]);
+
+  useEffect(() => {
+    const fetchCardData = async () => {
+      const data = await getPortfolio();
+      if (Array.isArray(data.data.items)) {
+        setCardData(data.data.items);
+      } else {
+        console.error('data.data.items no es un array');
+      }
+    };
+  
+    fetchCardData();
+  }, []);
+
 
   const handleSwitchChange = () => {
     setSwitchValue(!switchValue);
@@ -50,9 +64,40 @@ const PortafoliosCard = ({
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
-  const handleFieldChange = (fieldName, value) => {
-    // Actualizar solo el campo correspondiente en additionalFields
-    setAdditionalFields({ ...additionalFields, [fieldName]: value });
+  const handleAddPortfolioItem = async () => {
+    // Validar que los campos no estén vacíos
+    if (additionalFields.title.trim() === '' || additionalFields.sourceLink.trim() === '') {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+  
+    // Preparar los datos para la solicitud POST
+    const newData = {
+      title: additionalFields.title,
+      sourceLink: additionalFields.sourceLink,
+      isVisible: true,
+    };
+  
+    // Llamar a la función AddPortfolioItem con los datos preparados
+    const newCard = await AddPortfolioItem(newData);
+  
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setCardData(prevCardData => [...prevCardData, newCard.data]);
+    }
+
+    // Cerrar el modal de agregar y restablecer los campos adicionales
+    setShowAddModal(false);
+    setAdditionalFields({});
+  };
+
+
+  const handleFieldChange = (field, value) => {
+    setAdditionalFields(prevFields => ({
+      ...prevFields,
+      [field]: value,
+    }));
   };
 
   const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
@@ -62,13 +107,21 @@ const PortafoliosCard = ({
     setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
-  const handleEditCard = (cardId) => {
-    console.log("card",cardData)
-    const cardToEdit = cardData.find(card => card.id === cardId);
-    console.log(cardId);
+
+  useEffect(() => {
+    if (editingCard) {
+      setShowEditModal(true);
+    }
+  }, [editingCard]);
+
+  const [originalTitle, setOriginalTitle] = useState(null);
+
+  const handleEditCard = async (cardTitle) => {
+    const cardToEdit = await getPortfolioItem (cardTitle)
     setEditingCard(cardToEdit);
-    setShowEditModal(true);
+    setOriginalTitle(cardTitle); // Guardar el título original
   };
+
 
   // Modal de edición Experiencial Laboral
   const handleEditInputChange = (field, value, setState) => {
@@ -78,28 +131,39 @@ const PortafoliosCard = ({
     }));
   };
 
-  const handleSaveEdit = (
-    editedCard,
-    content,
-    setContent,
-    setShowEditModal
-  ) => {
+  const [content, setContent] = useState(null);
+  
+
+  const handleSaveEdit = async () => {
 
     // Validar que los campos no estén vacíos
-    if (editedCard.title.trim() === '' || editedCard.sourceLink.trim() === '') {
+    if (editingCard.title.trim() === '' || editingCard.sourceLink.trim() === null || editingCard.title.trim() === '' || editingCard.sourceLink.trim() === null) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
     }
 
-    const updatedContent = content.map((card) => {
-      if (card.id === editedCard.id) {
-        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
-      }
-      return card;
-    });
+    // Preparar los datos para la solicitud PATCH
+  const newData = {
+    title: editingCard.title, // Ajusta esto según sea necesario
+    sourceLink: editingCard.sourceLink,
+    isVisible: true,
+  };
 
-    setContent(updatedContent);
+    const updatedCard = await EditPortfolioItem(originalTitle, newData);
+
+    setContent(updatedCard);
+
+    // Actualizar cardData con los nuevos datos
+    const updatedCardData = cardData.map(card => {
+      if (card.title === originalTitle) {
+        return { ...card, title: newData.title, sourceLink: newData.sourceLink };
+      } else {
+        return card;
+      }
+    });
+    setCardData(updatedCardData);
+
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
@@ -162,9 +226,10 @@ const PortafoliosCard = ({
     setEditMode(true);
   };
 
-  const handleDeleteClick = (cardId, cardType) => {
-    if (cardId) {
-      setCardToDelete(cardId);
+  const handleDeleteClick = (cardTitle, cardType) => {
+    setOriginalTitle(cardTitle); 
+    if (cardTitle) {
+      setCardToDelete(cardTitle);
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
@@ -172,23 +237,18 @@ const PortafoliosCard = ({
     }
   };
 
-  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
+  const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
-      let updatedCardContent = [];
       if (cardTypeToDelete === "cardContentPortafolios") {
-        updatedCardContent = cardContentPortafolios.filter(
-          (item) => item.id !== cardToDelete
-        );
-        setCardContentPortafolios(updatedCardContent);
-        // agregar cada uno de los estados de edicion
+        await DeletePortfolioItem(originalTitle);
+        const updatedCardData = cardData.filter(card => card.title !== cardToDelete);
+        setCardData(updatedCardData);
         setShowIcons(false);
         setEditMode(true);
       } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
       }
-
-      // Cerrar el modal y limpiar el estado
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
@@ -238,7 +298,7 @@ const PortafoliosCard = ({
         )}
       </Text>
 
-      {cardData && cardData.map((item, index) => (
+      {Array.isArray(cardData)  && cardData.map((item, index) => (
         <Box
           key={index}
           bg="white"
@@ -258,7 +318,7 @@ const PortafoliosCard = ({
   icon={<EditIcon />}
   colorScheme="blue"
   marginRight="5px"
-  onClick={() => handleEditCard(item.id)}
+  onClick={() => handleEditCard(item.title)}
 />
               <IconButton
                 aria-label="Eliminar"
@@ -266,7 +326,7 @@ const PortafoliosCard = ({
                 colorScheme="red"
                 marginLeft="5px"
                 onClick={() =>
-                  handleDeleteClick(item.id, "cardContentPortafolios")
+                  handleDeleteClick(item.title, "cardContentPortafolios")
                 }
               />
             </Flex>
@@ -307,7 +367,7 @@ const PortafoliosCard = ({
                   value={editingCard.title}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "titulo",
+                      "title",
                       e.target.value,
                       setEditingCard
                     )
@@ -319,7 +379,7 @@ const PortafoliosCard = ({
                 <Input
                   value={editingCard.sourceLink}
                   onChange={(e) =>
-                    handleEditInputChange("url", e.target.value, setEditingCard)
+                    handleEditInputChange("sourceLink", e.target.value, setEditingCard)
                   }
                   placeholder="Editar Url..."
                   size="lg"
@@ -332,13 +392,8 @@ const PortafoliosCard = ({
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() =>
-                handleSaveEdit(
-                  editingCard,
-                  cardContentPortafolios,
-                  setCardContentPortafolios,
-                  setShowEditModal
-                )
+              onClick={
+                handleSaveEdit
               }
             >
               Guardar
@@ -361,14 +416,14 @@ const PortafoliosCard = ({
               <>
                 <Input
                   value={additionalFields.title || ""}
-                  onChange={(e) => handleFieldChange("titulo", e.target.value)}
+                  onChange={(e) => handleFieldChange("title", e.target.value)}
                   placeholder="Título"
                   marginBottom="10px"
                 />
 
                 <Input
                   value={additionalFields.sourceLink || ""}
-                  onChange={(e) => handleFieldChange("url", e.target.value)}
+                  onChange={(e) => handleFieldChange("sourceLink", e.target.value)}
                   placeholder="Url del portafolio"
                   marginBottom="10px"
                 />
@@ -376,7 +431,7 @@ const PortafoliosCard = ({
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
+            <Button colorScheme="blue" mr={3} onClick={handleAddPortfolioItem}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={() => setShowAddModal(false)}>

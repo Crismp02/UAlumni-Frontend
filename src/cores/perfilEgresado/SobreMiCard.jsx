@@ -58,7 +58,6 @@ const SobremiCard = ({ cardContent, setCardContent, cardData: initialCardData })
 
   // Preparar los datos para la solicitud PATCH
   const newData = {
-    numberOfDownloads: 0,
     isVisible: true, // Ajusta esto según sea necesario
     aboutMe: editingCard.descripcion,
   };
