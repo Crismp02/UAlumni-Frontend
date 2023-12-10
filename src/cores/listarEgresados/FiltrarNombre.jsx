@@ -1,6 +1,7 @@
 import React from "react";
 import { Input, Text, useMediaQuery } from "@chakra-ui/react";
 
+
 function FiltrarNombre({ valueName, handleChangeName }){
     const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
     return(

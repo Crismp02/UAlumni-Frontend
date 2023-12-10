@@ -44,7 +44,7 @@ function FiltrosEgresados() {
     /*Busqueda por nombre*/
   }
   const [valueName, setValueName] = useState("");
-  const handleChangeName = (event) => setValueName(event.target.value);
+  
 
   {
     /*Busqueda por habilidades*/
@@ -169,6 +169,59 @@ function FiltrosEgresados() {
     setSelectedCarrera(null);
   };
 
+  // Maneja el cambio de la URL
+  const constructURL = (filters) => {
+    const baseUrl = 'http://localhost:3000/alumni/resume?';
+    const params = new URLSearchParams();
+  
+    // Agregar los filtros al URLSearchParams
+    Object.keys(filters).forEach((key) => {
+      params.set(key, filters[key]);
+    });
+  
+    return baseUrl + params.toString();
+  };
+  
+  const handleChangeName = (event) => {
+    const newValue = event.target.value;
+    // guardar la carrera seleccionada en el estado
+    const newCarrers = { ...selectedTags, [selectedCarrera]: false};
+    setSelectedTags(newCarrers);
+
+    // delimitar el valor de la carrera seleccionada por &carrers y separar carreras por &carrers=
+
+    const newCarrersString = Object.keys(newCarrers).filter(
+      (tag) => newCarrers[tag]
+    ).join('&careers=');
+
+    setValueName(newValue);
+
+    // guardar la categoria seleccionada en el estado
+    const newCategoria = list.map((item) => item.categoria);
+
+    // guardar las habilidades seleccionadas en el estado
+    const newSkills = list.map((item) => item.habilidad);
+    
+
+  
+    const filters = {
+      name: newValue,
+      careers: newCarrersString,
+      categoria: newCategoria,
+      skills: newSkills,
+      positions: listPos,
+    };
+  
+    const newUrl = constructURL(filters);
+    console.log('URL:', newUrl);
+  
+    // Aquí puedes usar la nueva URL como necesites
+    // Por ejemplo, redirigir o actualizar el historial
+  };
+  
+  
+
+
   return (
     <>
       <Button
@@ -225,6 +278,8 @@ function FiltrosEgresados() {
               selectedCarrera={selectedCarrera}
               selectedTags={selectedTags}
               handleClick={handleClick}
+
+
             />
             {/*Filtros exactos:*/}
             <Checkbox
