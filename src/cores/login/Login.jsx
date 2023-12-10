@@ -1,11 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import NavBar from "../../components/Navbar";
-import {
-  Image,
-  Box,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Image, Box, useMediaQuery } from "@chakra-ui/react";
 import { loginUser } from "../../services/auth/Auth.services";
 import LoginForm from "./LoginForm";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +33,9 @@ function Login() {
       try {
         const data = await loginUser(email, password);
         console.log(data);
-        navigate("/profile")
+        if (data) {
+          navigate("/profile");
+        }
       } catch (error) {
         console.error(error);
       }

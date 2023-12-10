@@ -43,7 +43,9 @@ function Register() {
       try {
         const data = await registerUser(email, firstName, lastName, password);
         console.log(data);
-        navigate("/login")
+        if (data){
+          navigate("/login")
+        }
       } catch (error) {
         console.error(error);
       }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import NavBarEgresados from "../../components/NavBarEgresados";
 import Footer from "../../components/Footer";
 import ExperienciaLaboralCard from "./ExperienciaLaboralCard";
@@ -11,11 +11,24 @@ import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobreMiCard";
 
 import { Box, Text, Flex, VStack, Button  } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import CustomSwitch from "./Switch";
+import { getMeProfile } from "../../services/auth/MeProfile.services";
 
 function PerfilEgresado() {
+  const [dataProfile, setDataProfile] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getMeProfile();
+      setDataProfile(result);
+      console.log(result);
+      //console.log(result.data.resume.portfolio);
+    }
+    
+    fetchData();
+  }, []);
+
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleSwitchChange = () => {
@@ -107,7 +120,8 @@ function PerfilEgresado() {
   return (
     <div>
       <NavBarEgresados />
-
+      {dataProfile && (
+<>
       <Text
         fontSize={["lg", "lg", "xl", "4xl"]}
         color="black"
@@ -161,8 +175,8 @@ function PerfilEgresado() {
             marginBottom="0"
             textAlign="center"
           >
-            Nombre del Egresado
-          </Text>
+            {dataProfile.data.names} {dataProfile.data.surnames}
+          </Text> 
           <Text
             fontSize="xl"
             marginLeft="10"
@@ -171,7 +185,7 @@ function PerfilEgresado() {
             marginBottom="0"
             textAlign="center"
           >
-            Carrera
+            {dataProfile && dataProfile.data.careers.length > 0 && dataProfile.data.careers.map(career => career.careerName).join(' / ')}
           </Text>
           <Box
             display="flex"
@@ -197,16 +211,19 @@ function PerfilEgresado() {
           <ContactoCard
             cardContent={cardContentContacto}
             setCardContent={setcardContentContacto}
+            cardData={dataProfile && dataProfile.data}
           />
 
           <PortafoliosCard
             cardContentPortafolios={cardContentPortafolios}
             setCardContentPortafolios={setCardContentPortafolios}
+            cardData={dataProfile && dataProfile.data.resume.portfolio}
           />
 
           <SobremiCard
             cardContent={cardContentSobremi}
             setCardContent={setCardContentSobremi}
+            cardData={dataProfile && dataProfile.data.resume.aboutMe}
           />
         </Box>
         {/* inicio de 2do Box */}
@@ -292,6 +309,7 @@ function PerfilEgresado() {
           </Box>
         </Box>
       </Box>
+      </>)}
 
       <Footer />
     </div>

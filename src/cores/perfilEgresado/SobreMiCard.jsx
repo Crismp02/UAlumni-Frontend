@@ -8,14 +8,17 @@ import {
   ModalFooter,
   ModalBody,
   Button,
-  Input,
   Textarea,
   Box,
   Flex,
 } from "@chakra-ui/react";
-import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { EditIcon } from "@chakra-ui/icons";
+import { editAboutMe } from "../../services/auth/MeProfile.services";
 
-const SobremiCard = ({ cardContent, setCardContent }) => {
+const SobremiCard = ({ cardContent, setCardContent, cardData: initialCardData }) => {
+
+  const [cardData, setCardData] = useState(initialCardData);
+
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContent");
@@ -31,15 +34,9 @@ const SobremiCard = ({ cardContent, setCardContent }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
 
-  const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
-    setShowIconsFunc((prevIcons) => !prevIcons);
-    setEditModeFunc((prevMode) => !prevMode);
-    setShowAddButton(true); // Mostrar el botón de agregar después de editar
-    setShowEditButton(false); // Ocultar el botón de editar después de editar
-  };
 
-  const handleEditCard = (cardToEdit) => {
-    setEditingCard(cardToEdit);
+  const handleEditCard = () => {
+    setEditingCard({ descripcion: cardData});
     setShowEditModal(true);
   };
 
@@ -51,32 +48,35 @@ const SobremiCard = ({ cardContent, setCardContent }) => {
     }));
   };
 
-  const handleSaveEdit = (
-    editedCard,
-    content,
-    setContent,
-    setShowEditModal
-  ) => {
-    // Validar que el campo de descripción no esté vacío
-    if (editedCard.descripcion.trim() === '' || editedCard.descripcion === null) {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('La descripción no puede estar vacía');
-      return;
-    }
+  const handleSaveEdit = async () => {
+  // Validar que el campo de descripción no esté vacío
+  if (editingCard.descripcion.trim() === '' || editingCard.descripcion === null) {
+    // Mostrar un mensaje de error o manejar la situación según lo desees
+    console.error('La descripción no puede estar vacía');
+    return;
+  }
 
-    const updatedContent = content.map((card) => {
-      if (card.id === editedCard.id) {
-        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
-      }
-      return card;
-    });
-
-    setContent(updatedContent);
-    setShowEditModal(false);
-    // agregar cada uno de los estados de edicion
-    setShowIcons(false);
-    setEditMode(true);
+  // Preparar los datos para la solicitud PATCH
+  const newData = {
+    numberOfDownloads: 0,
+    isVisible: true, // Ajusta esto según sea necesario
+    aboutMe: editingCard.descripcion,
   };
+
+  // Llamar a la función editAboutMe para hacer la solicitud PATCH
+  const updatedCard = await editAboutMe(newData);
+
+  // Actualizar cardContent con updatedCard
+  setCardContent(updatedCard);
+
+  // Actualizar cardData con la nueva descripción
+  setCardData(newData.aboutMe); // Aquí es donde se cambió el código
+
+  setShowEditModal(false);
+  // agregar cada uno de los estados de edicion
+  setShowIcons(false);
+  setEditMode(true);
+};
 
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
@@ -143,7 +143,7 @@ const SobremiCard = ({ cardContent, setCardContent }) => {
           position="absolute"
           right="45px"
           color="blue.500"
-          onClick={() => handleEditCard(cardContent[0])}
+          onClick={() => handleEditCard(cardData)}
         />
       </Text>
 
@@ -159,7 +159,7 @@ const SobremiCard = ({ cardContent, setCardContent }) => {
         boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
       >
         <Flex>
-          <Text>{cardContent[0].descripcion}</Text>
+          <Text>{cardData}</Text>
         </Flex>
       </Box>
 
@@ -193,14 +193,7 @@ const SobremiCard = ({ cardContent, setCardContent }) => {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() =>
-                handleSaveEdit(
-                  editingCard,
-                  cardContent,
-                  setCardContent,
-                  setShowEditModal
-                )
-              }
+              onClick={ handleSaveEdit }
             >
               Guardar
             </Button>

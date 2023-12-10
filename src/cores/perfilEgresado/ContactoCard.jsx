@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"; 
 import { AddIcon, EditIcon, DeleteIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
 
-const ContactoCard = ({ cardContent, setCardContent }) => {
+const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
  
 
   const [editMode, setEditMode] = useState(true);
@@ -44,8 +44,8 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
-  const handleEditCard = (cardToEdit) => {
-    setEditingCard(cardToEdit);
+  const handleEditCard = () => {
+    setEditingCard(cardData);
     setShowEditModal(true);
   };
 
@@ -63,8 +63,13 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
     setContent,
     setShowEditModal
   ) => {
-
-    if (editedCard.tlf.trim() === '' || editedCard.direccion.trim() === '') {
+    if (
+      !editedCard &&
+      !editedCard.telephoneNumber &&
+      !editedCard.address &&
+      editedCard.telephoneNumber.trim() === '' ||
+      editedCard.address.trim() === ''
+    ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
@@ -136,6 +141,8 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
 
   return (
     <>
+    {cardData && (
+    <>
       <Text
         fontWeight="bold"
         fontSize="xl"
@@ -168,7 +175,7 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
         >
           <Flex>
             <PhoneIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].tlf}</Text>
+            <Text fontWeight="bold">{cardData.telephoneNumber}</Text>
           </Flex>
         </Box>
         <Box
@@ -184,7 +191,7 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
         >
           <Flex>
             <InfoIcon color="blue.500" marginRight="20px" marginTop="5px" />
-            <Text fontWeight="bold">{cardContent[0].direccion}</Text>
+            <Text fontWeight="bold">{cardData.address}</Text>
           </Flex>
         </Box>
 
@@ -197,10 +204,10 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
             {editingCard && (
               <>
                 <Input
-                  value={editingCard.tlf}
+                  value={editingCard.telephoneNumber}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "tlf",
+                      "telephoneNumber",
                       e.target.value,
                       setEditingCard
                     )
@@ -210,10 +217,10 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
                   marginBottom="4"
                 />
                 <Textarea
-                  value={editingCard.direccion}
+                  value={editingCard.address}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "direccion",
+                      "address",
                       e.target.value,
                       setEditingCard
                     )
@@ -270,6 +277,8 @@ const ContactoCard = ({ cardContent, setCardContent }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+    </>
+    )}
     </>
   );
 };

@@ -22,6 +22,7 @@ import CustomSwitch from "./Switch";
 const PortafoliosCard = ({
   cardContentPortafolios,
   setCardContentPortafolios,
+  cardData,
 }) => {
   const [switchValue, setSwitchValue] = useState(false);
 
@@ -61,7 +62,10 @@ const PortafoliosCard = ({
     setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
-  const handleEditCard = (cardToEdit) => {
+  const handleEditCard = (cardId) => {
+    console.log("card",cardData)
+    const cardToEdit = cardData.find(card => card.id === cardId);
+    console.log(cardId);
     setEditingCard(cardToEdit);
     setShowEditModal(true);
   };
@@ -82,7 +86,7 @@ const PortafoliosCard = ({
   ) => {
 
     // Validar que los campos no estén vacíos
-    if (editedCard.titulo.trim() === '' || editedCard.url.trim() === '') {
+    if (editedCard.title.trim() === '' || editedCard.sourceLink.trim() === '') {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
@@ -112,7 +116,7 @@ const PortafoliosCard = ({
   const handleGuardar = () => {
 
     // Validar que los campos no estén vacíos antes de guardar
-    if (additionalFields.titulo.trim() === '' || additionalFields.url.trim() === '') {
+    if (additionalFields.title.trim() === '' || additionalFields.sourceLink.trim() === '') {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
@@ -234,9 +238,9 @@ const PortafoliosCard = ({
         )}
       </Text>
 
-      {cardContentPortafolios.map((card) => (
+      {cardData && cardData.map((item, index) => (
         <Box
-          key={card.id}
+          key={index}
           bg="white"
           padding="4"
           border="1px solid #ccc"
@@ -250,27 +254,27 @@ const PortafoliosCard = ({
           {showIcons && (
             <Flex justifyContent="flex-end" marginBottom="10px">
               <IconButton
-                aria-label="Editar"
-                icon={<EditIcon />}
-                colorScheme="blue"
-                marginRight="5px"
-                onClick={() => handleEditCard(card)}
-              />
+  aria-label="Editar"
+  icon={<EditIcon />}
+  colorScheme="blue"
+  marginRight="5px"
+  onClick={() => handleEditCard(item.id)}
+/>
               <IconButton
                 aria-label="Eliminar"
                 icon={<DeleteIcon />}
                 colorScheme="red"
                 marginLeft="5px"
                 onClick={() =>
-                  handleDeleteClick(card.id, "cardContentPortafolios")
+                  handleDeleteClick(item.id, "cardContentPortafolios")
                 }
               />
             </Flex>
           )}
           <Flex justifyContent="space-between">
-            <Text fontWeight="bold">{card.titulo}</Text>
+            <Text fontWeight="bold">{item.title}</Text>
           </Flex>
-          <Text>{card.url}</Text>
+          <Text>{item.sourceLink}</Text>
           <Flex alignItems="center" marginTop="10px">
             <CustomSwitch
               isChecked={switchValue}
@@ -300,7 +304,7 @@ const PortafoliosCard = ({
             {editingCard && (
               <>
                 <Input
-                  value={editingCard.titulo}
+                  value={editingCard.title}
                   onChange={(e) =>
                     handleEditInputChange(
                       "titulo",
@@ -313,7 +317,7 @@ const PortafoliosCard = ({
                   marginBottom="4"
                 />
                 <Input
-                  value={editingCard.url}
+                  value={editingCard.sourceLink}
                   onChange={(e) =>
                     handleEditInputChange("url", e.target.value, setEditingCard)
                   }
@@ -356,14 +360,14 @@ const PortafoliosCard = ({
             {cardTypeToAdd === "Portafolios" && (
               <>
                 <Input
-                  value={additionalFields.titulo || ""}
+                  value={additionalFields.title || ""}
                   onChange={(e) => handleFieldChange("titulo", e.target.value)}
                   placeholder="Título"
                   marginBottom="10px"
                 />
 
                 <Input
-                  value={additionalFields.url || ""}
+                  value={additionalFields.sourceLink || ""}
                   onChange={(e) => handleFieldChange("url", e.target.value)}
                   placeholder="Url del portafolio"
                   marginBottom="10px"
