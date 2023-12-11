@@ -54,39 +54,12 @@ function FiltrosEgresados() {
   const [list, setList] = useState([]);
 
   // Objeto inicial de habilidades
-  const habilidades = {};
-
-// Función para realizar el fetch y actualizar las habilidades
-const fetchAndUpdateHabilidades = async () => {
-  try {
-    const url = "http://localhost:3000/skill-category";
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-
-    // Actualizar el objeto de habilidades con los datos obtenidos
-    data.items.forEach((item) => {
-      const name = item.name.toLowerCase(); // Convertir el nombre a minúsculas para coincidir con las llaves en el objeto habilidades
-      if (habilidades.hasOwnProperty(name)) {
-        habilidades[name] = item.relatedCareers.map((career) => career.name);
-      }
-    });
-
-    // Verificar la actualización del objeto habilidades
-    console.log("Habilidades actualizadas:", habilidades);
-  } catch (error) {
-    console.error("Hubo un error al obtener los datos:", error);
-  }
+const habilidades = {
+  frontend: ["React", "Vue", "Angular"],
+  backend: ["Node.js", "Laravel", "Ruby"],
+  diseño: ["Photoshop", "Illustrator", "Figma"],
 };
 
-// Llamar a la función para obtener y actualizar habilidades
-fetchAndUpdateHabilidades();
-
-  
   const handleHabilidadChange = (e) => {
     setHabilidad(e.target.value);
     if (
@@ -189,12 +162,13 @@ fetchAndUpdateHabilidades();
       const selectedPositions = listPos.length > 0 ? listPos : [];
     
       const filters = {
-        name: valueName,
+        name: valueName ? valueName : undefined,
         careers: careerParams.length > 0 ? careerParams.join('&careers=') : undefined,
         skills: selectedSkills.length > 0 ? selectedSkills.join('&skills=') : undefined,
         categories: selectedCategories.length > 0 ? selectedCategories.join('&categories=') : undefined,
         positions: selectedPositions.length > 0 ? selectedPositions.join('&positions=') : undefined,
       };
+      
     
       const newFilters = Object.fromEntries(Object.entries(filters).filter(([_, value]) => value !== undefined));
     
@@ -272,7 +246,7 @@ fetchAndUpdateHabilidades();
     const selectedPositions = listPos.length > 0 ? listPos : [];
   
     const filters = {
-      name: newValue,
+      name: valueName ? valueName : undefined,
       careers: careerParams.length > 0 ? careerParams.join('&careers=') : undefined,
       skills: selectedSkills.length > 0 ? selectedSkills.join('&skills=') : undefined,
       categories: selectedCategories.length > 0 ? selectedCategories.join('&categories=') : undefined,
