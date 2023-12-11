@@ -13,7 +13,7 @@ import {
   Box,
   Flex,
 } from "@chakra-ui/react"; 
-import { AddIcon, EditIcon, DeleteIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
+import { EditIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
 
 const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
  

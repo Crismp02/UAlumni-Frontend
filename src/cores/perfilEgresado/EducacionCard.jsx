@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { format, addDays } from 'date-fns';
 import {
   Text,
   Modal,
@@ -12,12 +13,28 @@ import {
   Box,
   Flex,
   IconButton,
-  VStack,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
+import { AddHigherEducationStudy, DeleteHigherEducationStudy, EditHigherEducationStudy, getHigherEducationStudies, getHigherEducationStudy } from "../../services/auth/MeProfile.services";
 
-const EducacionCard = ({ cardContent, setCardContent }) => {
+const EducacionCard = () => {
+
+  const [cardData, setCardData] = useState([]);
+
+  useEffect(() => {
+    const fetchCardData = async () => {
+      const data = await getHigherEducationStudies();
+      if (Array.isArray(data.data.items)) {
+        setCardData(data.data.items);
+      } else {
+        console.error('data.data.items no es un array');
+      }
+    };
+  
+    fetchCardData();
+  }, []);
+
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleSwitchChange = () => {
@@ -42,6 +59,35 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
+  const handleAddEducation = async () => {
+    // Validar que los campos no estén vacíos
+    if (additionalFields.title.trim() === '' || additionalFields.institution.trim() === '' || additionalFields.endDate.trim() === '' || additionalFields.title.trim() === null || additionalFields.institution.trim() === null || additionalFields.endDate.trim() === null) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+  
+    // Preparar los datos para la solicitud POST
+    const newData = {
+      title: additionalFields.title,
+      institution: additionalFields.institution,
+      endDate: additionalFields.endDate,
+      isVisible: true,
+    };
+  
+    // Llamar a la función AddHigherEducationStudy con los datos preparados
+    const newCard = await AddHigherEducationStudy(newData);
+  
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setCardData(prevCardData => [...prevCardData, newCard.data]);
+    }
+
+    // Cerrar el modal de agregar y restablecer los campos adicionales
+    setShowAddModal(false);
+    setAdditionalFields({});
+  };
+
   const handleFieldChange = (fieldName, value) => {
     // Actualizar solo el campo correspondiente en additionalFields
     setAdditionalFields({ ...additionalFields, [fieldName]: value });
@@ -54,9 +100,25 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
     setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
-  const handleEditCard = (cardToEdit) => {
+  useEffect(() => {
+    if (editingCard) {
+      setShowEditModal(true);
+    }
+  }, [editingCard]);
+
+  const [originalTitle, setOriginalTitle] = useState(null);
+
+  const handleEditCard = async (cardTitle) => {
+    const cardToEdit = await getHigherEducationStudy(cardTitle);
+    
+    // Formatear la fecha y agregar un día
+  const date = new Date(cardToEdit.endDate);
+  const datePlusOneDay = addDays(date, 1);
+  const formattedDate = format(datePlusOneDay, 'yyyy-MM-dd');
+  cardToEdit.endDate = formattedDate;
+  
     setEditingCard(cardToEdit);
-    setShowEditModal(true);
+    setOriginalTitle(cardTitle); // Guardar el título original
   };
 
   // Modal de edición Experiencial Laboral
@@ -67,28 +129,39 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
     }));
   };
 
-  const handleSaveEdit = (
-    editedCard,
-    content,
-    setContent,
-    setShowEditModal
-  ) => {
+  const [content, setContent] = useState(null);
+
+  const handleSaveEdit = async () => {
 
     // Validar que los campos no estén vacíos
-    if (editedCard.grado.trim() === '' || editedCard.institucion.trim() === '' || editedCard.anioFinal.trim() === '') {
+    if (editingCard.title.trim() === '' || editingCard.institution.trim() === '' || editingCard.endDate.trim() === '' || editingCard.title.trim() === null || editingCard.institution.trim() === null || editingCard.endDate.trim() === null ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
     }
 
-    const updatedContent = content.map((card) => {
-      if (card.id === editedCard.id) {
-        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
-      }
-      return card;
-    });
+    // Preparar los datos para la solicitud PATCH
+  const newData = {
+    title: editingCard.title, // Ajusta esto según sea necesario
+    institution: editingCard.institution,
+    endDate: editingCard.endDate,
+    isVisible: true,
+  };
 
-    setContent(updatedContent);
+  const updatedCard = await EditHigherEducationStudy(originalTitle, newData);
+
+  setContent(updatedCard);
+
+  // Actualizar cardData con los nuevos datos
+  const updatedCardData = cardData.map(card => {
+    if (card.title === originalTitle) {
+      return { ...card, title: newData.title, institution: newData.institution, endDate: newData.endDate };
+    } else {
+      return card;
+    }
+  });
+  setCardData(updatedCardData);
+
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
@@ -102,44 +175,7 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
     setShowAddModal(true);
   };
 
-  const handleGuardar = () => {
-
-    // Validar que los campos no estén vacíos antes de guardar
-    if (additionalFields.grado.trim() === '' || additionalFields.institucion.trim() === '' || additionalFields.anioFinal.trim() === '') {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
-    return;
-  }
-
-    let newCardContent = [];
-
-    // Lógica para agregar datos según el tipo de tarjeta actual
-    switch (cardTypeToAdd) {
-      case "Educación":
-        newCardContent = [
-          ...cardContent,
-          {
-            id: cardContent.length + 1, // Generar un nuevo ID
-            grado: additionalFields.grado,
-            institucion: additionalFields.institucion,
-            anioFinal: additionalFields.anioFinal,
-          },
-        ];
-        setCardContent(newCardContent);
-        setShowIcons(false);
-        setEditMode(true);
-        break;
-
-      // Agrega lógica para otros tipos de tarjetas si es necesario
-      default:
-        break;
-    }
-
-    // Restablecer los campos adicionales después de guardar
-    setAdditionalFields({});
-    // CERRAR MODAL DE AGREGAR
-    setShowAddModal(false);
-  };
+  
 
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
@@ -149,9 +185,10 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
     setEditMode(true);
   };
 
-  const handleDeleteClick = (cardId, cardType) => {
-    if (cardId) {
-      setCardToDelete(cardId);
+  const handleDeleteClick = (cardTitle, cardType) => {
+    setOriginalTitle(cardTitle); 
+    if (cardTitle) {
+      setCardToDelete(cardTitle);
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
@@ -159,23 +196,18 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
     }
   };
 
-  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
+  const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
-      let updatedCardContent = [];
       if (cardTypeToDelete === "cardContent") {
-        updatedCardContent = cardContent.filter(
-          (item) => item.id !== cardToDelete
-        );
-        setCardContent(updatedCardContent);
-        // agregar cada uno de los estados de edicion
+        await DeleteHigherEducationStudy(originalTitle);
+        const updatedCardData = cardData.filter(card => card.title !== cardToDelete);
+        setCardData(updatedCardData);
         setShowIcons(false);
         setEditMode(true);
       } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
       }
-
-      // Cerrar el modal y limpiar el estado
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
@@ -227,9 +259,9 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
         )}
       </Text>
 
-      {cardContent.map((card) => (
+      {Array.isArray(cardData)  && cardData.map((item, index) => (
         <Box
-          key={card.id}
+          key={index}
           bg="white"
           padding="4"
           border="1px solid #ccc"
@@ -248,23 +280,23 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
                 icon={<EditIcon />}
                 colorScheme="blue"
                 marginRight="5px"
-                onClick={() => handleEditCard(card)}
+                onClick={() => handleEditCard(item.title)}
               />
               <IconButton
                 aria-label="Eliminar"
                 icon={<DeleteIcon />}
                 colorScheme="red"
                 marginLeft="5px"
-                onClick={() => handleDeleteClick(card.id, "cardContent")}
+                onClick={() => handleDeleteClick(item.title, "cardContent")}
               />
             </Flex>
           )}
           <Flex justifyContent="space-between">
-            <Text fontWeight="bold">{card.grado}</Text>
+            <Text fontWeight="bold">{item.title}</Text>
           </Flex>
 
-          <Text>{card.institucion}</Text>
-          {new Date(card.anioFinal).getFullYear()}
+          <Text>{item.institution}</Text>
+          {addDays(new Date(item.endDate), 1).getFullYear()}
           <Flex alignItems="center" marginTop="10px">
             <CustomSwitch
               isChecked={switchValue}
@@ -294,10 +326,10 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
             {editingCard && (
               <>
                 <Input
-                  value={editingCard.grado}
+                  value={editingCard.title}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "grado",
+                      "title",
                       e.target.value,
                       setEditingCard
                     )
@@ -307,10 +339,10 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
                   marginBottom="4"
                 />
                 <Input
-                  value={editingCard.institucion}
+                  value={editingCard.institution}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "institucion",
+                      "institution",
                       e.target.value,
                       setEditingCard
                     )
@@ -321,10 +353,10 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
                 />
                 Fecha de culminación
                 <Input
-                  value={editingCard.anioFinal}
+                  value={editingCard.endDate}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "anioFinal",
+                      "endDate",
                       e.target.value,
                       setEditingCard
                     )
@@ -340,14 +372,7 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() =>
-                handleSaveEdit(
-                  editingCard,
-                  cardContent,
-                  setCardContent,
-                  setShowEditModal
-                )
-              }
+              onClick={ handleSaveEdit }
             >
               Guardar
             </Button>
@@ -369,25 +394,25 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
               <>
                 Grado
                 <Input
-                  value={additionalFields.grado || ""}
-                  onChange={(e) => handleFieldChange("grado", e.target.value)}
+                  value={additionalFields.title || ""}
+                  onChange={(e) => handleFieldChange("title", e.target.value)}
                   placeholder="Grado"
                   marginBottom="10px"
                 />
                 Institución
                 <Input
-                  value={additionalFields.institucion || ""}
+                  value={additionalFields.institution || ""}
                   onChange={(e) =>
-                    handleFieldChange("institucion", e.target.value)
+                    handleFieldChange("institution", e.target.value)
                   }
                   placeholder="Institución"
                   marginBottom="10px"
                 />
                 Fecha Final
                 <Input
-                  value={additionalFields.anioFinal || ""}
+                  value={additionalFields.endDate || ""}
                   onChange={(e) =>
-                    handleFieldChange("anioFinal", e.target.value)
+                    handleFieldChange("endDate", e.target.value)
                   }
                   type="date"
                   marginBottom="10px"
@@ -396,7 +421,7 @@ const EducacionCard = ({ cardContent, setCardContent }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
+            <Button colorScheme="blue" mr={3} onClick={handleAddEducation}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={() => setShowAddModal(false)}>

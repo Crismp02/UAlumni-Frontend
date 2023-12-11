@@ -18,10 +18,7 @@ import CustomSwitch from "./Switch";
 import { AddPortfolioItem, DeletePortfolioItem, EditPortfolioItem, getPortfolio, getPortfolioItem } from "../../services/auth/MeProfile.services";
 
 
-const PortafoliosCard = ({
-  cardContentPortafolios,
-  setCardContentPortafolios,
-}) => {
+const PortafoliosCard = () => {
   const [switchValue, setSwitchValue] = useState(false);
 
   const [cardData, setCardData] = useState([]);
@@ -175,47 +172,6 @@ const PortafoliosCard = ({
     setCardTypeToAdd(cardType);
     setShowAddButton(false);
     setShowAddModal(true);
-  };
-
-  const handleGuardar = () => {
-
-    // Validar que los campos no estén vacíos antes de guardar
-    if (additionalFields.title.trim() === '' || additionalFields.sourceLink.trim() === '') {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
-      return;
-    }
-
-    let newCardContent = [];
-
-    // Lógica para agregar datos según el tipo de tarjeta actual
-    switch (cardTypeToAdd) {
-      case "Portafolios":
-        newCardContent = [
-          ...cardContentPortafolios,
-          {
-            id: cardContentPortafolios.length + 1, // Generar un nuevo ID
-            titulo: additionalFields.titulo,
-            descripcion: additionalFields.descripcion,
-            url: additionalFields.url,
-            fechaInicio: additionalFields.fechaInicio,
-            fechaFinal: additionalFields.fechaFinal,
-          },
-        ];
-        setCardContentPortafolios(newCardContent);
-        setShowIcons(false);
-        setEditMode(true);
-        break;
-
-      // Agrega lógica para otros tipos de tarjetas si es necesario
-      default:
-        break;
-    }
-
-    // Restablecer los campos adicionales después de guardar
-    setAdditionalFields({});
-    // CERRAR MODAL DE AGREGAR
-    setShowAddModal(false);
   };
 
   const handleCancelDelete = () => {

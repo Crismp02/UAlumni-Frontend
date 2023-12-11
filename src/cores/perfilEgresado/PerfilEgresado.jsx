@@ -23,7 +23,7 @@ function PerfilEgresado() {
       const result = await getMeProfile();
       setDataProfile(result);
       console.log(result);
-      //console.log(result.data.resume.portfolio);
+      //console.log(result.data.resume.higherEducationStudies);
     }
     
     fetchData();
@@ -214,11 +214,7 @@ function PerfilEgresado() {
             cardData={dataProfile && dataProfile.data}
           />
 
-          <PortafoliosCard
-            cardContentPortafolios={cardContentPortafolios}
-            setCardContentPortafolios={setCardContentPortafolios}
-            cardData={dataProfile && dataProfile.data.resume.portfolio}
-          />
+          <PortafoliosCard/>
 
           <SobremiCard
             cardContent={cardContentSobremi}
@@ -238,10 +234,7 @@ function PerfilEgresado() {
             setCardContent={setCardContent}
           />
 
-          <EducacionCard
-            cardContent={cardContentEducacion}
-            setCardContent={setCardContentEducacion}
-          />
+          <EducacionCard/>
 
           <Text
             fontWeight="bold"
