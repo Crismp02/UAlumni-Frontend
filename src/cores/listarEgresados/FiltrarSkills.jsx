@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Button,
@@ -13,15 +13,51 @@ import {
 function FiltrarSkills({
   categoria,
   setCategoria,
+  setCategorias,
+  setHabilidades,
   habilidad,
   habilidades,
   list,
   handleAddCategoria,
   handleHabilidadChange,
   handleRemoveHabilidad,
+  categorias,
 }) {
   const [isHovering, setIsHovering] = useState(false);
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
+
+  const [cargandoHabilidades, setCargandoHabilidades] = useState(false);
+
+useEffect(() => {
+  if (categoria) {
+    setCargandoHabilidades(true);
+    fetch(`http://localhost:3000/skillCategory/${categoria}/technical-skill`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Error al obtener las habilidades");
+      })
+      .then((data) => {
+        if (Array.isArray(data.data.items)) {
+          const habilidadesNombres = data.data.items.map((item) => item.name);
+          setHabilidades((prevHabilidades) => ({
+            ...prevHabilidades,
+            [categoria]: habilidadesNombres, // Actualizar las habilidades específicas de la categoría seleccionada
+          }));
+        }
+        console.log("mis habilidades");
+        console.log(habilidades); // Observar los cambios después de actualizar el estado
+        setCargandoHabilidades(false);
+      })
+      .catch((error) => {
+        console.error("Error de fetch:", error);
+        setCargandoHabilidades(false); // Marcar que ha habido un error en la obtención de las habilidades
+      });
+  }
+}, [categoria]);
+
+
   return (
     <div>
       <Text marginBottom="10px">Habilidades:</Text>
@@ -33,9 +69,11 @@ function FiltrarSkills({
               value={categoria}
               onChange={(e) => setCategoria(e.target.value)}
             >
-              <option value="frontend">Frontend</option>
-              <option value="backend">Backend</option>
-              <option value="diseño">Diseño</option>
+              {categorias.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </Select>
             <Tooltip label="Filtrar por categoría completa" isOpen={isHovering}>
               <Button
@@ -63,9 +101,11 @@ function FiltrarSkills({
               fontSize="9px"
               onChange={(e) => setCategoria(e.target.value)}
             >
-              <option value="frontend">Frontend</option>
-              <option value="backend">Backend</option>
-              <option value="diseño">Diseño</option>
+              {categorias.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </Select>
             <Button
               onClick={handleAddCategoria}
@@ -87,7 +127,7 @@ function FiltrarSkills({
       </Box>
       {isLargerThan435 ? (
         <>
-          {categoria && (
+          {categoria && habilidades[categoria] && (
             <Select
               placeholder="Habilidad"
               value={habilidad}

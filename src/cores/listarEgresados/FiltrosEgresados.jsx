@@ -55,11 +55,34 @@ function FiltrosEgresados() {
   const [list, setList] = useState([]);
 
   // Objeto inicial de habilidades
-const habilidades = {
-  frontend: ["React", "Vue", "Angular"],
-  backend: ["Node.js", "Laravel", "Ruby"],
-  diseño: ["Photoshop", "Illustrator", "Figma"],
-};
+  const [habilidades, setHabilidades] = useState({
+    backend: ["Photoshop", "Illustrator", "Figma"],
+    elementos: ["Photoshop", "Illustrator", "Figma"],
+  });
+
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    async function fetchCategorias() {
+      try {
+        const response = await fetch("http://localhost:3000/skill-category");
+        if (!response.ok) {
+          throw new Error("Error al obtener los egresados");
+        }
+        const data = await response.json();
+        if (Array.isArray(data.data.items)) {
+          const categoriasObtenidas = data.data.items.map(item => item.name);
+          setCategorias(categoriasObtenidas);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+  
+    fetchCategorias();
+  }, []);
+  
+  
 
   const handleHabilidadChange = (e) => {
     setHabilidad(e.target.value);
@@ -265,11 +288,14 @@ const habilidades = {
               list={list}
               categoria={categoria}
               setCategoria={setCategoria}
+              setCategorias={setCategorias}
               habilidad={habilidad}
               habilidades={habilidades}
+              setHabilidades={setHabilidades}
               handleAddCategoria={handleAddCategoria}
               handleHabilidadChange={handleHabilidadChange}
               handleRemoveHabilidad={handleRemoveHabilidad}
+              categorias={categorias}
             />
 
             {/*Busqueda por posiciones de interes*/}
