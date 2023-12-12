@@ -251,3 +251,125 @@ export const editAboutMe = async (newData) => {
         toast.error(`Error: ${error.message}`);
       }
     }
+
+    export const getLanguage = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/language`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return data.data.items;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    };
+
+    export const getLanguagesAlumni = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/language`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return data.data;
+        } else {
+        throw new Error(data.message);
+        }
+    }
+    catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    };
+
+    export const AddLanguage = async (newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/language`, {
+          method: 'POST',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            languageName: newData.languageName,
+            masteryLevel: newData.masteryLevel,
+            isVisible: newData.isVisible,
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    };
+
+    export const getLanguageItem = async (languageName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/language/${languageName}`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return (data.data);
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const editLanguage = async (languageName, newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/language/${languageName}`, {
+          method: 'PATCH',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            languageName: newData.languageName,
+            masteryLevel: newData.masteryLevel,
+            isVisible: true,
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    };
+
+    export const DeleteLanguage = async (languageName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/language/${languageName}`, {
+          method: 'DELETE',
+          credentials: "include", 
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Modal,
@@ -8,22 +8,48 @@ import {
   ModalFooter,
   ModalBody,
   Button,
-  Input,
   Box,
   Flex,
   Select,
   IconButton,
-  VStack,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
+import { AddLanguage, DeleteLanguage, editLanguage, getLanguage, getLanguageItem, getLanguagesAlumni } from "../../services/auth/MeProfile.services";
 
 const IdiomasCard = ({
   cardContentIdiomas,
   setCardContentIdiomas,
-  idiomas,
-  niveles,
 }) => {
+
+  const [cardData, setCardData] = useState([]);
+
+  // Define idiomas como un estado
+  const [idiomas, setIdiomas] = useState([]);
+  const niveles = [0, 1, 2, 3, 4, 5];
+
+  // Usa useEffect para llamar a getLanguage cuando el componente se monta
+  useEffect(() => {
+    getLanguage().then(data => {
+      if (Array.isArray(data)) {
+        setIdiomas(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    const fetchCardData = async () => {
+      const data = await getLanguagesAlumni();
+      if (Array.isArray(data.items)) {
+        setCardData(data.items);
+      } else {
+        console.error('data.data.items no es un array');
+      }
+    };
+  
+    fetchCardData();
+  }, []);
+
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleSwitchChange = () => {
@@ -32,8 +58,7 @@ const IdiomasCard = ({
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] =
-    useState("cardContentIdiomas");
+  const [cardTypeToDelete, setCardTypeToDelete] = useState("cardContentIdiomas");
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEdit, setcardIdToEdit] = useState(null);
 
@@ -49,6 +74,34 @@ const IdiomasCard = ({
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
+  const handleAddLanguage = async () => {
+    // Validar que los campos no estén vacíos
+    if (!additionalFields.languageName || additionalFields.languageName.trim() === '' || additionalFields.masteryLevel === null || additionalFields.masteryLevel === 0){
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      console.error('Los campos no pueden estar vacíos');
+      return;
+    }
+  
+    // Preparar los datos para la solicitud POST
+    const newData = {
+      languageName: additionalFields.languageName,
+      masteryLevel: parseInt(additionalFields.masteryLevel), 
+      isVisible: true,
+    };
+  
+    // Llamar a la función AddHigherEducationStudy con los datos preparados
+    const newCard = await AddLanguage(newData);
+  
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setCardData(prevCardData => [...prevCardData, newCard.data]);
+    }
+
+    // Cerrar el modal de agregar y restablecer los campos adicionales
+    setShowAddModal(false);
+    setAdditionalFields({});
+  };
+
   const handleFieldChange = (fieldName, value) => {
     // Actualizar solo el campo correspondiente en additionalFields
     setAdditionalFields({ ...additionalFields, [fieldName]: value });
@@ -61,41 +114,64 @@ const IdiomasCard = ({
     setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
-  const handleEditCard = (cardToEdit) => {
-    setEditingCard(cardToEdit);
-    setShowEditModal(true);
-  };
+  useEffect(() => {
+    if (editingCard) {
+      setShowEditModal(true);
+    }
+  }, [editingCard]);
+
+ const [originalTitle, setOriginalTitle] = useState(null);
+
+ const handleEditCard = async (cardTitle) => {
+  console.log(cardTitle);
+  const cardToEdit = await getLanguageItem(cardTitle);
+
+  setEditingCard({
+    ...cardToEdit,
+    languageName: cardToEdit.languageName,
+  });
+  setOriginalTitle(cardTitle); // Guardar el título original
+};
 
   // Modal de edición Idiomas
-  const handleEditInputChange = (field, value, setState) => {
-    setState((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+  const handleEditInputChange = (field, value, setter) => {
+    if (field === 'languageName') {
+      // Solo guarda el nombre del idioma, no el objeto completo
+      setter(prev => ({ ...prev, [field]: value }));
+    } else {
+      setter(prev => ({ ...prev, [field]: value }));
+    }
   };
 
-  const handleSaveEdit = (
-    editedCard,
-    content,
-    setContent,
-    setShowEditModal
-  ) => {
-
+  const [content, setContent] = useState(null);
+  const handleSaveEdit =  async () => {
+  
     // Validar que los campos no estén vacíos
-    if (editedCard.idioma.trim() === '' || editedCard.nivel.trim() === '') {
+   if (!editingCard.languageName || editingCard.languageName.trim() === '' || editingCard.masteryLevel === null || editingCard.masteryLevel === 0){
       // Mostrar un mensaje de error o manejar la situación según lo desees
       console.error('Los campos no pueden estar vacíos');
       return;
     }
-
-    const updatedContent = content.map((card) => {
-      if (card.id === editedCard.id) {
-        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
+  
+    const newData = {
+      languageName: editingCard.languageName,
+      masteryLevel: parseInt(editingCard.masteryLevel), // Convertir a número entero
+      isVisible: true,
+    };
+  
+    const updatedCard = await editLanguage(originalTitle, newData);
+  
+    setContent(updatedCard);
+    // Actualizar cardData con los nuevos datos
+    const updatedCardData = cardData.map(card => {
+      if (card.languageName === originalTitle) {
+        return { ...card, languageName: newData.languageName, masteryLevel: newData.masteryLevel };
+      } else {
+        return card;
       }
-      return card;
     });
-
-    setContent(updatedContent);
+    setCardData(updatedCardData);
+  
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
@@ -109,44 +185,6 @@ const IdiomasCard = ({
     setShowAddModal(true);
   };
 
-  const handleGuardar = () => {
-
-    // Validar que los campos no estén vacíos antes de guardar
-    if (additionalFields.idioma.trim() === '' || additionalFields.nivel.trim() === '') {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
-      return;
-    }
-
-    let newCardContent = [];
-
-    // Lógica para agregar datos según el tipo de tarjeta actual
-    switch (cardTypeToAdd) {
-      case "Idiomas":
-        newCardContent = [
-          ...cardContentIdiomas,
-          {
-            id: cardContentIdiomas.length + 1, // Generar un nuevo ID
-            idioma: additionalFields.idioma,
-            nivel: additionalFields.nivel,
-          },
-        ];
-        setCardContentIdiomas(newCardContent);
-        setShowIcons(false);
-        setEditMode(true);
-        break;
-
-      // Agrega lógica para otros tipos de tarjetas si es necesario
-      default:
-        break;
-    }
-
-    // Restablecer los campos adicionales después de guardar
-    setAdditionalFields({});
-    // CERRAR MODAL DE AGREGAR
-    setShowAddModal(false);
-  };
-
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
     setShowDeleteModal(false);
@@ -155,9 +193,9 @@ const IdiomasCard = ({
     setEditMode(true);
   };
 
-  const handleDeleteClick = (cardId, cardType) => {
-    if (cardId) {
-      setCardToDelete(cardId);
+  const handleDeleteClick = (cardTitle, cardType) => {
+    if (cardTitle) {
+      setCardToDelete(cardTitle);
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
@@ -165,14 +203,13 @@ const IdiomasCard = ({
     }
   };
 
-  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
+  const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
-      let updatedCardContent = [];
       if (cardTypeToDelete === "cardContentIdiomas") {
-        updatedCardContent = cardContentIdiomas.filter(
-          (item) => item.id !== cardToDelete
-        );
+        await DeleteLanguage(originalTitle);
         setCardContentIdiomas(updatedCardContent);
+        const updatedCardData = cardData.filter(card => card.title !== cardToDelete);
+        setCardData(updatedCardData);
         // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
@@ -233,9 +270,9 @@ const IdiomasCard = ({
         )}
       </Text>
 
-      {cardContentIdiomas.map((card) => (
+      {Array.isArray(cardData)  && cardData.map((item, index) => (
         <Box
-          key={card.id}
+          key={index}
           bg="white"
           padding="4"
           border="1px solid #ccc"
@@ -254,21 +291,21 @@ const IdiomasCard = ({
                 icon={<EditIcon />}
                 colorScheme="blue"
                 marginRight="5px"
-                onClick={() => handleEditCard(card)}
+                onClick={() => handleEditCard(item.languageName)}
               />
               <IconButton
                 aria-label="Eliminar"
                 icon={<DeleteIcon />}
                 colorScheme="red"
                 marginLeft="5px"
-                onClick={() => handleDeleteClick(card.id, "cardContentIdiomas")}
+                onClick={() => handleDeleteClick(item.languageName, "cardContentIdiomas")}
               />
             </Flex>
           )}
           <Flex justifyContent="space-between">
-            <Text fontWeight="bold">{card.idioma}</Text>
+            <Text fontWeight="bold">{item.languageName}</Text>
             <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-              {card.nivel}
+              {item.masteryLevel}
             </Text>
           </Flex>
           <Flex alignItems="center" marginTop="5px">
@@ -300,10 +337,10 @@ const IdiomasCard = ({
             {editingCard && (
               <>
                 <Select
-                  value={editingCard.idioma}
+                  value={editingCard.languageName}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "idioma",
+                      "languageName",
                       e.target.value,
                       setEditingCard
                     )
@@ -313,17 +350,17 @@ const IdiomasCard = ({
                   marginBottom="4"
                 >
                   {idiomas.map((idioma) => (
-                    <option key={idioma} value={idioma}>
-                      {idioma}
+                    <option key={idioma.name} value={idioma.name}>
+                      {idioma.name}
                     </option>
                   ))}
                 </Select>
 
                 <Select
-                  value={editingCard.niveles}
+                  value={editingCard.masteryLevel}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "nivel",
+                      "masteryLevel",
                       e.target.value,
                       setEditingCard
                     )
@@ -345,13 +382,8 @@ const IdiomasCard = ({
             <Button
               colorScheme="blue"
               mr={3}
-              onClick={() =>
-                handleSaveEdit(
-                  editingCard,
-                  cardContentIdiomas,
-                  setCardContentIdiomas,
-                  setShowEditModal
-                )
+              onClick={
+                handleSaveEdit
               }
             >
               Guardar
@@ -374,21 +406,21 @@ const IdiomasCard = ({
               <>
                 Idioma
                 <Select
-                  value={additionalFields.idioma || ""}
-                  onChange={(e) => handleFieldChange("idioma", e.target.value)}
+                  value={additionalFields.languageName || ""}
+                  onChange={(e) => handleFieldChange("languageName", e.target.value)}
                   placeholder="Agregar Idioma"
                   marginBottom="10px"
                 >
                   {idiomas.map((idioma) => (
-                    <option key={idioma} value={idioma}>
-                      {idioma}
+                    <option key={idioma.name} value={idioma.name}>
+                      {idioma.name}
                     </option>
                   ))}
                 </Select>
                 Nivel
                 <Select
-                  value={additionalFields.nivel || ""}
-                  onChange={(e) => handleFieldChange("nivel", e.target.value)}
+                  value={additionalFields.masteryLevel || ""}
+                  onChange={(e) => handleFieldChange("masteryLevel", e.target.value)}
                   placeholder="Agregar Nivel"
                   marginBottom="10px"
                 >
@@ -402,7 +434,7 @@ const IdiomasCard = ({
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
+            <Button colorScheme="blue" mr={3} onClick={handleAddLanguage}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={() => setShowAddModal(false)}>
