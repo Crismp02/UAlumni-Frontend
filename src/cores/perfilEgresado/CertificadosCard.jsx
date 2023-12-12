@@ -15,7 +15,7 @@ import {
   IconButton,
   VStack,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
-import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { AddIcon} from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
 
 const CertificadosCard = ({
@@ -52,54 +52,6 @@ const CertificadosCard = ({
   const handleFieldChange = (fieldName, value) => {
     // Actualizar solo el campo correspondiente en additionalFields
     setAdditionalFields({ ...additionalFields, [fieldName]: value });
-  };
-
-  const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
-    setShowIconsFunc((prevIcons) => !prevIcons);
-    setEditModeFunc((prevMode) => !prevMode);
-    setShowAddButton(true); // Mostrar el botón de agregar después de editar
-    setShowEditButton(false); // Ocultar el botón de editar después de editar
-  };
-
-  const handleEditCard = (cardToEdit) => {
-    setEditingCard(cardToEdit);
-    setShowEditModal(true);
-  };
-
-  // Modal de edición Certificados
-  const handleEditInputChange = (field, value, setState) => {
-    setState((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
-  };
-
-  const handleSaveEdit = (
-    editedCard,
-    content,
-    setContent,
-    setShowEditModal
-  ) => {
-
-    // Validar que los campos no estén vacíos
-    if (editedCard.curso.trim() === '' || editedCard.fecha.trim() === '') {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
-      return;
-    }
-
-    const updatedContent = content.map((card) => {
-      if (card.id === editedCard.id) {
-        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
-      }
-      return card;
-    });
-
-    setContent(updatedContent);
-    setShowEditModal(false);
-    // agregar cada uno de los estados de edicion
-    setShowIcons(false);
-    setEditMode(true);
   };
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas
@@ -148,55 +100,6 @@ const CertificadosCard = ({
     setShowAddModal(false);
   };
 
-  const handleCancelDelete = () => {
-    // Cancelar la eliminación, cerrar el modal y limpiar el estado
-    setShowDeleteModal(false);
-    setCardToDelete(null);
-    setShowIcons(false);
-    setEditMode(true);
-  };
-
-  const handleDeleteClick = (cardId, cardType) => {
-    if (cardId) {
-      setCardToDelete(cardId);
-      setCardTypeToDelete(cardType);
-      setShowDeleteModal(true);
-    } else {
-      console.error("ID de tarjeta es nulo.");
-    }
-  };
-
-  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
-    if (cardToDelete !== null && cardTypeToDelete !== null) {
-      let updatedCardContent = [];
-      if (cardTypeToDelete === "cardContentCertificados") {
-        updatedCardContent = cardContentCertificados.filter(
-          (item) => item.id !== cardToDelete
-        );
-        setCardContentCertificados(updatedCardContent);
-        // agregar cada uno de los estados de edicion
-        setShowIcons(false);
-        setEditMode(true);
-      } else {
-        console.error("Tipo de tarjeta no reconocido.");
-        return;
-      }
-
-      // Cerrar el modal y limpiar el estado
-      setShowDeleteModal(false);
-      setCardToDelete(null);
-    } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
-    }
-  };
-
-  const handleCancelEdit = () => {
-    // Cancelar la edición, cerrar el modal y limpiar el estado
-    setcardIdToEdit(null);
-    setShowEditModal(false);
-    setShowIcons(false);
-    setEditMode(true);
-  };
 
   return (
     <>
@@ -210,15 +113,6 @@ const CertificadosCard = ({
         alignItems="center"
       >
         Certificados
-        {editMode ? (
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditClick(setShowIcons, setEditMode)}
-          />
-        ) : (
           <AddIcon
             onClick={() => handleAddClick("Certificados")}
             cursor="pointer"
@@ -231,7 +125,6 @@ const CertificadosCard = ({
             height="33px"
             padding="8px"
           />
-        )}
       </Text>
 
       {cardContentCertificados.map((card) => (
@@ -247,26 +140,6 @@ const CertificadosCard = ({
           marginBottom="5"
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
-          {showIcons && (
-            <Flex justifyContent="flex-end" marginBottom="10px">
-              <IconButton
-                aria-label="Editar"
-                icon={<EditIcon />}
-                colorScheme="blue"
-                marginRight="5px"
-                onClick={() => handleEditCard(card)}
-              />
-              <IconButton
-                aria-label="Eliminar"
-                icon={<DeleteIcon />}
-                colorScheme="red"
-                marginLeft="5px"
-                onClick={() =>
-                  handleDeleteClick(card.id, "cardContentCertificados")
-                }
-              />
-            </Flex>
-          )}
           <Flex justifyContent="space-between">
             <Text fontWeight="bold">{card.curso}</Text>
             <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
@@ -293,72 +166,6 @@ const CertificadosCard = ({
           </Flex>
         </Box>
       ))}
-
-      {/* Modal de edición Certificados*/}
-      <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Editar Certificados</ModalHeader>
-          <ModalBody>
-            {editingCard && (
-              <>
-                <Select
-                  value={editingCard.curso}
-                  onChange={(e) =>
-                    handleEditInputChange(
-                      "curso",
-                      e.target.value,
-                      setEditingCard
-                    )
-                  }
-                  placeholder="Editar Curso..."
-                  size="lg"
-                  marginBottom="4"
-                >
-                  {cursos.map((curso) => (
-                    <option key={curso} value={curso}>
-                      {curso}
-                    </option>
-                  ))}
-                </Select>
-                Fecha
-                <Input
-                  value={editingCard.fecha}
-                  onChange={(e) =>
-                    handleEditInputChange(
-                      "fecha",
-                      e.target.value,
-                      setEditingCard
-                    )
-                  }
-                  size="lg"
-                  marginBottom="4"
-                  type="date"
-                />
-              </>
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() =>
-                handleSaveEdit(
-                  editingCard,
-                  cardContentCertificados,
-                  setCardContentCertificados,
-                  setShowEditModal
-                )
-              }
-            >
-              Guardar
-            </Button>
-            <Button variant="ghost" onClick={handleCancelEdit}>
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
 
       {/*Modal agregar campos*/}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
@@ -397,28 +204,6 @@ const CertificadosCard = ({
               Guardar
             </Button>
             <Button variant="ghost" onClick={() => setShowAddModal(false)}>
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      {/* Modal de confirmación para eliminar */}
-      <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Confirmar Eliminación</ModalHeader>
-          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="red"
-              mr={3}
-              onClick={() =>
-                handleConfirmDelete(cardToDelete, cardTypeToDelete)
-              }
-            >
-              Eliminar
-            </Button>
-            <Button variant="ghost" onClick={handleCancelDelete}>
               Cancelar
             </Button>
           </ModalFooter>

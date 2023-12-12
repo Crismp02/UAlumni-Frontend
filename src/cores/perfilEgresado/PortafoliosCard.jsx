@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
-import { AddPortfolioItem, DeletePortfolioItem, EditPortfolioItem, getPortfolio, getPortfolioItem } from "../../services/auth/MeProfile.services";
+import { AddPortfolioItem, DeletePortfolioItem, EditPortfolioItem, getMeProfile, getPortfolioItem } from "../../services/auth/MeProfile.services";
 
 
 const PortafoliosCard = () => {
@@ -25,9 +25,9 @@ const PortafoliosCard = () => {
 
   useEffect(() => {
     const fetchCardData = async () => {
-      const data = await getPortfolio();
-      if (Array.isArray(data.data.items)) {
-        setCardData(data.data.items);
+      const data = await getMeProfile();
+      if (Array.isArray(data.data.resume.portfolio)) {
+        setCardData(data.data.resume.portfolio);
       } else {
         console.error('data.data.items no es un array');
       }

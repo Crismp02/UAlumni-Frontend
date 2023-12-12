@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
-import { AddHigherEducationStudy, DeleteHigherEducationStudy, EditHigherEducationStudy, getHigherEducationStudies, getHigherEducationStudy } from "../../services/auth/MeProfile.services";
+import { AddHigherEducationStudy, DeleteHigherEducationStudy, EditHigherEducationStudy, getHigherEducationStudy, getMeProfile } from "../../services/auth/MeProfile.services";
 
 const EducacionCard = () => {
 
@@ -24,9 +24,9 @@ const EducacionCard = () => {
 
   useEffect(() => {
     const fetchCardData = async () => {
-      const data = await getHigherEducationStudies();
-      if (Array.isArray(data.data.items)) {
-        setCardData(data.data.items);
+      const data = await getMeProfile();
+      if (Array.isArray(data.data.resume.higherEducationStudies)) {
+        setCardData(data.data.resume.higherEducationStudies);
       } else {
         console.error('data.data.items no es un array');
       }

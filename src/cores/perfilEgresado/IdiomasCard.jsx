@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
-import { AddLanguage, DeleteLanguage, editLanguage, getLanguage, getLanguageItem, getLanguagesAlumni } from "../../services/auth/MeProfile.services";
+import { AddLanguage, DeleteLanguage, editLanguage, getLanguage, getLanguageItem, getMeProfile } from "../../services/auth/MeProfile.services";
 
 const IdiomasCard = ({
   cardContentIdiomas,
@@ -39,9 +39,9 @@ const IdiomasCard = ({
 
   useEffect(() => {
     const fetchCardData = async () => {
-      const data = await getLanguagesAlumni();
-      if (Array.isArray(data.items)) {
-        setCardData(data.items);
+      const data = await getMeProfile();
+      if (Array.isArray(data.data.resume.knownLanguages)) {
+        setCardData(data.data.resume.knownLanguages);
       } else {
         console.error('data.data.items no es un array');
       }

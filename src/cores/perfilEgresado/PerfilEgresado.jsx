@@ -17,13 +17,17 @@ import { getMeProfile } from "../../services/auth/MeProfile.services";
 
 function PerfilEgresado() {
   const [dataProfile, setDataProfile] = useState(null);
+  const [cardData, setCardData] = useState([]);
+
+  const handleCardDataChange = (newData) => {
+    setCardData(newData);
+  };
 
   useEffect(() => {
     async function fetchData() {
       const result = await getMeProfile();
       setDataProfile(result);
-      console.log(result);
-      //console.log(result.data.resume.higherEducationStudies);
+     //console.log(result);
     }
     
     fetchData();
@@ -35,24 +39,6 @@ function PerfilEgresado() {
     setSwitchValue(!switchValue);
   };
 
-  const [cardContentEducacion, setCardContentEducacion] = useState([
-    {
-      id: 1,
-      grado: "Licenciatura",
-      anioFinal: "2023",
-      institucion: "Universidad Católica Andrés Bello",
-    },
-  ]);
-
-  const [cardContentIdiomas, setCardContentIdiomas] = useState([
-    {
-      id: 1,
-      idioma: "Inglés",
-      nivel: "A1",
-    },
-  ]);
-
-  const niveles = [0, 1, 2, 3, 4, 5];
 
   const [cardContentCertificados, setCardContentCertificados] = useState([
     {
@@ -72,20 +58,6 @@ function PerfilEgresado() {
       fechaFinal: "01/01/2022",
       descripcion:
         "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
-    },
-  ]);
-  const [cardContentPortafolios, setCardContentPortafolios] = useState([
-    {
-      id: 1,
-      titulo: "Titulo Portafolio",
-      url: "wwww.miportafolio.com",
-    },
-  ]);
-  const [cardContentSobremi, setCardContentSobremi] = useState([
-    {
-      id: 1,
-      descripcion:
-        "Soy María, una licenciada en comunicadora social con 2 años de experiencia. Me apasiona crear experiencias visuales que impacten a las personas. Creo que el diseño gráfico es una herramienta poderosa que puede usarse para comunicar ideas de una manera efectiva.",
     },
   ]);
   const [cardContentHabilidades, setCardContentHabilidades] = useState([
@@ -209,16 +181,14 @@ function PerfilEgresado() {
             </Text>
           </Box>
           <ContactoCard
-            cardContent={cardContentContacto}
-            setCardContent={setcardContentContacto}
             cardData={dataProfile && dataProfile.data}
           />
 
-          <PortafoliosCard/>
+          <PortafoliosCard
+          cardData={dataProfile && dataProfile.data.resume.portfolio}
+          onCardDataChange={handleCardDataChange} />
 
           <SobremiCard
-            cardContent={cardContentSobremi}
-            setCardContent={setCardContentSobremi}
             cardData={dataProfile && dataProfile.data.resume.aboutMe}
           />
         </Box>
@@ -257,11 +227,7 @@ function PerfilEgresado() {
             tipoHabilidad="Blandas"
           />
 
-          <IdiomasCard
-            cardContentIdiomas={cardContentIdiomas}
-            setCardContentIdiomas={setCardContentIdiomas}
-            niveles={niveles}
-          />
+          <IdiomasCard/>
 
           <CertificadosCard
             cardContentCertificados={cardContentCertificados}

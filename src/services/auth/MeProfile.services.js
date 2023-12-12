@@ -60,23 +60,6 @@ export const editAboutMe = async (newData) => {
     }
     };
 
-    export const getPortfolio = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/alumni/me/portfolio-item`, {
-        method: "GET",
-        credentials: "include", 
-        });
-        const data = await response.json();
-        if (response.ok) {
-        return data;
-        } else {
-        throw new Error(data.message);
-        }
-    } catch (error) {
-        toast.error(`Error: ${error.message}`);
-    }
-    };
-
     export const AddPortfolioItem = async (newData) => {
       try {
         const response = await fetch(`${BASE_URL}/alumni/me/portfolio-item`, {
@@ -145,23 +128,6 @@ export const editAboutMe = async (newData) => {
       } catch (error) {
         toast.error(`Error: ${error.message}`);
       }
-    };
-
-    export const getHigherEducationStudies = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/alumni/me/higher-education-studies`, {
-        method: "GET",
-        credentials: "include", 
-        });
-        const data = await response.json();
-        if (response.ok) {
-        return data;
-        } else {
-        throw new Error(data.message);
-        }
-    } catch (error) {
-        toast.error(`Error: ${error.message}`);
-    }
     };
 
     export const AddHigherEducationStudy = async (newData) => {
@@ -269,24 +235,6 @@ export const editAboutMe = async (newData) => {
     }
     };
 
-    export const getLanguagesAlumni = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/alumni/me/resume/language`, {
-        method: "GET",
-        credentials: "include", 
-        });
-        const data = await response.json();
-        if (response.ok) {
-        return data.data;
-        } else {
-        throw new Error(data.message);
-        }
-    }
-    catch (error) {
-        toast.error(`Error: ${error.message}`);
-    }
-    };
-
     export const AddLanguage = async (newData) => {
       try {
         const response = await fetch(`${BASE_URL}/alumni/me/resume/language`, {
@@ -372,4 +320,40 @@ export const editAboutMe = async (newData) => {
       } catch (error) {
         toast.error(`Error: ${error.message}`);
       }
+    }
+
+    export const getCiapCoursesAlumni = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/ciap-courses`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+          console.log("cursos alumni", data.data);
+        return data;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const getCiapCourses = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/ciap-courses`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+          console.log("cursos generales", data.data.items);
+        return data.data.items;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
     }
