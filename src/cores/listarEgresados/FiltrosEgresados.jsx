@@ -44,6 +44,7 @@ function FiltrosEgresados() {
     /*Busqueda por nombre*/
   }
   const [valueName, setValueName] = useState("");
+  const handleChangeName = (event) => setValueName(event.target.value);
   
 
   {
@@ -177,12 +178,9 @@ const habilidades = {
       try {
         console.log(url)
         const response = await fetch(url);
-        
-    
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('No hay respuesta del servidor');
         }
-    
         const data = await response.json();
         // Usa los datos como necesites
         console.log('Datos obtenidos:', data);
@@ -228,52 +226,6 @@ const habilidades = {
   const removeAccentsAndSpaces = (text) => {
     return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
   };
-  
-  
-  const handleChangeName = (event) => {
-    const newValue = event.target.value;
-    setValueName(newValue);
-  
-    const selectedCareers = Object.keys(selectedTags)
-      .filter(tag => selectedTags[tag] && tag !== selectedCarrera)
-      .map(career => removeAccentsAndSpaces(career.toUpperCase()));
-    
-      // quitar espacios desactivados
-    const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
-  
-    const selectedSkills = list.map(item => `${item.categoria}:${item.habilidad}`);
-    const selectedCategories = list.map(item => item.categoria);
-    const selectedPositions = listPos.length > 0 ? listPos : [];
-  
-    const filters = {
-      name: valueName ? valueName : undefined,
-      careers: careerParams.length > 0 ? careerParams.join('&careers=') : undefined,
-      skills: selectedSkills.length > 0 ? selectedSkills.join('&skills=') : undefined,
-      categories: selectedCategories.length > 0 ? selectedCategories.join('&categories=') : undefined,
-      positions: selectedPositions.length > 0 ? selectedPositions.join('&positions=') : undefined,
-    };
-  
-    const newFilters = Object.fromEntries(Object.entries(filters).filter(([_, value]) => value !== undefined));
-  
-    const newUrl = constructURL(newFilters);
-    console.log('URL:', newUrl);
-  };
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
 
