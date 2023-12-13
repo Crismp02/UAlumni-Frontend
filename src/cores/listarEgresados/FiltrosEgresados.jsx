@@ -17,10 +17,14 @@ import FiltrarSkills from "./FiltrarSkills";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "./FiltrosButtons";
+import { useEgresados } from './EgresadosContext';
+import { EgresadosProvider } from './EgresadosContext';
+
 
 function FiltrosEgresados() {
   const [isHovering, setIsHovering] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const { egresados, setEgresados } = useEgresados();
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -28,6 +32,12 @@ function FiltrosEgresados() {
 
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
+
+  const actualizarEgresados = () => {
+    // Lógica para actualizar egresados
+    const nuevosEgresados = obtenerNuevosEgresados();
+    setEgresados(nuevosEgresados);
+  };
 
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
@@ -45,7 +55,6 @@ function FiltrosEgresados() {
   }
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
-  
 
   {
     /*Busqueda por habilidades*/
@@ -55,10 +64,7 @@ function FiltrosEgresados() {
   const [list, setList] = useState([]);
 
   // Objeto inicial de habilidades
-  const [habilidades, setHabilidades] = useState({
-    backend: ["Photoshop", "Illustrator", "Figma"],
-    elementos: ["Photoshop", "Illustrator", "Figma"],
-  });
+  const [habilidades, setHabilidades] = useState({});
 
   const [categorias, setCategorias] = useState([]);
 
@@ -71,18 +77,38 @@ function FiltrosEgresados() {
         }
         const data = await response.json();
         if (Array.isArray(data.data.items)) {
-          const categoriasObtenidas = data.data.items.map(item => item.name);
+          const categoriasObtenidas = data.data.items.map((item) => item.name);
           setCategorias(categoriasObtenidas);
         }
       } catch (error) {
         console.error("Error:", error);
       }
     }
-  
+
     fetchCategorias();
   }, []);
-  
-  
+
+  const [carreras, setCarreras] = useState([]);
+
+  useEffect(() => {
+    async function fetchCarreras() {
+      try {
+        const response = await fetch("http://localhost:3000/career");
+        if (!response.ok) {
+          throw new Error("Error al obtener los egresados");
+        }
+        const data = await response.json();
+        if (Array.isArray(data.data.items)) {
+          const carrerasObtenidas = data.data.items.map((item) => item.name);
+          setCarreras(carrerasObtenidas);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchCarreras();
+  }, []);
 
   const handleHabilidadChange = (e) => {
     setHabilidad(e.target.value);
@@ -136,17 +162,6 @@ function FiltrosEgresados() {
       setSelectedTags((prev) => ({ ...prev, [label]: !prev[label] }));
     }
   };
-  const labels = [
-    "ADMINISTRACIÓN",
-    "COMUNICACIÓN SOCIAL",
-    "CONTADURÍA",
-    "DERECHO",
-    "EDUCACIÓN",
-    "INGENIERÍA CIVIL",
-    "INGENIERÍA INDUSTRIAL",
-    "INGENIERÍA INFORMÁTICA",
-    "RELACIONES INDUSTRIALES",
-  ];
 
   const selectedTagsToSend = Object.keys(selectedTags).filter(
     (tag) => selectedTags[tag]
@@ -169,50 +184,72 @@ function FiltrosEgresados() {
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
-    const handleSubmit = async () => {
-      if (isDisabled) {
-        return;
-      }
-    
-      const selectedCareers = Object.keys(selectedTags)
-        .filter(tag => selectedTags[tag] && tag !== selectedCarrera)
-        .map(career => removeAccentsAndSpaces(career.toUpperCase()));
+  // const [egresados, setEgresados] = useState([]);
 
-      // quitar espacios desactivados
-      const careerParams = selectedCarrera ? [removeAccentsAndSpaces(selectedCarrera.toUpperCase()), ...selectedCareers] : selectedCareers;
-    
-      const selectedSkills = list.map(item => `${item.categoria}:${item.habilidad}`);
-      const selectedCategories = list.map(item => item.categoria);
-      const selectedPositions = listPos.length > 0 ? listPos : [];
-    
-      const filters = {
-        name: valueName ? valueName : undefined,
-        careers: careerParams.length > 0 ? careerParams.join('&careers=') : undefined,
-        skills: selectedSkills.length > 0 ? selectedSkills.join('&skills=') : undefined,
-        categories: selectedCategories.length > 0 ? selectedCategories.join('&categories=') : undefined,
-        positions: selectedPositions.length > 0 ? selectedPositions.join('&positions=') : undefined,
-      };
-      
-    
-      const newFilters = Object.fromEntries(Object.entries(filters).filter(([_, value]) => value !== undefined));
-    
-      const url = constructURL(newFilters);
-    
-      try {
-        console.log(url)
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error('No hay respuesta del servidor');
-        }
-        const data = await response.json();
-        // Usa los datos como necesites
-        console.log('Datos obtenidos:', data);
-      } catch (error) {
-        console.error('Hubo un error al obtener los datos:', error);
-      }
+  
+
+  const handleSubmit = async () => {
+    if (isDisabled) {
+      return;
+    }
+
+    const selectedCareers = Object.keys(selectedTags)
+      .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
+      .map((career) => removeAccentsAndSpaces(career.toUpperCase()));
+
+    // quitar espacios desactivados
+    const careerParams = selectedCarrera
+      ? [
+          removeAccentsAndSpaces(selectedCarrera.toUpperCase()),
+          ...selectedCareers,
+        ]
+      : selectedCareers;
+
+    const selectedSkills = list.map(
+      (item) => `${item.categoria}:${item.habilidad}`
+    );
+    const selectedCategories = list.map((item) => item.categoria);
+    const selectedPositions = listPos.length > 0 ? listPos : [];
+
+    const filters = {
+      name: valueName ? valueName : undefined,
+      careers:
+        careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
+      skills:
+        selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
+      categories:
+        selectedCategories.length > 0
+          ? selectedCategories.join("&categories=")
+          : undefined,
+      positions:
+        selectedPositions.length > 0
+          ? selectedPositions.join("&positions=")
+          : undefined,
     };
+
+    const newFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => value !== undefined)
+    );
+
+    const url = constructURL(newFilters);
+
+    try {
+      console.log(url);
+      setIsLoading(true);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("No hay respuesta del servidor");
+      }
+      const data = await response.json();
+      setEgresados(data.data.items);
+      console.log("Datos obtenidos:", data);
+    } catch (error) {
+      console.error("Hubo un error al obtener los datos:", error);
+    } finally {
+      setIsLoading(false);
+    }
     
-    
+  };
 
   const handleReset = () => {
     setValueName("");
@@ -227,31 +264,31 @@ function FiltrosEgresados() {
 
   // Maneja el cambio de la URL
   const constructURL = (filters) => {
-    const baseUrl = 'http://localhost:3000/alumni/resume';
+    const baseUrl = "http://localhost:3000/alumni/resume";
     const url = new URL(baseUrl);
-  
+
     Object.keys(filters).forEach((key) => {
       if (Array.isArray(filters[key])) {
         filters[key].forEach((value) => {
           url.searchParams.append(key, value);
         });
-      } else if (key === 'careers') {
+      } else if (key === "careers") {
         url.searchParams.append(key, filters[key]);
       } else {
         url.searchParams.set(key, filters[key]);
       }
     });
-  
+
     return decodeURIComponent(url.toString());
   };
-  
+
   // normalizar texto de carreras
   const removeAccentsAndSpaces = (text) => {
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    return text
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .trim();
   };
-  
-  
-
 
   return (
     <>
@@ -309,7 +346,7 @@ function FiltrosEgresados() {
 
             {/*Busqueda por carreras:*/}
             <FiltrarCarreras
-              labels={labels}
+              labels={carreras}
               selectedCarrera={selectedCarrera}
               selectedTags={selectedTags}
               handleClick={handleClick}
@@ -334,6 +371,8 @@ function FiltrosEgresados() {
               setIsHovering={setIsHovering}
               onClose={onClose}
             />
+
+            
           </DrawerBody>
         </DrawerContent>
       </Drawer>

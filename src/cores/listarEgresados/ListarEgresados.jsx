@@ -3,40 +3,22 @@ import { useState, useEffect } from "react";
 // import EgresadoCard from "./EgresadoCard";
 import EgresadoCard2 from "./EgresadosCard2";
 import FiltrosEgresados from "./FiltrosEgresados";
-import NavBar from "../../components/Navbar";
 import { Text, Center, Box,useMediaQuery } from "@chakra-ui/react";
+import { useEgresados } from './EgresadosContext';
+import { EgresadosProvider } from './EgresadosContext';
 
 function ListarEgresados() {
-  const [egresados, setEgresados] = useState([]);
+  const { egresados, setEgresados } = useEgresados();
+  const [isLoading, setIsLoading] = useState(false); // Nuevo estado para controlar la carga
+
   // const [technicalSkills, setTechnicalSkills] = useState([]);
   const [isLargerThan770] = useMediaQuery("(min-width: 770px)");
 
-  useEffect(() => { async function fetchEgresados() { 
-
-    try { 
-      const response = await fetch( "http://localhost:3000/alumni"); 
-        if (!response.ok) { 
-          throw new Error("Error al obtener los egresados"); 
-        } 
-        const data = await response.json(); 
-        console.log("mis datos")
-        console.log(data)
-
-        if (Array.isArray(data.data.items)) {
-          // Actualiza el estado con los egresados obtenidos
-          setEgresados(data.data.items); 
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  }
   
-}
-
-fetchEgresados();}, []);
 
   return (
     <div>
-      <NavBar />
+      
       <Text
         fontSize={["lg", "lg", "xl", "4xl"]}
         color="black"
@@ -54,7 +36,6 @@ fetchEgresados();}, []);
       >
         ENCUENTRA A TU EGRESADO
       </Text>
-      <FiltrosEgresados />
       <Center>
         <Box
           w={["90%", "80%", "70%", "80%"]}

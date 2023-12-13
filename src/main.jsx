@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import LandingPage from "./cores/landingpage/LandingPage";
 import ListarEgresados from "./cores/listarEgresados/ListarEgresados";
 import ListarOfertas from "./cores/listarOfertas/ListarOfertas";
+import App from "./cores/listarEgresados/App";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/listarEgresados",
-    element: <ListarEgresados/>,
+    element: <App/>,
   },
   {
     path: "/listarOfertas",
