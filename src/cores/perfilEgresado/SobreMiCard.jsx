@@ -13,11 +13,13 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
+import { useToast } from "@chakra-ui/react";
 import { editAboutMe } from "../../services/auth/MeProfile.services";
 
-const SobremiCard = ({ cardContent, setCardContent, cardData: initialCardData }) => {
+const SobremiCard = ({ cardData: initialCardData }) => {
 
   const [cardData, setCardData] = useState(initialCardData);
+  const [cardContent, setCardContent] = useState([]);
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
@@ -25,15 +27,11 @@ const SobremiCard = ({ cardContent, setCardContent, cardData: initialCardData })
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEditSobremi, setcardIdToEditSobremi] = useState(null);
 
-  const [showAddButton, setShowAddButton] = useState(false);
-  const [showEditButton, setShowEditButton] = useState(true);
-
-  const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
 
+  const toast = useToast();
 
   const handleEditCard = () => {
     setEditingCard({ descripcion: cardData});
@@ -52,7 +50,13 @@ const SobremiCard = ({ cardContent, setCardContent, cardData: initialCardData })
   // Validar que el campo de descripción no esté vacío
   if (editingCard.descripcion.trim() === '' || editingCard.descripcion === null) {
     // Mostrar un mensaje de error o manejar la situación según lo desees
-    console.error('La descripción no puede estar vacía');
+    toast({
+      title: "Error",
+      description: "La descripción no pueden esta vacía",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
     return;
   }
 
@@ -83,16 +87,6 @@ const SobremiCard = ({ cardContent, setCardContent, cardData: initialCardData })
     setCardToDelete(null);
     setShowIcons(false);
     setEditMode(true);
-  };
-
-  const handleDeleteClick = (cardId, cardType) => {
-    if (cardId) {
-      setCardToDelete(cardId);
-      setCardTypeToDelete(cardType);
-      setShowDeleteModal(true);
-    } else {
-      console.error("ID de tarjeta es nulo.");
-    }
   };
 
   const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {

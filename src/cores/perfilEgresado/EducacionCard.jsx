@@ -15,31 +15,21 @@ import {
   IconButton,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { useToast } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
-import { AddHigherEducationStudy, DeleteHigherEducationStudy, EditHigherEducationStudy, getHigherEducationStudy, getMeProfile } from "../../services/auth/MeProfile.services";
+import { AddHigherEducationStudy, DeleteHigherEducationStudy, EditHigherEducationStudy, getHigherEducationStudy } from "../../services/auth/MeProfile.services";
 
-const EducacionCard = () => {
+const EducacionCard = ({cardData, setCardData}) => {
 
-  const [cardData, setCardData] = useState([]);
-
-  useEffect(() => {
-    const fetchCardData = async () => {
-      const data = await getMeProfile();
-      if (Array.isArray(data.data.resume.higherEducationStudies)) {
-        setCardData(data.data.resume.higherEducationStudies);
-      } else {
-        console.error('data.data.items no es un array');
-      }
-    };
-  
-    fetchCardData();
-  }, []);
+  const [newCardData, setNewCardData] = useState(cardData);
 
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleSwitchChange = () => {
     setSwitchValue(!switchValue);
   };
+
+  const toast = useToast();
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
@@ -61,9 +51,19 @@ const EducacionCard = () => {
 
   const handleAddEducation = async () => {
     // Validar que los campos no estén vacíos
-    if (additionalFields.title.trim() === '' || additionalFields.institution.trim() === '' || additionalFields.endDate.trim() === '' || additionalFields.title.trim() === null || additionalFields.institution.trim() === null || additionalFields.endDate.trim() === null) {
+    if (
+      (!additionalFields.title || additionalFields.title.trim() === '') ||
+      (!additionalFields.institution || additionalFields.institution.trim() === '') ||
+      (!additionalFields.endDate || additionalFields.endDate.trim() === '')
+    )  {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
   
@@ -74,14 +74,41 @@ const EducacionCard = () => {
       endDate: additionalFields.endDate,
       isVisible: true,
     };
+
+    // Verificar si la tarjeta ya existe
+  const cardExists = newCardData.some(card => 
+    card.title === newData.title && 
+    card.institution === newData.institution && 
+    card.endDate === newData.endDate
+  );
+
+  if (cardExists) {
+    // Mostrar un mensaje de error o manejar la situación según lo desees
+    toast({
+      title: "Error",
+      description: "Ese Estudio Realizado ya existe",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
   
     // Llamar a la función AddHigherEducationStudy con los datos preparados
     const newCard = await AddHigherEducationStudy(newData);
   
     // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
     if (newCard) {
-      setCardData(prevCardData => [...prevCardData, newCard.data]);
+      setNewCardData(prevCardData => [...prevCardData, newCard.data]);
     }
+     // Mostrar un toast de éxito
+  toast({
+    title: "Éxito",
+    description: "El Estudio Realizado se ha añadido con éxito",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
@@ -136,7 +163,14 @@ const EducacionCard = () => {
     // Validar que los campos no estén vacíos
     if (editingCard.title.trim() === '' || editingCard.institution.trim() === '' || editingCard.endDate.trim() === '' || editingCard.title.trim() === null || editingCard.institution.trim() === null || editingCard.endDate.trim() === null ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -147,6 +181,26 @@ const EducacionCard = () => {
     endDate: editingCard.endDate,
     isVisible: true,
   };
+
+  // Verificar si la tarjeta ya existe
+  const cardExists = cardData.some(card => 
+    card.title === newData.title && 
+    card.institution === newData.institution && 
+    card.endDate === newData.endDate &&
+    card.title !== originalTitle // Excluir la tarjeta original que se está editando
+  );
+
+  if (cardExists) {
+    // Mostrar un mensaje de error o manejar la situación según lo desees
+    toast({
+      title: "Error",
+      description: "Ese Estudio Realizado ya existe",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
 
   const updatedCard = await EditHigherEducationStudy(originalTitle, newData);
 
@@ -160,7 +214,17 @@ const EducacionCard = () => {
       return card;
     }
   });
-  setCardData(updatedCardData);
+
+
+  setNewCardData(updatedCardData);
+  // Mostrar un toast de éxito
+  toast({
+    title: "Éxito",
+    description: "El Estudio Realizado se ha editado con éxito",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
@@ -199,11 +263,18 @@ const EducacionCard = () => {
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContent") {
-        await DeleteHigherEducationStudy(originalTitle);
+        await DeleteHigherEducationStudy(cardToDelete);
         const updatedCardData = cardData.filter(card => card.title !== cardToDelete);
-        setCardData(updatedCardData);
+        setNewCardData(updatedCardData);
         setShowIcons(false);
         setEditMode(true);
+        toast({
+          title: "Éxito",
+          description: "El Estudio Realizado ha sido eliminado con éxito",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
@@ -259,7 +330,7 @@ const EducacionCard = () => {
         )}
       </Text>
 
-      {Array.isArray(cardData)  && cardData.map((item, index) => (
+      {Array.isArray(newCardData)  && newCardData.map((item, index) => (
         <Box
           key={index}
           bg="white"
@@ -434,8 +505,8 @@ const EducacionCard = () => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Confirmar Eliminación</ModalHeader>
-          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
+          <ModalHeader>Eliminación Estudio Realizado</ModalHeader>
+          <ModalBody>¿Está seguro de que desea eliminar este Estudio Realizado?</ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"

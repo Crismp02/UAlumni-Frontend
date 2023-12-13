@@ -15,14 +15,13 @@ import {
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
-import { AddLanguage, DeleteLanguage, editLanguage, getLanguage, getLanguageItem, getMeProfile } from "../../services/auth/MeProfile.services";
+import { useToast } from "@chakra-ui/react";
+import { AddLanguage, DeleteLanguage, editLanguage, getLanguage, getLanguageItem} from "../../services/auth/MeProfile.services";
 
-const IdiomasCard = ({
-  cardContentIdiomas,
-  setCardContentIdiomas,
-}) => {
+const IdiomasCard = ({cardData, setCardData}) => {
+  const toast = useToast();
 
-  const [cardData, setCardData] = useState([]);
+  const [newCardData, setNewCardData] = useState(cardData);
 
   // Define idiomas como un estado
   const [idiomas, setIdiomas] = useState([]);
@@ -35,19 +34,6 @@ const IdiomasCard = ({
         setIdiomas(data);
       }
     });
-  }, []);
-
-  useEffect(() => {
-    const fetchCardData = async () => {
-      const data = await getMeProfile();
-      if (Array.isArray(data.data.resume.knownLanguages)) {
-        setCardData(data.data.resume.knownLanguages);
-      } else {
-        console.error('data.data.items no es un array');
-      }
-    };
-  
-    fetchCardData();
   }, []);
 
   const [switchValue, setSwitchValue] = useState(false);
@@ -78,9 +64,30 @@ const IdiomasCard = ({
     // Validar que los campos no estén vacíos
     if (!additionalFields.languageName || additionalFields.languageName.trim() === '' || additionalFields.masteryLevel === null || additionalFields.masteryLevel === 0){
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
+
+    // Verificar si el idioma ya existe
+  const languageExists = cardData.some(card => card.languageName === additionalFields.languageName);
+
+  if (languageExists) {
+    // Mostrar un mensaje de error o manejar la situación según lo desees
+    toast({
+      title: "Error",
+      description: "El idioma ya existe",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
   
     // Preparar los datos para la solicitud POST
     const newData = {
@@ -94,8 +101,16 @@ const IdiomasCard = ({
   
     // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
     if (newCard) {
-      setCardData(prevCardData => [...prevCardData, newCard.data]);
+      setNewCardData(prevCardData => [...prevCardData, newCard.data]);
     }
+    // Mostrar un toast de éxito
+  toast({
+    title: "Éxito",
+    description: "El idioma ha sido añadido con éxito",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
@@ -123,7 +138,6 @@ const IdiomasCard = ({
  const [originalTitle, setOriginalTitle] = useState(null);
 
  const handleEditCard = async (cardTitle) => {
-  console.log(cardTitle);
   const cardToEdit = await getLanguageItem(cardTitle);
 
   setEditingCard({
@@ -149,10 +163,31 @@ const IdiomasCard = ({
     // Validar que los campos no estén vacíos
    if (!editingCard.languageName || editingCard.languageName.trim() === '' || editingCard.masteryLevel === null || editingCard.masteryLevel === 0){
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
   
+    // Verificar si el idioma ya existe
+  const languageExists = cardData.some(card => card.languageName === editingCard.languageName && card.languageName !== originalTitle);
+
+  if (languageExists) {
+    // Mostrar un mensaje de error o manejar la situación según lo desees
+    toast({
+      title: "Error",
+      description: "El idioma ya existe",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
+
     const newData = {
       languageName: editingCard.languageName,
       masteryLevel: parseInt(editingCard.masteryLevel), // Convertir a número entero
@@ -160,6 +195,14 @@ const IdiomasCard = ({
     };
   
     const updatedCard = await editLanguage(originalTitle, newData);
+    // Mostrar un toast de éxito
+  toast({
+    title: "Éxito",
+    description: "El idioma ha sido editado con éxito",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
   
     setContent(updatedCard);
     // Actualizar cardData con los nuevos datos
@@ -170,7 +213,7 @@ const IdiomasCard = ({
         return card;
       }
     });
-    setCardData(updatedCardData);
+    setNewCardData(updatedCardData);
   
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
@@ -206,13 +249,21 @@ const IdiomasCard = ({
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentIdiomas") {
-        await DeleteLanguage(originalTitle);
-        setCardContentIdiomas(updatedCardContent);
-        const updatedCardData = cardData.filter(card => card.title !== cardToDelete);
-        setCardData(updatedCardData);
+        await DeleteLanguage(cardToDelete);
+        //setCardContentIdiomas(updatedCardContent);
+        const updatedCardData = cardData.filter(card => card.languageName !== cardToDelete);
+        setNewCardData(updatedCardData);
         // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
+        // Mostrar un toast de éxito
+  toast({
+    title: "Éxito",
+    description: "El idioma ha sido eliminado con éxito",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
       } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
@@ -270,7 +321,7 @@ const IdiomasCard = ({
         )}
       </Text>
 
-      {Array.isArray(cardData)  && cardData.map((item, index) => (
+      {Array.isArray(newCardData)  && newCardData.map((item, index) => (
         <Box
           key={index}
           bg="white"
@@ -447,8 +498,8 @@ const IdiomasCard = ({
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Confirmar Eliminación</ModalHeader>
-          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
+          <ModalHeader>Eliminación Idioma</ModalHeader>
+          <ModalBody>¿Está seguro de que desea eliminar este Idioma?</ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"

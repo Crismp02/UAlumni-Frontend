@@ -322,24 +322,6 @@ export const editAboutMe = async (newData) => {
       }
     }
 
-    export const getCiapCoursesAlumni = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/alumni/me/resume/ciap-courses`, {
-        method: "GET",
-        credentials: "include", 
-        });
-        const data = await response.json();
-        if (response.ok) {
-          console.log("cursos alumni", data.data);
-        return data;
-        } else {
-        throw new Error(data.message);
-        }
-    } catch (error) {
-        toast.error(`Error: ${error.message}`);
-    }
-    }
-
     export const getCiapCourses = async () => {
       try {
         const response = await fetch(`${BASE_URL}/ciap-courses`, {
@@ -348,8 +330,47 @@ export const editAboutMe = async (newData) => {
         });
         const data = await response.json();
         if (response.ok) {
-          console.log("cursos generales", data.data.items);
         return data.data.items;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const AddCiapCourse = async (newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/ciap-courses`, {
+          method: 'POST',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: newData.id,
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const getCiapCourseItem = async (id) => {
+      try {
+        const response = await fetch(`${BASE_URL}/ciap-courses/${id}`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return (data.data);
         } else {
         throw new Error(data.message);
         }

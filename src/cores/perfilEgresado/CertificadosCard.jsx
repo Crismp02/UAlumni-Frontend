@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Modal,
@@ -8,34 +8,33 @@ import {
   ModalFooter,
   ModalBody,
   Button,
-  Input,
   Box,
   Flex,
   Select,
-  IconButton,
-  VStack,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon} from "@chakra-ui/icons";
+import { useToast } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
+import { AddCiapCourse, getCiapCourseItem, getCiapCourses } from "../../services/auth/MeProfile.services";
 
-const CertificadosCard = ({
-  cardContentCertificados,
-  setCardContentCertificados,
-  cursos,
-}) => {
+const CertificadosCard = ({cardData, setCardData}) => {
+
+  const [newCardData, setNewCardData] = useState(cardData);
+
+  const [courses, setCourses] = useState([]);
+  useEffect(() => {
+    getCiapCourses().then(data => {
+      if (Array.isArray(data)) {
+        setCourses(data);
+      }
+    });
+  }, []);
+
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleSwitchChange = () => {
     setSwitchValue(!switchValue);
   };
-
-  const [editMode, setEditMode] = useState(true);
-  const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] = useState(
-    "cardContentCertificados"
-  );
-  const [showIcons, setShowIcons] = useState(false);
-  const [cardIdToEdit, setcardIdToEdit] = useState(null);
 
   const [showAddButton, setShowAddButton] = useState(false);
   const [showEditButton, setShowEditButton] = useState(true);
@@ -43,11 +42,68 @@ const CertificadosCard = ({
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editingCard, setEditingCard] = useState(null);
-
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
+
+  const toast = useToast();
+
+  const handleAddCourse = async () => {
+    // Validar que los campos no estén vacíos
+    if (!additionalFields.id || additionalFields.id === null){
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+  
+    // Verificar si el curso ya existe en newCardData
+    const existingCourse = newCardData.find(course => course.id === additionalFields.id);
+    if (existingCourse) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "El curso ya ha sido agregado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+  
+    // Llamar a la función getCourseItem para obtener los detalles del curso
+    const courseDetails = await getCiapCourseItem(additionalFields.id);
+  
+    // Preparar los datos para la solicitud POST
+    const newData = {
+      id: additionalFields.id,
+      name: courseDetails.name, // Agregar el nombre del curso a los datos
+      date: courseDetails.date, // Agregar la fecha del curso a los datos
+    };
+  
+    // Llamar a la función AddCiapCourse con los datos preparados
+    const newCard = await AddCiapCourse(newData);
+  
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setNewCardData(prevCardData => [...prevCardData, newData]);
+  
+      // Buscar el curso en el array courses
+      const course = courses.find(course => course.id === additionalFields.id);
+  
+      // Si el curso no está en el array courses, agregarlo
+      if (!course) {
+        setCourses(prevCourses => [...prevCourses, { id: additionalFields.id, name: newData.name }]);
+      }
+    }
+  
+    // Cerrar el modal de agregar y restablecer los campos adicionales
+    setShowAddModal(false);
+    setAdditionalFields({});
+  };
 
   const handleFieldChange = (fieldName, value) => {
     // Actualizar solo el campo correspondiente en additionalFields
@@ -60,46 +116,6 @@ const CertificadosCard = ({
     setShowAddButton(false);
     setShowAddModal(true);
   };
-
-  const handleGuardar = () => {
-
-    // Validar que los campos no estén vacíos antes de guardar
-  if (additionalFields.curso.trim() === '' || additionalFields.fecha.trim() === '') {
-    // Mostrar un mensaje de error o manejar la situación según lo desees
-    console.error('Los campos no pueden estar vacíos');
-    return;
-  }
-
-    let newCardContent = [];
-
-    // Lógica para agregar datos según el tipo de tarjeta actual
-    switch (cardTypeToAdd) {
-      case "Certificados":
-        newCardContent = [
-          ...cardContentCertificados,
-          {
-            id: cardContentCertificados.length + 1, // Generar un nuevo ID
-            curso: additionalFields.curso,
-            curso: additionalFields.curso,
-            fecha: additionalFields.fecha,
-          },
-        ];
-        setCardContentCertificados(newCardContent);
-        setShowIcons(false);
-        setEditMode(true);
-        break;
-
-      // Agrega lógica para otros tipos de tarjetas si es necesario
-      default:
-        break;
-    }
-
-    // Restablecer los campos adicionales después de guardar
-    setAdditionalFields({});
-    // CERRAR MODAL DE AGREGAR
-    setShowAddModal(false);
-  };
-
 
   return (
     <>
@@ -127,45 +143,58 @@ const CertificadosCard = ({
           />
       </Text>
 
-      {cardContentCertificados.map((card) => (
-        <Box
-          key={card.id}
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          <Flex justifyContent="space-between">
-            <Text fontWeight="bold">{card.curso}</Text>
-            <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-              CIAP
-            </Text>
-          </Flex>
-          <Text>{card.fecha}</Text>
-          <Flex alignItems="center" marginTop="10px">
-            <CustomSwitch
-              isChecked={switchValue}
-              onChange={handleSwitchChange}
-            />
-            {switchValue && (
-              <Text
-                fontSize="sm"
-                color="black"
-                marginLeft="10px"
-                fontWeight="bold"
-                alignItems="center"
-              >
-                Visible
-              </Text>
-            )}
-          </Flex>
-        </Box>
-      ))}
+      {Array.isArray(newCardData)  && newCardData.map((item, index) => {
+  // Convertir la fecha a un objeto Date y agregar un día
+  const date = new Date(item.date);
+  date.setDate(date.getDate() + 1);
+
+  // Obtener solo el año de la fecha
+  const year = date.getFullYear().toString();
+
+  // Buscar el nombre del curso en el array courses
+  const course = courses.find(course => course.id === item.id);
+  const courseName = course?.name || 'Curso no encontrado';
+
+  return (
+    <Box
+      key={index}
+      bg="white"
+      padding="4"
+      border="1px solid #ccc"
+      borderRadius="8px"
+      marginLeft="10"
+      marginRight="10"
+      marginTop="5"
+      marginBottom="5"
+      boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+    >
+      <Flex justifyContent="space-between">
+        <Text fontWeight="bold">{courseName}</Text>
+        <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+          CIAP
+        </Text>
+      </Flex>
+      <Text>{year}</Text>
+      <Flex alignItems="center" marginTop="10px">
+        <CustomSwitch
+          isChecked={switchValue}
+          onChange={handleSwitchChange}
+        />
+        {switchValue && (
+          <Text
+            fontSize="sm"
+            color="black"
+            marginLeft="10px"
+            fontWeight="bold"
+            alignItems="center"
+          >
+            Visible
+          </Text>
+        )}
+      </Flex>
+    </Box>
+  );
+})}
 
       {/*Modal agregar campos*/}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
@@ -178,29 +207,22 @@ const CertificadosCard = ({
               <>
                 Curso
                 <Select
-                  value={additionalFields.curso || ""}
-                  onChange={(e) => handleFieldChange("curso", e.target.value)}
-                  placeholder="Agregar Curso"
-                  marginBottom="10px"
-                >
-                  {cursos.map((curso) => (
-                    <option key={curso} value={curso}>
-                      {curso}
-                    </option>
-                  ))}
-                </Select>
-                fecha
-                <Input
-                  value={additionalFields.fecha || ""}
-                  onChange={(e) => handleFieldChange("fecha", e.target.value)}
-                  type="date"
-                  marginBottom="10px"
-                />
+  value={additionalFields.id || ""}
+  onChange={(e) => handleFieldChange("id", e.target.value)}
+  placeholder="Agregar Curso"
+  marginBottom="10px"
+>
+  {courses.map((curso) => (
+    <option key={curso.id} value={curso.id}>
+      {curso.name}
+    </option>
+  ))}
+</Select>
               </>
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
+            <Button colorScheme="blue" mr={3} onClick={handleAddCourse}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={() => setShowAddModal(false)}>

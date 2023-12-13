@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"; 
 import { EditIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
 
-const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
+const ContactoCard = ({ cardData }) => {
  
 
   const [editMode, setEditMode] = useState(true);
@@ -34,8 +34,6 @@ const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
 
-
- 
 
   const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
     setShowIconsFunc((prevIcons) => !prevIcons);
@@ -89,50 +87,6 @@ const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
     setEditMode(true);
   };
 
-
-
-  const handleCancelDelete = () => {
-    // Cancelar la eliminación, cerrar el modal y limpiar el estado
-    setShowDeleteModal(false);
-    setCardToDelete(null);
-    setShowIcons(false);
-    setEditMode(true);
-  };
-
-  const handleDeleteClick = (cardId, cardType) => {
-    if (cardId) {
-      setCardToDelete(cardId);
-      setCardTypeToDelete(cardType);
-      setShowDeleteModal(true);
-    } else {
-      console.error("ID de tarjeta es nulo.");
-    }
-  };
-
-  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
-    if (cardToDelete !== null && cardTypeToDelete !== null) {
-      let updatedCardContent = [];
-      if (cardTypeToDelete === "cardContent") {
-        updatedCardContent = cardContent.filter(
-          (item) => item.id !== cardToDelete
-        );
-        setCardContent(updatedCardContent);
-        // agregar cada uno de los estados de edicion
-        setShowIcons(false);
-        setEditMode(true);
-      } else {
-        console.error("Tipo de tarjeta no reconocido.");
-        return;
-      }
-
-      // Cerrar el modal y limpiar el estado
-      setShowDeleteModal(false);
-      setCardToDelete(null);
-    } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
-    }
-  };
-
   const handleCancelEdit = () => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
     setcardIdToEditContacto(null);
@@ -158,7 +112,7 @@ const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
             position="absolute"
             right="45px"
             color="blue.500"
-            onClick={() => handleEditCard(cardContent[0])}
+            onClick={() => handleEditCard(cardData)}
           />
       </Text>
 
@@ -240,7 +194,7 @@ const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
               onClick={() =>
                 handleSaveEdit(
                   editingCard,
-                  cardContent,
+                  cardData,
                   setCardContent,
                   setShowEditModal
                 )
@@ -249,29 +203,6 @@ const ContactoCard = ({ cardContent, setCardContent, cardData }) => {
               Guardar
             </Button>
             <Button variant="ghost" onClick={handleCancelEdit}>
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      {/* Modal de confirmación para eliminar */}
-      <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Confirmar Eliminación</ModalHeader>
-          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="red"
-              mr={3}
-              onClick={() =>
-                handleConfirmDelete(cardToDelete, cardTypeToDelete)
-              }
-            >
-              Eliminar
-            </Button>
-            <Button variant="ghost" onClick={handleCancelDelete}>
               Cancelar
             </Button>
           </ModalFooter>

@@ -15,27 +15,16 @@ import {
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
-import { AddPortfolioItem, DeletePortfolioItem, EditPortfolioItem, getMeProfile, getPortfolioItem } from "../../services/auth/MeProfile.services";
+import { useToast } from "@chakra-ui/react";
+import { AddPortfolioItem, DeletePortfolioItem, EditPortfolioItem, getPortfolioItem } from "../../services/auth/MeProfile.services";
 
 
-const PortafoliosCard = () => {
+const PortafoliosCard = ({cardData, setCardData}) => {
   const [switchValue, setSwitchValue] = useState(false);
 
-  const [cardData, setCardData] = useState([]);
+ const [newCardData, setNewCardData] = useState(cardData);
 
-  useEffect(() => {
-    const fetchCardData = async () => {
-      const data = await getMeProfile();
-      if (Array.isArray(data.data.resume.portfolio)) {
-        setCardData(data.data.resume.portfolio);
-      } else {
-        console.error('data.data.items no es un array');
-      }
-    };
-  
-    fetchCardData();
-  }, []);
-
+ const toast = useToast();
 
   const handleSwitchChange = () => {
     setSwitchValue(!switchValue);
@@ -63,12 +52,35 @@ const PortafoliosCard = () => {
 
   const handleAddPortfolioItem = async () => {
     // Validar que los campos no estén vacíos
-    if (additionalFields.title.trim() === '' || additionalFields.sourceLink.trim() === '') {
+    if (
+      (!additionalFields.title || additionalFields.title.trim() === '') ||
+      (!additionalFields.sourceLink || additionalFields.sourceLink.trim() === '')
+    ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
   
+    // Verificar si la tarjeta ya existe en newCardData
+  const existingCard = newCardData.find(card => card.title === additionalFields.title && card.sourceLink === additionalFields.sourceLink);
+  if (existingCard) {
+    // Mostrar un mensaje de error en un toast
+    toast({
+      title: "Error",
+      description: "Ese portafolio ya existe",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
+
     // Preparar los datos para la solicitud POST
     const newData = {
       title: additionalFields.title,
@@ -78,10 +90,19 @@ const PortafoliosCard = () => {
   
     // Llamar a la función AddPortfolioItem con los datos preparados
     const newCard = await AddPortfolioItem(newData);
+
+    // Mostrar un toast de éxito
+  toast({
+    title: "Éxito",
+    description: "El portafolio ha sido creado con éxito",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
   
     // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
     if (newCard) {
-      setCardData(prevCardData => [...prevCardData, newCard.data]);
+      setNewCardData(prevCardData => [...prevCardData, newCard.data]);
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
@@ -136,9 +157,29 @@ const PortafoliosCard = () => {
     // Validar que los campos no estén vacíos
     if (editingCard.title.trim() === '' || editingCard.sourceLink.trim() === null || editingCard.title.trim() === '' || editingCard.sourceLink.trim() === null) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
+
+    // Verificar si la tarjeta ya existe en newCardData
+  const existingCard = newCardData.find(card => card.title === editingCard.title && card.sourceLink === editingCard.sourceLink && card.title !== originalTitle);
+  if (existingCard) {
+    // Mostrar un mensaje de error en un toast
+    toast({
+      title: "Error",
+      description: "Ese portafolio ya existe",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
 
     // Preparar los datos para la solicitud PATCH
   const newData = {
@@ -152,14 +193,23 @@ const PortafoliosCard = () => {
     setContent(updatedCard);
 
     // Actualizar cardData con los nuevos datos
-    const updatedCardData = cardData.map(card => {
+    const updatedCardData = newCardData.map(card => {
       if (card.title === originalTitle) {
         return { ...card, title: newData.title, sourceLink: newData.sourceLink };
       } else {
         return card;
       }
     });
-    setCardData(updatedCardData);
+    setNewCardData(updatedCardData);
+
+    // Mostrar un toast de éxito
+  toast({
+    title: "Éxito",
+    description: "El portafolio ha sido editado con éxito",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
@@ -196,19 +246,40 @@ const PortafoliosCard = () => {
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentPortafolios") {
-        await DeletePortfolioItem(originalTitle);
-        const updatedCardData = cardData.filter(card => card.title !== cardToDelete);
-        setCardData(updatedCardData);
+        await DeletePortfolioItem(cardToDelete);
+        const updatedCardData = newCardData.filter(card => card.title !== cardToDelete);
+        setNewCardData(updatedCardData);
         setShowIcons(false);
         setEditMode(true);
+
+        toast({
+          title: "Éxito",
+          description: "El portafolio ha sido eliminado con éxito",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un problema al eliminar el portafolio",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un problema al eliminar el portafolio",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -254,7 +325,7 @@ const PortafoliosCard = () => {
         )}
       </Text>
 
-      {Array.isArray(cardData)  && cardData.map((item, index) => (
+      {Array.isArray(newCardData)  && newCardData.map((item, index) => (
         <Box
           key={index}
           bg="white"
@@ -400,8 +471,8 @@ const PortafoliosCard = () => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Confirmar Eliminación</ModalHeader>
-          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
+          <ModalHeader>Eliminar Portafolio</ModalHeader>
+          <ModalBody>¿Está seguro de que desea eliminar este Portafolio?</ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"

@@ -17,6 +17,7 @@ import { getMeProfile } from "../../services/auth/MeProfile.services";
 
 function PerfilEgresado() {
   const [dataProfile, setDataProfile] = useState(null);
+
   const [cardData, setCardData] = useState([]);
 
   const handleCardDataChange = (newData) => {
@@ -186,7 +187,7 @@ function PerfilEgresado() {
 
           <PortafoliosCard
           cardData={dataProfile && dataProfile.data.resume.portfolio}
-          onCardDataChange={handleCardDataChange} />
+          setCardData={ setCardData } />
 
           <SobremiCard
             cardData={dataProfile && dataProfile.data.resume.aboutMe}
@@ -204,7 +205,9 @@ function PerfilEgresado() {
             setCardContent={setCardContent}
           />
 
-          <EducacionCard/>
+          <EducacionCard
+          cardData={dataProfile && dataProfile.data.resume.higherEducationStudies}
+          setCardData={ setCardData } />
 
           <Text
             fontWeight="bold"
@@ -227,12 +230,13 @@ function PerfilEgresado() {
             tipoHabilidad="Blandas"
           />
 
-          <IdiomasCard/>
+          <IdiomasCard
+          cardData={dataProfile && dataProfile.data.resume.knownLanguages}
+          setCardData={ setCardData } />
 
           <CertificadosCard
-            cardContentCertificados={cardContentCertificados}
-            setCardContentCertificados={setCardContentCertificados}
-            cursos={cursos}
+            cardData={dataProfile && dataProfile.data.resume.ciapCourses}
+            setCardData={ setCardData }
           />
 
           <Text
