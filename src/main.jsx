@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         element: <Register />,
       },
       {
-        path: "/perfilEgresadoReclutador",
+        path: "/alumni/:email/profile",
         element: <PerfilEgresadoReclutador/>,
       },
     ],
@@ -45,10 +45,6 @@ const router = createBrowserRouter([
         path: "/profile",
         element: <PerfilEgresado/>,
       },
-      {
-        path: "/profileReclutador",
-        element: <PerfilEgresadoReclutador/>,
-      }
     ],
   },
 ]);

@@ -18,6 +18,31 @@ export const getMeProfile = async () => {
     }
     };
 
+    export const editContactInfo = async (newData) => {
+        try {
+            const response = await fetch(`${BASE_URL}/alumni/me`, {
+              method: 'PATCH',
+              credentials: "include",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                address: newData.address,
+                telephoneNumber: newData.telephoneNumber,
+              }),
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            toast.error(`Error: ${error.message}`);
+          }
+    };
+
 export const editAboutMe = async (newData) => {
     try {
         const response = await fetch(`${BASE_URL}/alumni/me/resume`, {

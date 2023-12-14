@@ -14,8 +14,10 @@ import { Box, Text, Flex, VStack, Button  } from "@chakra-ui/react";
 import { useState } from "react";
 import CustomSwitch from "./Switch";
 import { getMeProfile } from "../../services/auth/MeProfile.services";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 function PerfilEgresado() {
+  const [isLoading, setIsLoading] = useState(true);
   const [dataProfile, setDataProfile] = useState(null);
 
   const [cardData, setCardData] = useState([]);
@@ -28,8 +30,7 @@ function PerfilEgresado() {
     async function fetchData() {
       const result = await getMeProfile();
       setDataProfile(result);
-     console.log(dataProfile);
-     console.log(dataProfile.data);
+      setIsLoading(false);
     }
     
     fetchData();
@@ -83,17 +84,11 @@ function PerfilEgresado() {
         habilidad: "Frontend",
       },
     ]);
-  const [cardContentContacto, setcardContentContacto] = useState([
-    {
-      id: 1,
-      tlf: "04122111999",
-      direccion: "Puerto La cruz",
-    },
-  ]);
 
   return (
-    <div>
+    <Box style={{minHeight: '100vh', display: 'flex', flexDirection: 'column'}}>
       <NavBarEgresados />
+      {isLoading ? <LoadingSpinner/> : ( <>
       {dataProfile && (
 <>
       <Text
@@ -272,10 +267,10 @@ function PerfilEgresado() {
           </Box>
         </Box>
       </Box>
-      </>)}
+      </>)}</>)}
 
       <Footer />
-    </div>
+    </Box>
   );
 }
 

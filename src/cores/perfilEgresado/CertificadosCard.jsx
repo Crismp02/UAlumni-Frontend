@@ -143,58 +143,74 @@ const CertificadosCard = ({cardData, setCardData}) => {
           />
       </Text>
 
-      {Array.isArray(newCardData)  && newCardData.map((item, index) => {
-  // Convertir la fecha a un objeto Date y agregar un día
-  const date = new Date(item.date);
-  date.setDate(date.getDate() + 1);
+      {Array.isArray(newCardData) && newCardData.length > 0 ? (
+  newCardData.map((item, index) => {
+    // Convertir la fecha a un objeto Date y agregar un día
+    const date = new Date(item.date);
+    date.setDate(date.getDate() + 1);
 
-  // Obtener solo el año de la fecha
-  const year = date.getFullYear().toString();
+    // Obtener solo el año de la fecha
+    const year = date.getFullYear().toString();
 
-  // Buscar el nombre del curso en el array courses
-  const course = courses.find(course => course.id === item.id);
-  const courseName = course?.name || 'Curso no encontrado';
+    // Buscar el nombre del curso en el array courses
+    const course = courses.find(course => course.id === item.id);
+    const courseName = course?.name || 'Curso no encontrado';
 
-  return (
-    <Box
-      key={index}
-      bg="white"
-      padding="4"
-      border="1px solid #ccc"
-      borderRadius="8px"
-      marginLeft="10"
-      marginRight="10"
-      marginTop="5"
-      marginBottom="5"
-      boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-    >
-      <Flex justifyContent="space-between">
-        <Text fontWeight="bold">{courseName}</Text>
-        <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-          CIAP
-        </Text>
-      </Flex>
-      <Text>{year}</Text>
-      <Flex alignItems="center" marginTop="10px">
-        <CustomSwitch
-          isChecked={switchValue}
-          onChange={handleSwitchChange}
-        />
-        {switchValue && (
-          <Text
-            fontSize="sm"
-            color="black"
-            marginLeft="10px"
-            fontWeight="bold"
-            alignItems="center"
-          >
-            Visible
+    return (
+      <Box
+        key={index}
+        bg="white"
+        padding="4"
+        border="1px solid #ccc"
+        borderRadius="8px"
+        marginLeft="10"
+        marginRight="10"
+        marginTop="5"
+        marginBottom="5"
+        boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+      >
+        <Flex justifyContent="space-between">
+          <Text fontWeight="bold">{courseName}</Text>
+          <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+            CIAP
           </Text>
-        )}
-      </Flex>
-    </Box>
-  );
-})}
+        </Flex>
+        <Text>{year}</Text>
+        <Flex alignItems="center" marginTop="10px">
+          <CustomSwitch
+            isChecked={switchValue}
+            onChange={handleSwitchChange}
+          />
+          {switchValue && (
+            <Text
+              fontSize="sm"
+              color="black"
+              marginLeft="10px"
+              fontWeight="bold"
+              alignItems="center"
+            >
+              Visible
+            </Text>
+          )}
+        </Flex>
+      </Box>
+    );
+  })
+) : (
+  <Box
+    bg="white"
+    padding="4"
+    border="1px solid #ccc"
+    borderRadius="8px"
+    marginLeft="10"
+    marginRight="10"
+    marginTop="5"
+    marginBottom="5"
+    boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+  >
+    <Text color="gray.500">En esta sección, puedes añadir tus certificados del CIAP.</Text>
+  </Box>
+)}
 
       {/*Modal agregar campos*/}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>

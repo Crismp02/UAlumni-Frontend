@@ -12,11 +12,18 @@ import {
   Textarea,
   Box,
   Flex,
+  useToast,
 } from "@chakra-ui/react"; 
 import { EditIcon, PhoneIcon, InfoIcon } from "@chakra-ui/icons";
+import { editContactInfo } from "../../services/auth/MeProfile.services";
+import { Icon } from '@chakra-ui/react';
+import { FaMapMarkerAlt } from "react-icons/fa";
 
-const ContactoCard = ({ cardData }) => {
- 
+const ContactoCard = ({ cardData: initialCardData }) => {
+  const toast = useToast();
+
+  const [cardData, setCardData] = useState(initialCardData);
+  const [cardContent, setCardContent] = useState([]);
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
@@ -55,32 +62,40 @@ const ContactoCard = ({ cardData }) => {
     }));
   };
 
-  const handleSaveEdit = (
-    editedCard,
-    content,
-    setContent,
-    setShowEditModal
-  ) => {
+  const handleSaveEdit = async () => {
     if (
-      !editedCard &&
-      !editedCard.telephoneNumber &&
-      !editedCard.address &&
-      editedCard.telephoneNumber.trim() === '' ||
-      editedCard.address.trim() === ''
+      !editingCard &&
+      !editingCard.telephoneNumber &&
+      !editingCard.address &&
+      editingCard.telephoneNumber.trim() === '' ||
+      editingCard.address.trim() === ''
     ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
-      return;
+    toast({
+      title: "Error",
+      description: "Los campos no pueden estar vacíos",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
     }
 
-    const updatedContent = content.map((card) => {
-      if (card.id === editedCard.id) {
-        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
-      }
-      return card;
-    });
+    // Preparar los datos para la solicitud PATCH
+  const newData = {
+    telephoneNumber: editingCard.telephoneNumber, // Ajusta esto según sea necesario
+    address: editingCard.address,
+  };
 
-    setContent(updatedContent);
+   // Llamar a la función editContactInfo para hacer la solicitud PATCH
+   const updatedCard = await editContactInfo(newData);
+
+    // Actualizar cardContent con updatedCard
+  setCardContent(updatedCard);
+
+    // Actualizar cardData con la nueva descripción
+    setCardData(newData); // Aquí es donde se cambió el código
+
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
@@ -144,7 +159,7 @@ const ContactoCard = ({ cardData }) => {
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
           <Flex>
-            <InfoIcon color="blue.500" marginRight="20px" marginTop="5px" />
+            <Icon as={FaMapMarkerAlt} color="blue.500" marginRight="20px" marginTop="5px"/>
             <Text fontWeight="bold">{cardData.address}</Text>
           </Flex>
         </Box>
@@ -179,7 +194,7 @@ const ContactoCard = ({ cardData }) => {
                       setEditingCard
                     )
                   }
-                  placeholder="Editar dirección..."
+                  placeholder="Ciudad, Estado, País"
                   size="lg"
                   marginBottom="4"
                 />

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Spinner } from "@chakra-ui/react";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 function ProtectedRoutes() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function ProtectedRoutes() {
   }, [navigate]);
 
   if (isLoading) {
-    return <Spinner />;
+    return <LoadingSpinner />;
   }
   
   return <Outlet />;
