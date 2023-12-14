@@ -28,7 +28,8 @@ function PerfilEgresado() {
     async function fetchData() {
       const result = await getMeProfile();
       setDataProfile(result);
-     //console.log(result);
+     console.log(dataProfile);
+     console.log(dataProfile.data);
     }
     
     fetchData();
@@ -158,7 +159,7 @@ function PerfilEgresado() {
             marginBottom="0"
             textAlign="center"
           >
-            {dataProfile && dataProfile.data.careers.length > 0 && dataProfile.data.careers.map(career => career.careerName).join(' / ')}
+            {dataProfile && dataProfile.data.graduations.length > 0 && dataProfile.data.graduations.map(career => career.careerName).join(' / ')}
           </Text>
           <Box
             display="flex"

@@ -330,63 +330,79 @@ const EducacionCard = ({cardData, setCardData}) => {
         )}
       </Text>
 
-      {Array.isArray(newCardData)  && newCardData.map((item, index) => (
-        <Box
-          key={index}
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          {/* posición a la derecha */}
-          {showIcons && (
-            <Flex justifyContent="flex-end" marginBottom="10px">
-              <IconButton
-                aria-label="Editar"
-                icon={<EditIcon />}
-                colorScheme="blue"
-                marginRight="5px"
-                onClick={() => handleEditCard(item.title)}
-              />
-              <IconButton
-                aria-label="Eliminar"
-                icon={<DeleteIcon />}
-                colorScheme="red"
-                marginLeft="5px"
-                onClick={() => handleDeleteClick(item.title, "cardContent")}
-              />
-            </Flex>
-          )}
-          <Flex justifyContent="space-between">
-            <Text fontWeight="bold">{item.title}</Text>
-          </Flex>
+      {Array.isArray(newCardData) && newCardData.length > 0 ? (
+  newCardData.map((item, index) => (
+    <Box
+      key={index}
+      bg="white"
+      padding="4"
+      border="1px solid #ccc"
+      borderRadius="8px"
+      marginLeft="10"
+      marginRight="10"
+      marginTop="5"
+      marginBottom="5"
+      boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+    >
+      {/* posición a la derecha */}
+      {showIcons && (
+        <Flex justifyContent="flex-end" marginBottom="10px">
+          <IconButton
+            aria-label="Editar"
+            icon={<EditIcon />}
+            colorScheme="blue"
+            marginRight="5px"
+            onClick={() => handleEditCard(item.title)}
+          />
+          <IconButton
+            aria-label="Eliminar"
+            icon={<DeleteIcon />}
+            colorScheme="red"
+            marginLeft="5px"
+            onClick={() => handleDeleteClick(item.title, "cardContent")}
+          />
+        </Flex>
+      )}
+      <Flex justifyContent="space-between">
+        <Text fontWeight="bold">{item.title}</Text>
+      </Flex>
 
-          <Text>{item.institution}</Text>
-          {addDays(new Date(item.endDate), 1).getFullYear()}
-          <Flex alignItems="center" marginTop="10px">
-            <CustomSwitch
-              isChecked={switchValue}
-              onChange={handleSwitchChange}
-            />
-            {switchValue && (
-              <Text
-                fontSize="sm"
-                color="black"
-                marginLeft="10px"
-                fontWeight="bold"
-                alignItems="center"
-              >
-                Visible
-              </Text>
-            )}
-          </Flex>
-        </Box>
-      ))}
+      <Text>{item.institution}</Text>
+      {addDays(new Date(item.endDate), 1).getFullYear()}
+      <Flex alignItems="center" marginTop="10px">
+        <CustomSwitch
+          isChecked={switchValue}
+          onChange={handleSwitchChange}
+        />
+        {switchValue && (
+          <Text
+            fontSize="sm"
+            color="black"
+            marginLeft="10px"
+            fontWeight="bold"
+            alignItems="center"
+          >
+            Visible
+          </Text>
+        )}
+      </Flex>
+    </Box>
+  ))
+) : (
+  <Box
+    bg="white"
+    padding="4"
+    border="1px solid #ccc"
+    borderRadius="8px"
+    marginLeft="10"
+    marginRight="10"
+    marginTop="5"
+    marginBottom="5"
+    boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+  >
+    <Text color="grey">En esta sección, puedes añadir tus estudios realizados</Text>
+  </Box>
+)}
 
       {/* Modal de edición Educación*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>

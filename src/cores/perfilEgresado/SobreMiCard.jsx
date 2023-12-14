@@ -152,7 +152,11 @@ const SobremiCard = ({ cardData: initialCardData }) => {
         boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
       >
         <Flex>
-          <Text>{cardData}</Text>
+        {cardData ? (
+      <Text>{cardData}</Text>
+    ) : (
+      <Text color="grey">En esta sección, puedes añadir una descripción sobre tí.</Text>
+    )}
         </Flex>
       </Box>
 
