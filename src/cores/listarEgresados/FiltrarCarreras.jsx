@@ -1,5 +1,6 @@
-import React from "react";
+
 import { Text, Tag, TagLabel, Stack, Flex, useMediaQuery } from "@chakra-ui/react";
+import PropTypes from 'prop-types';
 
 function FiltrarCarreras({ labels, selectedCarrera, selectedTags, handleClick}){
     const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
@@ -56,3 +57,11 @@ function FiltrarCarreras({ labels, selectedCarrera, selectedTags, handleClick}){
     )
 }
 export default FiltrarCarreras;
+
+// Definir la validación de props
+FiltrarCarreras.propTypes = {
+  labels: PropTypes.object.isRequired,
+  selectedCarrera: PropTypes.object.isRequired,
+  selectedTags: PropTypes.object.isRequired, 
+  handleClick: PropTypes.object.isRequired,
+};

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import {
   Input,
   Text,
@@ -9,6 +9,7 @@ import {
   ListItem,
   Tooltip
 } from "@chakra-ui/react";
+import PropTypes from 'prop-types';
 
 function FiltrarPositions({
   valuePos,
@@ -126,3 +127,12 @@ function FiltrarPositions({
   );
 }
 export default FiltrarPositions;
+
+// Definir la validación de props
+FiltrarPositions.propTypes = {
+  valuePos:PropTypes.object.isRequired,
+  handleChangePos:PropTypes.object.isRequired,
+  handleAddPos:PropTypes.object.isRequired,
+  listPos:PropTypes.object.isRequired,
+  handleRemovePos:PropTypes.object.isRequired,
+};

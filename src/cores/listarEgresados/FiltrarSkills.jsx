@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import{ useState, useEffect } from "react";
 import {
   Text,
   Button,
@@ -9,11 +9,11 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 function FiltrarSkills({
   categoria,
   setCategoria,
-  setCategorias,
   setHabilidades,
   habilidad,
   habilidades,
@@ -25,37 +25,38 @@ function FiltrarSkills({
 }) {
   const [isHovering, setIsHovering] = useState(false);
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
+  console.log("AJAAA", categoria);
 
-  const [cargandoHabilidades, setCargandoHabilidades] = useState(false);
+  const [, setCargandoHabilidades] = useState(false);
 
-useEffect(() => {
-  if (categoria) {
-    setCargandoHabilidades(true);
-    fetch(`http://localhost:3000/skillCategory/${categoria}/technical-skill`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Error al obtener las habilidades");
-      })
-      .then((data) => {
-        if (Array.isArray(data.data.items)) {
-          const habilidadesNombres = data.data.items.map((item) => item.name);
-          setHabilidades((prevHabilidades) => ({
-            ...prevHabilidades,
-            [categoria]: habilidadesNombres, // Actualizar las habilidades específicas de la categoría seleccionada
-          }));
-        }
-        console.log("mis habilidades");
-        console.log(habilidades); // Observar los cambios después de actualizar el estado
-        setCargandoHabilidades(false);
-      })
-      .catch((error) => {
-        console.error("Error de fetch:", error);
-        setCargandoHabilidades(false); // Marcar que ha habido un error en la obtención de las habilidades
-      });
-  }
-}, [categoria]);
+  useEffect(() => {
+    if (categoria) {
+      setCargandoHabilidades(true);
+      fetch(`http://localhost:3000/skillCategory/${categoria}/technical-skill`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          throw new Error("Error al obtener las habilidades");
+        })
+        .then((data) => {
+          if (Array.isArray(data.data.items)) {
+            const habilidadesNombres = data.data.items.map((item) => item.name);
+            setHabilidades((prevHabilidades) => ({
+              ...prevHabilidades,
+              [categoria]: habilidadesNombres, // Actualizar las habilidades específicas de la categoría seleccionada
+            }));
+          }
+          console.log("mis habilidades");
+          console.log(habilidades); // Observar los cambios después de actualizar el estado
+          setCargandoHabilidades(false);
+        })
+        .catch((error) => {
+          console.error("Error de fetch:", error);
+          setCargandoHabilidades(false); // Marcar que ha habido un error en la obtención de las habilidades
+        });
+    }
+  }, [categoria, habilidades, setHabilidades]);
 
 
   return (
@@ -218,3 +219,17 @@ useEffect(() => {
   );
 }
 export default FiltrarSkills;
+
+FiltrarSkills.propTypes = {
+  categoria: PropTypes.string.isRequired,
+  setCategoria: PropTypes.func.isRequired,
+  setCategorias: PropTypes.func.isRequired,
+  setHabilidades: PropTypes.func.isRequired,
+  habilidad: PropTypes.string.isRequired,
+  habilidades: PropTypes.object.isRequired,
+  list: PropTypes.array.isRequired,
+  handleAddCategoria: PropTypes.func.isRequired,
+  handleHabilidadChange: PropTypes.func.isRequired,
+  handleRemoveHabilidad: PropTypes.func.isRequired,
+  categorias: PropTypes.array.isRequired,
+};

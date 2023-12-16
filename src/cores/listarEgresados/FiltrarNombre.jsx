@@ -1,5 +1,5 @@
-import React from "react";
 import { Input, Text, useMediaQuery } from "@chakra-ui/react";
+import PropTypes from 'prop-types';
 
 
 function FiltrarNombre({ valueName, handleChangeName }){
@@ -36,3 +36,9 @@ function FiltrarNombre({ valueName, handleChangeName }){
     )
 }
 export default FiltrarNombre;
+
+// Definir la validación de props
+FiltrarNombre.propTypes = {
+  valueName: PropTypes.object.isRequired,
+  handleChangeName: PropTypes.object.isRequired,
+};

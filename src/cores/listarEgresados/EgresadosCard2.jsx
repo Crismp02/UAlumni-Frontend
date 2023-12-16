@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 
 
 const EgresadoCard2 = ({ egresado }) =>{
- 
+
+    console.log("MIRAAAA",egresado);
     const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
     const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
     const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
@@ -12,8 +13,8 @@ const EgresadoCard2 = ({ egresado }) =>{
   if (!egresado) {
       return null; // o puedes retornar un componente de carga o similar
     }
-    const { names , surnames, associatedAlumni } = egresado;
-    const skillsArray = associatedAlumni?.resume?.technicalSkills || [];
+    const { names , surnames, resume} = egresado;
+    const skillsArray = resume?.technicalSkills || [];
 
     let skillsToShow;
     if (isLargerThan1300) {

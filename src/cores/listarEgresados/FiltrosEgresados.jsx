@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import {
   Button,
   Drawer,
@@ -18,13 +18,12 @@ import FiltrarPositions from "./FiltrarPositions";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "./FiltrosButtons";
 import { useEgresados } from './EgresadosContext';
-import { EgresadosProvider } from './EgresadosContext';
 
 
 function FiltrosEgresados() {
   const [isHovering, setIsHovering] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { egresados, setEgresados } = useEgresados();
+  const [, setIsLoading] = useState(false);
+  const {  setEgresados } = useEgresados();
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -33,11 +32,6 @@ function FiltrosEgresados() {
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
 
-  const actualizarEgresados = () => {
-    // Lógica para actualizar egresados
-    const nuevosEgresados = obtenerNuevosEgresados();
-    setEgresados(nuevosEgresados);
-  };
 
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
@@ -76,6 +70,7 @@ function FiltrosEgresados() {
           throw new Error("Error al obtener los egresados");
         }
         const data = await response.json();
+        console.log("UPAA",data);
         if (Array.isArray(data.data.items)) {
           const categoriasObtenidas = data.data.items.map((item) => item.name);
           setCategorias(categoriasObtenidas);
@@ -163,13 +158,7 @@ function FiltrosEgresados() {
     }
   };
 
-  const selectedTagsToSend = Object.keys(selectedTags).filter(
-    (tag) => selectedTags[tag]
-  );
 
-  const carrersToSend = selectedCarrera
-    ? [selectedCarrera, ...selectedTagsToSend]
-    : selectedTagsToSend;
 
   {
     /*Botones de búsqueda y reset*/
@@ -185,8 +174,6 @@ function FiltrosEgresados() {
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
   // const [egresados, setEgresados] = useState([]);
-
-  
 
   const handleSubmit = async () => {
     if (isDisabled) {
@@ -228,7 +215,7 @@ function FiltrosEgresados() {
     };
 
     const newFilters = Object.fromEntries(
-      Object.entries(filters).filter(([_, value]) => value !== undefined)
+      Object.entries(filters).filter(([, value]) => value !== undefined)
     );
 
     const url = constructURL(newFilters);
