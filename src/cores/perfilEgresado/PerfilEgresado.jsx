@@ -5,10 +5,11 @@ import ExperienciaLaboralCard from "./ExperienciaLaboralCard";
 import IdiomasCard from "./IdiomasCard";
 import CertificadosCard from "./CertificadosCard";
 import PortafoliosCard from "./PortafoliosCard";
-import HabilidadesCard from "./HabilidadesCard";
 import ContactoCard from "./ContactoCard";
 import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobreMiCard";
+import HabilidadesBlandasCard from "./HabilidadesBlandasCard";
+import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
 
 import { Box, Text, Flex, VStack, Button  } from "@chakra-ui/react";
 import { useState } from "react";
@@ -63,7 +64,7 @@ function PerfilEgresado() {
         "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
     },
   ]);
-  const [cardContentHabilidades, setCardContentHabilidades] = useState([
+  /* const [cardContentHabilidades, setCardContentHabilidades] = useState([
     {
       id: 1,
       habilidad: "Nodejs",
@@ -83,7 +84,7 @@ function PerfilEgresado() {
         id: 2,
         habilidad: "Frontend",
       },
-    ]);
+    ]); */
 
   return (
     <Box style={{minHeight: '100vh', display: 'flex', flexDirection: 'column'}}>
@@ -215,7 +216,7 @@ function PerfilEgresado() {
           >
             Habilidades
           </Text>
-          <HabilidadesCard
+          {/* <HabilidadesCard
             cardContentHabilidades={cardContentHabilidades}
             setCardContentHabilidades={setCardContentHabilidades}
             tipoHabilidad="Técnicas"
@@ -224,7 +225,15 @@ function PerfilEgresado() {
             cardContentHabilidades={cardContentHabilidadesBlandas}
             setCardContentHabilidades={setCardContentHabilidadesBlandas}
             tipoHabilidad="Blandas"
-          />
+          /> */}
+          <HabilidadesBlandasCard
+                cardData={dataProfile && dataProfile.data.resume.softSkills}
+                setCardData={setCardData}
+              />
+          <HabilidadesTecnicasCard
+                cardData={dataProfile && dataProfile.data.resume.technicalSkills}
+                setCardData={setCardData}
+              />
 
           <IdiomasCard
           cardData={dataProfile && dataProfile.data.resume.knownLanguages}
