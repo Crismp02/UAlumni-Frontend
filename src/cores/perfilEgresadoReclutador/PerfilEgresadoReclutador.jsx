@@ -10,7 +10,7 @@ import HabilidadesBlandasCard from "./HabilidadesBlandasCard";
 import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobremiCard";
 import { useParams } from "react-router-dom";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Card, Divider, Text, CardBody } from "@chakra-ui/react";
 import { getAlumniProfile } from "../../services/profileEgresado/AlumniProfile.services";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
@@ -34,7 +34,12 @@ function PerfilEgresadoReclutador() {
 
   return (
     <Box
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#F5F5F5",
+      }}
     >
       <NavBarReclutador />
       {isLoading ? (
@@ -59,66 +64,67 @@ function PerfilEgresadoReclutador() {
             PERFIL
           </Text>
 
-          <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
-            <Box
-              width={{ base: "100%", md: "45%" }}
-              bg="#F5F5F5"
-              height="100%"
-              marginRight={{ base: "0", md: "20px" }}
-              marginBottom={{ base: "20px", md: "0" }}
-              marginLeft={{ base: "0", md: "20px" }}
-              position="relative"
-            >
-              <Text
-                fontWeight="bold"
-                fontSize="xl"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="10"
-                marginBottom="0"
-                textAlign="center"
-              >
-                {dataProfile.data.names} {dataProfile.data.surnames}
+          <Box
+            width="calc(100vw - 20px)"
+            marginLeft="20px"
+            display="flex"
+            flexDirection="row"
+            marginBottom="20px"
+          >
+            <Box width="70vw" display="flex" flexDirection="column">
+              <Text color="#37B4E3" as="b" fontSize={["md", "md", "xl", "2xl"]}>
+                {(
+                  dataProfile.data.names +
+                  " " +
+                  dataProfile.data.surnames
+                ).toUpperCase()}
               </Text>
-              <Text
-                fontSize="xl"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="10"
-                marginBottom="0"
-                textAlign="center"
-              >
+              <Text color="#37B4E3" fontSize={["sm", "sm", "lg", "lg"]}>
                 {dataProfile &&
                   dataProfile.data.graduations.length > 0 &&
                   dataProfile.data.graduations
                     .map((career) => career.careerName)
                     .join(" / ")}
               </Text>
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="5"
-                marginBottom="5"
-              >
-                <DownloadCV email={email} />
-              </Box>
+            </Box>
+            <Box
+              display="flex"
+              width="30%"
+              justifyContent="right"
+              paddingRight="20px"
+              alignItems="center"
+            >
+              <DownloadCV email={email} />
+            </Box>
+          </Box>
+          <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
+            <Box
+              width={{ base: "100%", md: "33.3%" }}
+              height="100%"
+              marginRight={{ base: "0", md: "20px" }}
+              marginBottom={{ base: "20px", md: "0" }}
+              marginLeft={{ base: "0", md: "20px" }}
+              position="relative"
+            >
               <PortafoliosCard
                 cardData={dataProfile && dataProfile.data.resume.portfolio}
               />
-
               <SobremiCard
                 cardData={dataProfile && dataProfile.data.resume.aboutMe}
+              />
+              <IdiomasCard
+                cardData={dataProfile && dataProfile.data.resume.knownLanguages}
+              />
+              <HabilidadesBlandasCard
+                cardData={dataProfile && dataProfile.data.resume.softSkills}
               />
             </Box>
             {/* inicio de 2do Box */}
             <Box
-              width={{ base: "100%", md: "55%" }}
-              bg="#F5F5F5"
+              width={{ base: "100%", md: "66.6%" }}
               marginBottom="20px"
               position="relative"
+              marginRight={{ base: "0", md: "20px" }}
             >
               <ExperienciaLaboralCard
                 cardData={
@@ -130,51 +136,38 @@ function PerfilEgresadoReclutador() {
                   dataProfile && dataProfile.data.resume.higherEducationStudies
                 }
               />
-              <Text
-                fontWeight="bold"
-                fontSize="xl"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="5"
-                marginBottom="5"
-              >
-                Habilidades
-              </Text>
-              <HabilidadesBlandasCard
-                cardData={dataProfile && dataProfile.data.resume.softSkills}
-              />
               <HabilidadesTecnicasCard
                 cardData={
                   dataProfile && dataProfile.data.resume.technicalSkills
                 }
               />
-              <IdiomasCard
-                cardData={dataProfile && dataProfile.data.resume.knownLanguages}
-              />
               <CertificadosCard
                 cardData={dataProfile && dataProfile.data.resume.ciapCourses}
               />
-              <Text
-                fontWeight="bold"
-                fontSize="xl"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="5"
-                marginBottom="5"
-              >
-                Información de Contacto
-              </Text>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="5"
-                marginBottom="5"
-              >
-                <DownloadCV email={email} />
-              </Box>
+              <Card marginTop="20px">
+                <CardBody p="10px">
+                  <Text
+                    fontWeight="bold"
+                    fontSize="md"
+                    marginLeft="2"
+                    marginBottom="1"
+                    display="flex"
+                    alignItems="center"
+                    color="#007935"
+                  >
+                    Información de contacto
+                  </Text>
+                  <Divider orientation="horizontal" />
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    marginTop="3"
+                  >
+                    <DownloadCV email={email} />
+                  </Box>
+                </CardBody>
+              </Card>
             </Box>
           </Box>
         </>

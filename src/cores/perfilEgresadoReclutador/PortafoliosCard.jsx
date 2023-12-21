@@ -1,44 +1,46 @@
 import React, { useState } from "react";
-import { Text, Box, Flex } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
+import { Text, Box, Flex, Divider, Card, CardBody } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 
 const PortafoliosCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
 
   return (
     <>
+      <Card>
+      <CardBody p="10px">
       <Text
         fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
+        fontSize="md"
+        marginLeft="2"
+        marginBottom="1"
         display="flex"
         alignItems="center"
+        color="#007935"
       >
         Portafolios
       </Text>
+      <Divider orientation='horizontal' />
 
       {Array.isArray(newCardData) && newCardData.length > 0
         ? newCardData.map((item, index) => (
             <Box
               key={index}
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+              border="2px solid #007935"
+              borderTop="none"
+              borderRight="none"
+              borderBottom="none"
+              marginTop="3"
+              paddingLeft="2"
             >
               <Flex justifyContent="space-between">
-                <Text fontWeight="bold">{item.title}</Text>
+                <Text fontWeight="bold" fontSize="15px">{item.title}</Text>
               </Flex>
-              <Text>{item.sourceLink}</Text>
+              <Text as="i" fontSize="15px">{item.sourceLink}</Text>
             </Box>
           ))
         : null}
+        </CardBody>  
+        </Card>
     </>
   );
 };

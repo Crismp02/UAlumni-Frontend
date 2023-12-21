@@ -1,38 +1,39 @@
 import React, { useState } from "react";
-import { Text, Box, Flex } from "@chakra-ui/react";
+import { Text, Box, Flex, Card, CardBody, Divider } from "@chakra-ui/react";
 
 const SobremiCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
 
   return (
     <>
+     <Card marginTop="20px">
+      <CardBody p="10px">
       <Text
         fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
+        fontSize="md"
+        marginLeft="2"
+        marginBottom="1"
         display="flex"
         alignItems="center"
+        color="#007935"
       >
         Sobre mí
       </Text>
-
+      <Divider orientation='horizontal' />
       <Box
-        bg="white"
-        padding="4"
-        border="1px solid #ccc"
-        borderRadius="8px"
-        marginLeft="10"
-        marginRight="10"
-        marginTop="5"
-        marginBottom="5"
-        boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+         border="2px solid #007935"
+         borderTop="none"
+         borderRight="none"
+         borderBottom="none"
+         marginTop="3"
+         paddingLeft="2"
       >
         <Flex>
-          <Text>{cardData}</Text>
+          <Text fontSize="15px">{cardData}</Text>
         </Flex>
       </Box>
+      </CardBody>
+      </Card>
     </>
   );
 };
