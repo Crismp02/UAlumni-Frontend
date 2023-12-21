@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { format, addDays } from "date-fns";
 import {
   Text,
   Modal,
@@ -12,18 +13,28 @@ import {
   Textarea,
   Box,
   Flex,
-  VStack,
-  IconButton
+  IconButton,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon, CalendarIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
+import { useToast } from "@chakra-ui/react";
+import {
+  AddWorkExperience,
+  DeleteWorkExperience,
+  editWorkExperience,
+  getWorkExperienceItem,
+} from "../../services/auth/MeProfile.services";
 
-const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
+const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
+  const [newCardData, setNewCardData] = useState(cardData);
+
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleSwitchChange = () => {
     setSwitchValue(!switchValue);
   };
+
+  const toast = useToast();
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
@@ -43,6 +54,84 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
+  const handleAddWorkExperience = async () => {
+    // Validar que los campos no estén vacíos
+    if (
+      !additionalFields.companyName ||
+      additionalFields.companyName.trim() === "" ||
+      !additionalFields.position ||
+      additionalFields.position.trim() === "" ||
+      !additionalFields.description ||
+      additionalFields.description.trim() === "" ||
+      !additionalFields.startDate ||
+      additionalFields.startDate.trim() === "" ||
+      !additionalFields.endDate ||
+      additionalFields.endDate.trim() === ""
+    ) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Preparar los datos para la solicitud POST
+    const newData = {
+      companyName: additionalFields.companyName,
+      position: additionalFields.position,
+      description: additionalFields.description,
+      startDate: additionalFields.startDate,
+      endDate: additionalFields.endDate,
+      isVisible: true,
+    };
+
+    // Verificar si la tarjeta ya existe
+    const cardExists = newCardData.some(
+      (card) =>
+        card.companyName === newData.companyName &&
+        card.position === newData.position &&
+        card.description === newData.description &&
+        card.startDate === newData.startDate &&
+        card.endDate === newData.endDate
+    );
+
+    if (cardExists) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Esa experiencia laboral ya existe",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Llamar a la función AddWorkExperience para hacer la solicitud POST
+    const newCard = await AddWorkExperience(newData);
+
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
+    }
+    // Mostrar un toast de éxito
+    toast({
+      title: "Éxito",
+      description: "La experiencia laboral se ha añadido con éxito",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+
+    // Cerrar el modal de agregar y restablecer los campos adicionales
+    setShowAddModal(false);
+    setAdditionalFields({});
+  };
+
   const handleFieldChange = (fieldName, value) => {
     // Actualizar solo el campo correspondiente en additionalFields
     setAdditionalFields({ ...additionalFields, [fieldName]: value });
@@ -55,9 +144,31 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
     setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
-  const handleEditCard = (cardToEdit) => {
+  useEffect(() => {
+    if (editingCard) {
+      setShowEditModal(true);
+    }
+  }, [editingCard]);
+
+  const [originalTitle, setOriginalTitle] = useState(null);
+
+  const handleEditCard = async (workExperienceNumber) => {
+    const cardToEdit = await getWorkExperienceItem(workExperienceNumber);
+
+    // Formatear la fecha y agregar un día
+    const dateS = new Date(cardToEdit.startDate);
+    const dateSPlusOneDay = addDays(dateS, 1);
+    const formattedDateS = format(dateSPlusOneDay, "yyyy-MM-dd");
+    cardToEdit.startDate = formattedDateS;
+
+    // Formatear la fecha y agregar un día
+    const dateE = new Date(cardToEdit.endDate);
+    const dateEPlusOneDay = addDays(dateE, 1);
+    const formattedDateE = format(dateEPlusOneDay, "yyyy-MM-dd");
+    cardToEdit.endDate = formattedDateE;
+
     setEditingCard(cardToEdit);
-    setShowEditModal(true);
+    setOriginalTitle(workExperienceNumber); // Guardar el título original
   };
 
   // Modal de edición Experiencial Laboral
@@ -67,29 +178,95 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
       [field]: value,
     }));
   };
+  const [content, setContent] = useState(null);
 
-  const handleSaveEdit = (
-    editedCard,
-    content,
-    setContent,
-    setShowEditModal
-  ) => {
-
+  const handleSaveEdit = async () => {
     // Validar que los campos no estén vacíos
-    if (editedCard.empresa.trim() === '' || editedCard.posicion.trim() === '' || editedCard.descripcion.trim() === '' || editedCard.fechaInicio.trim() === '' || editedCard.fechaFinal.trim() === '') {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error('Los campos no pueden estar vacíos');
+    if (
+      editingCard.companyName.trim() === "" ||
+      editingCard.position.trim() === "" ||
+      editingCard.description.trim() === "" ||
+      editingCard.startDate.trim() === "" ||
+      editingCard.endDate.trim() === "" ||
+      editingCard.companyName.trim() === null ||
+      editingCard.position.trim() === null ||
+      editingCard.description.trim() === null ||
+      editingCard.startDate.trim() === null ||
+      editingCard.endDate.trim() === null
+    ) {
+      toast({
+        title: "Error",
+        description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
-    const updatedContent = content.map((card) => {
-      if (card.id === editedCard.id) {
-        return { ...editedCard }; // Actualizar la tarjeta completa con los nuevos datos
+    // Preparar los datos para la solicitud PATCH
+    const newData = {
+      companyName: editingCard.companyName,
+      position: editingCard.position,
+      description: editingCard.description,
+      startDate: editingCard.startDate,
+      endDate: editingCard.endDate,
+      isVisible: true,
+    };
+
+    // Verificar si la tarjeta ya existe
+    const cardExists = cardData.some(
+      (card) =>
+        card.companyName === newData.companyName &&
+        card.position === newData.position &&
+        card.description === newData.description &&
+        card.startDate === newData.startDate &&
+        card.endDate === newData.endDate &&
+        card.companyName !== originalTitle // Excluir la tarjeta original que se está editando
+    );
+
+    if (cardExists) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Esa experiencia laboral ya existe",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    const updatedCard = await editWorkExperience(originalTitle, newData);
+
+    setContent(updatedCard);
+
+    // Actualizar cardData con los nuevos datos
+    const updatedCardData = newCardData.map((card) => {
+      if (card.number === originalTitle) {
+        return {
+          ...card,
+          companyName: newData.companyName,
+          position: newData.position,
+          description: newData.description,
+          startDate: newData.startDate,
+          endDate: newData.endDate,
+        };
+      } else {
+        return card;
       }
-      return card;
     });
 
-    setContent(updatedContent);
+    setNewCardData(updatedCardData);
+    // Mostrar un toast de éxito
+    toast({
+      title: "Éxito",
+      description: "La experiencia laboral se ha editado con éxito",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
@@ -103,47 +280,6 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
     setShowAddModal(true);
   };
 
-  const handleGuardar = () => {
-
-    // Validar que los campos no estén vacíos antes de guardar
-  if (additionalFields.empresa.trim() === '' || additionalFields.posicion.trim() === '' || additionalFields.descripcion.trim() === '' || additionalFields.fechaInicio.trim() === '' || additionalFields.fechaFinal.trim() === '') {
-    // Mostrar un mensaje de error o manejar la situación según lo desees
-    console.error('Los campos no pueden estar vacíos');
-    return;
-  }
-
-    let newCardContent = [];
-
-    // Lógica para agregar datos según el tipo de tarjeta actual
-    switch (cardTypeToAdd) {
-      case "Experiencia Laboral":
-        newCardContent = [
-          ...cardContent,
-          {
-            id: cardContent.length + 1, // Generar un nuevo ID
-            empresa: additionalFields.empresa,
-            descripcion: additionalFields.descripcion,
-            posicion: additionalFields.posicion,
-            fechaInicio: additionalFields.fechaInicio,
-            fechaFinal: additionalFields.fechaFinal,
-          },
-        ];
-        setCardContent(newCardContent);
-        setShowIcons(false);
-        setEditMode(true);
-        break;
-
-      // Agrega lógica para otros tipos de tarjetas si es necesario
-      default:
-        break;
-    }
-
-    // Restablecer los campos adicionales después de guardar
-    setAdditionalFields({});
-    // CERRAR MODAL DE AGREGAR
-    setShowAddModal(false);
-  };
-
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
     setShowDeleteModal(false);
@@ -152,9 +288,10 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
     setEditMode(true);
   };
 
-  const handleDeleteClick = (cardId, cardType) => {
-    if (cardId) {
-      setCardToDelete(cardId);
+  const handleDeleteClick = (workExperienceNumber, cardType) => {
+    setOriginalTitle(workExperienceNumber);
+    if (workExperienceNumber) {
+      setCardToDelete(workExperienceNumber);
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
@@ -162,23 +299,27 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
     }
   };
 
-  const handleConfirmDelete = (cardToDelete, cardTypeToDelete) => {
+  const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
-      let updatedCardContent = [];
       if (cardTypeToDelete === "cardContent") {
-        updatedCardContent = cardContent.filter(
-          (item) => item.id !== cardToDelete
+        await DeleteWorkExperience(cardToDelete);
+        const updatedCardData = cardData.filter(
+          (card) => card.number !== cardToDelete
         );
-        setCardContent(updatedCardContent);
-        // agregar cada uno de los estados de edicion
+        setNewCardData(updatedCardData);
         setShowIcons(false);
         setEditMode(true);
+        toast({
+          title: "Éxito",
+          description: "El Estudio Realizado ha sido eliminado con éxito",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       } else {
         console.error("Tipo de tarjeta no reconocido.");
         return;
       }
-
-      // Cerrar el modal y limpiar el estado
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
@@ -190,6 +331,8 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
     setcardIdToEditExpLaboral(null);
     setShowEditModal(false);
+    setShowIcons(false);
+    setEditMode(true);
   };
 
   return (
@@ -228,76 +371,110 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
         )}
       </Text>
 
-  {cardContent.map((card) => (
-  <Box
-    key={card.id}
-    bg="white"
-    padding="4"
-    border="1px solid #ccc"
-    borderRadius="8px"
-    marginLeft="10"
-    marginRight="10"
-    marginTop="5"
-    marginBottom="5"
-    boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-  >
-    {showIcons && (
-      <Flex justifyContent="flex-end" marginBottom="10px">
-        <IconButton
-          aria-label="Editar"
-          icon={<EditIcon />}
-          colorScheme="blue"
-          marginRight="5px"
-          onClick={() => handleEditCard(card)}
-        />
-        <IconButton
-          aria-label="Eliminar"
-          icon={<DeleteIcon />}
-          colorScheme="red"
-          marginLeft="5px"
-          onClick={() => handleDeleteClick(card.id, "cardContent")}
-        />
-      </Flex>
-    )}
-    <Flex justifyContent="space-between" alignItems="center">
-      <Text fontWeight="bold">{card.empresa}</Text>
-      <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-        {card.posicion}
-      </Text>
-    </Flex>
+      {Array.isArray(newCardData) && newCardData.length > 0 ? (
+        newCardData.map((item, index) => {
+          const dateS = new Date(item.startDate);
+          const formattedDateS = `${dateS.getDate()}/${
+            dateS.getMonth() + 1
+          }/${dateS.getFullYear()}`;
+          const dateE = new Date(item.endDate);
+          const formattedDateE = `${dateE.getDate()}/${
+            dateE.getMonth() + 1
+          }/${dateE.getFullYear()}`;
+          return (
+            <Box
+              key={index}
+              bg="white"
+              padding="4"
+              border="1px solid #ccc"
+              borderRadius="8px"
+              marginLeft="10"
+              marginRight="10"
+              marginTop="5"
+              marginBottom="5"
+              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            >
+              {showIcons && (
+                <Flex justifyContent="flex-end" marginBottom="10px">
+                  <IconButton
+                    aria-label="Editar"
+                    icon={<EditIcon />}
+                    colorScheme="blue"
+                    marginRight="5px"
+                    onClick={() => handleEditCard(item.number)}
+                  />
+                  <IconButton
+                    aria-label="Eliminar"
+                    icon={<DeleteIcon />}
+                    colorScheme="red"
+                    marginLeft="5px"
+                    onClick={() =>
+                      handleDeleteClick(item.number, "cardContent")
+                    }
+                  />
+                </Flex>
+              )}
+              <Flex justifyContent="space-between" alignItems="center">
+                <Text fontWeight="bold">{item.companyName}</Text>
+                <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
+                  {item.position}
+                </Text>
+              </Flex>
 
-    <Flex justifyContent="space-between" alignItems="center" marginTop="5px">
-      <Text>{card.descripcion}</Text>
-    </Flex>
-    <Flex justifyContent="space-between" alignItems="center" marginTop="5px">
-      <Text>
-        {card.fechaInicio} - {card.fechaFinal} <CalendarIcon color="blue.500" marginLeft="5px" />
-      </Text>
-    </Flex>
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+                marginTop="5px"
+              >
+                <Text>{item.description}</Text>
+              </Flex>
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+                marginTop="5px"
+              >
+                <Text>
+                  {formattedDateS} - {formattedDateE}
+                </Text>
+              </Flex>
 
-    <Flex alignItems="center" marginTop="10px">
-      
-      <CustomSwitch
-        isChecked={switchValue}
-        onChange={handleSwitchChange}
-      />
-      {switchValue && (
-        <Text
-          fontSize="sm"
-          color="black"
-          marginLeft="10px"
-          fontWeight="bold"
-          alignItems="center"
+              <Flex alignItems="center" marginTop="10px">
+                <CustomSwitch
+                  isChecked={switchValue}
+                  onChange={handleSwitchChange}
+                />
+                {switchValue && (
+                  <Text
+                    fontSize="sm"
+                    color="black"
+                    marginLeft="10px"
+                    fontWeight="bold"
+                    alignItems="center"
+                  >
+                    Visible
+                  </Text>
+                )}
+              </Flex>
+            </Box>
+          );
+        })
+      ) : (
+        <Box
+          bg="white"
+          padding="4"
+          border="1px solid #ccc"
+          borderRadius="8px"
+          marginLeft="10"
+          marginRight="10"
+          marginTop="5"
+          marginBottom="5"
+          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
-          Visible
-        </Text>
+          <Text color="grey">
+            En esta sección, puedes añadir tus estudios realizados
+          </Text>
+        </Box>
       )}
-    </Flex>
-
-    
-  </Box>
-))}
-
 
       {/* Modal de edición Experiencia Laboral*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
@@ -308,23 +485,23 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
             {editingCard && (
               <>
                 <Input
-                  value={editingCard.empresa}
+                  value={editingCard.companyName}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "empresa",
+                      "companyName",
                       e.target.value,
                       setEditingCard
                     )
                   }
-                  placeholder="Editar empresa..."
+                  placeholder="Editar nombre empresa..."
                   size="lg"
                   marginBottom="4"
                 />
                 <Input
-                  value={editingCard.posicion}
+                  value={editingCard.position}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "posicion",
+                      "position",
                       e.target.value,
                       setEditingCard
                     )
@@ -334,10 +511,10 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
                   marginBottom="4"
                 />
                 <Textarea
-                  value={editingCard.descripcion}
+                  value={editingCard.description}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "descripcion",
+                      "description",
                       e.target.value,
                       setEditingCard
                     )
@@ -348,10 +525,10 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
                 />
                 Fecha Inicio
                 <Input
-                  value={editingCard.fechaInicio}
+                  value={editingCard.startDate}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "fechaInicio",
+                      "startDate",
                       e.target.value,
                       setEditingCard
                     )
@@ -362,10 +539,10 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
                 />
                 Fecha Final
                 <Input
-                  value={editingCard.fechaFinal}
+                  value={editingCard.endDate}
                   onChange={(e) =>
                     handleEditInputChange(
-                      "fechaFinal",
+                      "endDate",
                       e.target.value,
                       setEditingCard
                     )
@@ -378,18 +555,7 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() =>
-                handleSaveEdit(
-                  editingCard,
-                  cardContent,
-                  setCardContent,
-                  setShowEditModal
-                )
-              }
-            >
+            <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={handleCancelEdit}>
@@ -408,73 +574,56 @@ const ExperienciaLaboralCard = ({ cardContent, setCardContent }) => {
             {/* campos correspondientes al tipo de tarjeta */}
             {cardTypeToAdd === "Experiencia Laboral" && (
               <>
+                Nombre de la compañía
                 <Input
-                  value={additionalFields.grado || ""}
-                  onChange={(e) => handleFieldChange("grado", e.target.value)}
-                  placeholder="Grado"
-                  marginBottom="10px"
-                />
-                Fecha
-                <Input
-                  value={additionalFields.anioFinal || ""}
+                  value={additionalFields.companyName || ""}
                   onChange={(e) =>
-                    handleFieldChange("anioFinal", e.target.value)
+                    handleFieldChange("companyName", e.target.value)
                   }
-                  type="date"
+                  placeholder="Nombre de la compañía"
                   marginBottom="10px"
                 />
-              </>
-            )}
-            {cardTypeToAdd === "Experiencia Laboral" && (
-              <>
+                Posición
                 <Input
-                  placeholder="Nombre Empresa"
-                  marginBottom="10px"
-                  value={additionalFields.empresa || ""}
-                  onChange={(e) => handleFieldChange("empresa", e.target.value)}
-                />
-                <Input
-                  value={additionalFields.posicion || ""}
+                  value={additionalFields.position || ""}
                   onChange={(e) =>
-                    handleFieldChange("posicion", e.target.value)
+                    handleFieldChange("position", e.target.value)
                   }
                   placeholder="Posición"
                   marginBottom="10px"
                 />
+                Descripción
                 <Textarea
-                  value={additionalFields.descripcion || ""}
-                  onChange={(e) =>
-                    handleFieldChange("descripcion", e.target.value)
-                  }
-                  placeholder="Descripción..."
+                  placeholder="Descripción"
                   marginBottom="10px"
+                  value={additionalFields.description || ""}
+                  onChange={(e) =>
+                    handleFieldChange("description", e.target.value)
+                  }
                 />
                 Fecha Inicio
                 <Input
-                  value={additionalFields.fechaInicio || ""}
+                  value={additionalFields.startDate || ""}
                   onChange={(e) =>
-                    handleFieldChange("fechaInicio", e.target.value)
+                    handleFieldChange("startDate", e.target.value)
                   }
                   type="date"
-                  placeholder="Posición"
+                  placeholder="Fecha inicio"
                   marginBottom="10px"
                 />
-                Fecha Final
+                Fecha Fin
                 <Input
-                  value={additionalFields.fechaFinal || ""}
-                  onChange={(e) =>
-                    handleFieldChange("fechaFinal", e.target.value)
-                  }
+                  value={additionalFields.endDate || ""}
+                  onChange={(e) => handleFieldChange("endDate", e.target.value)}
                   type="date"
-                  placeholder="Posición"
+                  placeholder="Fecha fin"
                   marginBottom="10px"
                 />
-                {/* ... Otros campos específicos de Experiencia Laboral ... */}
               </>
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleGuardar}>
+            <Button colorScheme="blue" mr={3} onClick={handleAddWorkExperience}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={() => setShowAddModal(false)}>

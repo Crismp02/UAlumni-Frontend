@@ -28,7 +28,6 @@ export const getMeProfile = async () => {
               },
               body: JSON.stringify({
                 address: newData.address,
-                telephoneNumber: newData.telephoneNumber,
               }),
             });
 
@@ -402,4 +401,231 @@ export const editAboutMe = async (newData) => {
     } catch (error) {
         toast.error(`Error: ${error.message}`);
     }
+    }
+
+    export const AddWorkExperience = async (newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/work-experiences`, {
+          method: 'POST',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            companyName: newData.companyName,
+            position: newData.position,
+            description: newData.description,
+            startDate: newData.startDate,
+            endDate: newData.endDate,
+            isVisible: true,
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const getWorkExperienceItem = async (workExperienceNumber) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/work-experiences/${workExperienceNumber}`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+        return (data.data);
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const editWorkExperience = async (companyName, newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/work-experiences/${companyName}`, {
+          method: 'PATCH',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            companyName: newData.companyName,
+            position: newData.position,
+            description: newData.description,
+            startDate: newData.startDate,
+            endDate: newData.endDate,
+            isVisible: true,
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const DeleteWorkExperience = async (workExperienceNumber) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/work-experiences/${workExperienceNumber}`, {
+          method: 'DELETE',
+          credentials: "include", 
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const getSoftSkills = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/soft-skills`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return data.data.items;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const AddSoftSkill = async (newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/soft-skill`, {
+          method: 'POST',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            skillName: newData.skillName,
+            isVisible: true,
+          }),
+        });
+       
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+        toast.error(`Error: ${error.message[1]}`);
+      }
+    }
+
+    export const deleteSoftSkill = async (skillName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/soft-skill/${skillName}`, {
+          method: 'DELETE',
+          credentials: "include", 
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const getSkillCategory = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/skill-category`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return data.data.items;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const getTechnicalSkills = async (skillCategory) => {
+      try {
+        const response = await fetch(`${BASE_URL}/skillCategory/${skillCategory}/technical-skill`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return data.data.items;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const AddTechnicalSkill = async (newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/skill-category/technical-skill`, {
+          method: 'POST',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            skillCategoryName: newData.skillCategoryName,
+            skillName: newData.skillName,
+            isVisible: true,
+          }),
+        });
+       
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+        toast.error(`Error: ${error.message[1]}`);
+      }
+    }
+
+    export const deleteTechnicalSkill = async (skillCategory, skillName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/skill-category/${skillCategory}/technical-skill/${skillName}`, {
+          method: 'DELETE',
+          credentials: "include", 
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
     }

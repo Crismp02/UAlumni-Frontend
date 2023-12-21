@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { format, addDays } from 'date-fns';
+import { format, addDays } from "date-fns";
 import {
   Text,
   Modal,
@@ -17,10 +17,14 @@ import {
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
-import { AddHigherEducationStudy, DeleteHigherEducationStudy, EditHigherEducationStudy, getHigherEducationStudy } from "../../services/auth/MeProfile.services";
+import {
+  AddHigherEducationStudy,
+  DeleteHigherEducationStudy,
+  EditHigherEducationStudy,
+  getHigherEducationStudy,
+} from "../../services/auth/MeProfile.services";
 
-const EducacionCard = ({cardData, setCardData}) => {
-
+const EducacionCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
 
   const [switchValue, setSwitchValue] = useState(false);
@@ -52,10 +56,13 @@ const EducacionCard = ({cardData, setCardData}) => {
   const handleAddEducation = async () => {
     // Validar que los campos no estén vacíos
     if (
-      (!additionalFields.title || additionalFields.title.trim() === '') ||
-      (!additionalFields.institution || additionalFields.institution.trim() === '') ||
-      (!additionalFields.endDate || additionalFields.endDate.trim() === '')
-    )  {
+      !additionalFields.title ||
+      additionalFields.title.trim() === "" ||
+      !additionalFields.institution ||
+      additionalFields.institution.trim() === "" ||
+      !additionalFields.endDate ||
+      additionalFields.endDate.trim() === ""
+    ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       toast({
         title: "Error",
@@ -66,7 +73,7 @@ const EducacionCard = ({cardData, setCardData}) => {
       });
       return;
     }
-  
+
     // Preparar los datos para la solicitud POST
     const newData = {
       title: additionalFields.title,
@@ -76,39 +83,40 @@ const EducacionCard = ({cardData, setCardData}) => {
     };
 
     // Verificar si la tarjeta ya existe
-  const cardExists = newCardData.some(card => 
-    card.title === newData.title && 
-    card.institution === newData.institution && 
-    card.endDate === newData.endDate
-  );
+    const cardExists = newCardData.some(
+      (card) =>
+        card.title === newData.title &&
+        card.institution === newData.institution &&
+        card.endDate === newData.endDate
+    );
 
-  if (cardExists) {
-    // Mostrar un mensaje de error o manejar la situación según lo desees
+    if (cardExists) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Ese Estudio Realizado ya existe",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Llamar a la función AddHigherEducationStudy con los datos preparados
+    const newCard = await AddHigherEducationStudy(newData);
+
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
+    }
+    // Mostrar un toast de éxito
     toast({
-      title: "Error",
-      description: "Ese Estudio Realizado ya existe",
-      status: "error",
+      title: "Éxito",
+      description: "El Estudio Realizado se ha añadido con éxito",
+      status: "success",
       duration: 3000,
       isClosable: true,
     });
-    return;
-  }
-  
-    // Llamar a la función AddHigherEducationStudy con los datos preparados
-    const newCard = await AddHigherEducationStudy(newData);
-  
-    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
-    if (newCard) {
-      setNewCardData(prevCardData => [...prevCardData, newCard.data]);
-    }
-     // Mostrar un toast de éxito
-  toast({
-    title: "Éxito",
-    description: "El Estudio Realizado se ha añadido con éxito",
-    status: "success",
-    duration: 3000,
-    isClosable: true,
-  });
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
@@ -137,13 +145,13 @@ const EducacionCard = ({cardData, setCardData}) => {
 
   const handleEditCard = async (cardTitle) => {
     const cardToEdit = await getHigherEducationStudy(cardTitle);
-    
+
     // Formatear la fecha y agregar un día
-  const date = new Date(cardToEdit.endDate);
-  const datePlusOneDay = addDays(date, 1);
-  const formattedDate = format(datePlusOneDay, 'yyyy-MM-dd');
-  cardToEdit.endDate = formattedDate;
-  
+    const date = new Date(cardToEdit.endDate);
+    const datePlusOneDay = addDays(date, 1);
+    const formattedDate = format(datePlusOneDay, "yyyy-MM-dd");
+    cardToEdit.endDate = formattedDate;
+
     setEditingCard(cardToEdit);
     setOriginalTitle(cardTitle); // Guardar el título original
   };
@@ -159,9 +167,15 @@ const EducacionCard = ({cardData, setCardData}) => {
   const [content, setContent] = useState(null);
 
   const handleSaveEdit = async () => {
-
     // Validar que los campos no estén vacíos
-    if (editingCard.title.trim() === '' || editingCard.institution.trim() === '' || editingCard.endDate.trim() === '' || editingCard.title.trim() === null || editingCard.institution.trim() === null || editingCard.endDate.trim() === null ) {
+    if (
+      editingCard.title.trim() === "" ||
+      editingCard.institution.trim() === "" ||
+      editingCard.endDate.trim() === "" ||
+      editingCard.title.trim() === null ||
+      editingCard.institution.trim() === null ||
+      editingCard.endDate.trim() === null
+    ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       // Mostrar un mensaje de error o manejar la situación según lo desees
       toast({
@@ -175,56 +189,61 @@ const EducacionCard = ({cardData, setCardData}) => {
     }
 
     // Preparar los datos para la solicitud PATCH
-  const newData = {
-    title: editingCard.title, // Ajusta esto según sea necesario
-    institution: editingCard.institution,
-    endDate: editingCard.endDate,
-    isVisible: true,
-  };
+    const newData = {
+      title: editingCard.title, // Ajusta esto según sea necesario
+      institution: editingCard.institution,
+      endDate: editingCard.endDate,
+      isVisible: true,
+    };
 
-  // Verificar si la tarjeta ya existe
-  const cardExists = cardData.some(card => 
-    card.title === newData.title && 
-    card.institution === newData.institution && 
-    card.endDate === newData.endDate &&
-    card.title !== originalTitle // Excluir la tarjeta original que se está editando
-  );
+    // Verificar si la tarjeta ya existe
+    const cardExists = cardData.some(
+      (card) =>
+        card.title === newData.title &&
+        card.institution === newData.institution &&
+        card.endDate === newData.endDate &&
+        card.title !== originalTitle // Excluir la tarjeta original que se está editando
+    );
 
-  if (cardExists) {
-    // Mostrar un mensaje de error o manejar la situación según lo desees
+    if (cardExists) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Ese Estudio Realizado ya existe",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    const updatedCard = await EditHigherEducationStudy(originalTitle, newData);
+
+    setContent(updatedCard);
+
+    // Actualizar cardData con los nuevos datos
+    const updatedCardData = cardData.map((card) => {
+      if (card.title === originalTitle) {
+        return {
+          ...card,
+          title: newData.title,
+          institution: newData.institution,
+          endDate: newData.endDate,
+        };
+      } else {
+        return card;
+      }
+    });
+
+    setNewCardData(updatedCardData);
+    // Mostrar un toast de éxito
     toast({
-      title: "Error",
-      description: "Ese Estudio Realizado ya existe",
-      status: "error",
+      title: "Éxito",
+      description: "El Estudio Realizado se ha editado con éxito",
+      status: "success",
       duration: 3000,
       isClosable: true,
     });
-    return;
-  }
-
-  const updatedCard = await EditHigherEducationStudy(originalTitle, newData);
-
-  setContent(updatedCard);
-
-  // Actualizar cardData con los nuevos datos
-  const updatedCardData = cardData.map(card => {
-    if (card.title === originalTitle) {
-      return { ...card, title: newData.title, institution: newData.institution, endDate: newData.endDate };
-    } else {
-      return card;
-    }
-  });
-
-
-  setNewCardData(updatedCardData);
-  // Mostrar un toast de éxito
-  toast({
-    title: "Éxito",
-    description: "El Estudio Realizado se ha editado con éxito",
-    status: "success",
-    duration: 3000,
-    isClosable: true,
-  });
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
@@ -239,8 +258,6 @@ const EducacionCard = ({cardData, setCardData}) => {
     setShowAddModal(true);
   };
 
-  
-
   const handleCancelDelete = () => {
     // Cancelar la eliminación, cerrar el modal y limpiar el estado
     setShowDeleteModal(false);
@@ -250,7 +267,7 @@ const EducacionCard = ({cardData, setCardData}) => {
   };
 
   const handleDeleteClick = (cardTitle, cardType) => {
-    setOriginalTitle(cardTitle); 
+    setOriginalTitle(cardTitle);
     if (cardTitle) {
       setCardToDelete(cardTitle);
       setCardTypeToDelete(cardType);
@@ -264,7 +281,9 @@ const EducacionCard = ({cardData, setCardData}) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContent") {
         await DeleteHigherEducationStudy(cardToDelete);
-        const updatedCardData = cardData.filter(card => card.title !== cardToDelete);
+        const updatedCardData = cardData.filter(
+          (card) => card.title !== cardToDelete
+        );
         setNewCardData(updatedCardData);
         setShowIcons(false);
         setEditMode(true);
@@ -331,78 +350,80 @@ const EducacionCard = ({cardData, setCardData}) => {
       </Text>
 
       {Array.isArray(newCardData) && newCardData.length > 0 ? (
-  newCardData.map((item, index) => (
-    <Box
-      key={index}
-      bg="white"
-      padding="4"
-      border="1px solid #ccc"
-      borderRadius="8px"
-      marginLeft="10"
-      marginRight="10"
-      marginTop="5"
-      marginBottom="5"
-      boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-    >
-      {/* posición a la derecha */}
-      {showIcons && (
-        <Flex justifyContent="flex-end" marginBottom="10px">
-          <IconButton
-            aria-label="Editar"
-            icon={<EditIcon />}
-            colorScheme="blue"
-            marginRight="5px"
-            onClick={() => handleEditCard(item.title)}
-          />
-          <IconButton
-            aria-label="Eliminar"
-            icon={<DeleteIcon />}
-            colorScheme="red"
-            marginLeft="5px"
-            onClick={() => handleDeleteClick(item.title, "cardContent")}
-          />
-        </Flex>
-      )}
-      <Flex justifyContent="space-between">
-        <Text fontWeight="bold">{item.title}</Text>
-      </Flex>
-
-      <Text>{item.institution}</Text>
-      {addDays(new Date(item.endDate), 1).getFullYear()}
-      <Flex alignItems="center" marginTop="10px">
-        <CustomSwitch
-          isChecked={switchValue}
-          onChange={handleSwitchChange}
-        />
-        {switchValue && (
-          <Text
-            fontSize="sm"
-            color="black"
-            marginLeft="10px"
-            fontWeight="bold"
-            alignItems="center"
+        newCardData.map((item, index) => (
+          <Box
+            key={index}
+            bg="white"
+            padding="4"
+            border="1px solid #ccc"
+            borderRadius="8px"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
           >
-            Visible
+            {/* posición a la derecha */}
+            {showIcons && (
+              <Flex justifyContent="flex-end" marginBottom="10px">
+                <IconButton
+                  aria-label="Editar"
+                  icon={<EditIcon />}
+                  colorScheme="blue"
+                  marginRight="5px"
+                  onClick={() => handleEditCard(item.title)}
+                />
+                <IconButton
+                  aria-label="Eliminar"
+                  icon={<DeleteIcon />}
+                  colorScheme="red"
+                  marginLeft="5px"
+                  onClick={() => handleDeleteClick(item.title, "cardContent")}
+                />
+              </Flex>
+            )}
+            <Flex justifyContent="space-between">
+              <Text fontWeight="bold">{item.title}</Text>
+            </Flex>
+
+            <Text>{item.institution}</Text>
+            {addDays(new Date(item.endDate), 1).getFullYear()}
+            <Flex alignItems="center" marginTop="10px">
+              <CustomSwitch
+                isChecked={switchValue}
+                onChange={handleSwitchChange}
+              />
+              {switchValue && (
+                <Text
+                  fontSize="sm"
+                  color="black"
+                  marginLeft="10px"
+                  fontWeight="bold"
+                  alignItems="center"
+                >
+                  Visible
+                </Text>
+              )}
+            </Flex>
+          </Box>
+        ))
+      ) : (
+        <Box
+          bg="white"
+          padding="4"
+          border="1px solid #ccc"
+          borderRadius="8px"
+          marginLeft="10"
+          marginRight="10"
+          marginTop="5"
+          marginBottom="5"
+          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+        >
+          <Text color="grey">
+            En esta sección, puedes añadir tus estudios realizados
           </Text>
-        )}
-      </Flex>
-    </Box>
-  ))
-) : (
-  <Box
-    bg="white"
-    padding="4"
-    border="1px solid #ccc"
-    borderRadius="8px"
-    marginLeft="10"
-    marginRight="10"
-    marginTop="5"
-    marginBottom="5"
-    boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-  >
-    <Text color="grey">En esta sección, puedes añadir tus estudios realizados</Text>
-  </Box>
-)}
+        </Box>
+      )}
 
       {/* Modal de edición Educación*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
@@ -456,11 +477,7 @@ const EducacionCard = ({cardData, setCardData}) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={ handleSaveEdit }
-            >
+            <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={handleCancelEdit}>
@@ -498,9 +515,7 @@ const EducacionCard = ({cardData, setCardData}) => {
                 Fecha Final
                 <Input
                   value={additionalFields.endDate || ""}
-                  onChange={(e) =>
-                    handleFieldChange("endDate", e.target.value)
-                  }
+                  onChange={(e) => handleFieldChange("endDate", e.target.value)}
                   type="date"
                   marginBottom="10px"
                 />
@@ -522,7 +537,9 @@ const EducacionCard = ({cardData, setCardData}) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Eliminación Estudio Realizado</ModalHeader>
-          <ModalBody>¿Está seguro de que desea eliminar este Estudio Realizado?</ModalBody>
+          <ModalBody>
+            ¿Está seguro de que desea eliminar este Estudio Realizado?
+          </ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"

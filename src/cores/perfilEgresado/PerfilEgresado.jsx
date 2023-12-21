@@ -15,6 +15,9 @@ import { useState } from "react";
 import CustomSwitch from "./Switch";
 import { getMeProfile } from "../../services/auth/MeProfile.services";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import HabilidadesBlandasCard from "./HabilidadesBlandasCard";
+import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
+import  DownloadCV  from "../perfilEgresadoReclutador/DownloadCV"
 
 function PerfilEgresado() {
   const [isLoading, setIsLoading] = useState(true);
@@ -43,49 +46,107 @@ function PerfilEgresado() {
   };
 
 
-  const [cardContentCertificados, setCardContentCertificados] = useState([
-    {
-      id: 1,
-      curso: "Certificado de Estudios",
-      fecha: "18/01/2020",
-    },
-  ]);
-  const cursos = ["Prototipos con Arduino", "Photoshop", "Componente Docente"];
-
-  const [cardContent, setCardContent] = useState([
-    {
-      id: 1,
-      empresa: "Corporación XYZ",
-      posicion: "Posición",
-      fechaInicio: "01/01/2020",
-      fechaFinal: "01/01/2022",
-      descripcion:
-        "En este cargo como Jefe de Comunicaciones en la Corporación XYZ, logró aumentar el tráfico web en un 20%.",
-    },
-  ]);
-  const [cardContentHabilidades, setCardContentHabilidades] = useState([
-    {
-      id: 1,
-      habilidad: "Nodejs",
-    },
-    {
-      id: 2,
-      habilidad: "Frontend",
-    },
-  ]);
-  const [cardContentHabilidadesBlandas, setCardContentHabilidadesBlandas] =
-    useState([
-      {
-        id: 1,
-        habilidad: "Laravel",
-      },
-      {
-        id: 2,
-        habilidad: "Frontend",
-      },
-    ]);
-
   return (
+    <Box
+      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+    >
+      <NavBarEgresados/>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          <Text
+            fontSize={["lg", "lg", "xl", "4xl"]}
+            color="black"
+            textAlign="center"
+            as="b"
+            paddingTop={["2px", "2px", "2px", "10px"]}
+            marginTop="10px"
+            marginBottom="10px"
+            style={{
+              textDecoration: "underline",
+              textDecorationColor: "green",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            PERFIL
+          </Text>
+
+          <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
+            <Box
+              width={{ base: "100%", md: "45%" }}
+              bg="#F5F5F5"
+              height="100%"
+              marginRight={{ base: "0", md: "20px" }}
+              marginBottom={{ base: "20px", md: "0" }}
+              marginLeft={{ base: "0", md: "20px" }}
+              position="relative"
+            >
+              <Text
+                fontWeight="bold"
+                fontSize="xl"
+                marginLeft="10"
+                marginRight="10"
+                marginTop="10"
+                marginBottom="0"
+                textAlign="center"
+              >
+                {dataProfile.data.names} {dataProfile.data.surnames}
+              </Text>
+              <Text
+                fontSize="xl"
+                marginLeft="10"
+                marginRight="10"
+                marginTop="10"
+                marginBottom="0"
+                textAlign="center"
+              >
+                {dataProfile &&
+                  dataProfile.data.graduations.length > 0 &&
+                  dataProfile.data.graduations
+                    .map((career) => career.careerName)
+                    .join(" / ")}
+              </Text>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                marginLeft="10"
+                marginRight="10"
+                marginTop="5"
+                marginBottom="5"
+              >
+                <DownloadCV email={dataProfile.data.email} />
+                Cantidad Descargas
+              </Box>
+              <ContactoCard
+            cardData={dataProfile && dataProfile.data}
+          />
+
+          <PortafoliosCard
+          cardData={dataProfile && dataProfile.data.resume.portfolio}
+          setCardData={ setCardData } />
+
+          <SobremiCard
+            cardData={dataProfile && dataProfile.data.resume.aboutMe}
+          />
+            </Box>
+            {/* inicio de 2do Box */}
+            <Box
+              width={{ base: "100%", md: "55%" }}
+              bg="#F5F5F5"
+              marginBottom="20px"
+              position="relative"
+            >
+              
+            </Box>
+          </Box>
+        </>
+      )}
+      <Footer />
+    </Box>
+    /*
     <Box style={{minHeight: '100vh', display: 'flex', flexDirection: 'column'}}>
       <NavBarEgresados />
       {isLoading ? <LoadingSpinner/> : ( <>
@@ -189,7 +250,7 @@ function PerfilEgresado() {
             cardData={dataProfile && dataProfile.data.resume.aboutMe}
           />
         </Box>
-        {/* inicio de 2do Box */}
+        {/* inicio de 2do Box 
         <Box
           width={{ base: "100%", md: "55%" }}
           bg="#F5F5F5"
@@ -197,8 +258,8 @@ function PerfilEgresado() {
           position="relative"
         >
           <ExperienciaLaboralCard
-            cardContent={cardContent}
-            setCardContent={setCardContent}
+           cardData={dataProfile && dataProfile.data.resume.workExperiences}
+           setCardData={ setCardData }
           />
 
           <EducacionCard
@@ -215,15 +276,13 @@ function PerfilEgresado() {
           >
             Habilidades
           </Text>
-          <HabilidadesCard
-            cardContentHabilidades={cardContentHabilidades}
-            setCardContentHabilidades={setCardContentHabilidades}
-            tipoHabilidad="Técnicas"
+          <HabilidadesTecnicasCard
+          cardData={dataProfile && dataProfile.data.resume.technicalSkills}
+          setCardData={ setCardData }
           />
-          <HabilidadesCard
-            cardContentHabilidades={cardContentHabilidadesBlandas}
-            setCardContentHabilidades={setCardContentHabilidadesBlandas}
-            tipoHabilidad="Blandas"
+          <HabilidadesBlandasCard
+          cardData={dataProfile && dataProfile.data.resume.softSkills}
+          setCardData={ setCardData }
           />
 
           <IdiomasCard
@@ -270,7 +329,7 @@ function PerfilEgresado() {
       </>)}</>)}
 
       <Footer />
-    </Box>
+    </Box> */
   );
 }
 
