@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon} from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
-import CustomSwitch from "./Switch";
 import { AddCiapCourse, editCiapCourse, getCiapCourseItem, getCiapCourses } from "../../services/auth/MeProfile.services";
 
 const CertificadosCard = ({cardData, setCardData}) => {
