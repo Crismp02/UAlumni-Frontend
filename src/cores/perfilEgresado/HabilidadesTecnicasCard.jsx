@@ -31,11 +31,31 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
 
- useEffect(() => {
-  setNewCardData(cardData);
-  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.languageName);
-  setCheckedItems(checkedItems);
-}, [cardData]);
+  useEffect(() => {
+    setNewCardData(cardData);
+    
+    // Inicializa checkedItems con los nombres de las habilidades que son visibles
+    const initialCheckedItems = cardData.filter(item => item.isVisible).map(item => item.skillName);
+    setCheckedItems(initialCheckedItems);
+  
+    // Agrupa las habilidades por categoría
+    const groups = cardData.reduce((acc, skill) => {
+      const { skillCategoryName } = skill;
+      if (!acc[skillCategoryName]) {
+        acc[skillCategoryName] = [];
+      }
+      acc[skillCategoryName].push(skill);
+      return acc;
+    }, {});
+  
+    // Inicializa checkedCategories con los nombres de las categorías que tienen todas sus habilidades visibles
+    const initialCheckedCategories = Object.keys(groups).filter(category => 
+      groups[category].every(skill => skill.isVisible)
+    );
+    setCheckedCategories(initialCheckedCategories);
+  
+    setGroupedSkills(groups);
+  }, [cardData]);
 
   const [groupedSkills, setGroupedSkills] = useState({});
 

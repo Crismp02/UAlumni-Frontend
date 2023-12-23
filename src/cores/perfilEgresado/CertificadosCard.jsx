@@ -25,10 +25,12 @@ const CertificadosCard = ({cardData, setCardData}) => {
   const [checkedItems, setCheckedItems] = useState([]);
 
   useEffect(() => {
-   setNewCardData(cardData);
-   const checkedItems = cardData.filter(item => item.isVisible).map(item => item.title);
-   setCheckedItems(checkedItems);
- }, [cardData]);
+    setNewCardData(cardData);
+    
+    // Inicializa checkedItems con los títulos de los cursos que son visibles
+    const initialCheckedItems = cardData.filter(item => item.isVisible).map(item => item.id);
+    setCheckedItems(initialCheckedItems);
+  }, [cardData]);
  
   const [courses, setCourses] = useState([]);
   useEffect(() => {
