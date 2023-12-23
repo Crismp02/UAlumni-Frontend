@@ -9,7 +9,6 @@ import {
   useDisclosure,
   IconButton,
   Checkbox,
-  Box
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
@@ -21,7 +20,7 @@ import FiltrosButtons from "./FiltrosButtons";
 import { useEgresados } from './EgresadosContext';
 
 
-function FiltrosEgresados() {
+function FiltrosEgresadosMenu() {
   const [isHovering, setIsHovering] = useState(false);
   const [, setIsLoading] = useState(false);
   const {  setEgresados } = useEgresados();
@@ -280,11 +279,30 @@ function FiltrosEgresados() {
 
   return (
     <>
-      
-      <Box
-      marginLeft="50px"
-      
+      <Button
+        backgroundColor="#37B4E3"
+        _hover={{ bg: "#247390" }}
+        onClick={onOpen}
+        style={{
+          borderRadius: "30px",
+          marginLeft: "10px",
+          width: "40px",
+          height: "40px",
+        }}
+        marginBottom="5px"
       >
+        <HamburgerIcon color="white" />
+      </Button>
+      <Drawer placement={placement} onClose={onClose} isOpen={isOpen} size="md">
+        <DrawerOverlay />
+        <DrawerContent paddingLeft="5px" paddingRight="5px">
+          <DrawerHeader borderBottomWidth="1px">
+            Filtros
+            <IconButton icon={<CloseIcon />} onClick={onClose} float="right" />
+          </DrawerHeader>
+
+          <DrawerBody>
+            {/*Busqueda por nombre*/}
             <FiltrarNombre
               valueName={valueName}
               handleChangeName={handleChangeName}
@@ -340,9 +358,13 @@ function FiltrosEgresados() {
               setIsHovering={setIsHovering}
               onClose={onClose}
             />
-   </Box>         
+
+            
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
 
-export default FiltrosEgresados;
+export default FiltrosEgresadosMenu;
