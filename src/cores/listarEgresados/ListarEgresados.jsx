@@ -13,6 +13,7 @@ function ListarEgresados() {
 
   // const [technicalSkills, setTechnicalSkills] = useState([]);
   const [isLargerThan770] = useMediaQuery("(min-width: 770px)");
+  const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
 
   
 
@@ -22,7 +23,7 @@ function ListarEgresados() {
       
       <Center>
         <Box
-          w={["80%"]}
+          w={isSmallerThan800 ? "95%" : ["80%", "80%", "80%", "80%", "80%", "80%"]}
           h={["50rem", "50rem"]}
           backgroundColor="#F5F5F5"
           marginBottom="10px"

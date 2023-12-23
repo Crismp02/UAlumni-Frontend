@@ -52,7 +52,7 @@ function FiltrosOfertas() {
 
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
-  const [list, setList] = useState([]);
+  const [list, setList] = useState([]); 
 
   const habilidades = {
     frontend: ["React", "Vue", "Angular"],

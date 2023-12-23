@@ -29,8 +29,8 @@ const EgresadoCard2 = ({ egresado }) =>{
 
   return (
     <div>
-            <Box
-        w={["250px", "350px", "540px", "790px", "1000px", "1100px"]}
+        <Box
+        w={["80%", "80%", "80%", "80%", "80%", "80%"]}
         m="auto"
         p={5}
         shadow="md"
