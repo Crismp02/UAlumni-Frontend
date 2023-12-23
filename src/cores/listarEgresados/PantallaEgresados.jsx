@@ -1,9 +1,36 @@
-import FiltrosEgresadosMenu from './FiltrosEgresadosMenu';
-import ListarEgresados from './ListarEgresados';
-import FiltrosEgresados from './FiltrosEgresados';
+import FiltrosEgresadosMenu from "./FiltrosEgresadosMenu";
+import ListarEgresados from "./ListarEgresados";
+import FiltrosEgresados from "./FiltrosEgresados";
 import { Box, useMediaQuery, Text, Flex } from "@chakra-ui/react";
+import { useEgresados } from "./EgresadosContext";
+import { useEffect } from "react";
 
 const PantallaEgresados = () => {
+  const {
+    egresados,
+    currentPage,
+    totalPages,
+    fetchPaginatedData,
+    setCurrentPage,
+    isLoading,
+  } = useEgresados();
+
+  useEffect(() => {
+    fetchPaginatedData(currentPage);
+  }, [fetchPaginatedData, currentPage]);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
 
   return (
@@ -39,6 +66,22 @@ const PantallaEgresados = () => {
         ) : (
           <Box flex="2">
             <ListarEgresados />
+            {/* Controles de paginación */}
+            <div>
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1 || isLoading}
+              >
+                Anterior
+              </button>
+              <span>{`Página ${currentPage} de ${totalPages}`}</span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages || isLoading}
+              >
+                Siguiente
+              </button>
+            </div>
           </Box>
         )}
       </Flex>
