@@ -36,14 +36,22 @@ function PerfilEgresado() {
       setDataProfile(result);
       setIsLoading(false);
     }
-
+  
     fetchData();
   }, []);
-
+  
+  useEffect(() => {
+    if (dataProfile) {
+      //console.log(dataProfile.data.resume);
+      // Inicializa el valor del switch con el valor de visibilidad obtenido desde el backend
+      setSwitchValue(dataProfile.data.resume.isVisible);
+    }
+  }, [dataProfile]);
+  
   const handleSwitchChange = async (e) => {
     const isVisible = e.target.checked;
     setSwitchValue(isVisible);
-
+  
     await editVisibility(isVisible);
   };
   const [switchValue, setSwitchValue] = useState(false);
