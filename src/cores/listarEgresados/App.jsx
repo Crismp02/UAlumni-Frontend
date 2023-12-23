@@ -1,14 +1,14 @@
 import { EgresadosProvider } from './EgresadosContext';
-import FiltrosEgresados from './FiltrosEgresados';
-import ListarEgresados from './ListarEgresados';
 import NavBar from '../../components/Navbar';
+import PantallaEgresados from './PantallaEgresados';
+import TituloListarEgresados from './TituloListarEgresados';
 
 const App = () => {
   return (
     <EgresadosProvider>
       <NavBar />
-      <FiltrosEgresados />
-      <ListarEgresados />
+      <TituloListarEgresados/>
+      <PantallaEgresados/>
     </EgresadosProvider>
   );
 };

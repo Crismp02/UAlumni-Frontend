@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import {
   Button,
   Drawer,
@@ -7,30 +7,18 @@ import {
   DrawerOverlay,
   DrawerContent,
   useDisclosure,
-  Input,
   Text,
-  List,
-  ListItem,
-  Box,
   Select,
-  Tag,
-  TagLabel,
-  Stack,
-  Flex,
   IconButton,
-  useMediaQuery,
-  Tooltip,
   Checkbox,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { useLocation } from "react-router-dom";
 import FiltrarNombre from "./FiltrarNombre";
 import FiltrarSkills from "./FiltrarSkills";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrosButtons from "./FiltrosButtons";
 
 function FiltrosOfertas() {
-  const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
   const [isHovering, setIsHovering] = useState(false);
 
 
@@ -54,11 +42,39 @@ function FiltrosOfertas() {
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
 
-  const habilidades = {
-    frontend: ["React", "Vue", "Angular"],
-    backend: ["Node.js", "Python", "Ruby"],
-    diseño: ["Photoshop", "Illustrator", "Figma"],
-  };
+  // Objeto inicial de habilidades
+  const [habilidades, setHabilidades] = useState({});
+
+  // Objeto inicial de categorias
+  const [categorias, setCategorias] = useState([]);
+
+
+  useEffect(() => {
+
+    async function fetchCategorias() {
+
+      try {
+
+        const response = await fetch("http://localhost:3000/skill-category");
+
+        if (!response.ok) {
+          throw new Error("Error al obtener los egresados");
+        }
+
+        const data = await response.json();
+
+        if (Array.isArray(data.data.items)) {
+          const categoriasObtenidas = data.data.items.map((item) => item.name);
+          setCategorias(categoriasObtenidas);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchCategorias();
+  }, []);
+
   const handleHabilidadChange = (e) => {
     setHabilidad(e.target.value);
     if (
@@ -90,8 +106,10 @@ function FiltrosOfertas() {
   const [listPos, setListPos] = useState([]);
   const handleChangePos = (event) => setValuePos(event.target.value);
   const handleAddPos = () => {
+    if(valuePos.trim() !== ""){
     setListPos((oldList) => [...oldList, valuePos]);
     setValuePos("");
+    }
   };
   const handleRemovePos = (indexToRemove) => {
     setListPos((oldList) =>
@@ -110,9 +128,9 @@ function FiltrosOfertas() {
   {
     /*Botones de búsqueda y reset*/
   }
-  const [exactMatch, setExactMatch] = useState(false);
+  // const [exactMatch, setExactMatch] = useState(false);
 
-  const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
+  // const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
 
   const isDisabled =
     !valueName &&
@@ -120,16 +138,27 @@ function FiltrosOfertas() {
     listPos.length === 0 &&
     !selectedOption;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isDisabled) {
       return;
     }
 
+  const selectedSkills = list.map(
+    (item) => `${item.categoria}:${item.habilidad}`
+  );
+
+  const selectedCategories = list.map((item) => item.categoria);
+  const selectedPositions = listPos.length >0 ? listPos: [];
+
+const filters = {
+    name: valueName ? valueName : undefined,
+    
+  }
     const data = {
       name: valueName,
       skills: list,
       positionsOfInterest: listPos,
-      exactMatch,
+      // exactMatch,
       category: selectedOption,
 
     };
@@ -187,6 +216,7 @@ function FiltrosOfertas() {
               handleAddCategoria={handleAddCategoria}
               handleHabilidadChange={handleHabilidadChange}
               handleRemoveHabilidad={handleRemoveHabilidad}
+                categorias={categorias}
             />
 
             {/*Busqueda por posiciones de interes*/}
@@ -217,9 +247,7 @@ function FiltrosOfertas() {
             <Checkbox
               marginBottom="10px"
               marginTop="30px"
-              isChecked={exactMatch}
               as="b"
-              onChange={handleCheckboxChange}
             >
               Filtrar por coincidencia exacta
             </Checkbox>

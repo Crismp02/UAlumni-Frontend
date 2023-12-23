@@ -27,7 +27,7 @@ function FiltrarNombre({ valueName, handleChangeName }){
                   onChange={handleChangeName}
                   placeholder="Buscar egresado por nombre"
                   size="sm"
-                  fontSize="10px"
+                  // fontSize="10px"
                   marginBottom="30px"
                 />
               </div>

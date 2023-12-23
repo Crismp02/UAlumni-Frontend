@@ -51,7 +51,7 @@ function FiltrosEgresados() {
   const handleChangeName = (event) => setValueName(event.target.value);
 
   {
-    /*Busqueda por habilidades*/
+    /*Busqueda por habilidades categoria*/
   }
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
@@ -60,6 +60,7 @@ function FiltrosEgresados() {
   // Objeto inicial de habilidades
   const [habilidades, setHabilidades] = useState({});
 
+  // Objeto inicial de categorias
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
@@ -157,7 +158,6 @@ function FiltrosEgresados() {
       setSelectedTags((prev) => ({ ...prev, [label]: !prev[label] }));
     }
   };
-
 
 
   {

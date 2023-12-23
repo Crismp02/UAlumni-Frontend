@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Text,
   Button,
@@ -9,20 +9,27 @@ import {
   Tooltip,
   useMediaQuery,
 } from "@chakra-ui/react";
+import PropTypes from 'prop-types';
 
 function FiltrarSkills({
   categoria,
   setCategoria,
+  setHabilidades,
   habilidad,
   habilidades,
   list,
   handleAddCategoria,
   handleHabilidadChange,
   handleRemoveHabilidad,
+  categorias,
 }) {
   const [isHovering, setIsHovering] = useState(false);
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
+  const [, setCargandoHabilidades] = useState(false);
+
+
   return (
+
     <div>
       <Text marginBottom="10px">Habilidades:</Text>
       <Box display="flex" flexDirection="row" alignItems="center">
@@ -33,9 +40,11 @@ function FiltrarSkills({
               value={categoria}
               onChange={(e) => setCategoria(e.target.value)}
             >
-              <option value="frontend">Frontend</option>
-              <option value="backend">Backend</option>
-              <option value="diseño">Diseño</option>
+                {categorias.map((cat, index) => (
+                <option key={index} value={cat}>
+                  {cat}
+                </option>
+              ))}
             </Select>
             <Tooltip label="Filtrar por categoría completa" isOpen={isHovering}>
               <Button
@@ -178,3 +187,17 @@ function FiltrarSkills({
   );
 }
 export default FiltrarSkills;
+
+FiltrarSkills.propTypes = {
+  categoria: PropTypes.string.isRequired,
+  setCategoria: PropTypes.func.isRequired,
+  setCategorias: PropTypes.func.isRequired,
+  setHabilidades: PropTypes.func.isRequired,
+  habilidad: PropTypes.string.isRequired,
+  habilidades: PropTypes.object.isRequired,
+  list: PropTypes.array.isRequired,
+  handleAddCategoria: PropTypes.func.isRequired,
+  handleHabilidadChange: PropTypes.func.isRequired,
+  handleRemoveHabilidad: PropTypes.func.isRequired,
+  categorias: PropTypes.array.isRequired,
+};
