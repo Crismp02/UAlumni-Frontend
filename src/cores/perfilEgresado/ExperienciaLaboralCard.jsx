@@ -13,13 +13,12 @@ import {
   Textarea,
   Box,
   Flex,
-  IconButton,
   Card,
   CardBody,
   Divider,
+  Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
-import { AddIcon, EditIcon, DeleteIcon, CalendarIcon } from "@chakra-ui/icons";
-import CustomSwitch from "./Switch";
+import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
 import {
   AddWorkExperience,
@@ -30,12 +29,13 @@ import {
 
 const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
+  const [checkedItems, setCheckedItems] = useState([]);
 
-  const [switchValue, setSwitchValue] = useState(false);
-
-  const handleSwitchChange = () => {
-    setSwitchValue(!switchValue);
-  };
+  useEffect(() => {
+   setNewCardData(cardData);
+   const checkedItems = cardData.filter(item => item.isVisible).map(item => item.number);
+   setCheckedItems(checkedItems);
+ }, [cardData]);
 
   const toast = useToast();
 
@@ -56,6 +56,48 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   const [editingCard, setEditingCard] = useState(null);
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
+  
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.number));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await editWorkExperience(item.number, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await editWorkExperience(item.number, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
+
+  const handleCheck = async (e, item) => {
+    const isChecked = e.target.checked;
+    const updatedItem = { ...item, isVisible: isChecked };
+  
+    if (isChecked) {
+      setCheckedItems(prevItems => [...prevItems, item.number]);
+    } else {
+      setCheckedItems(prevItems => prevItems.filter(number => number !== item.number));
+    }
+  
+    try {
+      // Update the isVisible property in the backend
+      await editWorkExperience(item.number, updatedItem);
+      // Update the isVisible property in the local state
+      setNewCardData(prevData => prevData.map(card => card.number === item.number ? updatedItem : card));
+    } catch (error) {
+      // Handle error
+      console.error('Error updating item:', error);
+    }
+  };
+
 
   const handleAddWorkExperience = async () => {
     // Validar que los campos no estén vacíos
@@ -89,7 +131,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       description: additionalFields.description,
       startDate: additionalFields.startDate,
       endDate: additionalFields.endDate,
-      isVisible: true,
+      isVisible: false,
     };
 
     // Verificar si la tarjeta ya existe
@@ -343,6 +385,8 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     <Card>
       <CardBody p="10px">
       <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+      <Flex alignItems="left">
+          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
       <Text
         fontWeight="bold"
         fontSize="md"
@@ -354,6 +398,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       >
         Experiencia Laboral
       </Text>
+      </Flex>
       <AddIcon
             onClick={() => handleAddClick("Experiencia Laboral")}
             cursor="pointer"
@@ -378,6 +423,8 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
             dateE.getMonth() + 1
           }/${dateE.getFullYear()}`;
           return (
+            <Flex key={index} alignItems="center" marginTop="3">
+            <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.number)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
             <Box
               key={index}
               border="2px solid #007935"
@@ -386,6 +433,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
               borderBottom="none"
               marginTop="3"
               paddingLeft="2"
+              width="100%"
             >
               <Box>
               <Flex justifyContent="space-between" alignItems="center">
@@ -423,6 +471,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                 </Box> 
 
             </Box>
+            </Flex>
           );
         })
       ) : (

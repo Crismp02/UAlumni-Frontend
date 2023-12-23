@@ -11,17 +11,25 @@ import {
   Box,
   Flex,
   Select,
-  Card, CardBody, Divider
+  Card, CardBody, Divider,
+  Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon} from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
 import CustomSwitch from "./Switch";
-import { AddCiapCourse, getCiapCourseItem, getCiapCourses } from "../../services/auth/MeProfile.services";
+import { AddCiapCourse, editCiapCourse, getCiapCourseItem, getCiapCourses } from "../../services/auth/MeProfile.services";
 
 const CertificadosCard = ({cardData, setCardData}) => {
 
   const [newCardData, setNewCardData] = useState(cardData);
+  const [checkedItems, setCheckedItems] = useState([]);
 
+  useEffect(() => {
+   setNewCardData(cardData);
+   const checkedItems = cardData.filter(item => item.isVisible).map(item => item.title);
+   setCheckedItems(checkedItems);
+ }, [cardData]);
+ 
   const [courses, setCourses] = useState([]);
   useEffect(() => {
     getCiapCourses().then(data => {
@@ -31,14 +39,9 @@ const CertificadosCard = ({cardData, setCardData}) => {
     });
   }, []);
 
-  const [switchValue, setSwitchValue] = useState(false);
-
-  const handleSwitchChange = () => {
-    setSwitchValue(!switchValue);
-  };
+ 
 
   const [showAddButton, setShowAddButton] = useState(false);
-  const [showEditButton, setShowEditButton] = useState(true);
 
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -46,6 +49,47 @@ const CertificadosCard = ({cardData, setCardData}) => {
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
   const toast = useToast();
+
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.id));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await editCiapCourse(item.id, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await editCiapCourse(item.id, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
+
+const handleCheck = async (e, item) => {
+  const isChecked = e.target.checked;
+  const updatedItem = { ...item, isVisible: isChecked };
+
+  if (isChecked) {
+    setCheckedItems([...checkedItems, item.id]);
+  } else {
+    setCheckedItems(checkedItems.filter((id) => id !== item.id));
+  }
+
+  try {
+    // Update the isVisible property in the backend
+    await editCiapCourse(item.id, updatedItem);
+    // Update the isVisible property in the local state
+    setNewCardData(prevData => prevData.map(card => card.id === item.id ? updatedItem : card));
+  } catch (error) {
+    // Handle error
+    console.error('Error updating item:', error);
+  }
+};
 
   const handleAddCourse = async () => {
     // Validar que los campos no estén vacíos
@@ -123,6 +167,8 @@ const CertificadosCard = ({cardData, setCardData}) => {
     <Card marginTop="20px">
         <CardBody p="10px">
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+        <Flex alignItems="left">
+          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
           <Text
             fontWeight="bold"
             fontSize="md"
@@ -134,6 +180,7 @@ const CertificadosCard = ({cardData, setCardData}) => {
           >
             Certificados CIAP
           </Text>
+          </Flex>
           <AddIcon
     onClick={() => handleAddClick("Certificados")}
     cursor="pointer"
@@ -153,6 +200,8 @@ const CertificadosCard = ({cardData, setCardData}) => {
                   date.getMonth() + 1
                 }/${date.getFullYear()}`;
                 return (
+                  <Flex key={index} alignItems="center" marginTop="3">
+              <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.id)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
                   <Box
                     key={index}
                     border="2px solid #007935"
@@ -161,10 +210,12 @@ const CertificadosCard = ({cardData, setCardData}) => {
                     borderBottom="none"
                     marginTop="3"
                     paddingLeft="2"
+                    width="100%"
                   >
                     <Text fontWeight="bold">{item.name}</Text>
                     <Text>{formattedDate}</Text>
                   </Box>
+                  </Flex>
                 );
               })
             : (<Box

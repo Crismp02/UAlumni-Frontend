@@ -16,15 +16,23 @@ import {
     Divider,
     Flex,
     Tag,
-    TagCloseButton
+    TagCloseButton,
+    Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
-import { AddSoftSkill, deleteSoftSkill, getSoftSkills } from "../../services/auth/MeProfile.services";
+import { AddSoftSkill, deleteSoftSkill, editSoftSkill, getSoftSkills } from "../../services/auth/MeProfile.services";
 
 const HabilidadesBlandasCard = ({cardData, setCardData}) => {
 
     const toast = useToast();
     const [newCardData, setNewCardData] = useState(cardData);
+    const [checkedItems, setCheckedItems] = useState([]);
+
+    useEffect(() => {
+     setNewCardData(cardData);
+     const checkedItems = cardData.filter(item => item.isVisible).map(item => item.industryName);
+     setCheckedItems(checkedItems);
+   }, [cardData]);
 
     const [softSkills, setSoftSkills] = useState([]);
     useEffect(() => {
@@ -52,6 +60,26 @@ const HabilidadesBlandasCard = ({cardData, setCardData}) => {
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
+
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.skillName));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await editSoftSkill(item.skillName, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await editSoftSkill(item.skillName, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
 
   const handleAddSkill = async () => {
     // Validar que los campos no estén vacíos
@@ -212,6 +240,8 @@ const HabilidadesBlandasCard = ({cardData, setCardData}) => {
             alignItems="center"
             justifyContent="space-between"
           >
+            <Flex alignItems="left">
+          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
             <Text
               fontWeight="bold"
               fontSize="md"
@@ -223,6 +253,7 @@ const HabilidadesBlandasCard = ({cardData, setCardData}) => {
             >
               Habilidades Blandas
             </Text>
+            </Flex>
             <EditIcon
             cursor="pointer"
             position="absolute"

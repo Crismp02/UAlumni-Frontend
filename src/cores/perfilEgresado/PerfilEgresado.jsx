@@ -12,7 +12,7 @@ import SobremiCard from "./SobreMiCard";
 import { Box, Text, Flex, VStack, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import CustomSwitch from "./Switch";
-import { getMeProfile } from "../../services/auth/MeProfile.services";
+import { editVisibility, getMeProfile } from "../../services/auth/MeProfile.services";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import HabilidadesBlandasCard from "./HabilidadesBlandasCard";
 import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
@@ -40,11 +40,14 @@ function PerfilEgresado() {
     fetchData();
   }, []);
 
+  const handleSwitchChange = async (e) => {
+    const isVisible = e.target.checked;
+    setSwitchValue(isVisible);
+
+    await editVisibility(isVisible);
+  };
   const [switchValue, setSwitchValue] = useState(false);
 
-  const handleSwitchChange = () => {
-    setSwitchValue(!switchValue);
-  };
 
   return (
     <Box

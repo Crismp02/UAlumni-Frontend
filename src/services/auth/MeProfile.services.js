@@ -17,6 +17,28 @@ export const getMeProfile = async () => {
         toast.error(`Error: ${error.message}`);
     }
     };
+    export const editVisibility = async (newData) => {
+        try {
+            const response = await fetch(`${BASE_URL}/alumni/me/resume`, {
+              method: 'PATCH',
+              credentials: "include",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                isVisible: newData,
+              }),
+            });
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+          } catch (error) {
+            toast.error(`Error: ${error.message}`);
+          }
+        };
 
     export const editContactInfo = async (newData) => {
         try {
@@ -560,7 +582,30 @@ export const editCiapCourse = async (id, newData) => {
         toast.error(`Error: ${error.message[1]}`);
       }
     }
-
+    export const editSoftSkill = async (skillName, newData) => {
+      try {
+          const response = await fetch(`${BASE_URL}/alumni/me/resume/soft-skill/${skillName}`, {
+            method: 'PATCH',
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              skillName: newData.skillName,
+              isVisible: newData.isVisible,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.log(error);
+          toast.error(`Error: ${error.message[1]}`);
+        }
+      }
+      
     export const deleteSoftSkill = async (skillName) => {
       try {
         const response = await fetch(`${BASE_URL}/alumni/me/resume/soft-skill/${skillName}`, {
@@ -637,6 +682,31 @@ export const editCiapCourse = async (id, newData) => {
         toast.error(`Error: ${error.message[1]}`);
       }
     }
+
+    export const editTechnicalSkill = async (skillCategory, skillName, newData) => {
+      try {
+          const response = await fetch(`${BASE_URL}/alumni/me/resume/skill-category/${skillCategory}/technical-skill/${skillName}`, {
+            method: 'PATCH',
+            credentials: "include",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              skillCategoryName: newData.skillCategoryName,
+              skillName: newData.skillName,
+              isVisible: newData.isVisible,
+            }),
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          return data;
+        } catch (error) {
+          console.log(error);
+          toast.error(`Error: ${error.message[1]}`);
+        }
+      }
 
     export const deleteTechnicalSkill = async (skillCategory, skillName) => {
       try {

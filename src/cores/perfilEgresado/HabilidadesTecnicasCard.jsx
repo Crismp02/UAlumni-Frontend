@@ -14,12 +14,14 @@ import {
   Card,
   CardBody,
   Divider,
-  Flex
+  Flex,
+  Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
 import {
   AddTechnicalSkill,
   deleteTechnicalSkill,
+  editTechnicalSkill,
   getSkillCategory,
   getTechnicalSkills,
 } from "../../services/auth/MeProfile.services";
@@ -27,6 +29,13 @@ import {
 const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   const toast = useToast();
   const [newCardData, setNewCardData] = useState(cardData);
+  const [checkedItems, setCheckedItems] = useState([]);
+
+ useEffect(() => {
+  setNewCardData(cardData);
+  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.languageName);
+  setCheckedItems(checkedItems);
+}, [cardData]);
 
   const [groupedSkills, setGroupedSkills] = useState({});
 
@@ -89,6 +98,52 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
+
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.skillName));
+      // Marca todas las categorías
+      setCheckedCategories(Object.keys(groupedSkills));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await editTechnicalSkill(item.skillCategoryName, item.skillName, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      setCheckedCategories([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await editTechnicalSkill(item.skillCategoryName, item.skillName, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
+
+  const [checkedCategories, setCheckedCategories] = useState([]);
+
+  const handleCategoryCheck = async (e, category) => {
+  const isChecked = e.target.checked;
+
+  // Actualiza checkedCategories
+  if (isChecked) {
+    setCheckedCategories(prev => [...prev, category]);
+  } else {
+    setCheckedCategories(prev => prev.filter(c => c !== category));
+  }
+  const updatedSkills = newCardData.filter(skill => skill.skillCategoryName === category).map(skill => ({ ...skill, isVisible: isChecked }));
+    for (const skill of updatedSkills) {
+      await editTechnicalSkill(category, skill.skillName, skill);
+    }
+  
+    setGroupedSkills(prevSkills => {
+      const updatedGroupedSkills = { ...prevSkills };
+      updatedGroupedSkills[category] = updatedSkills;
+      return updatedGroupedSkills;
+    });
+  };
 
   const handleAddSkill = async () => {
     // Validar que los campos no estén vacíos
@@ -303,6 +358,8 @@ setGroupedSkills(prevGroupedSkills => {
             alignItems="center"
             justifyContent="space-between"
           >
+            <Flex alignItems="left">
+          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
             <Text
               fontWeight="bold"
               fontSize="md"
@@ -314,6 +371,7 @@ setGroupedSkills(prevGroupedSkills => {
             >
               Habilidades Técnicas
             </Text>
+            </Flex>
             <AddIcon
               onClick={() => handleAddClick("Técnicas")}
               cursor="pointer"
@@ -334,9 +392,12 @@ setGroupedSkills(prevGroupedSkills => {
     borderBottom="none"
     marginTop="3"
     paddingLeft="2">
-      <Text fontWeight="bold" fontSize="sm" marginBottom="3">
-        {category}
-      </Text>
+      <Flex alignItems="center">
+        <Checkbox colorScheme="green" isChecked={checkedCategories.includes(category)} onChange={(e) => handleCategoryCheck(e, category)} marginRight="5px"/>
+        <Text fontWeight="bold" fontSize="sm" marginBottom="3">
+          {category}
+        </Text>
+      </Flex>
       <Box
         display="flex"
         flexDirection="row"
@@ -371,26 +432,26 @@ setGroupedSkills(prevGroupedSkills => {
             </Box>
           ))
         ) : (
-                    <Box
-                      bg="white"
-                      padding="4"
-                      border="1px solid #ccc"
-                      borderRadius="8px"
-                      marginLeft="10"
-                      marginRight="10"
-                      marginTop="5"
-                      marginBottom="5"
-                      boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-                    >
-                      <Text color="grey">
-                        En esta sección, puedes añadir tus habilidades técnicas
-                      </Text>
-                    </Box>
-                  )}
-                </Box>
-              </Box>
-            ))}
+          <Box
+            bg="white"
+            padding="4"
+            border="1px solid #ccc"
+            borderRadius="8px"
+            marginLeft="10"
+            marginRight="10"
+            marginTop="5"
+            marginBottom="5"
+            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+          >
+            <Text color="grey">
+              En esta sección, puedes añadir tus habilidades técnicas
+            </Text>
           </Box>
+        )}
+      </Box>
+    </Box>
+  ))}
+</Box>
         </CardBody>
       </Card>
 

@@ -14,6 +14,7 @@ import {
   Card,
   CardBody,
   Divider,
+  Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -29,6 +30,14 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   const toast = useToast();
 
   const [newCardData, setNewCardData] = useState(cardData);
+  const [checkedItems, setCheckedItems] = useState([]);
+
+ useEffect(() => {
+  setNewCardData(cardData);
+  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.languageName);
+  setCheckedItems(checkedItems);
+}, [cardData]);
+
 
   // Define idiomas como un estado
   const [idiomas, setIdiomas] = useState([]);
@@ -61,6 +70,47 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   const [editingCard, setEditingCard] = useState(null);
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
+
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.languageName));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await editLanguage(item.languageName, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await editLanguage(item.languageName, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
+
+  const handleCheck = async (e, item) => {
+    const isChecked = e.target.checked;
+    const updatedItem = { ...item, isVisible: isChecked };
+  
+    if (isChecked) {
+      setCheckedItems(prevItems => [...prevItems, item.languageName]);
+    } else {
+      setCheckedItems(prevItems => prevItems.filter(languageName => languageName !== item.languageName));
+    }
+  
+    try {
+      // Update the isVisible property in the backend
+      await editLanguage(item.languageName, updatedItem);
+      // Update the isVisible property in the local state
+      setNewCardData(prevData => prevData.map(card => card.languageName === item.languageName ? updatedItem : card));
+    } catch (error) {
+      // Handle error
+      console.error('Error updating item:', error);
+    }
+  };
 
   const handleAddLanguage = async () => {
     // Validar que los campos no estén vacíos
@@ -317,7 +367,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-          >
+          ><Flex alignItems="left">
+          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
             <Text
               fontWeight="bold"
               fontSize="md"
@@ -329,6 +380,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
             >
               Idiomas
             </Text>
+            </Flex>
             <AddIcon
               onClick={() => handleAddClick("Idiomas")}
               cursor="pointer"
@@ -343,6 +395,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
           <Divider orientation="horizontal" />
           {Array.isArray(newCardData) && newCardData.length > 0 ? (
             newCardData.map((item, index) => (
+              <Flex key={index} alignItems="center" marginTop="3">
+              <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.languageName)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
               <Box
                 key={index}
                 border="2px solid #007935"
@@ -354,6 +408,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                 display="flex"
                 flexDirection="row"
                 justifyContent="space-between"
+                width="100%"
               >
                 <Box display="flex" flexDirection="row">
                   <Text marginRight="10px">{item.languageName}</Text>
@@ -392,6 +447,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                   </Flex>
                 </Box>
               </Box>
+              </Flex>
             ))
           ) : (
             <Box

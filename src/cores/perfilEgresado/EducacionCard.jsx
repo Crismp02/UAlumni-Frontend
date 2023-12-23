@@ -12,14 +12,14 @@ import {
   Input,
   Box,
   Flex,
-  IconButton,
   Card,
   CardBody,
   Divider,
+  Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
-import CustomSwitch from "./Switch";
+
 import {
   AddHigherEducationStudy,
   DeleteHigherEducationStudy,
@@ -29,12 +29,13 @@ import {
 
 const EducacionCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
+  const [checkedItems, setCheckedItems] = useState([]);
 
-  const [switchValue, setSwitchValue] = useState(false);
-
-  const handleSwitchChange = () => {
-    setSwitchValue(!switchValue);
-  };
+ useEffect(() => {
+  setNewCardData(cardData);
+  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.title);
+  setCheckedItems(checkedItems);
+}, [cardData]);
 
   const toast = useToast();
 
@@ -55,6 +56,47 @@ const EducacionCard = ({ cardData, setCardData }) => {
   const [editingCard, setEditingCard] = useState(null);
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
+  
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.title));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await EditHigherEducationStudy(item.title, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await EditHigherEducationStudy(item.title, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
+
+const handleCheck = async (e, item) => {
+  const isChecked = e.target.checked;
+  const updatedItem = { ...item, isVisible: isChecked };
+
+  if (isChecked) {
+    setCheckedItems([...checkedItems, item.title]);
+  } else {
+    setCheckedItems(checkedItems.filter((title) => title !== item.title));
+  }
+
+  try {
+    // Update the isVisible property in the backend
+    await EditHigherEducationStudy(item.title, updatedItem);
+    // Update the isVisible property in the local state
+    setNewCardData(prevData => prevData.map(card => card.title === item.title ? updatedItem : card));
+  } catch (error) {
+    // Handle error
+    console.error('Error updating item:', error);
+  }
+};
 
   const handleAddEducation = async () => {
     // Validar que los campos no estén vacíos
@@ -321,6 +363,8 @@ const EducacionCard = ({ cardData, setCardData }) => {
     <Card marginTop="20px">
         <CardBody p="10px">
           <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+          <Flex alignItems="left">
+    <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
           <Text
             fontWeight="bold"
             fontSize="md"
@@ -332,6 +376,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
           >
             Estudios Realizados
           </Text>
+          </Flex>
           <AddIcon
             onClick={() => handleAddClick("Educación")}
             cursor="pointer"
@@ -347,7 +392,9 @@ const EducacionCard = ({ cardData, setCardData }) => {
 
           {Array.isArray(newCardData) && newCardData.length > 0 ? (
         newCardData.map((item, index) => (
-          <Box
+          <Flex key={index} alignItems="center" marginTop="3">
+        <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.title)} onChange={(e) => handleCheck(e, item)} marginRight="5px"/>
+        <Box
             key={index}
              border="2px solid #007935"
               borderTop="none"
@@ -355,6 +402,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
               borderBottom="none"
               marginTop="3"
               paddingLeft="2"
+              width="100%"
           >
             <Box>
             <Flex justifyContent="space-between" alignItems="center">
@@ -387,6 +435,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         </Flex>
             </Box>
           </Box>
+          </Flex>
         ))
       ) : (
         <Box
