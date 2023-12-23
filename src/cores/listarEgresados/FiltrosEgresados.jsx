@@ -11,6 +11,7 @@ import {
   Checkbox,
   Box
 } from "@chakra-ui/react";
+import { useLocation } from 'react-router-dom';
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
 import FiltrarNombre from "./FiltrarNombre";
@@ -22,9 +23,14 @@ import { useEgresados } from './EgresadosContext';
 
 
 function FiltrosEgresados() {
+  const {
+    fetchPaginatedData,
+    setEgresados,
+    setCurrentPage,
+    isLoading,
+  } = useEgresados();
   const [isHovering, setIsHovering] = useState(false);
   const [, setIsLoading] = useState(false);
-  const {  setEgresados } = useEgresados();
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -230,6 +236,7 @@ function FiltrosEgresados() {
       }
       const data = await response.json();
       setEgresados(data.data.items);
+      setCurrentPage(1); // Reinicia la página a la primera al hacer una nueva búsqueda
       console.log("Datos obtenidos:", data);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);

@@ -8,48 +8,42 @@ export const EgresadosProvider = ({ children }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const itemsPerPage = 5; // Cantidad de egresados por página
-  const totalItems = 25; // Total de egresados
-
-  useEffect(() => {
-    const totalPageCount = Math.ceil(totalItems / itemsPerPage);
-    setTotalPages(totalPageCount);
-    fetchPaginatedData(currentPage);
-  }, [currentPage, totalItems]);
 
   const fetchPaginatedData = async (page) => {
     setIsLoading(true);
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
 
-    // Simulación de datos ficticios
-    const mockEgresados = Array.from({ length: totalItems }, (_, index) => ({
-      email: `egresado${index + 1}@example.com`,
-      names: `Nombre${index + 1}`,
-      surnames: `Apellido${index + 1}`,
-      graduations: [
-        {
-          careerName: `Carrera ${Math.floor(Math.random() * 5) + 1}`,
-          graduationDate: '1970-01-01T00:00:00.000Z',
-        },
-      ],
-    }));
+    try {
+      // Aquí haces la solicitud real al servidor para obtener los datos paginados
+      const response = await fetch(`URL_DE_TU_API?page=${page}&perPage=${itemsPerPage}`);
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos');
+      }
 
-    const paginatedData = mockEgresados.slice(startIndex, endIndex);
-    setEgresados(paginatedData);
-    setIsLoading(false);
+      const data = await response.json();
+      setEgresados(data.data.items); // Ajusta esta línea según la estructura de tus datos
+      setCurrentPage(data.data.meta.pageNumber);
+      setTotalPages(data.data.meta.numberOfPages);
+    } catch (error) {
+      console.error('Hubo un error al obtener los datos:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Aquí puedes usar useEffect u otros métodos para cargar datos al montar el componente, si es necesario
+
+  const contextValue = {
+    egresados,
+    setEgresados,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    fetchPaginatedData,
+    isLoading,
   };
 
   return (
-    <EgresadosContext.Provider
-      value={{
-        egresados,
-        currentPage,
-        setCurrentPage,
-        totalPages,
-        fetchPaginatedData,
-        isLoading,
-      }}
-    >
+    <EgresadosContext.Provider value={contextValue}>
       {children}
     </EgresadosContext.Provider>
   );
