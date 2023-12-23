@@ -11,24 +11,28 @@ import {
   Input,
   Box,
   Flex,
-  IconButton,
+  Card,
+  CardBody,
+  Divider,
+  Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
-import CustomSwitch from "./Switch";
 import { useToast } from "@chakra-ui/react";
 import { AddPortfolioItem, DeletePortfolioItem, EditPortfolioItem, getPortfolioItem } from "../../services/auth/MeProfile.services";
 
 
 const PortafoliosCard = ({cardData, setCardData}) => {
-  const [switchValue, setSwitchValue] = useState(false);
 
  const [newCardData, setNewCardData] = useState(cardData);
+ const [checkedItems, setCheckedItems] = useState([]);
+
+ useEffect(() => {
+  setNewCardData(cardData);
+  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.title);
+  setCheckedItems(checkedItems);
+}, [cardData]);
 
  const toast = useToast();
-
-  const handleSwitchChange = () => {
-    setSwitchValue(!switchValue);
-  };
   
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
@@ -39,7 +43,6 @@ const PortafoliosCard = ({cardData, setCardData}) => {
   const [cardIdToEdit, setcardIdToEdit] = useState(null);
 
   const [showAddButton, setShowAddButton] = useState(false);
-  const [showEditButton, setShowEditButton] = useState(true);
 
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -49,6 +52,47 @@ const PortafoliosCard = ({cardData, setCardData}) => {
   const [editingCard, setEditingCard] = useState(null);
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
+
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.title));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await EditPortfolioItem(item.title, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await EditPortfolioItem(item.title, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
+
+const handleCheck = async (e, item) => {
+  const isChecked = e.target.checked;
+  const updatedItem = { ...item, isVisible: isChecked };
+
+  if (isChecked) {
+    setCheckedItems([...checkedItems, item.title]);
+  } else {
+    setCheckedItems(checkedItems.filter((title) => title !== item.title));
+  }
+
+  try {
+    // Update the isVisible property in the backend
+    await EditPortfolioItem(item.title, updatedItem);
+    // Update the isVisible property in the local state
+    setNewCardData(prevData => prevData.map(card => card.title === item.title ? updatedItem : card));
+  } catch (error) {
+    // Handle error
+    console.error('Error updating item:', error);
+  }
+};
 
   const handleAddPortfolioItem = async () => {
     // Validar que los campos no estén vacíos
@@ -116,13 +160,6 @@ const PortafoliosCard = ({cardData, setCardData}) => {
       ...prevFields,
       [field]: value,
     }));
-  };
-
-  const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
-    setShowIconsFunc((prevIcons) => !prevIcons);
-    setEditModeFunc((prevMode) => !prevMode);
-    setShowAddButton(true); // Mostrar el botón de agregar después de editar
-    setShowEditButton(false); // Ocultar el botón de editar después de editar
   };
 
 
@@ -291,44 +328,80 @@ const PortafoliosCard = ({cardData, setCardData}) => {
 
   return (
     <>
-      <Text
-        fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
-        display="flex"
-        alignItems="center"
-      >
-        Portafolios
-        {editMode ? (
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditClick(setShowIcons, setEditMode)}
-          />
-        ) : (
-          <AddIcon
-            onClick={() => handleAddClick("Portafolios")}
-            cursor="pointer"
-            color="white"
-            position="absolute"
-            right="45px"
-            bg="#007935"
-            borderRadius="10px"
-            width="42px"
-            height="33px"
-            padding="8px"
-          />
-        )}
-      </Text>
-
-      {Array.isArray(newCardData) && newCardData.length > 0 ? (
-  newCardData.map((item, index) => (
-    <Box
-      key={index}
+    <Card marginTop="20px">
+    <CardBody p="10px">
+    <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+    <Flex alignItems="left">
+    <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
+  <Text
+    fontWeight="bold"
+    fontSize="md"
+    marginLeft="2"
+    marginBottom="1"
+    display="flex"
+    alignItems="center"
+    color="#007935"
+  >
+    Portafolios
+  </Text>
+  </Flex>
+  <AddIcon
+    onClick={() => handleAddClick("Portafolios")}
+    cursor="pointer"
+    color="white"
+    bg="#007935"
+    borderRadius="10px"
+    width="30px"
+    height="25px"
+    padding="6px"
+  />
+</Box>
+      <Divider orientation='horizontal' />
+      {Array.isArray(newCardData) && newCardData.length > 0
+  ? newCardData.map((item, index) => (
+      <Flex key={index} alignItems="center" marginTop="3">
+        <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.title)} onChange={(e) => handleCheck(e, item)} marginRight="5px"/>
+        <Box
+          border="2px solid #007935"
+          borderTop="none"
+          borderRight="none"
+          borderBottom="none"
+          paddingLeft="2"
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          width="100%"
+        >
+          <Box>
+            <Flex justifyContent="space-between">
+              <Text fontWeight="bold" fontSize="15px">{item.title}</Text>
+            </Flex>
+            <Text as="i" fontSize="15px">{item.sourceLink}</Text>
+          </Box>
+          <Box>
+            <Flex justifyContent="flex-end">
+              <EditIcon cursor="pointer"
+                display="flex"
+                justifySelf="flex-end"
+                color="#C0C0C0"
+                onClick={() => handleEditCard(item.title)}
+              />
+              <DeleteIcon
+                cursor="pointer"
+                display="flex"
+                justifySelf="flex-end"
+                marginLeft="10px"
+                color="#C0C0C0"
+                onClick={() =>
+                  handleDeleteClick(item.title, "cardContentPortafolios")
+                }
+              />
+            </Flex>
+          </Box>
+        </Box>
+      </Flex>
+    ))
+  : (<Box
       bg="white"
       padding="4"
       border="1px solid #ccc"
@@ -339,64 +412,11 @@ const PortafoliosCard = ({cardData, setCardData}) => {
       marginBottom="5"
       boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
     >
-      {showIcons && (
-        <Flex justifyContent="flex-end" marginBottom="10px">
-          <IconButton
-            aria-label="Editar"
-            icon={<EditIcon />}
-            colorScheme="blue"
-            marginRight="5px"
-            onClick={() => handleEditCard(item.title)}
-          />
-          <IconButton
-            aria-label="Eliminar"
-            icon={<DeleteIcon />}
-            colorScheme="red"
-            marginLeft="5px"
-            onClick={() =>
-              handleDeleteClick(item.title, "cardContentPortafolios")
-            }
-          />
-        </Flex>
-      )}
-          <Flex justifyContent="space-between">
-        <Text fontWeight="bold">{item.title}</Text>
-      </Flex>
-      <Text>{item.sourceLink}</Text>
-      <Flex alignItems="center" marginTop="10px">
-        <CustomSwitch
-          isChecked={switchValue}
-          onChange={handleSwitchChange}
-        />
-        {switchValue && (
-          <Text
-            fontSize="sm"
-            color="black"
-            marginLeft="10px"
-            fontWeight="bold"
-            alignItems="center"
-          >
-            Visible
-          </Text>
-        )}
-      </Flex>
-    </Box>
-  ))
-) : (
-  <Box
-    bg="white"
-    padding="4"
-    border="1px solid #ccc"
-    borderRadius="8px"
-    marginLeft="10"
-    marginRight="10"
-    marginTop="5"
-    marginBottom="5"
-    boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-  >
-    <Text color="grey">En esta sección, puedes añadir un portafolio de tus trabajos, o cualquier otra cosa que desees mostrar.</Text>
-  </Box>
-)}
+      <Text color="grey">En esta sección, puedes añadir un portafolio de tus trabajos, o cualquier otra cosa que desees mostrar.</Text>
+    </Box>)
+}
+</CardBody>
+</Card>
 
       {/* Modal de edición Portafolios*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>

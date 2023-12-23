@@ -8,50 +8,44 @@ import {
   ModalFooter,
   ModalBody,
   Button,
+  Input,
   Box,
   Flex,
-  Select,
   Card,
   CardBody,
   Divider,
+  Checkbox
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
 import {
-  AddLanguage,
-  DeleteLanguage,
-  editLanguage,
-  getLanguage,
-  getLanguageItem,
+  AddIndustryOfInterest,
+  deleteIndustryOfInterest,
+  editIndustryOfInterest,
+  getIndustryOfInterestItem,
 } from "../../services/auth/MeProfile.services";
 
-const IdiomasCard = ({ cardData, setCardData }) => {
-  const toast = useToast();
-
+const IndustriasInteresCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
+  const [checkedItems, setCheckedItems] = useState([]);
 
-  // Define idiomas como un estado
-  const [idiomas, setIdiomas] = useState([]);
-  const niveles = [0, 1, 2, 3, 4, 5];
+ useEffect(() => {
+  setNewCardData(cardData);
+  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.industryName);
+  setCheckedItems(checkedItems);
+}, [cardData]);
 
-  // Usa useEffect para llamar a getLanguage cuando el componente se monta
-  useEffect(() => {
-    getLanguage().then((data) => {
-      if (Array.isArray(data)) {
-        setIdiomas(data);
-      }
-    });
-  }, []);
+  const toast = useToast();
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
-  const [cardTypeToDelete, setCardTypeToDelete] =
-    useState("cardContentIdiomas");
+  const [cardTypeToDelete, setCardTypeToDelete] = useState(
+    "cardContentPortafolios"
+  );
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEdit, setcardIdToEdit] = useState(null);
 
   const [showAddButton, setShowAddButton] = useState(false);
-  const [showEditButton, setShowEditButton] = useState(true);
 
   const [cardTypeToAdd, setCardTypeToAdd] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -62,13 +56,53 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
-  const handleAddLanguage = async () => {
+  const handleCheckAll = async (e) => {
+    if (e.target.checked) {
+      setCheckedItems(newCardData.map((item) => item.industryName));
+      // Update all items to be isVisible: true in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      for (const item of updatedData) {
+        await editIndustryOfInterest(item.industryName, item);
+      }
+      setNewCardData(updatedData);
+    } else {
+      setCheckedItems([]);
+      // Update all items to be isVisible: false in the backend and local state
+      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      for (const item of updatedData) {
+        await editIndustryOfInterest(item.industryName, item);
+      }
+      setNewCardData(updatedData);
+    }
+  };
+
+  const handleCheck = async (e, item) => {
+    const isChecked = e.target.checked;
+    const updatedItem = { ...item, isVisible: isChecked };
+  
+    if (isChecked) {
+      setCheckedItems(prevItems => [...prevItems, item.industryName]);
+    } else {
+      setCheckedItems(prevItems => prevItems.filter(industryName => industryName !== item.industryName));
+    }
+  
+    try {
+      // Update the isVisible property in the backend
+      await editIndustryOfInterest(item.industryName, updatedItem);
+      // Update the isVisible property in the local state
+      setNewCardData(prevData => prevData.map(card => card.industryName === item.industryName ? updatedItem : card));
+    } catch (error) {
+      // Handle error
+      console.error('Error updating item:', error);
+    }
+  };
+
+
+  const handleAddPortfolioItem = async () => {
     // Validar que los campos no estén vacíos
     if (
-      !additionalFields.languageName ||
-      additionalFields.languageName.trim() === "" ||
-      additionalFields.masteryLevel === null ||
-      additionalFields.masteryLevel === 0
+      !additionalFields.industryName ||
+      additionalFields.industryName.trim() === ""
     ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       toast({
@@ -81,16 +115,15 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       return;
     }
 
-    // Verificar si el idioma ya existe
-    const languageExists = cardData.some(
-      (card) => card.languageName === additionalFields.languageName
+    // Verificar si la tarjeta ya existe en newCardData
+    const existingCard = newCardData.find(
+      (card) => card.industryName === additionalFields.industryName
     );
-
-    if (languageExists) {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
+    if (existingCard) {
+      // Mostrar un mensaje de error en un toast
       toast({
         title: "Error",
-        description: "El idioma ya existe",
+        description: "Esa industria de interés ya existe",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -100,42 +133,36 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
     // Preparar los datos para la solicitud POST
     const newData = {
-      languageName: additionalFields.languageName,
-      masteryLevel: parseInt(additionalFields.masteryLevel),
-      isVisible: true,
+      industryName: additionalFields.industryName,
     };
 
-    // Llamar a la función AddHigherEducationStudy con los datos preparados
-    const newCard = await AddLanguage(newData);
+    // Llamar a la función AddPortfolioItem con los datos preparados
+    const newCard = await AddIndustryOfInterest(newData);
+
+    // Mostrar un toast de éxito
+    toast({
+      title: "Éxito",
+      description: "La industria de interés ha sido creada con éxito",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
 
     // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
     if (newCard) {
       setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
     }
-    // Mostrar un toast de éxito
-    toast({
-      title: "Éxito",
-      description: "El idioma ha sido añadido con éxito",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
   };
 
-  const handleFieldChange = (fieldName, value) => {
-    // Actualizar solo el campo correspondiente en additionalFields
-    setAdditionalFields({ ...additionalFields, [fieldName]: value });
-  };
-
-  const handleEditClick = (setShowIconsFunc, setEditModeFunc) => {
-    setShowIconsFunc((prevIcons) => !prevIcons);
-    setEditModeFunc((prevMode) => !prevMode);
-    setShowAddButton(true); // Mostrar el botón de agregar después de editar
-    setShowEditButton(false); // Ocultar el botón de editar después de editar
+  const handleFieldChange = (field, value) => {
+    setAdditionalFields((prevFields) => ({
+      ...prevFields,
+      [field]: value,
+    }));
   };
 
   useEffect(() => {
@@ -147,33 +174,26 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   const [originalTitle, setOriginalTitle] = useState(null);
 
   const handleEditCard = async (cardTitle) => {
-    const cardToEdit = await getLanguageItem(cardTitle);
-
-    setEditingCard({
-      ...cardToEdit,
-      languageName: cardToEdit.languageName,
-    });
+    const cardToEdit = await getIndustryOfInterestItem(cardTitle);
+    setEditingCard(cardToEdit);
     setOriginalTitle(cardTitle); // Guardar el título original
   };
 
-  // Modal de edición Idiomas
-  const handleEditInputChange = (field, value, setter) => {
-    if (field === "languageName") {
-      // Solo guarda el nombre del idioma, no el objeto completo
-      setter((prev) => ({ ...prev, [field]: value }));
-    } else {
-      setter((prev) => ({ ...prev, [field]: value }));
-    }
+  // Modal de edición Experiencial Laboral
+  const handleEditInputChange = (field, value, setState) => {
+    setState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
   };
 
   const [content, setContent] = useState(null);
+
   const handleSaveEdit = async () => {
     // Validar que los campos no estén vacíos
     if (
-      !editingCard.languageName ||
-      editingCard.languageName.trim() === "" ||
-      editingCard.masteryLevel === null ||
-      editingCard.masteryLevel === 0
+      editingCard.industryName.trim() === "" ||
+      editingCard.industryName.trim() === null
     ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       toast({
@@ -186,18 +206,15 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       return;
     }
 
-    // Verificar si el idioma ya existe
-    const languageExists = cardData.some(
-      (card) =>
-        card.languageName === editingCard.languageName &&
-        card.languageName !== originalTitle
+    // Verificar si la tarjeta ya existe en newCardData
+    const existingCard = newCardData.find(
+      (card) => card.industryName === editingCard.industryName
     );
-
-    if (languageExists) {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
+    if (existingCard) {
+      // Mostrar un mensaje de error en un toast
       toast({
         title: "Error",
-        description: "El idioma ya existe",
+        description: "Esa industria de interés ya existe",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -205,36 +222,33 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       return;
     }
 
+    // Preparar los datos para la solicitud PATCH
     const newData = {
-      languageName: editingCard.languageName,
-      masteryLevel: parseInt(editingCard.masteryLevel), // Convertir a número entero
-      isVisible: true,
+      industryName: editingCard.industryName, // Ajusta esto según sea necesario
     };
 
-    const updatedCard = await editLanguage(originalTitle, newData);
-    // Mostrar un toast de éxito
-    toast({
-      title: "Éxito",
-      description: "El idioma ha sido editado con éxito",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
+    const updatedCard = await editIndustryOfInterest(originalTitle, newData);
 
     setContent(updatedCard);
+
     // Actualizar cardData con los nuevos datos
-    const updatedCardData = cardData.map((card) => {
-      if (card.languageName === originalTitle) {
-        return {
-          ...card,
-          languageName: newData.languageName,
-          masteryLevel: newData.masteryLevel,
-        };
+    const updatedCardData = newCardData.map((card) => {
+      if (card.industryName === originalTitle) {
+        return { ...card, industryName: newData.industryName };
       } else {
         return card;
       }
     });
     setNewCardData(updatedCardData);
+
+    // Mostrar un toast de éxito
+    toast({
+      title: "Éxito",
+      description: "La industria de interés ha sido editada con éxito",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
@@ -258,6 +272,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   };
 
   const handleDeleteClick = (cardTitle, cardType) => {
+    setOriginalTitle(cardTitle);
     if (cardTitle) {
       setCardToDelete(cardTitle);
       setCardTypeToDelete(cardType);
@@ -269,34 +284,44 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
-      if (cardTypeToDelete === "cardContentIdiomas") {
-        await DeleteLanguage(cardToDelete);
-        //setCardContentIdiomas(updatedCardContent);
-        const updatedCardData = cardData.filter(
-          (card) => card.languageName !== cardToDelete
+      if (cardTypeToDelete === "cardContentPortafolios") {
+        await deleteIndustryOfInterest(cardToDelete);
+        const updatedCardData = newCardData.filter(
+          (card) => card.industryName !== cardToDelete
         );
         setNewCardData(updatedCardData);
-        // agregar cada uno de los estados de edicion
         setShowIcons(false);
         setEditMode(true);
-        // Mostrar un toast de éxito
+
         toast({
           title: "Éxito",
-          description: "El idioma ha sido eliminado con éxito",
+          description: "La industria de interés ha sido eliminada con éxito",
           status: "success",
           duration: 3000,
           isClosable: true,
         });
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description:
+            "Ha ocurrido un problema al eliminar la industria de interés",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
-
-      // Cerrar el modal y limpiar el estado
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description:
+          "Ha ocurrido un problema al eliminar la industria de interés",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -304,8 +329,6 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     // Cancelar la edición, cerrar el modal y limpiar el estado
     setcardIdToEdit(null);
     setShowEditModal(false);
-    setShowIcons(false);
-    setEditMode(true);
   };
 
   return (
@@ -318,6 +341,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
             alignItems="center"
             justifyContent="space-between"
           >
+            <Flex alignItems="left">
+            <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
             <Text
               fontWeight="bold"
               fontSize="md"
@@ -327,10 +352,11 @@ const IdiomasCard = ({ cardData, setCardData }) => {
               alignItems="center"
               color="#007935"
             >
-              Idiomas
+              Industrias de interés
             </Text>
+            </Flex>
             <AddIcon
-              onClick={() => handleAddClick("Idiomas")}
+              onClick={() => handleAddClick("IndustriasInteres")}
               cursor="pointer"
               color="white"
               bg="#007935"
@@ -343,6 +369,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
           <Divider orientation="horizontal" />
           {Array.isArray(newCardData) && newCardData.length > 0 ? (
             newCardData.map((item, index) => (
+              <Flex key={index} alignItems="center" marginTop="3">
+              <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.industryName)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
               <Box
                 key={index}
                 border="2px solid #007935"
@@ -354,18 +382,14 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                 display="flex"
                 flexDirection="row"
                 justifyContent="space-between"
+                width="100%"
               >
-                <Box display="flex" flexDirection="row">
-                  <Text marginRight="10px">{item.languageName}</Text>
-                  <Text
-                    bg="#FBC430"
-                    color="black"
-                    padding="1"
-                    borderRadius="8"
-                    fontSize="12px"
-                  >
-                    {item.masteryLevel}
-                  </Text>
+                <Box>
+                  <Flex justifyContent="space-between">
+                    <Text fontWeight="bold" fontSize="15px">
+                      {item.industryName}
+                    </Text>
+                  </Flex>
                 </Box>
                 <Box>
                   <Flex justifyContent="flex-end">
@@ -374,7 +398,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                       display="flex"
                       justifySelf="flex-end"
                       color="#C0C0C0"
-                      onClick={() => handleEditCard(item.languageName)}
+                      onClick={() => handleEditCard(item.industryName)}
                     />
                     <DeleteIcon
                       cursor="pointer"
@@ -384,14 +408,15 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                       color="#C0C0C0"
                       onClick={() =>
                         handleDeleteClick(
-                          item.languageName,
-                          "cardContentIdiomas"
+                          item.industryName,
+                          "cardContentPortafolios"
                         )
                       }
                     />
                   </Flex>
                 </Box>
               </Box>
+              </Flex>
             ))
           ) : (
             <Box
@@ -405,62 +430,34 @@ const IdiomasCard = ({ cardData, setCardData }) => {
               marginBottom="5"
               boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
             >
-              <Text color="gray.500">
-                En esta sección, puedes indicar tu nivel de dominio de los
-                idiomas que hablas.
+              <Text color="grey">
+                En esta sección, puedes añadir industrias de interés.
               </Text>
             </Box>
           )}
         </CardBody>
       </Card>
 
-      {/* Modal de edición Idiomas*/}
+      {/* Modal de edición Portafolios*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Idiomas</ModalHeader>
+          <ModalHeader>Editar Industrias de interés</ModalHeader>
           <ModalBody>
             {editingCard && (
               <>
-                <Select
-                  value={editingCard.languageName}
+                <Input
+                  value={editingCard.industryName}
                   onChange={(e) =>
-                    handleEditInputChange(
-                      "languageName",
-                      e.target.value,
-                      setEditingCard
-                    )
+                    setEditingCard((prevCard) => ({
+                      ...prevCard,
+                      industryName: e.target.value,
+                    }))
                   }
-                  placeholder="Editar Idioma..."
+                  placeholder="Editar industria..."
                   size="lg"
                   marginBottom="4"
-                >
-                  {idiomas.map((idioma) => (
-                    <option key={idioma.name} value={idioma.name}>
-                      {idioma.name}
-                    </option>
-                  ))}
-                </Select>
-
-                <Select
-                  value={editingCard.masteryLevel}
-                  onChange={(e) =>
-                    handleEditInputChange(
-                      "masteryLevel",
-                      e.target.value,
-                      setEditingCard
-                    )
-                  }
-                  placeholder="Editar Nivel..."
-                  size="lg"
-                  marginBottom="4"
-                >
-                  {niveles.map((nivel) => (
-                    <option key={nivel} value={nivel}>
-                      {nivel}
-                    </option>
-                  ))}
-                </Select>
+                />
               </>
             )}
           </ModalBody>
@@ -482,43 +479,21 @@ const IdiomasCard = ({ cardData, setCardData }) => {
           <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
-            {cardTypeToAdd === "Idiomas" && (
+            {cardTypeToAdd === "IndustriasInteres" && (
               <>
-                Idioma
-                <Select
-                  value={additionalFields.languageName || ""}
+                <Input
+                  value={additionalFields.industryName || ""}
                   onChange={(e) =>
-                    handleFieldChange("languageName", e.target.value)
+                    handleFieldChange("industryName", e.target.value)
                   }
-                  placeholder="Agregar Idioma"
+                  placeholder="Nombre industria"
                   marginBottom="10px"
-                >
-                  {idiomas.map((idioma) => (
-                    <option key={idioma.name} value={idioma.name}>
-                      {idioma.name}
-                    </option>
-                  ))}
-                </Select>
-                Nivel
-                <Select
-                  value={additionalFields.masteryLevel || ""}
-                  onChange={(e) =>
-                    handleFieldChange("masteryLevel", e.target.value)
-                  }
-                  placeholder="Agregar Nivel"
-                  marginBottom="10px"
-                >
-                  {niveles.map((niveles) => (
-                    <option key={niveles} value={niveles}>
-                      {niveles}
-                    </option>
-                  ))}
-                </Select>
+                />
               </>
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddLanguage}>
+            <Button colorScheme="blue" mr={3} onClick={handleAddPortfolioItem}>
               Guardar
             </Button>
             <Button variant="ghost" onClick={() => setShowAddModal(false)}>
@@ -531,8 +506,10 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eliminación Idioma</ModalHeader>
-          <ModalBody>¿Está seguro de que desea eliminar este Idioma?</ModalBody>
+          <ModalHeader>Eliminar Industria de interés</ModalHeader>
+          <ModalBody>
+            ¿Está seguro de que desea eliminar esta industria de interés?
+          </ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"
@@ -553,4 +530,4 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   );
 };
 
-export default IdiomasCard;
+export default IndustriasInteresCard;

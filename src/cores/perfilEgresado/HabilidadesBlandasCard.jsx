@@ -11,6 +11,12 @@ import {
   Button,
   Box,
     Select,
+    Card,
+    CardBody,
+    Divider,
+    Flex,
+    Tag,
+    TagCloseButton
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
 import { AddSoftSkill, deleteSoftSkill, getSoftSkills } from "../../services/auth/MeProfile.services";
@@ -198,86 +204,97 @@ const HabilidadesBlandasCard = ({cardData, setCardData}) => {
 
   return (
     <>
-      {/* Texto Principal Habilidades */}
-
-      <Text fontSize="lg" marginLeft="10" marginRight="10" marginTop="5">
-        Blandas
-        {editMode ? (
-          <EditIcon
+      <Card marginTop="20px">
+        <CardBody p="10px">
+          <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Text
+              fontWeight="bold"
+              fontSize="md"
+              marginLeft="2"
+              marginBottom="1"
+              display="flex"
+              alignItems="center"
+              color="#007935"
+            >
+              Habilidades Blandas
+            </Text>
+            <EditIcon
             cursor="pointer"
             position="absolute"
             right="45px"
-            color="blue.500"
+            color="#C0C0C0"
             onClick={() => handleEditClick(setShowIcons, setEditMode)}
           />
-        ) : (
-          <AddIcon
-            cursor="pointer"
-            color="white"
-            position="absolute"
-            right="45px"
-            bg="#007935"
-            borderRadius="10px"
-            width="42px"
-            height="33px"
-            padding="8px"
-            onClick={() => handleAddClick("SoftSkills")}
-          />
-        )}
-      </Text>
-      <Box
-        display="flex"
-        flexDirection="row"
-        flexWrap="wrap"
-        marginLeft="10"
-        marginRight="10"
-        marginBottom="5"
-      >
-        {Array.isArray(newCardData) && newCardData.length > 0 ? (
-          newCardData.map((item, index) => (
-            <Box key={index} position="relative" padding="2" marginRight="2">
-              <Box padding="2" marginBottom="2" marginRight="2">
-                <Text bg="#3182CE" padding="2" borderRadius="4px" color="white">
-                  {item.skillName}
-                </Text>
-                {showIcons && (
-                  <CloseIcon
-                    color="black"
-                    position="absolute"
-                    top="9px"
-                    right="17px"
-                    fontSize="16px"
-                    cursor="pointer"
-                    display={showIcons ? "block" : "none"}
-                    onClick={() =>
+            <AddIcon
+              onClick={() => handleAddClick("SoftSkills")}
+              cursor="pointer"
+              color="white"
+              bg="#007935"
+              borderRadius="10px"
+              width="30px"
+              height="25px"
+              padding="6px"
+            />
+          </Box>
+          <Divider orientation="horizontal" />
+          <Box display="flex" flexDirection="row" flexWrap="wrap">
+            {Array.isArray(newCardData) && newCardData.length > 0
+              ? newCardData.map((item, index) => (
+                  <Box key={index}
+                  marginTop="3"
+                  paddingLeft="2"
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between">
+                    <Box display="flex" flexDirection="row">
+                      <Tag
+                        bg="#37B4E3"
+                        fontSize="12px"
+                        paddingLeft="2"
+                        paddingTop="1px"
+                        paddingBottom="1px"
+                        paddingRight="8px"
+                        borderRadius="4px"
+                        color="white"
+                      >
+                        {item.skillName}
+                        <TagCloseButton onClick={() =>
                       handleDeleteClick(
                         item.skillName,
                         "cardContentHabilidades"
                       )
-                    }
-                  />
-                )}
-              </Box>
-            </Box>
-          ))
-        ) : (
-          <Box
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-          >
-            <Text color="grey">
-              En esta sección, puedes añadir tus habilidades blandas
-            </Text>
+                    }/>
+                      </Tag>
+                    </Box>
+                    <Box>
+                    </Box>
+                  </Box>
+                ))
+              : (
+                    <Box
+                      bg="white"
+                      padding="4"
+                      border="1px solid #ccc"
+                      borderRadius="8px"
+                      marginLeft="10"
+                      marginRight="10"
+                      marginTop="5"
+                      marginBottom="5"
+                      boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+                    >
+                      <Text color="grey">
+                        En esta sección, puedes añadir tus habilidades blandas
+                      </Text>
+                    </Box>
+                  )}
           </Box>
-        )}
-      </Box>
+        </CardBody>
+      </Card>
 
       {/*Modal agregar campos*/}
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
@@ -333,9 +350,7 @@ const HabilidadesBlandasCard = ({cardData, setCardData}) => {
             >
               Eliminar
             </Button>
-            <Button variant="ghost" >
-              Cancelar
-            </Button>
+            <Button variant="ghost">Cancelar</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

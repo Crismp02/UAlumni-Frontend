@@ -11,6 +11,9 @@ import {
   Textarea,
   Box,
   Flex,
+  Card,
+  CardBody,
+  Divider,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -121,44 +124,47 @@ const SobremiCard = ({ cardData: initialCardData }) => {
 
   return (
     <>
+    <Card marginTop="20px">
+    <CardBody p="10px">
+      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
       <Text
         fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
+        fontSize="md"
+        marginLeft="2"
+        marginBottom="1"
         display="flex"
         alignItems="center"
+        color="#007935"
       >
         Sobre mí
-        <EditIcon
-          cursor="pointer"
-          position="absolute"
-          right="45px"
-          color="blue.500"
-          onClick={() => handleEditCard(cardData)}
-        />
       </Text>
-
+      <EditIcon
+            cursor="pointer"
+            display="flex"
+            justifySelf="flex-end"
+            color="#C0C0C0"
+            onClick={() => handleEditCard(cardData)}
+          />
+          </Box>
+      <Divider orientation='horizontal' />
       <Box
-        bg="white"
-        padding="4"
-        border="1px solid #ccc"
-        borderRadius="8px"
-        marginLeft="10"
-        marginRight="10"
-        marginTop="5"
-        marginBottom="5"
-        boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-      >
-        <Flex>
+          border="2px solid #007935"
+          borderTop="none"
+          borderRight="none"
+          borderBottom="none"
+          marginTop="3"
+          paddingLeft="2"
+        >
+          <Flex>
         {cardData ? (
       <Text>{cardData}</Text>
     ) : (
       <Text color="grey">En esta sección, puedes añadir una descripción sobre tí.</Text>
     )}
         </Flex>
-      </Box>
+        </Box>
+      </CardBody>
+      </Card>
 
       {/* Modal de edición Sobre mí*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>

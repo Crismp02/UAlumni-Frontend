@@ -13,6 +13,9 @@ import {
   Box,
   Flex,
   IconButton,
+  Card,
+  CardBody,
+  Divider,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -315,96 +318,74 @@ const EducacionCard = ({ cardData, setCardData }) => {
 
   return (
     <>
-      <Text
-        fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
-        display="flex"
-        alignItems="center"
-      >
-        Educación
-        {editMode ? (
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditClick(setShowIcons, setEditMode)}
-          />
-        ) : (
+    <Card marginTop="20px">
+        <CardBody p="10px">
+          <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
+          <Text
+            fontWeight="bold"
+            fontSize="md"
+            marginLeft="2"
+            marginBottom="1"
+            display="flex"
+            alignItems="center"
+            color="#007935"
+          >
+            Estudios Realizados
+          </Text>
           <AddIcon
             onClick={() => handleAddClick("Educación")}
             cursor="pointer"
             color="white"
-            position="absolute"
-            right="45px"
             bg="#007935"
             borderRadius="10px"
-            width="42px"
-            height="33px"
-            padding="8px"
+            width="30px"
+            height="25px"
+            padding="6px"
           />
-        )}
-      </Text>
+          </Box>
+          <Divider orientation="horizontal" />
 
-      {Array.isArray(newCardData) && newCardData.length > 0 ? (
+          {Array.isArray(newCardData) && newCardData.length > 0 ? (
         newCardData.map((item, index) => (
           <Box
             key={index}
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+             border="2px solid #007935"
+              borderTop="none"
+              borderRight="none"
+              borderBottom="none"
+              marginTop="3"
+              paddingLeft="2"
           >
-            {/* posición a la derecha */}
-            {showIcons && (
-              <Flex justifyContent="flex-end" marginBottom="10px">
-                <IconButton
-                  aria-label="Editar"
-                  icon={<EditIcon />}
-                  colorScheme="blue"
-                  marginRight="5px"
-                  onClick={() => handleEditCard(item.title)}
-                />
-                <IconButton
-                  aria-label="Eliminar"
-                  icon={<DeleteIcon />}
-                  colorScheme="red"
-                  marginLeft="5px"
-                  onClick={() => handleDeleteClick(item.title, "cardContent")}
-                />
-              </Flex>
-            )}
+            <Box>
+            <Flex justifyContent="space-between" alignItems="center">
             <Flex justifyContent="space-between">
               <Text fontWeight="bold">{item.title}</Text>
             </Flex>
+            {addDays(new Date(item.endDate), 1).getFullYear()}
+            </Flex>
+            
 
             <Text>{item.institution}</Text>
-            {addDays(new Date(item.endDate), 1).getFullYear()}
-            <Flex alignItems="center" marginTop="10px">
-              <CustomSwitch
-                isChecked={switchValue}
-                onChange={handleSwitchChange}
-              />
-              {switchValue && (
-                <Text
-                  fontSize="sm"
-                  color="black"
-                  marginLeft="10px"
-                  fontWeight="bold"
-                  alignItems="center"
-                >
-                  Visible
-                </Text>
-              )}
-            </Flex>
+           
+            </Box>
+            <Box>
+            <Flex justifyContent="flex-end">
+          <EditIcon cursor="pointer"
+            display="flex"
+            justifySelf="flex-end"
+            color="#C0C0C0"
+            onClick={() => handleEditCard(item.title)}/>
+          <DeleteIcon
+          cursor="pointer"
+          display="flex"
+          justifySelf="flex-end"
+          marginLeft="10px"
+          color="#C0C0C0"
+          onClick={() =>
+            handleDeleteClick(item.title, "cardContent")
+          }/>
+        </Flex>
+            </Box>
           </Box>
         ))
       ) : (
@@ -424,6 +405,9 @@ const EducacionCard = ({ cardData, setCardData }) => {
           </Text>
         </Box>
       )}
+
+          </CardBody>
+          </Card>
 
       {/* Modal de edición Educación*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>

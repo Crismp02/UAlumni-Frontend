@@ -12,11 +12,12 @@ import {
   Box,
   Flex,
   useToast,
+  Card,
+  CardBody,
+  Divider,
 } from "@chakra-ui/react"; 
 import { EditIcon } from "@chakra-ui/icons";
 import { editContactInfo } from "../../services/auth/MeProfile.services";
-import { Icon } from '@chakra-ui/react';
-import { FaMapMarkerAlt } from "react-icons/fa";
 
 const ContactoCard = ({ cardData: initialCardData }) => {
   const toast = useToast();
@@ -28,9 +29,6 @@ const ContactoCard = ({ cardData: initialCardData }) => {
   const [showIcons, setShowIcons] = useState(false);
   const [cardIdToEditContacto, setcardIdToEditContacto] = useState(null);
 
-
-  const [showAddButton, setShowAddButton] = useState(false);
-  const [showEditButton, setShowEditButton] = useState(true);
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
@@ -95,41 +93,44 @@ const ContactoCard = ({ cardData: initialCardData }) => {
     <>
     {cardData && (
     <>
+    <Card>
+    <CardBody p="10px">
+      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
       <Text
         fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
+        fontSize="md"
+        marginLeft="2"
+        marginBottom="1"
         display="flex"
         alignItems="center"
+        color="#007935"
       >
         Contacto
-          <EditIcon
+      </Text>
+      <EditIcon
             cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
+            display="flex"
+            justifySelf="flex-end"
+            color="#C0C0C0"
             onClick={() => handleEditCard(cardData)}
           />
-      </Text>
-
-        <Box
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+          </Box>
+      <Divider orientation='horizontal' />
+      <Box
+          border="2px solid #007935"
+          borderTop="none"
+          borderRight="none"
+          borderBottom="none"
+          marginTop="3"
+          paddingLeft="2"
         >
           <Flex>
-            <Icon as={FaMapMarkerAlt} color="blue.500" marginRight="20px" marginTop="5px"/>
-            <Text fontWeight="bold">{cardData.address}</Text>
+          <Text fontWeight="bold" fontSize="15px">Dirección</Text>
           </Flex>
+          <Text>{cardData.address}</Text>
         </Box>
+      </CardBody>
+    </Card>
 
       {/* Modal de edición Contacto*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>

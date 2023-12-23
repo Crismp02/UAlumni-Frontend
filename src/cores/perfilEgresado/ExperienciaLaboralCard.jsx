@@ -14,6 +14,9 @@ import {
   Box,
   Flex,
   IconButton,
+  Card,
+  CardBody,
+  Divider,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon, CalendarIcon } from "@chakra-ui/icons";
 import CustomSwitch from "./Switch";
@@ -337,39 +340,32 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
 
   return (
     <>
+    <Card>
+      <CardBody p="10px">
+      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
       <Text
         fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
+        fontSize="md"
+        marginLeft="2"
+        marginBottom="1"
         display="flex"
         alignItems="center"
+        color="#007935"
       >
         Experiencia Laboral
-        {editMode ? (
-          <EditIcon
-            cursor="pointer"
-            position="absolute"
-            right="45px"
-            color="blue.500"
-            onClick={() => handleEditClick(setShowIcons, setEditMode)}
-          />
-        ) : (
-          <AddIcon
+      </Text>
+      <AddIcon
             onClick={() => handleAddClick("Experiencia Laboral")}
             cursor="pointer"
             color="white"
-            position="absolute"
-            right="45px"
             bg="#007935"
             borderRadius="10px"
-            width="42px"
-            height="33px"
-            padding="8px"
+            width="30px"
+            height="25px"
+            padding="6px"
           />
-        )}
-      </Text>
+          </Box>
+      <Divider orientation='horizontal' />
 
       {Array.isArray(newCardData) && newCardData.length > 0 ? (
         newCardData.map((item, index) => {
@@ -384,77 +380,48 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
           return (
             <Box
               key={index}
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+              border="2px solid #007935"
+              borderTop="none"
+              borderRight="none"
+              borderBottom="none"
+              marginTop="3"
+              paddingLeft="2"
             >
-              {showIcons && (
-                <Flex justifyContent="flex-end" marginBottom="10px">
-                  <IconButton
-                    aria-label="Editar"
-                    icon={<EditIcon />}
-                    colorScheme="blue"
-                    marginRight="5px"
-                    onClick={() => handleEditCard(item.number)}
-                  />
-                  <IconButton
-                    aria-label="Eliminar"
-                    icon={<DeleteIcon />}
-                    colorScheme="red"
-                    marginLeft="5px"
-                    onClick={() =>
-                      handleDeleteClick(item.number, "cardContent")
-                    }
-                  />
-                </Flex>
-              )}
+              <Box>
               <Flex justifyContent="space-between" alignItems="center">
-                <Text fontWeight="bold">{item.companyName}</Text>
-                <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-                  {item.position}
-                </Text>
-              </Flex>
+      <Text fontWeight="bold" fontSize="15px">{item.companyName}</Text>
+      <Text justifyContent="space-between" alignItems="center" marginTop="5px">
+         {formattedDateS} - {formattedDateE} 
+      </Text>
+    </Flex>
+    <Flex >
+      <Text bg="#FBC430" color="black" fontSize="12px" paddingLeft="2" paddingTop="1px" paddingBottom="1px" paddingRight="8px" borderRadius="4px">
+      {item.position}
+      </Text>
+    </Flex>
+    <Flex justifyContent="space-between" fontSize="14px" alignItems="center" marginTop="10px" color="#6B6A6A">
+      <Text>{item.description}</Text>
+    </Flex>
+              </Box>
+            <Box>
+                <Flex justifyContent="flex-end">
+                <EditIcon cursor="pointer"
+            display="flex"
+            justifySelf="flex-end"
+            color="#C0C0C0"
+            onClick={() => handleEditCard(item.number)}/>
+            <DeleteIcon
+          cursor="pointer"
+          display="flex"
+          justifySelf="flex-end"
+          marginLeft="10px"
+          color="#C0C0C0"
+          onClick={() =>
+            handleDeleteClick(item.number, "cardContent")
+          }/>
+                </Flex>
+                </Box> 
 
-              <Flex
-                justifyContent="space-between"
-                alignItems="center"
-                marginTop="5px"
-              >
-                <Text>{item.description}</Text>
-              </Flex>
-              <Flex
-                justifyContent="space-between"
-                alignItems="center"
-                marginTop="5px"
-              >
-                <Text>
-                  {formattedDateS} - {formattedDateE}
-                </Text>
-              </Flex>
-
-              <Flex alignItems="center" marginTop="10px">
-                <CustomSwitch
-                  isChecked={switchValue}
-                  onChange={handleSwitchChange}
-                />
-                {switchValue && (
-                  <Text
-                    fontSize="sm"
-                    color="black"
-                    marginLeft="10px"
-                    fontWeight="bold"
-                    alignItems="center"
-                  >
-                    Visible
-                  </Text>
-                )}
-              </Flex>
             </Box>
           );
         })
@@ -471,10 +438,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
           boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
         >
           <Text color="grey">
-            En esta sección, puedes añadir tus estudios realizados
+            En esta sección, puedes añadir tus experiencias laborales
           </Text>
         </Box>
       )}
+
+      </CardBody>
+      </Card>
 
       {/* Modal de edición Experiencia Laboral*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>

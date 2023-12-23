@@ -3,6 +3,7 @@ import {
   Text,
   Box,
   Flex,
+  Card, CardBody, Divider
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 
 const ExperienciaLaboralCard = ({ cardData }) => {
@@ -10,18 +11,20 @@ const ExperienciaLaboralCard = ({ cardData }) => {
 
   return (
     <>
+     <Card>
+      <CardBody p="10px">
       <Text
         fontWeight="bold"
-        fontSize="xl"
-        marginLeft="10"
-        marginTop="10"
-        marginBottom="0"
+        fontSize="md"
+        marginLeft="2"
+        marginBottom="1"
         display="flex"
         alignItems="center"
+        color="#007935"
       >
         Experiencia Laboral
       </Text>
-
+      <Divider orientation='horizontal' />
       {Array.isArray(newCardData) && newCardData.length > 0
         ? newCardData.map((item, index) => {
           const dateS = new Date(item.startDate);
@@ -31,33 +34,32 @@ const ExperienciaLaboralCard = ({ cardData }) => {
           return(
   <Box
     key={index}
-    bg="white"
-    padding="4"
-    border="1px solid #ccc"
-    borderRadius="8px"
-    marginLeft="10"
-    marginRight="10"
-    marginTop="5"
-    marginBottom="5"
-    boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+    border="2px solid #007935"
+         borderTop="none"
+         borderRight="none"
+         borderBottom="none"
+         marginTop="3"
+         paddingLeft="2"
   >
     <Flex justifyContent="space-between" alignItems="center">
-      <Text fontWeight="bold">{item.companyName}</Text>
-      <Text bg="#FBC430" color="black" padding="2" borderRadius="8">
-        {item.position}
+      <Text fontWeight="bold" fontSize="15px">{item.companyName}</Text>
+      <Text justifyContent="space-between" alignItems="center" marginTop="5px">
+         {formattedDateS} - {formattedDateE} 
       </Text>
     </Flex>
-
-    <Flex justifyContent="space-between" alignItems="center" marginTop="5px">
+    <Flex >
+      <Text bg="#FBC430" color="black" fontSize="12px" paddingLeft="2" paddingTop="1px" paddingBottom="1px" paddingRight="8px" borderRadius="4px">
+      {item.position}
+      </Text>
+    </Flex>
+    <Flex justifyContent="space-between" fontSize="14px" alignItems="center" marginTop="10px" color="#6B6A6A">
       <Text>{item.description}</Text>
     </Flex>
-    <Flex justifyContent="space-between" alignItems="center" marginTop="5px">
-      <Text>
-        {formattedDateS} - {formattedDateE} 
-      </Text>
-    </Flex>
+    
   </Box>
 )}) : null}
+      </CardBody>
+      </Card>
     </>
   );
 };

@@ -1,23 +1,24 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import NavBarEgresados from "../../components/NavBarEgresados";
 import Footer from "../../components/Footer";
 import ExperienciaLaboralCard from "./ExperienciaLaboralCard";
 import IdiomasCard from "./IdiomasCard";
 import CertificadosCard from "./CertificadosCard";
 import PortafoliosCard from "./PortafoliosCard";
-import HabilidadesCard from "./HabilidadesCard";
 import ContactoCard from "./ContactoCard";
 import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobreMiCard";
 
-import { Box, Text, Flex, VStack, Button  } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import CustomSwitch from "./Switch";
 import { getMeProfile } from "../../services/auth/MeProfile.services";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import HabilidadesBlandasCard from "./HabilidadesBlandasCard";
 import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
-import  DownloadCV  from "../perfilEgresadoReclutador/DownloadCV"
+import DownloadCV from "../perfilEgresadoReclutador/DownloadCV";
+import IndustriasInteresCard from "./IndustriasInteresCard";
+import PosicionesInteresCard from "./PosicionesInteresCard";
 
 function PerfilEgresado() {
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +36,7 @@ function PerfilEgresado() {
       setDataProfile(result);
       setIsLoading(false);
     }
-    
+
     fetchData();
   }, []);
 
@@ -45,12 +46,16 @@ function PerfilEgresado() {
     setSwitchValue(!switchValue);
   };
 
-
   return (
     <Box
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#F5F5F5",
+      }}
     >
-      <NavBarEgresados/>
+      <NavBarEgresados />
       {isLoading ? (
         <LoadingSpinner />
       ) : (
@@ -73,73 +78,136 @@ function PerfilEgresado() {
             PERFIL
           </Text>
 
-          <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
-            <Box
-              width={{ base: "100%", md: "45%" }}
-              bg="#F5F5F5"
-              height="100%"
-              marginRight={{ base: "0", md: "20px" }}
-              marginBottom={{ base: "20px", md: "0" }}
-              marginLeft={{ base: "0", md: "20px" }}
-              position="relative"
-            >
-              <Text
-                fontWeight="bold"
-                fontSize="xl"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="10"
-                marginBottom="0"
-                textAlign="center"
-              >
-                {dataProfile.data.names} {dataProfile.data.surnames}
+          <Box
+            width="calc(100vw - 20px)"
+            marginLeft="20px"
+            display="flex"
+            flexDirection="row"
+            marginBottom="20px"
+          >
+            <Box width="70vw" display="flex" flexDirection="column">
+              <Text color="#37B4E3" as="b" fontSize={["md", "md", "xl", "2xl"]}>
+                {(
+                  dataProfile.data.names +
+                  " " +
+                  dataProfile.data.surnames
+                ).toUpperCase()}
               </Text>
-              <Text
-                fontSize="xl"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="10"
-                marginBottom="0"
-                textAlign="center"
-              >
+              <Text color="#37B4E3" fontSize={["sm", "sm", "lg", "lg"]}>
                 {dataProfile &&
                   dataProfile.data.graduations.length > 0 &&
                   dataProfile.data.graduations
                     .map((career) => career.careerName)
                     .join(" / ")}
               </Text>
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                marginLeft="10"
-                marginRight="10"
-                marginTop="5"
-                marginBottom="5"
-              >
+            </Box>
+            <Box
+              display="flex"
+              width="30%"
+              justifyContent="right"
+              paddingRight="20px"
+              alignItems="center"
+            >
+              <Box display="flex" flexDirection="column">
                 <DownloadCV email={dataProfile.data.email} />
-                Cantidad Descargas
+                <Text color="grey">
+                  Cantidad de descargas:{" "}
+                  {dataProfile.data.resume.numberOfDownloads}
+                </Text>
+                <Flex
+                  justifyContent="flex-end"
+                  alignItems="center"
+                  marginTop="10px"
+                >
+                  {switchValue ? (
+                    <Text
+                      fontSize="sm"
+                      color="black"
+                      marginRight="10px"
+                      fontWeight="bold"
+                    >
+                      Perfil público
+                    </Text>
+                  ) : (
+                    <Text
+                      fontSize="sm"
+                      color="black"
+                      marginRight="10px"
+                      fontWeight="bold"
+                    >
+                      Perfil oculto
+                    </Text>
+                  )}
+                  <VStack spacing={4}>
+                    <CustomSwitch
+                      isChecked={switchValue}
+                      onChange={handleSwitchChange}
+                    />
+                  </VStack>
+                </Flex>
               </Box>
-              <ContactoCard
-            cardData={dataProfile && dataProfile.data}
-          />
+            </Box>
+          </Box>
+          <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
+            <Box
+              width={{ base: "100%", md: "33.3%" }}
+              height="100%"
+              marginRight={{ base: "0", md: "20px" }}
+              marginBottom="20px"
+              marginLeft={{ base: "0", md: "20px" }}
+              position="relative"
+            >
+              <ContactoCard cardData={dataProfile && dataProfile.data} />
 
-          <PortafoliosCard
-          cardData={dataProfile && dataProfile.data.resume.portfolio}
+              <IndustriasInteresCard
+                cardData={dataProfile && dataProfile.data.resume.industriesOfInterest}
+                setCardData={setCardData}
+              />
+              <PosicionesInteresCard
+                cardData={dataProfile && dataProfile.data.resume.positionsOfInterest}
+                setCardData={setCardData}
+              />
+
+              <PortafoliosCard
+                cardData={dataProfile && dataProfile.data.resume.portfolio}
+                setCardData={setCardData}
+              />
+
+              <SobremiCard
+                cardData={dataProfile && dataProfile.data.resume.aboutMe}
+              />
+
+            <IdiomasCard
+          cardData={dataProfile && dataProfile.data.resume.knownLanguages}
           setCardData={ setCardData } />
 
-          <SobremiCard
-            cardData={dataProfile && dataProfile.data.resume.aboutMe}
+          <HabilidadesBlandasCard
+            cardData={dataProfile && dataProfile.data.resume.softSkills}
+            setCardData={ setCardData }
           />
             </Box>
             {/* inicio de 2do Box */}
             <Box
-              width={{ base: "100%", md: "55%" }}
-              bg="#F5F5F5"
+              width={{ base: "100%", md: "66.6%" }}
               marginBottom="20px"
               position="relative"
+              marginRight={{ base: "0", md: "20px" }}
             >
-              
+               <ExperienciaLaboralCard
+           cardData={dataProfile && dataProfile.data.resume.workExperiences}
+           setCardData={ setCardData }
+          />
+          <EducacionCard
+          cardData={dataProfile && dataProfile.data.resume.higherEducationStudies}
+          setCardData={ setCardData } />
+          <HabilidadesTecnicasCard
+            cardData={dataProfile && dataProfile.data.resume.technicalSkills}
+            setCardData={ setCardData }
+          />
+ <CertificadosCard
+            cardData={dataProfile && dataProfile.data.resume.ciapCourses}
+            setCardData={ setCardData }
+          />
             </Box>
           </Box>
         </>
@@ -276,13 +344,15 @@ function PerfilEgresado() {
           >
             Habilidades
           </Text>
-          <HabilidadesTecnicasCard
-          cardData={dataProfile && dataProfile.data.resume.technicalSkills}
-          setCardData={ setCardData }
+          <HabilidadesCard
+            cardContentHabilidades={cardContentHabilidades}
+            setCardContentHabilidades={setCardContentHabilidades}
+            tipoHabilidad="Técnicas"
           />
-          <HabilidadesBlandasCard
-          cardData={dataProfile && dataProfile.data.resume.softSkills}
-          setCardData={ setCardData }
+          <HabilidadesCard
+            cardContentHabilidades={cardContentHabilidadesBlandas}
+            setCardContentHabilidades={setCardContentHabilidadesBlandas}
+            tipoHabilidad="Blandas"
           />
 
           <IdiomasCard

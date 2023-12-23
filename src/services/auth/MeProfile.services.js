@@ -95,7 +95,7 @@ export const editAboutMe = async (newData) => {
           body: JSON.stringify({
             title: newData.title,
             sourceLink: newData.sourceLink,
-            isVisible: true,
+            isVisible: false,
           }),
         });
     
@@ -121,7 +121,7 @@ export const editAboutMe = async (newData) => {
           body: JSON.stringify({
             title: newData.title,
             sourceLink: newData.sourceLink,
-            isVisible: true,
+            isVisible: newData.isVisible,
           }),
         });
     
@@ -166,7 +166,7 @@ export const editAboutMe = async (newData) => {
             title: newData.title,
             institution: newData.institution,
             endDate: newData.endDate,
-            isVisible: true,
+            isVisible: false,
           }),
         });
     
@@ -198,9 +198,9 @@ export const editAboutMe = async (newData) => {
     }
     };
 
-    export const EditHigherEducationStudy = async (title, newData) => {
+    export const EditHigherEducationStudy = async (originalTitle, newData) => {
       try {
-        const response = await fetch(`${BASE_URL}/alumni/me/higher-education-studies/${title}`, {
+        const response = await fetch(`${BASE_URL}/alumni/me/higher-education-studies/${originalTitle}`, {
           method: 'PATCH',
           credentials: "include", 
           headers: {
@@ -208,8 +208,9 @@ export const editAboutMe = async (newData) => {
           },
           body: JSON.stringify({
             title: newData.title,
-            description: newData.description,
-            isVisible: true,
+            institution: newData.institution,
+            endDate: newData.endDate,
+            isVisible: newData.isVisible,
           }),
         });
     
@@ -270,7 +271,7 @@ export const editAboutMe = async (newData) => {
           body: JSON.stringify({
             languageName: newData.languageName,
             masteryLevel: newData.masteryLevel,
-            isVisible: newData.isVisible,
+            isVisible: false,
           }),
         });
     
@@ -313,7 +314,7 @@ export const editAboutMe = async (newData) => {
           body: JSON.stringify({
             languageName: newData.languageName,
             masteryLevel: newData.masteryLevel,
-            isVisible: true,
+            isVisible: newData.isVisible,
           }),
         });
     
@@ -373,6 +374,7 @@ export const editAboutMe = async (newData) => {
           },
           body: JSON.stringify({
             id: newData.id,
+            isVisible: false,
           }),
         });
     
@@ -385,6 +387,29 @@ export const editAboutMe = async (newData) => {
         toast.error(`Error: ${error.message}`);
       }
     }
+
+export const editCiapCourse = async (id, newData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/ciap-courses/${id}`, {
+          method: 'PATCH',
+          credentials: "include",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            isVisible: newData.isVisible,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    };
 
     export const getCiapCourseItem = async (id) => {
       try {
@@ -417,7 +442,7 @@ export const editAboutMe = async (newData) => {
             description: newData.description,
             startDate: newData.startDate,
             endDate: newData.endDate,
-            isVisible: true,
+            isVisible: false,
           }),
         });
     
@@ -463,7 +488,7 @@ export const editAboutMe = async (newData) => {
             description: newData.description,
             startDate: newData.startDate,
             endDate: newData.endDate,
-            isVisible: true,
+            isVisible: newData.isVisible,
           }),
         });
     
@@ -521,7 +546,7 @@ export const editAboutMe = async (newData) => {
           },
           body: JSON.stringify({
             skillName: newData.skillName,
-            isVisible: true,
+            isVisible: false,
           }),
         });
        
@@ -598,7 +623,7 @@ export const editAboutMe = async (newData) => {
           body: JSON.stringify({
             skillCategoryName: newData.skillCategoryName,
             skillName: newData.skillName,
-            isVisible: true,
+            isVisible: false,
           }),
         });
        
@@ -616,6 +641,176 @@ export const editAboutMe = async (newData) => {
     export const deleteTechnicalSkill = async (skillCategory, skillName) => {
       try {
         const response = await fetch(`${BASE_URL}/alumni/me/resume/skill-category/${skillCategory}/technical-skill/${skillName}`, {
+          method: 'DELETE',
+          credentials: "include", 
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const AddIndustryOfInterest = async (newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/industry-of-interest`, {
+          method: 'POST',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            industryName: newData.industryName,
+            isVisible: false,
+          }),
+        });
+       
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+        toast.error(`Error: ${error.message[1]}`);
+      }
+    }
+
+    export const editIndustryOfInterest = async (industryName, newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/industry-of-interest/${industryName}`, {
+          method: 'PATCH',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            industryName: newData.industryName,
+            isVisible: newData.isVisible,
+          }),
+        });
+       
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+        toast.error(`Error: ${error.message[1]}`);
+      }
+    }
+
+    export const getIndustryOfInterestItem = async (industryName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/industry-of-interest/${industryName}`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+        return (data.data);
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const deleteIndustryOfInterest = async (industryName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/industry-of-interest/${industryName}`, {
+          method: 'DELETE',
+          credentials: "include", 
+        });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const AddPositionOfInterest = async (newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/positions-of-interest`, {
+          method: 'POST',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            positionName: newData.positionName,
+            isVisible: false,
+          }),
+        });
+       
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const editPositionOfInterest = async (positionName, newData) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/position-of-interest/${positionName}`, {
+          method: 'PATCH',
+          credentials: "include", 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            positionName: newData.positionName,
+            isVisible: newData.isVisible,
+          }),
+        });
+       
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.log(error);
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+
+    export const getPositionOfInterestItem = async (positionName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/position-of-interest/${positionName}`, {
+        method: "GET",
+        credentials: "include", 
+        });
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+        return (data.data);
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
+    export const deletePositionOfInterest = async (positionName) => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/position-of-interest/${positionName}`, {
           method: 'DELETE',
           credentials: "include", 
         });

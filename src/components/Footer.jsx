@@ -19,7 +19,7 @@ function Footer() {
         width={isLargerThan400 ? "auto" : "100%"}
         height="auto"
         padding="10px"
-        paddingLeft={["20px", "100px"]}
+        paddingLeft={isLargerThan700 ? "5vw" : isLargerThan400 ? "3vw" : "2vw"}
       >
         {isLargerThan700 ? (
           <>
@@ -53,7 +53,7 @@ function Footer() {
         width={isLargerThan400 ? "auto" : "100%"}
         height="auto"
         padding="10px"
-        paddingLeft={["20px", "100px"]}
+        paddingLeft={isLargerThan700 ? "5vw" : isLargerThan400 ? "3vw" : "2vw"}
       >
         {isLargerThan700 ? (
           <>
