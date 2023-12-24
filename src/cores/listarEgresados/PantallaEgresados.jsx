@@ -3,30 +3,19 @@ import ListarEgresados from "./ListarEgresados";
 import FiltrosEgresados from "./FiltrosEgresados";
 import { Box, useMediaQuery, Text, Flex } from "@chakra-ui/react";
 import { useEgresados } from "./EgresadosContext";
-import { useEffect } from "react";
 
 const PantallaEgresados = () => {
-  const {
-    egresados,
-    currentPage,
-    totalPages,
-    fetchPaginatedData,
-    setCurrentPage,
-    isLoading,
-  } = useEgresados();
+  const { currentPage, totalPages, isLoading, setCurrentPage } = useEgresados();
 
   const handlePreviousPage = () => {
     if (currentPage > 1 && !isLoading) {
       setCurrentPage(currentPage - 1);
-      fetchPaginatedData(currentPage - 1); // Llama a la función de paginación
     }
   };
 
   const handleNextPage = () => {
-    console.log("yo le dije eres un crack");
     if (currentPage < totalPages && !isLoading) {
       setCurrentPage(currentPage + 1);
-      fetchPaginatedData(currentPage + 1); // Llama a la función de paginación
     }
   };
 

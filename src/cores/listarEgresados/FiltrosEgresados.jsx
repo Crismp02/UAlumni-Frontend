@@ -16,14 +16,15 @@ import { useEgresados } from "./EgresadosContext";
 function FiltrosEgresados() {
   const {
     fetchPaginatedData,
-    setEgresados,
-    setCurrentPage,
     isLoading,
+    updateEgresadosData,
+    setCurrentPage,
+    totalPages,
   } = useEgresados();
+  const [page, setPage] = useState(1);
   const [currentPage,] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [egresados,] = useState([]);
-  const [totalPages, setTotalPages] = useState(1); // Inicializa con un valor predeterminado
   const [randomizationSeed, setRandomizationSeed] = useState(null);
 
   const [, setIsLoading] = useState(false);
@@ -31,7 +32,6 @@ function FiltrosEgresados() {
    const [seed, setSeed] = useState(0);
 
   const [isHovering, setIsHovering] = useState(false);
-  const [page, setPage] = useState(1);
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -78,7 +78,6 @@ function FiltrosEgresados() {
           throw new Error("Error al obtener los egresados");
         }
         const data = await response.json();
-        console.log("UPAA",data);
         if (Array.isArray(data.data.items)) {
           const categoriasObtenidas = data.data.items.map((item) => item.name);
           setCategorias(categoriasObtenidas);
@@ -183,11 +182,6 @@ function FiltrosEgresados() {
 
   // const [egresados, setEgresados] = useState([]);
 
-  const handlePaginate = async (page) => {
-    if (page < 1 || page > totalPages || isLoading) {
-      return;
-    }
- }
   const handleSubmit = async () => {
     if (isDisabled) {
       return;
@@ -195,12 +189,12 @@ function FiltrosEgresados() {
 
     const selectedCareers = Object.keys(selectedTags)
       .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
-      .map((career) => removeAccentsAndSpaces(career.toUpperCase()));
+      .map((career) => removeAccentsAndSpaces(career));
 
     // quitar espacios desactivados
     const careerParams = selectedCarrera
       ? [
-          removeAccentsAndSpaces(selectedCarrera.toUpperCase()),
+          removeAccentsAndSpaces(selectedCarrera),
           ...selectedCareers,
         ]
       : selectedCareers;
@@ -212,7 +206,7 @@ function FiltrosEgresados() {
     const selectedPositions = listPos.length > 0 ? listPos : [];
 
     // Agrega parámetros de paginación
-    const paginationParams = `${page}&per-page=3`;
+    const paginationParams = `${page}&per-page=1`;
 
     const filters = {
       page: paginationParams, // Asegura que siempre se inicie en la página 1 al realizar una búsqueda
@@ -239,6 +233,9 @@ function FiltrosEgresados() {
 
     const url = constructURL(newFilters);
 
+    await fetchPaginatedData(1, newFilters);
+      setCurrentPage(1);
+
     try {
       console.log(url);
       setIsLoading(true);
@@ -247,11 +244,9 @@ function FiltrosEgresados() {
         throw new Error("No hay respuesta del servidor");
       }
       const data = await response.json();
-      setEgresados(data.data.items)
-      setCurrentPage(1);// Reinicia la página a la primera al hacer una nueva búsqueda
-      setSeed(data.data.meta.randomizationSeed);
-      setTotalPages(data.data.meta.totalPages); // Actualiza la semilla
-    //  await handleSearch(); 
+      updateEgresadosData(data.data.items);
+      setPage(1);
+      setCurrentPage(1);
       console.log("Datos obtenidos:", data);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
@@ -261,13 +256,6 @@ function FiltrosEgresados() {
     
   };
 
-  const goToPreviousPage = async () => {
-    handlePaginate(currentPage - 1);// Llama a la función de búsqueda con la página anterior
-    }
-
-  const goToNextPage = async () => {
-    handlePaginate(currentPage + 1);    
-  };
 
   // const paginationParams = `${page}&per-page=10`;
 
