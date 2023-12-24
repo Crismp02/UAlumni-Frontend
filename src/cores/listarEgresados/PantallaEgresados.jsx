@@ -15,19 +15,18 @@ const PantallaEgresados = () => {
     isLoading,
   } = useEgresados();
 
-  useEffect(() => {
-    fetchPaginatedData(currentPage);
-  }, [fetchPaginatedData, currentPage]);
-
   const handlePreviousPage = () => {
-    if (currentPage > 1) {
+    if (currentPage > 1 && !isLoading) {
       setCurrentPage(currentPage - 1);
+      fetchPaginatedData(currentPage - 1); // Llama a la función de paginación
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
+    console.log("yo le dije eres un crack");
+    if (currentPage < totalPages && !isLoading) {
       setCurrentPage(currentPage + 1);
+      fetchPaginatedData(currentPage + 1); // Llama a la función de paginación
     }
   };
 

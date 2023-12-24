@@ -1,25 +1,16 @@
 import  { useState, useEffect } from "react";
 import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  useDisclosure,
-  IconButton,
   Checkbox,
-  Box
+  Box,
+  useDisclosure
 } from "@chakra-ui/react";
 import { useLocation } from 'react-router-dom';
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { useLocation } from "react-router-dom";
 import FiltrarNombre from "./FiltrarNombre";
 import FiltrarSkills from "./FiltrarSkills";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "./FiltrosButtons";
-import { useEgresados } from './EgresadosContext';
+import { useEgresados } from "./EgresadosContext";
 
 
 function FiltrosEgresados() {
@@ -29,8 +20,18 @@ function FiltrosEgresados() {
     setCurrentPage,
     isLoading,
   } = useEgresados();
-  const [isHovering, setIsHovering] = useState(false);
+  const [currentPage,] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [egresados,] = useState([]);
+  const [totalPages, setTotalPages] = useState(1); // Inicializa con un valor predeterminado
+  const [randomizationSeed, setRandomizationSeed] = useState(null);
+
   const [, setIsLoading] = useState(false);
+   // Estado para la semilla
+   const [seed, setSeed] = useState(0);
+
+  const [isHovering, setIsHovering] = useState(false);
+  const [page, setPage] = useState(1);
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -45,11 +46,11 @@ function FiltrosEgresados() {
     setSelectedCarrera(carreraFromUrl);
   }, [carreraFromUrl]);
 
-  {
-    /*Const del Drawer*/
-  }
+  // {
+  //   /*Const del Drawer*/
+  // }
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const placement = "left";
+  // const placement = "left";
 
   {
     /*Busqueda por nombre*/
@@ -182,6 +183,11 @@ function FiltrosEgresados() {
 
   // const [egresados, setEgresados] = useState([]);
 
+  const handlePaginate = async (page) => {
+    if (page < 1 || page > totalPages || isLoading) {
+      return;
+    }
+ }
   const handleSubmit = async () => {
     if (isDisabled) {
       return;
@@ -205,7 +211,11 @@ function FiltrosEgresados() {
     const selectedCategories = list.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
 
+    // Agrega parámetros de paginación
+    const paginationParams = `${page}&per-page=3`;
+
     const filters = {
+      page: paginationParams, // Asegura que siempre se inicie en la página 1 al realizar una búsqueda
       name: valueName ? valueName : undefined,
       careers:
         careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
@@ -219,7 +229,9 @@ function FiltrosEgresados() {
         selectedPositions.length > 0
           ? selectedPositions.join("&positions=")
           : undefined,
+      // Agrega la semilla a la URL para paginación
     };
+
 
     const newFilters = Object.fromEntries(
       Object.entries(filters).filter(([, value]) => value !== undefined)
@@ -235,8 +247,11 @@ function FiltrosEgresados() {
         throw new Error("No hay respuesta del servidor");
       }
       const data = await response.json();
-      setEgresados(data.data.items);
-      setCurrentPage(1); // Reinicia la página a la primera al hacer una nueva búsqueda
+      setEgresados(data.data.items)
+      setCurrentPage(1);// Reinicia la página a la primera al hacer una nueva búsqueda
+      setSeed(data.data.meta.randomizationSeed);
+      setTotalPages(data.data.meta.totalPages); // Actualiza la semilla
+    //  await handleSearch(); 
       console.log("Datos obtenidos:", data);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
@@ -245,6 +260,19 @@ function FiltrosEgresados() {
     }
     
   };
+
+  const goToPreviousPage = async () => {
+    handlePaginate(currentPage - 1);// Llama a la función de búsqueda con la página anterior
+    }
+
+  const goToNextPage = async () => {
+    handlePaginate(currentPage + 1);    
+  };
+
+  // const paginationParams = `${page}&per-page=10`;
+
+  // Funciones para manejar la paginación
+
 
   const handleReset = () => {
     setValueName("");
@@ -289,9 +317,7 @@ function FiltrosEgresados() {
     <>
       
       <Box
-      marginLeft="50px"
-      
-      >
+      marginLeft="50px">
             <FiltrarNombre
               valueName={valueName}
               handleChangeName={handleChangeName}
@@ -346,10 +372,11 @@ function FiltrosEgresados() {
               isHovering={isHovering}
               setIsHovering={setIsHovering}
               onClose={onClose}
-            />
-   </Box>         
+            />      
+      </Box>         
     </>
   );
 }
+
 
 export default FiltrosEgresados;

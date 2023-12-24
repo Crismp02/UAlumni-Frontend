@@ -25,7 +25,6 @@ function FiltrarSkills({
 }) {
   const [isHovering, setIsHovering] = useState(false);
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
-  console.log("AJAAA", categoria);
 
   const [, setCargandoHabilidades] = useState(false);
 
