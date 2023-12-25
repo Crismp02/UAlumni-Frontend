@@ -30,10 +30,12 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
   const [checkedItems, setCheckedItems] = useState([]);
 
   useEffect(() => {
-   setNewCardData(cardData);
-   const checkedItems = cardData.filter(item => item.isVisible).map(item => item.positionName);
-   setCheckedItems(checkedItems);
- }, [cardData]);
+    setNewCardData(cardData);
+    const checkedItems = cardData
+      .filter((item) => item.isVisible)
+      .map((item) => item.positionName);
+    setCheckedItems(checkedItems);
+  }, [cardData]);
 
   const toast = useToast();
 
@@ -60,7 +62,10 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
     if (e.target.checked) {
       setCheckedItems(newCardData.map((item) => item.positionName));
       // Update all items to be isVisible: true in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: true,
+      }));
       for (const item of updatedData) {
         await editPositionOfInterest(item.positionName, item);
       }
@@ -68,7 +73,10 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
     } else {
       setCheckedItems([]);
       // Update all items to be isVisible: false in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: false,
+      }));
       for (const item of updatedData) {
         await editPositionOfInterest(item.positionName, item);
       }
@@ -79,21 +87,27 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
   const handleCheck = async (e, item) => {
     const isChecked = e.target.checked;
     const updatedItem = { ...item, isVisible: isChecked };
-  
+
     if (isChecked) {
-      setCheckedItems(prevItems => [...prevItems, item.positionName]);
+      setCheckedItems((prevItems) => [...prevItems, item.positionName]);
     } else {
-      setCheckedItems(prevItems => prevItems.filter(positionName => positionName !== item.positionName));
+      setCheckedItems((prevItems) =>
+        prevItems.filter((positionName) => positionName !== item.positionName)
+      );
     }
-  
+
     try {
       // Update the isVisible property in the backend
       await editPositionOfInterest(item.positionName, updatedItem);
       // Update the isVisible property in the local state
-      setNewCardData(prevData => prevData.map(card => card.positionName === item.positionName ? updatedItem : card));
+      setNewCardData((prevData) =>
+        prevData.map((card) =>
+          card.positionName === item.positionName ? updatedItem : card
+        )
+      );
     } catch (error) {
       // Handle error
-      console.error('Error updating item:', error);
+      console.error("Error updating item:", error);
     }
   };
 
@@ -343,18 +357,22 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
             justifyContent="space-between"
           >
             <Flex alignItems="left">
-            <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
-            <Text
-              fontWeight="bold"
-              fontSize="md"
-              marginLeft="2"
-              marginBottom="1"
-              display="flex"
-              alignItems="center"
-              color="#007935"
-            >
-              Posiciones de interés
-            </Text>
+              <Checkbox
+                colorScheme="green"
+                isChecked={checkedItems.length === newCardData.length}
+                onChange={handleCheckAll}
+              />
+              <Text
+                fontWeight="bold"
+                fontSize="md"
+                marginLeft="2"
+                marginBottom="1"
+                display="flex"
+                alignItems="center"
+                color="#007935"
+              >
+                Posiciones de interés
+              </Text>
             </Flex>
             <AddIcon
               onClick={() => handleAddClick("IndustriasInteres")}
@@ -371,52 +389,57 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
           {Array.isArray(newCardData) && newCardData.length > 0 ? (
             newCardData.map((item, index) => (
               <Flex key={index} alignItems="center" marginTop="3">
-              <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.positionName)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
-              <Box
-                key={index}
-                border="2px solid #007935"
-                borderTop="none"
-                borderRight="none"
-                borderBottom="none"
-                marginTop="3"
-                paddingLeft="2"
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-                width="100%"
-              >
-                <Box>
-                  <Flex justifyContent="space-between">
-                    <Text fontWeight="bold" fontSize="15px">
-                      {item.positionName}
-                    </Text>
-                  </Flex>
+                <Checkbox
+                  colorScheme="green"
+                  isChecked={checkedItems.includes(item.positionName)}
+                  onChange={(e) => handleCheck(e, item)}
+                  marginRight="5px"
+                />
+                <Box
+                  key={index}
+                  border="2px solid #007935"
+                  borderTop="none"
+                  borderRight="none"
+                  borderBottom="none"
+                  marginTop="3"
+                  paddingLeft="2"
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Box>
+                    <Flex justifyContent="space-between">
+                      <Text fontWeight="bold" fontSize="15px">
+                        {item.positionName}
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Box>
+                    <Flex justifyContent="flex-end">
+                      <EditIcon
+                        cursor="pointer"
+                        display="flex"
+                        justifySelf="flex-end"
+                        color="#C0C0C0"
+                        onClick={() => handleEditCard(item.positionName)}
+                      />
+                      <DeleteIcon
+                        cursor="pointer"
+                        display="flex"
+                        justifySelf="flex-end"
+                        marginLeft="10px"
+                        color="#C0C0C0"
+                        onClick={() =>
+                          handleDeleteClick(
+                            item.positionName,
+                            "cardContentPortafolios"
+                          )
+                        }
+                      />
+                    </Flex>
+                  </Box>
                 </Box>
-                <Box>
-                  <Flex justifyContent="flex-end">
-                    <EditIcon
-                      cursor="pointer"
-                      display="flex"
-                      justifySelf="flex-end"
-                      color="#C0C0C0"
-                      onClick={() => handleEditCard(item.positionName)}
-                    />
-                    <DeleteIcon
-                      cursor="pointer"
-                      display="flex"
-                      justifySelf="flex-end"
-                      marginLeft="10px"
-                      color="#C0C0C0"
-                      onClick={() =>
-                        handleDeleteClick(
-                          item.positionName,
-                          "cardContentPortafolios"
-                        )
-                      }
-                    />
-                  </Flex>
-                </Box>
-              </Box>
               </Flex>
             ))
           ) : (
@@ -432,9 +455,9 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
               boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
             >
               <Text color="grey">
-                En esta sección, puedes añadir posiciones de interés.
+                En esta sección, puedes añadir Posiciones de Interés.
               </Text>
-            </Box>   
+            </Box>
           )}
         </CardBody>
       </Card>
@@ -443,10 +466,16 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar posición de interés</ModalHeader>
+          <ModalHeader color="#007935">
+            Editar Posiciones de Interés
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (
               <>
+                <Text marginTop="2px" as="b">
+                  Nombre de la Posición de Interés
+                </Text>
                 <Input
                   value={editingCard.positionName}
                   onChange={(e) =>
@@ -455,7 +484,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
                       positionName: e.target.value,
                     }))
                   }
-                  placeholder="Editar industria..."
+                  placeholder="Nombre de la Posición de Interés..."
                   size="lg"
                   marginBottom="4"
                 />
@@ -463,10 +492,22 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleSaveEdit}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={handleCancelEdit}>
+            <Button
+              variant="ghost"
+              onClick={handleCancelEdit}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -477,24 +518,40 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Agregar Posición de interés</ModalHeader>
+          <ModalHeader color="#007935">Agregar Posición de Interés</ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
-              <>
-                <Input
-                  value={additionalFields.positionName || ""}
-                  onChange={(e) =>
-                    handleFieldChange("positionName", e.target.value)
-                  }
-                  placeholder="Nombre posición de interés"
-                  marginBottom="10px"
-                />
-              </>
+            <>
+              <Text marginTop="2px" as="b">
+                Nombre de la Posición de Interés
+              </Text>
+              <Input
+                value={additionalFields.positionName || ""}
+                onChange={(e) =>
+                  handleFieldChange("positionName", e.target.value)
+                }
+                placeholder="Nombre de la Posición de Interés"
+                marginBottom="10px"
+              />
+            </>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddPortfolioItem}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleAddPortfolioItem}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setShowAddModal(false)}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -504,9 +561,12 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eliminar posición de interés</ModalHeader>
+          <ModalHeader color="#007935">
+            Eliminar Posición de Interés
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
-            ¿Está seguro de que desea eliminar esta posición de interés?
+            ¿Está seguro de que desea eliminar esta Posición de Interés?
           </ModalBody>
           <ModalFooter>
             <Button

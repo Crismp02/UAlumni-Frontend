@@ -14,7 +14,7 @@ import {
   Card,
   CardBody,
   Divider,
-  Checkbox
+  Checkbox,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -29,11 +29,13 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
 
- useEffect(() => {
-  setNewCardData(cardData);
-  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.industryName);
-  setCheckedItems(checkedItems);
-}, [cardData]);
+  useEffect(() => {
+    setNewCardData(cardData);
+    const checkedItems = cardData
+      .filter((item) => item.isVisible)
+      .map((item) => item.industryName);
+    setCheckedItems(checkedItems);
+  }, [cardData]);
 
   const toast = useToast();
 
@@ -60,7 +62,10 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     if (e.target.checked) {
       setCheckedItems(newCardData.map((item) => item.industryName));
       // Update all items to be isVisible: true in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: true,
+      }));
       for (const item of updatedData) {
         await editIndustryOfInterest(item.industryName, item);
       }
@@ -68,7 +73,10 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     } else {
       setCheckedItems([]);
       // Update all items to be isVisible: false in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: false,
+      }));
       for (const item of updatedData) {
         await editIndustryOfInterest(item.industryName, item);
       }
@@ -79,24 +87,29 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
   const handleCheck = async (e, item) => {
     const isChecked = e.target.checked;
     const updatedItem = { ...item, isVisible: isChecked };
-  
+
     if (isChecked) {
-      setCheckedItems(prevItems => [...prevItems, item.industryName]);
+      setCheckedItems((prevItems) => [...prevItems, item.industryName]);
     } else {
-      setCheckedItems(prevItems => prevItems.filter(industryName => industryName !== item.industryName));
+      setCheckedItems((prevItems) =>
+        prevItems.filter((industryName) => industryName !== item.industryName)
+      );
     }
-  
+
     try {
       // Update the isVisible property in the backend
       await editIndustryOfInterest(item.industryName, updatedItem);
       // Update the isVisible property in the local state
-      setNewCardData(prevData => prevData.map(card => card.industryName === item.industryName ? updatedItem : card));
+      setNewCardData((prevData) =>
+        prevData.map((card) =>
+          card.industryName === item.industryName ? updatedItem : card
+        )
+      );
     } catch (error) {
       // Handle error
-      console.error('Error updating item:', error);
+      console.error("Error updating item:", error);
     }
   };
-
 
   const handleAddPortfolioItem = async () => {
     // Validar que los campos no estén vacíos
@@ -177,14 +190,6 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     const cardToEdit = await getIndustryOfInterestItem(cardTitle);
     setEditingCard(cardToEdit);
     setOriginalTitle(cardTitle); // Guardar el título original
-  };
-
-  // Modal de edición Experiencial Laboral
-  const handleEditInputChange = (field, value, setState) => {
-    setState((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
   };
 
   const [content, setContent] = useState(null);
@@ -342,18 +347,22 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
             justifyContent="space-between"
           >
             <Flex alignItems="left">
-            <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
-            <Text
-              fontWeight="bold"
-              fontSize="md"
-              marginLeft="2"
-              marginBottom="1"
-              display="flex"
-              alignItems="center"
-              color="#007935"
-            >
-              Industrias de interés
-            </Text>
+              <Checkbox
+                colorScheme="green"
+                isChecked={checkedItems.length === newCardData.length}
+                onChange={handleCheckAll}
+              />
+              <Text
+                fontWeight="bold"
+                fontSize="md"
+                marginLeft="2"
+                marginBottom="1"
+                display="flex"
+                alignItems="center"
+                color="#007935"
+              >
+                Industrias de interés
+              </Text>
             </Flex>
             <AddIcon
               onClick={() => handleAddClick("IndustriasInteres")}
@@ -370,52 +379,57 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
           {Array.isArray(newCardData) && newCardData.length > 0 ? (
             newCardData.map((item, index) => (
               <Flex key={index} alignItems="center" marginTop="3">
-              <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.industryName)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
-              <Box
-                key={index}
-                border="2px solid #007935"
-                borderTop="none"
-                borderRight="none"
-                borderBottom="none"
-                marginTop="3"
-                paddingLeft="2"
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-                width="100%"
-              >
-                <Box>
-                  <Flex justifyContent="space-between">
-                    <Text fontWeight="bold" fontSize="15px">
-                      {item.industryName}
-                    </Text>
-                  </Flex>
+                <Checkbox
+                  colorScheme="green"
+                  isChecked={checkedItems.includes(item.industryName)}
+                  onChange={(e) => handleCheck(e, item)}
+                  marginRight="5px"
+                />
+                <Box
+                  key={index}
+                  border="2px solid #007935"
+                  borderTop="none"
+                  borderRight="none"
+                  borderBottom="none"
+                  marginTop="3"
+                  paddingLeft="2"
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Box>
+                    <Flex justifyContent="space-between">
+                      <Text fontWeight="bold" fontSize="15px">
+                        {item.industryName}
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Box>
+                    <Flex justifyContent="flex-end">
+                      <EditIcon
+                        cursor="pointer"
+                        display="flex"
+                        justifySelf="flex-end"
+                        color="#C0C0C0"
+                        onClick={() => handleEditCard(item.industryName)}
+                      />
+                      <DeleteIcon
+                        cursor="pointer"
+                        display="flex"
+                        justifySelf="flex-end"
+                        marginLeft="10px"
+                        color="#C0C0C0"
+                        onClick={() =>
+                          handleDeleteClick(
+                            item.industryName,
+                            "cardContentPortafolios"
+                          )
+                        }
+                      />
+                    </Flex>
+                  </Box>
                 </Box>
-                <Box>
-                  <Flex justifyContent="flex-end">
-                    <EditIcon
-                      cursor="pointer"
-                      display="flex"
-                      justifySelf="flex-end"
-                      color="#C0C0C0"
-                      onClick={() => handleEditCard(item.industryName)}
-                    />
-                    <DeleteIcon
-                      cursor="pointer"
-                      display="flex"
-                      justifySelf="flex-end"
-                      marginLeft="10px"
-                      color="#C0C0C0"
-                      onClick={() =>
-                        handleDeleteClick(
-                          item.industryName,
-                          "cardContentPortafolios"
-                        )
-                      }
-                    />
-                  </Flex>
-                </Box>
-              </Box>
               </Flex>
             ))
           ) : (
@@ -431,7 +445,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
               boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
             >
               <Text color="grey">
-                En esta sección, puedes añadir industrias de interés.
+                En esta sección, puedes añadir Industrias de Interés.
               </Text>
             </Box>
           )}
@@ -442,11 +456,18 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Industrias de interés</ModalHeader>
+          <ModalHeader color="#007935">
+            Editar Industrias de Interés
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (
               <>
+                <Text marginTop="2px" as="b">
+                  Nombre de la industria de interés
+                </Text>
                 <Input
+                  marginTop="2px"
                   value={editingCard.industryName}
                   onChange={(e) =>
                     setEditingCard((prevCard) => ({
@@ -454,7 +475,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                       industryName: e.target.value,
                     }))
                   }
-                  placeholder="Editar industria..."
+                  placeholder="Nombre de la industria de interés..."
                   size="lg"
                   marginBottom="4"
                 />
@@ -462,10 +483,22 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleSaveEdit}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={handleCancelEdit}>
+            <Button
+              variant="ghost"
+              onClick={handleCancelEdit}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -476,27 +509,44 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+          <ModalHeader color="#007935">
+            Agregar Industrias de Interés
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
-            {cardTypeToAdd === "IndustriasInteres" && (
-              <>
-                <Input
-                  value={additionalFields.industryName || ""}
-                  onChange={(e) =>
-                    handleFieldChange("industryName", e.target.value)
-                  }
-                  placeholder="Nombre industria"
-                  marginBottom="10px"
-                />
-              </>
-            )}
+            <>
+              <Text marginTop="2px" as="b">
+                Nombre de la industria de interés
+              </Text>
+              <Input
+                marginTop="2px"
+                value={additionalFields.industryName || ""}
+                onChange={(e) =>
+                  handleFieldChange("industryName", e.target.value)
+                }
+                placeholder="Nombre de la Industria de Interés"
+                marginBottom="10px"
+              />
+            </>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddPortfolioItem}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleAddPortfolioItem}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setShowAddModal(false)}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -506,9 +556,12 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eliminar Industria de interés</ModalHeader>
+          <ModalHeader color="#007935">
+            Eliminar Industria de Interés
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
-            ¿Está seguro de que desea eliminar esta industria de interés?
+            ¿Está seguro de que desea eliminar esta Industria de Interés?
           </ModalBody>
           <ModalFooter>
             <Button

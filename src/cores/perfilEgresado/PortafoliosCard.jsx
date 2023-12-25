@@ -422,11 +422,18 @@ const handleCheck = async (e, item) => {
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Portafolios</ModalHeader>
+        <ModalHeader color="#007935">
+            Editar portafolio
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (
               <>
+               <Text marginTop="2px" as="b">
+                  Título del portafolio
+                </Text>
                 <Input
+                marginTop="2px"
                   value={editingCard.title}
                   onChange={(e) =>
                     handleEditInputChange(
@@ -435,16 +442,20 @@ const handleCheck = async (e, item) => {
                       setEditingCard
                     )
                   }
-                  placeholder="Editar titulo..."
+                  placeholder="Titulo del portafolio"
                   size="lg"
                   marginBottom="4"
                 />
+                <Text marginTop="8px" as="b">
+                  Link del portafolio
+                </Text>
                 <Input
+                marginTop="2px"
                   value={editingCard.sourceLink}
                   onChange={(e) =>
                     handleEditInputChange("sourceLink", e.target.value, setEditingCard)
                   }
-                  placeholder="Editar Url..."
+                  placeholder="Link del Portafolio"
                   size="lg"
                   marginBottom="4"
                 />
@@ -458,10 +469,14 @@ const handleCheck = async (e, item) => {
               onClick={
                 handleSaveEdit
               }
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
             >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={handleCancelEdit}>
+            <Button variant="ghost" onClick={handleCancelEdit} color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}>
               Cancelar
             </Button>
           </ModalFooter>
@@ -472,32 +487,43 @@ const handleCheck = async (e, item) => {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+        <ModalHeader color="#007935">
+            Agregar portafolio
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
-            {cardTypeToAdd === "Portafolios" && (
               <>
+              <Text marginTop="2px" as="b">
+                  Título del portafolio
+                </Text>
                 <Input
+                marginTop="2px"
                   value={additionalFields.title || ""}
                   onChange={(e) => handleFieldChange("title", e.target.value)}
-                  placeholder="Título"
+                  placeholder="Título del portafolio"
                   marginBottom="10px"
                 />
-
+ <Text marginTop="8px" as="b">
+                  Link del portafolio
+                </Text>
                 <Input
+                marginTop="2px"
                   value={additionalFields.sourceLink || ""}
                   onChange={(e) => handleFieldChange("sourceLink", e.target.value)}
-                  placeholder="Url del portafolio"
+                  placeholder="Link del portafolio"
                   marginBottom="10px"
                 />
               </>
-            )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddPortfolioItem}>
+            <Button colorScheme="blue" mr={3} onClick={handleAddPortfolioItem}               bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}>
               Guardar
             </Button>
-            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+            <Button variant="ghost" onClick={() => setShowAddModal(false)} color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}>
               Cancelar
             </Button>
           </ModalFooter>
@@ -507,8 +533,8 @@ const handleCheck = async (e, item) => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eliminar Portafolio</ModalHeader>
-          <ModalBody>¿Está seguro de que desea eliminar este Portafolio?</ModalBody>
+          <ModalHeader>Eliminar portafolio</ModalHeader>
+          <ModalBody>¿Está seguro de que desea eliminar este portafolio?</ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"
