@@ -8,7 +8,10 @@ import {
 
 const IdiomasCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
-
+  if (!Array.isArray(newCardData) || newCardData.length === 0) {
+    return null;
+  }
+  
   return (
     <>
     <Card marginTop="20px">

@@ -3,7 +3,10 @@ import { Text, Box, Flex, Card, CardBody, Divider } from "@chakra-ui/react";
 
 const EducacionCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
-
+  if (!Array.isArray(newCardData) || newCardData.length === 0) {
+    return null;
+  }
+  
   return (
     <>
       <Card marginTop="20px">

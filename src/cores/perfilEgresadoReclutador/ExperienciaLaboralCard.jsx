@@ -8,7 +8,10 @@ import {
 
 const ExperienciaLaboralCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
-
+  if (!Array.isArray(newCardData) || newCardData.length === 0) {
+    return null;
+  }
+  
   return (
     <>
      <Card>

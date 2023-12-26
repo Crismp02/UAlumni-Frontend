@@ -3,10 +3,13 @@ import { Text, Box, Flex, Divider, Card, CardBody } from "@chakra-ui/react"; // 
 
 const PortafoliosCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
-
+  if (!Array.isArray(newCardData) || newCardData.length === 0) {
+    return null;
+  }
+  
   return (
     <>
-      <Card>
+      <Card marginTop="20px">
       <CardBody p="10px">
       <Text
         fontWeight="bold"

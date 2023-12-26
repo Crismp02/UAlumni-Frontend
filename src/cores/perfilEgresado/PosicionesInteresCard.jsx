@@ -371,7 +371,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
                 alignItems="center"
                 color="#007935"
               >
-                Posiciones de interés
+                Posiciones de Interés
               </Text>
             </Flex>
             <AddIcon

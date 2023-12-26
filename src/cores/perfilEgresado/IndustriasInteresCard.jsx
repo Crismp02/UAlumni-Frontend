@@ -361,7 +361,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                 alignItems="center"
                 color="#007935"
               >
-                Industrias de interés
+                Industrias de Interés
               </Text>
             </Flex>
             <AddIcon

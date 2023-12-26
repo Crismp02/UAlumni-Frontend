@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Text, Box, Card, CardBody, Divider } from "@chakra-ui/react";
 
 const HabilidadesTecnicasCard = ({ cardData }) => {
+  if (!Array.isArray(cardData) || cardData.length === 0) {
+    return null;
+  }
   const [groupedSkills, setGroupedSkills] = useState({});
 
   useEffect(() => {
@@ -29,7 +32,7 @@ const HabilidadesTecnicasCard = ({ cardData }) => {
             alignItems="center"
             color="#007935"
           >
-            Técnicas
+            Habilidades Técnicas
           </Text>
           <Divider orientation="horizontal" />
           {Object.entries(groupedSkills).map(([category, skills]) => (

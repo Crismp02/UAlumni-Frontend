@@ -3,6 +3,9 @@ import { Text, Box, Card, CardBody, Divider } from "@chakra-ui/react";
 
 const CertificadosCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
+  if (!Array.isArray(newCardData) || newCardData.length === 0) {
+    return null;
+  }
 
   return (
     <>

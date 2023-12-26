@@ -15,6 +15,8 @@ import { getAlumniProfile } from "../../services/profileEgresado/AlumniProfile.s
 import LoadingSpinner from "../../components/LoadingSpinner";
 import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
 import DownloadCV from "./DownloadCV";
+import IndustriasInteresCard from "./IndustriasInteresCard";
+import PosicionesInteresCard from "./PosiciónInterésCard";
 
 function PerfilEgresadoReclutador() {
   const { email } = useParams();
@@ -102,10 +104,16 @@ function PerfilEgresadoReclutador() {
               width={{ base: "100%", md: "33.3%" }}
               height="100%"
               marginRight={{ base: "0", md: "20px" }}
-              marginBottom={{ base: "20px", md: "0" }}
+              marginBottom= "20px"
               marginLeft={{ base: "0", md: "20px" }}
               position="relative"
             >
+              <IndustriasInteresCard
+              cardData={dataProfile && dataProfile.data.resume.industriesOfInterest}/>
+
+              <PosicionesInteresCard
+              cardData={dataProfile && dataProfile.data.resume.positionsOfInterest}/>
+
               <PortafoliosCard
                 cardData={dataProfile && dataProfile.data.resume.portfolio}
               />
@@ -155,7 +163,7 @@ function PerfilEgresadoReclutador() {
                     alignItems="center"
                     color="#007935"
                   >
-                    Información de contacto
+                    Información de Contacto
                   </Text>
                   <Divider orientation="horizontal" />
                   <Box

@@ -7,7 +7,10 @@ import {
 
 const HabilidadesBlandasCard = ({ cardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
-
+  if (!Array.isArray(newCardData) || newCardData.length === 0) {
+    return null;
+  }
+  
   return (
     <>
       <Card marginTop="20px">
@@ -21,7 +24,7 @@ const HabilidadesBlandasCard = ({ cardData }) => {
    alignItems="center"
    color="#007935"
 >
-  Blandas
+  Habilidades Blandas
 </Text>
 <Divider orientation='horizontal' />
 <Box
