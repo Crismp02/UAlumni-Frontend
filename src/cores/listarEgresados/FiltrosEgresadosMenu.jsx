@@ -182,12 +182,12 @@ function FiltrosEgresadosMenu() {
 
     const selectedCareers = Object.keys(selectedTags)
       .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
-      .map((career) => removeAccentsAndSpaces(career.toUpperCase()));
+      .map((career) => career);
 
     // quitar espacios desactivados
     const careerParams = selectedCarrera
       ? [
-          removeAccentsAndSpaces(selectedCarrera.toUpperCase()),
+          selectedCarrera,
           ...selectedCareers,
         ]
       : selectedCareers;
@@ -270,12 +270,7 @@ function FiltrosEgresadosMenu() {
   };
 
   // normalizar texto de carreras
-  const removeAccentsAndSpaces = (text) => {
-    return text
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  };
+
 
   return (
     <>

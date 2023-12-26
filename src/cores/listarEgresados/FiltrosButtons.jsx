@@ -9,6 +9,7 @@ function FiltrosButtons({
   setIsHovering,
   setIsFocused,
   onClose,
+  setHasSearched,
 }) {
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
   return (
@@ -42,6 +43,7 @@ function FiltrosButtons({
               onClick={() => {
                 handleSubmit();
                 onClose();
+                setHasSearched(true);
               }}
               isDisabled={isDisabled}
               onMouseEnter={() => setIsHovering(true)}
@@ -62,6 +64,7 @@ function FiltrosButtons({
             onClick={() => {
               handleSubmit();
               onClose();
+              setHasSearched(true);
             }}
             onBlur={() => setIsFocused(false)}
             isDisabled={isDisabled}

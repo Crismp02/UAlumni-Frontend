@@ -1,19 +1,17 @@
-import  { useState, useEffect } from "react";
-import {
-  Checkbox,
-  Box,
-  useDisclosure
-} from "@chakra-ui/react";
+
+import { Box, Checkbox, useDisclosure } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
-import FiltrarNombre from "./FiltrarNombre";
-import FiltrarSkills from "./FiltrarSkills";
-import FiltrarPositions from "./FiltrarPositions";
 import FiltrarCarreras from "./FiltrarCarreras";
+import FiltrarNombre from "./FiltrarNombre";
+import FiltrarPositions from "./FiltrarPositions";
+import FiltrarSkills from "./FiltrarSkills";
 import FiltrosButtons from "./FiltrosButtons";
 import { useEgresados } from "./EgresadosContext";
+import PropTypes from 'prop-types';
 
 
-function FiltrosEgresados() {
+function FiltrosEgresados({ setHasSearched }) {
   const {
     fetchPaginatedData,
     isLoading,
@@ -189,12 +187,12 @@ function FiltrosEgresados() {
 
     const selectedCareers = Object.keys(selectedTags)
       .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
-      .map((career) => removeAccentsAndSpaces(career));
+      .map((career) => career);
 
     // quitar espacios desactivados
     const careerParams = selectedCarrera
       ? [
-          removeAccentsAndSpaces(selectedCarrera),
+          selectedCarrera,
           ...selectedCareers,
         ]
       : selectedCareers;
@@ -206,7 +204,7 @@ function FiltrosEgresados() {
     const selectedPositions = listPos.length > 0 ? listPos : [];
 
     // Agrega parámetros de paginación
-    const paginationParams = `${page}&per-page=1`;
+    const paginationParams = `${page}&per-page=4`;
 
     const filters = {
       page: paginationParams, // Asegura que siempre se inicie en la página 1 al realizar una búsqueda
@@ -293,14 +291,6 @@ function FiltrosEgresados() {
     return decodeURIComponent(url.toString());
   };
 
-  // normalizar texto de carreras
-  const removeAccentsAndSpaces = (text) => {
-    return text
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-  };
-
   return (
     <>
       
@@ -360,11 +350,14 @@ function FiltrosEgresados() {
               isHovering={isHovering}
               setIsHovering={setIsHovering}
               onClose={onClose}
+              setHasSearched={setHasSearched}
             />      
       </Box>         
     </>
   );
 }
 
-
+FiltrosEgresados.propTypes = {
+  setHasSearched: PropTypes.func.isRequired,
+};
 export default FiltrosEgresados;
