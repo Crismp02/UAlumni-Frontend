@@ -92,51 +92,59 @@ const ContactoCard = ({ cardData: initialCardData }) => {
     <>
       {cardData && (
         <>
-          <Card>
-            <CardBody p="10px">
-              <Box
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Text
-                  fontWeight="bold"
-                  fontSize="md"
-                  marginLeft="2"
-                  marginBottom="1"
-                  display="flex"
-                  alignItems="center"
-                  color="#007935"
-                >
-                  Contacto
-                </Text>
-                <EditIcon
-                  cursor="pointer"
-                  display="flex"
-                  justifySelf="flex-end"
-                  color="#C0C0C0"
-                  onClick={() => handleEditCard(cardData)}
-                />
-              </Box>
-              <Divider orientation="horizontal" />
-              <Box
-                border="2px solid #007935"
-                borderTop="none"
-                borderRight="none"
-                borderBottom="none"
-                marginTop="3"
-                paddingLeft="2"
-              >
-                <Flex>
-                  <Text fontWeight="bold" fontSize="15px">
-                    Dirección
-                  </Text>
-                </Flex>
-                <Text>{cardData.address}</Text>
-              </Box>
-            </CardBody>
-          </Card>
+         <Card>
+  <CardBody p="10px">
+    <Box
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Text
+        fontWeight="bold"
+        fontSize="md"
+        marginLeft="2"
+        marginBottom="1"
+        display="flex"
+        alignItems="center"
+        color="#007935"
+      >
+        Contacto
+      </Text>
+      <EditIcon
+        cursor="pointer"
+        display="flex"
+        justifySelf="flex-end"
+        color="#C0C0C0"
+        onClick={() => handleEditCard(cardData)}
+      />
+    </Box>
+    <Divider orientation="horizontal" />
+    <Box
+      border="2px solid #007935"
+      borderTop="none"
+      borderRight="none"
+      borderBottom="none"
+      marginTop="3"
+      paddingLeft="2"
+    >
+      <Flex>
+        <Text fontWeight="bold" fontSize="15px">
+          Dirección
+        </Text>
+      </Flex>
+      {cardData.address ? (
+        <Text>{cardData.address}</Text>
+      ) : (
+        <Box marginTop="10px">
+          <Text color="gray.500">
+            En esta sección, puedes añadir tu dirección.
+          </Text>
+        </Box>
+      )}
+    </Box>
+  </CardBody>
+</Card>
 
           {/* Modal de edición Contacto*/}
           <Modal isOpen={showEditModal} onClose={handleCancelEdit}>

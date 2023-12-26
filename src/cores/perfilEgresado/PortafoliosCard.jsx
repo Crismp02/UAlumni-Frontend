@@ -402,15 +402,12 @@ const handleCheck = async (e, item) => {
       </Flex>
     ))
   : (<Box
-      bg="white"
-      padding="4"
-      border="1px solid #ccc"
-      borderRadius="8px"
-      marginLeft="10"
-      marginRight="10"
-      marginTop="5"
-      marginBottom="5"
-      boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+    marginTop="10px"
+    border="2px solid #007935"
+    borderTop="none"
+    borderRight="none"
+    borderBottom="none"
+    paddingLeft="2"
     >
       <Text color="grey">En esta sección, puedes añadir un portafolio de tus trabajos, o cualquier otra cosa que desees mostrar.</Text>
     </Box>)
@@ -533,7 +530,10 @@ const handleCheck = async (e, item) => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eliminar portafolio</ModalHeader>
+        <ModalHeader color="#007935">
+            Eliminar portafolio
+          </ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>¿Está seguro de que desea eliminar este portafolio?</ModalBody>
           <ModalFooter>
             <Button

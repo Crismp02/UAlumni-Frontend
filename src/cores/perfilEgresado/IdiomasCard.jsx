@@ -14,7 +14,7 @@ import {
   Card,
   CardBody,
   Divider,
-  Checkbox
+  Checkbox,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -32,12 +32,13 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
 
- useEffect(() => {
-  setNewCardData(cardData);
-  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.languageName);
-  setCheckedItems(checkedItems);
-}, [cardData]);
-
+  useEffect(() => {
+    setNewCardData(cardData);
+    const checkedItems = cardData
+      .filter((item) => item.isVisible)
+      .map((item) => item.languageName);
+    setCheckedItems(checkedItems);
+  }, [cardData]);
 
   // Define idiomas como un estado
   const [idiomas, setIdiomas] = useState([]);
@@ -75,7 +76,10 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     if (e.target.checked) {
       setCheckedItems(newCardData.map((item) => item.languageName));
       // Update all items to be isVisible: true in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: true,
+      }));
       for (const item of updatedData) {
         await editLanguage(item.languageName, item);
       }
@@ -83,7 +87,10 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     } else {
       setCheckedItems([]);
       // Update all items to be isVisible: false in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: false,
+      }));
       for (const item of updatedData) {
         await editLanguage(item.languageName, item);
       }
@@ -94,21 +101,27 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   const handleCheck = async (e, item) => {
     const isChecked = e.target.checked;
     const updatedItem = { ...item, isVisible: isChecked };
-  
+
     if (isChecked) {
-      setCheckedItems(prevItems => [...prevItems, item.languageName]);
+      setCheckedItems((prevItems) => [...prevItems, item.languageName]);
     } else {
-      setCheckedItems(prevItems => prevItems.filter(languageName => languageName !== item.languageName));
+      setCheckedItems((prevItems) =>
+        prevItems.filter((languageName) => languageName !== item.languageName)
+      );
     }
-  
+
     try {
       // Update the isVisible property in the backend
       await editLanguage(item.languageName, updatedItem);
       // Update the isVisible property in the local state
-      setNewCardData(prevData => prevData.map(card => card.languageName === item.languageName ? updatedItem : card));
+      setNewCardData((prevData) =>
+        prevData.map((card) =>
+          card.languageName === item.languageName ? updatedItem : card
+        )
+      );
     } catch (error) {
       // Handle error
-      console.error('Error updating item:', error);
+      console.error("Error updating item:", error);
     }
   };
 
@@ -367,19 +380,24 @@ const IdiomasCard = ({ cardData, setCardData }) => {
             flexDirection="row"
             alignItems="center"
             justifyContent="space-between"
-          ><Flex alignItems="left">
-          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
-            <Text
-              fontWeight="bold"
-              fontSize="md"
-              marginLeft="2"
-              marginBottom="1"
-              display="flex"
-              alignItems="center"
-              color="#007935"
-            >
-              Idiomas
-            </Text>
+          >
+            <Flex alignItems="left">
+              <Checkbox
+                colorScheme="green"
+                isChecked={checkedItems.length === newCardData.length}
+                onChange={handleCheckAll}
+              />
+              <Text
+                fontWeight="bold"
+                fontSize="md"
+                marginLeft="2"
+                marginBottom="1"
+                display="flex"
+                alignItems="center"
+                color="#007935"
+              >
+                Idiomas
+              </Text>
             </Flex>
             <AddIcon
               onClick={() => handleAddClick("Idiomas")}
@@ -396,70 +414,72 @@ const IdiomasCard = ({ cardData, setCardData }) => {
           {Array.isArray(newCardData) && newCardData.length > 0 ? (
             newCardData.map((item, index) => (
               <Flex key={index} alignItems="center" marginTop="3">
-              <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.languageName)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
-              <Box
-                key={index}
-                border="2px solid #007935"
-                borderTop="none"
-                borderRight="none"
-                borderBottom="none"
-                marginTop="3"
-                paddingLeft="2"
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-                width="100%"
-              >
-                <Box display="flex" flexDirection="row">
-                  <Text marginRight="10px">{item.languageName}</Text>
-                  <Text
-                    bg="#FBC430"
-                    color="black"
-                    padding="1"
-                    borderRadius="8"
-                    fontSize="12px"
-                  >
-                    {item.masteryLevel}
-                  </Text>
+                <Checkbox
+                  colorScheme="green"
+                  isChecked={checkedItems.includes(item.languageName)}
+                  onChange={(e) => handleCheck(e, item)}
+                  marginRight="5px"
+                />
+                <Box
+                  key={index}
+                  border="2px solid #007935"
+                  borderTop="none"
+                  borderRight="none"
+                  borderBottom="none"
+                  marginTop="3"
+                  paddingLeft="2"
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  width="100%"
+                >
+                  <Box display="flex" flexDirection="row">
+                    <Text marginRight="10px">{item.languageName}</Text>
+                    <Text
+                      bg="#FBC430"
+                      color="black"
+                      padding="1"
+                      borderRadius="8"
+                      fontSize="12px"
+                    >
+                      {item.masteryLevel}
+                    </Text>
+                  </Box>
+                  <Box>
+                    <Flex justifyContent="flex-end">
+                      <EditIcon
+                        cursor="pointer"
+                        display="flex"
+                        justifySelf="flex-end"
+                        color="#C0C0C0"
+                        onClick={() => handleEditCard(item.languageName)}
+                      />
+                      <DeleteIcon
+                        cursor="pointer"
+                        display="flex"
+                        justifySelf="flex-end"
+                        marginLeft="10px"
+                        color="#C0C0C0"
+                        onClick={() =>
+                          handleDeleteClick(
+                            item.languageName,
+                            "cardContentIdiomas"
+                          )
+                        }
+                      />
+                    </Flex>
+                  </Box>
                 </Box>
-                <Box>
-                  <Flex justifyContent="flex-end">
-                    <EditIcon
-                      cursor="pointer"
-                      display="flex"
-                      justifySelf="flex-end"
-                      color="#C0C0C0"
-                      onClick={() => handleEditCard(item.languageName)}
-                    />
-                    <DeleteIcon
-                      cursor="pointer"
-                      display="flex"
-                      justifySelf="flex-end"
-                      marginLeft="10px"
-                      color="#C0C0C0"
-                      onClick={() =>
-                        handleDeleteClick(
-                          item.languageName,
-                          "cardContentIdiomas"
-                        )
-                      }
-                    />
-                  </Flex>
-                </Box>
-              </Box>
               </Flex>
             ))
           ) : (
             <Box
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            marginTop="10px"
+            border="2px solid #007935"
+            borderTop="none"
+            borderRight="none"
+            borderBottom="none"
+            paddingLeft="2"
             >
               <Text color="gray.500">
                 En esta sección, puedes indicar tu nivel de dominio de los
@@ -474,10 +494,14 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Idiomas</ModalHeader>
+          <ModalHeader color="#007935">Editar idioma</ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (
               <>
+                <Text marginTop="2px" as="b">
+                  Nombre del idioma
+                </Text>
                 <Select
                   value={editingCard.languageName}
                   onChange={(e) =>
@@ -487,7 +511,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                       setEditingCard
                     )
                   }
-                  placeholder="Editar Idioma..."
+                  placeholder="Nombre del idioma"
                   size="lg"
                   marginBottom="4"
                 >
@@ -497,7 +521,9 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                     </option>
                   ))}
                 </Select>
-
+                <Text marginTop="2px" as="b">
+                  Nivel de experiencia
+                </Text>
                 <Select
                   value={editingCard.masteryLevel}
                   onChange={(e) =>
@@ -507,7 +533,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                       setEditingCard
                     )
                   }
-                  placeholder="Editar Nivel..."
+                  placeholder="Nivel de experiencia"
                   size="lg"
                   marginBottom="4"
                 >
@@ -521,10 +547,22 @@ const IdiomasCard = ({ cardData, setCardData }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleSaveEdit}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={handleCancelEdit}>
+            <Button
+              variant="ghost"
+              onClick={handleCancelEdit}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -535,49 +573,64 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+          <ModalHeader color="#007935">Agregar idioma</ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
-            {cardTypeToAdd === "Idiomas" && (
-              <>
-                Idioma
-                <Select
-                  value={additionalFields.languageName || ""}
-                  onChange={(e) =>
-                    handleFieldChange("languageName", e.target.value)
-                  }
-                  placeholder="Agregar Idioma"
-                  marginBottom="10px"
-                >
-                  {idiomas.map((idioma) => (
-                    <option key={idioma.name} value={idioma.name}>
-                      {idioma.name}
-                    </option>
-                  ))}
-                </Select>
-                Nivel
-                <Select
-                  value={additionalFields.masteryLevel || ""}
-                  onChange={(e) =>
-                    handleFieldChange("masteryLevel", e.target.value)
-                  }
-                  placeholder="Agregar Nivel"
-                  marginBottom="10px"
-                >
-                  {niveles.map((niveles) => (
-                    <option key={niveles} value={niveles}>
-                      {niveles}
-                    </option>
-                  ))}
-                </Select>
-              </>
-            )}
+            <>
+              <Text marginTop="2px" as="b">
+                Nombre del idioma
+              </Text>
+              <Select
+                value={additionalFields.languageName || ""}
+                onChange={(e) =>
+                  handleFieldChange("languageName", e.target.value)
+                }
+                placeholder="Agregar Idioma"
+                marginBottom="10px"
+              >
+                {idiomas.map((idioma) => (
+                  <option key={idioma.name} value={idioma.name}>
+                    {idioma.name}
+                  </option>
+                ))}
+              </Select>
+              <Text marginTop="2px" as="b">
+                Nivel de experiencia
+              </Text>
+              <Select
+                value={additionalFields.masteryLevel || ""}
+                onChange={(e) =>
+                  handleFieldChange("masteryLevel", e.target.value)
+                }
+                placeholder="Agregar Nivel"
+                marginBottom="10px"
+              >
+                {niveles.map((niveles) => (
+                  <option key={niveles} value={niveles}>
+                    {niveles}
+                  </option>
+                ))}
+              </Select>
+            </>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddLanguage}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleAddLanguage}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setShowAddModal(false)}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -587,8 +640,11 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Eliminación Idioma</ModalHeader>
-          <ModalBody>¿Está seguro de que desea eliminar este Idioma?</ModalBody>
+        <ModalHeader color="#007935">
+            Eliminar idioma
+          </ModalHeader>
+          <Divider orientation="horizontal" />
+          <ModalBody>¿Está seguro de que desea eliminar este idioma?</ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"

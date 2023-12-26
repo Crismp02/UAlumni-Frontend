@@ -15,9 +15,9 @@ import {
   CardBody,
   Divider,
   Flex,
-  Checkbox
+  Checkbox,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
-import { AddIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import {
   AddTechnicalSkill,
   deleteTechnicalSkill,
@@ -33,11 +33,13 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
 
   useEffect(() => {
     setNewCardData(cardData);
-    
+
     // Inicializa checkedItems con los nombres de las habilidades que son visibles
-    const initialCheckedItems = cardData.filter(item => item.isVisible).map(item => item.skillName);
+    const initialCheckedItems = cardData
+      .filter((item) => item.isVisible)
+      .map((item) => item.skillName);
     setCheckedItems(initialCheckedItems);
-  
+
     // Agrupa las habilidades por categoría
     const groups = cardData.reduce((acc, skill) => {
       const { skillCategoryName } = skill;
@@ -47,13 +49,13 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
       acc[skillCategoryName].push(skill);
       return acc;
     }, {});
-  
+
     // Inicializa checkedCategories con los nombres de las categorías que tienen todas sus habilidades visibles
-    const initialCheckedCategories = Object.keys(groups).filter(category => 
-      groups[category].every(skill => skill.isVisible)
+    const initialCheckedCategories = Object.keys(groups).filter((category) =>
+      groups[category].every((skill) => skill.isVisible)
     );
     setCheckedCategories(initialCheckedCategories);
-  
+
     setGroupedSkills(groups);
   }, [cardData]);
 
@@ -125,7 +127,10 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
       // Marca todas las categorías
       setCheckedCategories(Object.keys(groupedSkills));
       // Update all items to be isVisible: true in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: true,
+      }));
       for (const item of updatedData) {
         await editTechnicalSkill(item.skillCategoryName, item.skillName, item);
       }
@@ -134,7 +139,10 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
       setCheckedItems([]);
       setCheckedCategories([]);
       // Update all items to be isVisible: false in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: false,
+      }));
       for (const item of updatedData) {
         await editTechnicalSkill(item.skillCategoryName, item.skillName, item);
       }
@@ -145,20 +153,22 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   const [checkedCategories, setCheckedCategories] = useState([]);
 
   const handleCategoryCheck = async (e, category) => {
-  const isChecked = e.target.checked;
+    const isChecked = e.target.checked;
 
-  // Actualiza checkedCategories
-  if (isChecked) {
-    setCheckedCategories(prev => [...prev, category]);
-  } else {
-    setCheckedCategories(prev => prev.filter(c => c !== category));
-  }
-  const updatedSkills = newCardData.filter(skill => skill.skillCategoryName === category).map(skill => ({ ...skill, isVisible: isChecked }));
+    // Actualiza checkedCategories
+    if (isChecked) {
+      setCheckedCategories((prev) => [...prev, category]);
+    } else {
+      setCheckedCategories((prev) => prev.filter((c) => c !== category));
+    }
+    const updatedSkills = newCardData
+      .filter((skill) => skill.skillCategoryName === category)
+      .map((skill) => ({ ...skill, isVisible: isChecked }));
     for (const skill of updatedSkills) {
       await editTechnicalSkill(category, skill.skillName, skill);
     }
-  
-    setGroupedSkills(prevSkills => {
+
+    setGroupedSkills((prevSkills) => {
       const updatedGroupedSkills = { ...prevSkills };
       updatedGroupedSkills[category] = updatedSkills;
       return updatedGroupedSkills;
@@ -215,16 +225,16 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
       newData.skillCategoryName = additionalFields.categoryName;
       newData.skillName = additionalFields.name;
       // Actualizar newCardData asegurándose de que no haya duplicados
-    setNewCardData(prevCardData => {
-      const skillNames = prevCardData.reduce((acc, skill) => {
-        acc[skill.skillName] = true;
-        return acc;
-      }, {});
-      if (!skillNames[newData.skillName]) {
-        return [...prevCardData, newData];
-      }
-      return prevCardData;
-    });
+      setNewCardData((prevCardData) => {
+        const skillNames = prevCardData.reduce((acc, skill) => {
+          acc[skill.skillName] = true;
+          return acc;
+        }, {});
+        if (!skillNames[newData.skillName]) {
+          return [...prevCardData, newData];
+        }
+        return prevCardData;
+      });
 
       // Buscar el curso en el array courses
       // Buscar la habilidad en el array technicalSkills
@@ -239,25 +249,27 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
           { name: additionalFields.name },
         ]);
       }
-      
+
       // Actualizar groupedSkills
-setGroupedSkills(prevGroupedSkills => {
-  const newGroupedSkills = { ...prevGroupedSkills };
-  if (!newGroupedSkills[additionalFields.categoryName]) {
-    newGroupedSkills[additionalFields.categoryName] = [];
-  }
+      setGroupedSkills((prevGroupedSkills) => {
+        const newGroupedSkills = { ...prevGroupedSkills };
+        if (!newGroupedSkills[additionalFields.categoryName]) {
+          newGroupedSkills[additionalFields.categoryName] = [];
+        }
 
-  const skillNames = newGroupedSkills[additionalFields.categoryName].reduce((acc, skill) => {
-    acc[skill.skillName] = true;
-    return acc;
-  }, {});
+        const skillNames = newGroupedSkills[
+          additionalFields.categoryName
+        ].reduce((acc, skill) => {
+          acc[skill.skillName] = true;
+          return acc;
+        }, {});
 
-  if (!skillNames[newData.skillName]) {
-    newGroupedSkills[additionalFields.categoryName].push(newData);
-  }
+        if (!skillNames[newData.skillName]) {
+          newGroupedSkills[additionalFields.categoryName].push(newData);
+        }
 
-  return newGroupedSkills;
-});
+        return newGroupedSkills;
+      });
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
@@ -338,16 +350,16 @@ setGroupedSkills(prevGroupedSkills => {
           (card) => card.skillName !== cardToDelete.skillName
         );
         setNewCardData(updatedCardData);
-  
+
         // Actualizar groupedSkills
-        setGroupedSkills(prevGroupedSkills => {
+        setGroupedSkills((prevGroupedSkills) => {
           const newGroupedSkills = { ...prevGroupedSkills };
-          newGroupedSkills[cardToDelete.skillCategoryName] = newGroupedSkills[cardToDelete.skillCategoryName].filter(
-            (skill) => skill.skillName !== cardToDelete.skillName
-          );
+          newGroupedSkills[cardToDelete.skillCategoryName] = newGroupedSkills[
+            cardToDelete.skillCategoryName
+          ].filter((skill) => skill.skillName !== cardToDelete.skillName);
           return newGroupedSkills;
         });
-  
+
         setShowIcons(false);
         setEditMode(true);
         toast({
@@ -371,107 +383,113 @@ setGroupedSkills(prevGroupedSkills => {
   return (
     <>
       <Card marginTop="20px">
-        <CardBody p="10px">
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Flex alignItems="left">
-          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
-            <Text
-              fontWeight="bold"
-              fontSize="md"
-              marginLeft="2"
-              marginBottom="1"
-              display="flex"
-              alignItems="center"
-              color="#007935"
-            >
-              Habilidades Técnicas
-            </Text>
-            </Flex>
-            <AddIcon
-              onClick={() => handleAddClick("Técnicas")}
-              cursor="pointer"
-              color="white"
-              bg="#007935"
-              borderRadius="10px"
-              width="30px"
-              height="25px"
-              padding="6px"
-            />
-          </Box>
-          <Divider orientation="horizontal" />
-          <Box display="flex" flexDirection="column" flexWrap="wrap">
-  {Object.keys(groupedSkills).map((category, index) => (
-    <Box key={index} border="2px solid #007935"
-    borderTop="none"
-    borderRight="none"
-    borderBottom="none"
-    marginTop="3"
-    paddingLeft="2">
-      <Flex alignItems="center">
-        <Checkbox colorScheme="green" isChecked={checkedCategories.includes(category)} onChange={(e) => handleCategoryCheck(e, category)} marginRight="5px"/>
-        <Text fontWeight="bold" fontSize="sm" marginBottom="3">
-          {category}
+  <CardBody p="10px">
+    <Box
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+    >
+      <Flex alignItems="left">
+        <Checkbox
+          colorScheme="green"
+          isChecked={checkedItems.length === newCardData.length}
+          onChange={handleCheckAll}
+        />
+        <Text
+          fontWeight="bold"
+          fontSize="md"
+          marginLeft="2"
+          marginBottom="1"
+          display="flex"
+          alignItems="center"
+          color="#007935"
+        >
+          Habilidades Técnicas
         </Text>
       </Flex>
-      <Box
-        display="flex"
-        flexDirection="row"
-        flexWrap="wrap"
-      >
-        {groupedSkills[category].length > 0 ? (
-          groupedSkills[category].map((skill, index) => (
-            <Box
-              key={index}
-              display="flex"
-              flexDirection="row"
-            >
-              <Box paddingLeft="2">
-                <Tag
-                  bg="#37B4E3"
-                  fontSize="12px"
-                  paddingLeft="2"
-                  paddingTop="1px"
-                  paddingBottom="1px"
-                  paddingRight="8px"
-                  borderRadius="4px"
-                  color="white"
-                >
-                  {skill.skillName}
-                  <TagCloseButton
-                    onClick={() =>
-                      handleDeleteClick(skill, "cardContentHabilidades")
-                    }
-                  />
-                </Tag>
-              </Box>
-            </Box>
-          ))
-        ) : (
-          <Box
-            bg="white"
-            padding="4"
-            border="1px solid #ccc"
-            borderRadius="8px"
-            marginLeft="10"
-            marginRight="10"
-            marginTop="5"
-            marginBottom="5"
-            boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-          >
-            <Text color="grey">
-              En esta sección, puedes añadir tus habilidades técnicas
-            </Text>
-          </Box>
-        )}
-      </Box>
+      <AddIcon
+        onClick={() => handleAddClick("Técnicas")}
+        cursor="pointer"
+        color="white"
+        bg="#007935"
+        borderRadius="10px"
+        width="30px"
+        height="25px"
+        padding="6px"
+      />
     </Box>
-  ))}
-</Box>
+    <Divider orientation="horizontal" />
+    <Box display="flex" flexDirection="column" flexWrap="wrap">
+      {Object.keys(groupedSkills).length > 0 ? (
+        Object.keys(groupedSkills).map((category, index) => (
+          <Box
+            key={index}
+            border="2px solid #007935"
+            borderTop="none"
+            borderRight="none"
+            borderBottom="none"
+            marginTop="3"
+            paddingLeft="2"
+          >
+            <Flex alignItems="center">
+              <Checkbox
+                colorScheme="green"
+                isChecked={checkedCategories.includes(category)}
+                onChange={(e) => handleCategoryCheck(e, category)}
+                marginRight="5px"
+              />
+              <Text fontWeight="bold" fontSize="sm" marginBottom="3">
+                {category}
+              </Text>
+            </Flex>
+            <Box display="flex" flexDirection="row" flexWrap="wrap">
+              {groupedSkills[category].length > 0 ? (
+                groupedSkills[category].map((skill, index) => (
+                  <Box key={index} display="flex" flexDirection="row">
+                    <Box paddingLeft="2">
+                      <Tag
+                        bg="#37B4E3"
+                        fontSize="12px"
+                        paddingLeft="2"
+                        paddingTop="1px"
+                        paddingBottom="1px"
+                        paddingRight="8px"
+                        borderRadius="4px"
+                        color="white"
+                      >
+                        {skill.skillName}
+                        <TagCloseButton
+                          onClick={() =>
+                            handleDeleteClick(
+                              skill,
+                              "cardContentHabilidades"
+                            )
+                          }
+                        />
+                      </Tag>
+                    </Box>
+                  </Box>
+                ))
+              ) : null}
+            </Box>
+          </Box>
+        ))
+      ) : (
+        <Box
+        marginTop="10px"
+        border="2px solid #007935"
+        borderTop="none"
+        borderRight="none"
+        borderBottom="none"
+        paddingLeft="2"
+        >
+          <Text color="grey">
+            En esta sección, puedes añadir tus habilidades técnicas
+          </Text>
+        </Box>
+      )}
+    </Box>
         </CardBody>
       </Card>
 
@@ -479,9 +497,12 @@ setGroupedSkills(prevGroupedSkills => {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Agregar Habilidades Técnicas</ModalHeader>
+          <ModalHeader color="#007935">Agregar habilidad técnica</ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
-            Categorías
+            <Text marginTop="2px" as="b">
+              Categorías
+            </Text>
             <Select
               value={additionalFields.categoryName || ""}
               onChange={(e) => {
@@ -497,7 +518,9 @@ setGroupedSkills(prevGroupedSkills => {
                 </option>
               ))}
             </Select>
-            Habilidades
+            <Text marginTop="2px" as="b">
+              Habilidades
+            </Text>
             <Select
               value={additionalFields.name || ""}
               onChange={(e) => handleFieldChange("name", e.target.value)}
@@ -513,10 +536,22 @@ setGroupedSkills(prevGroupedSkills => {
             </Select>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddSkill}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleAddSkill}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setShowAddModal(false)}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -527,8 +562,11 @@ setGroupedSkills(prevGroupedSkills => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Confirmar Eliminación</ModalHeader>
-          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
+          <ModalHeader color="#007935">Eliminar habilidad técnica</ModalHeader>
+          <Divider orientation="horizontal" />
+          <ModalBody>
+            ¿Está seguro de que desea eliminar esta habilidad técnica?
+          </ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"
@@ -539,7 +577,9 @@ setGroupedSkills(prevGroupedSkills => {
             >
               Eliminar
             </Button>
-            <Button variant="ghost">Cancelar</Button>
+            <Button variant="ghost" onClick={handleCancelDelete}>
+              Cancelar
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

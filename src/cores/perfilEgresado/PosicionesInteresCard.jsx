@@ -444,18 +444,15 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
             ))
           ) : (
             <Box
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            marginTop="10px"
+            border="2px solid #007935"
+            borderTop="none"
+            borderRight="none"
+            borderBottom="none"
+            paddingLeft="2"
             >
               <Text color="grey">
-                En esta sección, puedes añadir Posiciones de Interés.
+                En esta sección, puedes añadir posiciones de interés.
               </Text>
             </Box>
           )}
@@ -467,14 +464,14 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Editar Posiciones de Interés
+            Editar posición de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (
               <>
                 <Text marginTop="2px" as="b">
-                  Nombre de la Posición de Interés
+                  Nombre de la posición de interés
                 </Text>
                 <Input
                   value={editingCard.positionName}
@@ -484,7 +481,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
                       positionName: e.target.value,
                     }))
                   }
-                  placeholder="Nombre de la Posición de Interés..."
+                  placeholder="Nombre de la posición de interés..."
                   size="lg"
                   marginBottom="4"
                 />
@@ -518,19 +515,19 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader color="#007935">Agregar Posición de Interés</ModalHeader>
+          <ModalHeader color="#007935">Agregar posición de interés</ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
             <>
               <Text marginTop="2px" as="b">
-                Nombre de la Posición de Interés
+                Nombre de la posición de interés
               </Text>
               <Input
                 value={additionalFields.positionName || ""}
                 onChange={(e) =>
                   handleFieldChange("positionName", e.target.value)
                 }
-                placeholder="Nombre de la Posición de Interés"
+                placeholder="Nombre de la posición de interés"
                 marginBottom="10px"
               />
             </>
@@ -562,11 +559,11 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Eliminar Posición de Interés
+            Eliminar posición de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
-            ¿Está seguro de que desea eliminar esta Posición de Interés?
+            ¿Está seguro de que desea eliminar esta posición de interés?
           </ModalBody>
           <ModalFooter>
             <Button

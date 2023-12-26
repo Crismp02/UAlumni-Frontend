@@ -434,18 +434,15 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
             ))
           ) : (
             <Box
-              bg="white"
-              padding="4"
-              border="1px solid #ccc"
-              borderRadius="8px"
-              marginLeft="10"
-              marginRight="10"
-              marginTop="5"
-              marginBottom="5"
-              boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
+            marginTop="10px"
+            border="2px solid #007935"
+            borderTop="none"
+            borderRight="none"
+            borderBottom="none"
+            paddingLeft="2"
             >
               <Text color="grey">
-                En esta sección, puedes añadir Industrias de Interés.
+                En esta sección, puedes añadir industrias de interés.
               </Text>
             </Box>
           )}
@@ -457,7 +454,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Editar Industrias de Interés
+            Editar industria de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
@@ -510,7 +507,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Agregar Industrias de Interés
+            Agregar industria de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
@@ -525,7 +522,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                 onChange={(e) =>
                   handleFieldChange("industryName", e.target.value)
                 }
-                placeholder="Nombre de la Industria de Interés"
+                placeholder="Nombre de la industria de interés"
                 marginBottom="10px"
               />
             </>
@@ -557,11 +554,11 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Eliminar Industria de Interés
+            Eliminar industria de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
-            ¿Está seguro de que desea eliminar esta Industria de Interés?
+            ¿Está seguro de que desea eliminar esta industria de interés?
           </ModalBody>
           <ModalFooter>
             <Button

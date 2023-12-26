@@ -16,7 +16,7 @@ import {
   Card,
   CardBody,
   Divider,
-  Checkbox
+  Checkbox,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -32,10 +32,12 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   const [checkedItems, setCheckedItems] = useState([]);
 
   useEffect(() => {
-   setNewCardData(cardData);
-   const checkedItems = cardData.filter(item => item.isVisible).map(item => item.number);
-   setCheckedItems(checkedItems);
- }, [cardData]);
+    setNewCardData(cardData);
+    const checkedItems = cardData
+      .filter((item) => item.isVisible)
+      .map((item) => item.number);
+    setCheckedItems(checkedItems);
+  }, [cardData]);
 
   const toast = useToast();
 
@@ -56,12 +58,15 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   const [editingCard, setEditingCard] = useState(null);
 
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
-  
+
   const handleCheckAll = async (e) => {
     if (e.target.checked) {
       setCheckedItems(newCardData.map((item) => item.number));
       // Update all items to be isVisible: true in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: true }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: true,
+      }));
       for (const item of updatedData) {
         await editWorkExperience(item.number, item);
       }
@@ -69,7 +74,10 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     } else {
       setCheckedItems([]);
       // Update all items to be isVisible: false in the backend and local state
-      const updatedData = newCardData.map(item => ({ ...item, isVisible: false }));
+      const updatedData = newCardData.map((item) => ({
+        ...item,
+        isVisible: false,
+      }));
       for (const item of updatedData) {
         await editWorkExperience(item.number, item);
       }
@@ -80,24 +88,29 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   const handleCheck = async (e, item) => {
     const isChecked = e.target.checked;
     const updatedItem = { ...item, isVisible: isChecked };
-  
+
     if (isChecked) {
-      setCheckedItems(prevItems => [...prevItems, item.number]);
+      setCheckedItems((prevItems) => [...prevItems, item.number]);
     } else {
-      setCheckedItems(prevItems => prevItems.filter(number => number !== item.number));
+      setCheckedItems((prevItems) =>
+        prevItems.filter((number) => number !== item.number)
+      );
     }
-  
+
     try {
       // Update the isVisible property in the backend
       await editWorkExperience(item.number, updatedItem);
       // Update the isVisible property in the local state
-      setNewCardData(prevData => prevData.map(card => card.number === item.number ? updatedItem : card));
+      setNewCardData((prevData) =>
+        prevData.map((card) =>
+          card.number === item.number ? updatedItem : card
+        )
+      );
     } catch (error) {
       // Handle error
-      console.error('Error updating item:', error);
+      console.error("Error updating item:", error);
     }
   };
-
 
   const handleAddWorkExperience = async () => {
     // Validar que los campos no estén vacíos
@@ -382,127 +395,164 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
 
   return (
     <>
-    <Card>
-      <CardBody p="10px">
-      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-      <Flex alignItems="left">
-          <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
-      <Text
-        fontWeight="bold"
-        fontSize="md"
-        marginLeft="2"
-        marginBottom="1"
-        display="flex"
-        alignItems="center"
-        color="#007935"
-      >
-        Experiencia Laboral
-      </Text>
-      </Flex>
-      <AddIcon
-            onClick={() => handleAddClick("Experiencia Laboral")}
-            cursor="pointer"
-            color="white"
-            bg="#007935"
-            borderRadius="10px"
-            width="30px"
-            height="25px"
-            padding="6px"
-          />
-          </Box>
-      <Divider orientation='horizontal' />
-
-      {Array.isArray(newCardData) && newCardData.length > 0 ? (
-        newCardData.map((item, index) => {
-          const dateS = new Date(item.startDate);
-          const formattedDateS = `${dateS.getDate()}/${
-            dateS.getMonth() + 1
-          }/${dateS.getFullYear()}`;
-          const dateE = new Date(item.endDate);
-          const formattedDateE = `${dateE.getDate()}/${
-            dateE.getMonth() + 1
-          }/${dateE.getFullYear()}`;
-          return (
-            <Flex key={index} alignItems="center" marginTop="3">
-            <Checkbox colorScheme="green" isChecked={checkedItems.includes(item.number)} onChange={(e) => handleCheck(e, item)}  marginRight="5px"/>
-            <Box
-              key={index}
-              border="2px solid #007935"
-              borderTop="none"
-              borderRight="none"
-              borderBottom="none"
-              marginTop="3"
-              paddingLeft="2"
-              width="100%"
-            >
-              <Box>
-              <Flex justifyContent="space-between" alignItems="center">
-      <Text fontWeight="bold" fontSize="15px">{item.companyName}</Text>
-      <Text justifyContent="space-between" alignItems="center" marginTop="5px">
-         {formattedDateS} - {formattedDateE} 
-      </Text>
-    </Flex>
-    <Flex >
-      <Text bg="#FBC430" color="black" fontSize="12px" paddingLeft="2" paddingTop="1px" paddingBottom="1px" paddingRight="8px" borderRadius="4px">
-      {item.position}
-      </Text>
-    </Flex>
-    <Flex justifyContent="space-between" fontSize="14px" alignItems="center" marginTop="10px" color="#6B6A6A">
-      <Text>{item.description}</Text>
-    </Flex>
-              </Box>
-            <Box>
-                <Flex justifyContent="flex-end">
-                <EditIcon cursor="pointer"
+      <Card>
+        <CardBody p="10px">
+          <Box
             display="flex"
-            justifySelf="flex-end"
-            color="#C0C0C0"
-            onClick={() => handleEditCard(item.number)}/>
-            <DeleteIcon
-          cursor="pointer"
-          display="flex"
-          justifySelf="flex-end"
-          marginLeft="10px"
-          color="#C0C0C0"
-          onClick={() =>
-            handleDeleteClick(item.number, "cardContent")
-          }/>
-                </Flex>
-                </Box> 
-
-            </Box>
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Flex alignItems="left">
+              <Checkbox
+                colorScheme="green"
+                isChecked={checkedItems.length === newCardData.length}
+                onChange={handleCheckAll}
+              />
+              <Text
+                fontWeight="bold"
+                fontSize="md"
+                marginLeft="2"
+                marginBottom="1"
+                display="flex"
+                alignItems="center"
+                color="#007935"
+              >
+                Experiencia Laboral
+              </Text>
             </Flex>
-          );
-        })
-      ) : (
-        <Box
-          bg="white"
-          padding="4"
-          border="1px solid #ccc"
-          borderRadius="8px"
-          marginLeft="10"
-          marginRight="10"
-          marginTop="5"
-          marginBottom="5"
-          boxShadow="0 2px 4px rgba(0, 0, 0, 0.1)"
-        >
-          <Text color="grey">
-            En esta sección, puedes añadir tus experiencias laborales
-          </Text>
-        </Box>
-      )}
+            <AddIcon
+              onClick={() => handleAddClick("Experiencia Laboral")}
+              cursor="pointer"
+              color="white"
+              bg="#007935"
+              borderRadius="10px"
+              width="30px"
+              height="25px"
+              padding="6px"
+            />
+          </Box>
+          <Divider orientation="horizontal" />
 
-      </CardBody>
+          {Array.isArray(newCardData) && newCardData.length > 0 ? (
+            newCardData.map((item, index) => {
+              const dateS = new Date(item.startDate);
+              const formattedDateS = `${dateS.getDate()}/${
+                dateS.getMonth() + 1
+              }/${dateS.getFullYear()}`;
+              const dateE = new Date(item.endDate);
+              const formattedDateE = `${dateE.getDate()}/${
+                dateE.getMonth() + 1
+              }/${dateE.getFullYear()}`;
+              return (
+                <Flex key={index} alignItems="center" marginTop="3">
+                  <Checkbox
+                    colorScheme="green"
+                    isChecked={checkedItems.includes(item.number)}
+                    onChange={(e) => handleCheck(e, item)}
+                    marginRight="5px"
+                  />
+                  <Box
+                    key={index}
+                    border="2px solid #007935"
+                    borderTop="none"
+                    borderRight="none"
+                    borderBottom="none"
+                    marginTop="3"
+                    paddingLeft="2"
+                    width="100%"
+                  >
+                    <Box>
+                      <Flex justifyContent="space-between" alignItems="center">
+                        <Text fontWeight="bold" fontSize="15px">
+                          {item.companyName}
+                        </Text>
+                        <Text
+                          justifyContent="space-between"
+                          alignItems="center"
+                          marginTop="5px"
+                        >
+                          {formattedDateS} - {formattedDateE}
+                        </Text>
+                      </Flex>
+                      <Flex>
+                        <Text
+                          bg="#FBC430"
+                          color="black"
+                          fontSize="12px"
+                          paddingLeft="2"
+                          paddingTop="1px"
+                          paddingBottom="1px"
+                          paddingRight="8px"
+                          borderRadius="4px"
+                        >
+                          {item.position}
+                        </Text>
+                      </Flex>
+                      <Flex
+                        justifyContent="space-between"
+                        fontSize="14px"
+                        alignItems="center"
+                        marginTop="10px"
+                        color="#6B6A6A"
+                      >
+                        <Text>{item.description}</Text>
+                      </Flex>
+                    </Box>
+                    <Box>
+                      <Flex justifyContent="flex-end">
+                        <EditIcon
+                          cursor="pointer"
+                          display="flex"
+                          justifySelf="flex-end"
+                          color="#C0C0C0"
+                          onClick={() => handleEditCard(item.number)}
+                        />
+                        <DeleteIcon
+                          cursor="pointer"
+                          display="flex"
+                          justifySelf="flex-end"
+                          marginLeft="10px"
+                          color="#C0C0C0"
+                          onClick={() =>
+                            handleDeleteClick(item.number, "cardContent")
+                          }
+                        />
+                      </Flex>
+                    </Box>
+                  </Box>
+                </Flex>
+              );
+            })
+          ) : (
+            <Box
+            marginTop="10px"
+            border="2px solid #007935"
+            borderTop="none"
+            borderRight="none"
+            borderBottom="none"
+            paddingLeft="2"
+            >
+              <Text color="grey">
+                En esta sección, puedes añadir tus experiencias laborales
+              </Text>
+            </Box>
+          )}
+        </CardBody>
       </Card>
 
       {/* Modal de edición Experiencia Laboral*/}
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Editar Experiencia Laboral</ModalHeader>
+          <ModalHeader color="#007935">Editar experiencia laboral</ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (
               <>
+                <Text marginTop="2px" as="b">
+                  Nombre de la empresa
+                </Text>
                 <Input
                   value={editingCard.companyName}
                   onChange={(e) =>
@@ -512,10 +562,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                       setEditingCard
                     )
                   }
-                  placeholder="Editar nombre empresa..."
+                  placeholder="Nombre de la empresa"
                   size="lg"
                   marginBottom="4"
                 />
+                <Text marginTop="2px" as="b">
+                  Posición
+                </Text>
                 <Input
                   value={editingCard.position}
                   onChange={(e) =>
@@ -525,10 +578,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                       setEditingCard
                     )
                   }
-                  placeholder="Editar posición..."
+                  placeholder="Posición"
                   size="lg"
                   marginBottom="4"
                 />
+                <Text marginTop="2px" as="b">
+                  Descripción
+                </Text>
                 <Textarea
                   value={editingCard.description}
                   onChange={(e) =>
@@ -538,11 +594,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                       setEditingCard
                     )
                   }
-                  placeholder="Editar Descripción..."
+                  placeholder="Descripción"
                   size="lg"
                   marginBottom="4"
                 />
-                Fecha Inicio
+                <Text marginTop="2px" as="b">
+                  Fecha inicio
+                </Text>
                 <Input
                   value={editingCard.startDate}
                   onChange={(e) =>
@@ -556,7 +614,9 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                   marginBottom="4"
                   type="date"
                 />
-                Fecha Final
+                <Text marginTop="2px" as="b">
+                  Fecha final
+                </Text>
                 <Input
                   value={editingCard.endDate}
                   onChange={(e) =>
@@ -574,10 +634,22 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleSaveEdit}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={handleCancelEdit}>
+            <Button
+              variant="ghost"
+              onClick={handleCancelEdit}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -588,64 +660,81 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Agregar {cardTypeToAdd}</ModalHeader>
+          <ModalHeader color="#007935">Agregar experiencia laboral</ModalHeader>
+          <Divider orientation="horizontal" />
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
-            {cardTypeToAdd === "Experiencia Laboral" && (
-              <>
-                Nombre de la compañía
-                <Input
-                  value={additionalFields.companyName || ""}
-                  onChange={(e) =>
-                    handleFieldChange("companyName", e.target.value)
-                  }
-                  placeholder="Nombre de la compañía"
-                  marginBottom="10px"
-                />
+            <>
+              <Text marginTop="2px" as="b">
+                Nombre de la empresa
+              </Text>
+              <Input
+                value={additionalFields.companyName || ""}
+                onChange={(e) =>
+                  handleFieldChange("companyName", e.target.value)
+                }
+                placeholder="Nombre de la empresa"
+                marginBottom="10px"
+              />
+              <Text marginTop="2px" as="b">
                 Posición
-                <Input
-                  value={additionalFields.position || ""}
-                  onChange={(e) =>
-                    handleFieldChange("position", e.target.value)
-                  }
-                  placeholder="Posición"
-                  marginBottom="10px"
-                />
+              </Text>
+              <Input
+                value={additionalFields.position || ""}
+                onChange={(e) => handleFieldChange("position", e.target.value)}
+                placeholder="Posición"
+                marginBottom="10px"
+              />
+              <Text marginTop="2px" as="b">
                 Descripción
-                <Textarea
-                  placeholder="Descripción"
-                  marginBottom="10px"
-                  value={additionalFields.description || ""}
-                  onChange={(e) =>
-                    handleFieldChange("description", e.target.value)
-                  }
-                />
-                Fecha Inicio
-                <Input
-                  value={additionalFields.startDate || ""}
-                  onChange={(e) =>
-                    handleFieldChange("startDate", e.target.value)
-                  }
-                  type="date"
-                  placeholder="Fecha inicio"
-                  marginBottom="10px"
-                />
-                Fecha Fin
-                <Input
-                  value={additionalFields.endDate || ""}
-                  onChange={(e) => handleFieldChange("endDate", e.target.value)}
-                  type="date"
-                  placeholder="Fecha fin"
-                  marginBottom="10px"
-                />
-              </>
-            )}
+              </Text>
+              <Textarea
+                placeholder="Descripción"
+                marginBottom="10px"
+                value={additionalFields.description || ""}
+                onChange={(e) =>
+                  handleFieldChange("description", e.target.value)
+                }
+              />
+              <Text marginTop="2px" as="b">
+                Fecha inicio
+              </Text>
+              <Input
+                value={additionalFields.startDate || ""}
+                onChange={(e) => handleFieldChange("startDate", e.target.value)}
+                type="date"
+                placeholder="Fecha inicio"
+                marginBottom="10px"
+              />
+              <Text marginTop="2px" as="b">
+                Fecha final
+              </Text>
+              <Input
+                value={additionalFields.endDate || ""}
+                onChange={(e) => handleFieldChange("endDate", e.target.value)}
+                type="date"
+                placeholder="Fecha fin"
+                marginBottom="10px"
+              />
+            </>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleAddWorkExperience}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={handleAddWorkExperience}
+              bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }}
+            >
               Guardar
             </Button>
-            <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="ghost"
+              onClick={() => setShowAddModal(false)}
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+            >
               Cancelar
             </Button>
           </ModalFooter>
@@ -655,8 +744,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showDeleteModal} onClose={handleCancelDelete}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Confirmar Eliminación</ModalHeader>
-          <ModalBody>¿Estás seguro de que deseas eliminar?</ModalBody>
+          <ModalHeader color="#007935">
+            Eliminar experiencia laboral
+          </ModalHeader>
+          <Divider orientation="horizontal" />
+          <ModalBody>
+            ¿Está seguro de que desea eliminar esta experiencia laboral?
+          </ModalBody>
           <ModalFooter>
             <Button
               colorScheme="red"
