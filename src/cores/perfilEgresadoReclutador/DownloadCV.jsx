@@ -3,14 +3,16 @@ import { Button } from "@chakra-ui/react";
 import { downloadPDF } from '../../services/profileEgresado/AlumniProfile.services';
 import { Stack, Text } from "@chakra-ui/react";
 
-function DownloadCV({email}) {
+function DownloadCV({id}) {
     const [pdfUrl, setPdfUrl] = useState(null);
 
     const handleDownload = async () => {
-      const blob = await downloadPDF(email);
+      console.log(id);
+      const blob = await downloadPDF(id);
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);
     };
+
   return (
     <Button 
     onClick={handleDownload} 

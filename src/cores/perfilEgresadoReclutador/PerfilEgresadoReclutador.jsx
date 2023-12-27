@@ -19,20 +19,20 @@ import IndustriasInteresCard from "./IndustriasInteresCard";
 import PosicionesInteresCard from "./PosiciónInterésCard";
 
 function PerfilEgresadoReclutador() {
-  const { email } = useParams();
+  const { id } = useParams();
   const [dataProfile, setDataProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (email) {
+    if (id) {
       async function fetchData() {
-        const result = await getAlumniProfile(email);
+        const result = await getAlumniProfile(id);
         setDataProfile(result);
         setIsLoading(false);
       }
       fetchData();
     }
-  }, [email]);
+  }, [id]);
 
   return (
     <Box
@@ -96,7 +96,7 @@ function PerfilEgresadoReclutador() {
               paddingRight="20px"
               alignItems="center"
             >
-              <DownloadCV email={email} />
+              <DownloadCV id={id} />
             </Box>
           </Box>
           <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
@@ -172,7 +172,7 @@ function PerfilEgresadoReclutador() {
                     alignItems="center"
                     marginTop="3"
                   >
-                    <DownloadCV email={email} />
+                    <DownloadCV id={id} />
                   </Box>
                 </CardBody>
               </Card>

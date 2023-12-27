@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
 
-export const getAlumniProfile = async (email) => {
+export const getAlumniProfile = async (id) => {
     try {
-        const response = await fetch(`${BASE_URL}/alumni/${email}/resume`, {
+        const response = await fetch(`${BASE_URL}/alumni/${id}/resume`, {
         method: "GET",
         });
         const data = await response.json();
@@ -17,9 +17,9 @@ export const getAlumniProfile = async (email) => {
     }
     };
 
-export const downloadPDF = async (email) => {
+export const downloadPDF = async (id) => {
     try {
-        const response = await fetch(`${BASE_URL}/alumni/${email}/resume/pdf`, {
+        const response = await fetch(`${BASE_URL}/alumni/${id}/resume/pdf`, {
         method: "GET",
         });
         const data = await response.blob();
