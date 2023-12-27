@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrarNombre from "./FiltrarNombre";
 import FiltrarPositions from "./FiltrarPositions";
+import FiltrarIndustrias from "./FiltrarIndustrias";
 import FiltrarSkills from "./FiltrarSkills";
 import FiltrosButtons from "./FiltrosButtons";
 import { useEgresados } from "./EgresadosContext";
@@ -139,6 +140,24 @@ function FiltrosEgresados({ setHasSearched }) {
   };
 
   {
+    /*Busqueda por industria de interés*/
+  }
+  const [valueInd, setValueInd] = useState("");
+  const [listInd, setListInd] = useState([]);
+  const handleChangeInd = (event) => setValueInd(event.target.value);
+  const handleAddInd = () => {
+    if (valueInd.trim() !== "") {
+      setListInd((oldList) => [...oldList, valueInd]);
+      setValueInd("");
+    }
+  };
+  const handleRemoveInd = (indexToRemove) => {
+    setListInd((oldList) =>
+      oldList.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  {
     /*Busqueda por carrera*/
   }
   const [selectedTags, setSelectedTags] = useState({});
@@ -160,6 +179,7 @@ function FiltrosEgresados({ setHasSearched }) {
     !valueName &&
     list.length === 0 &&
     listPos.length === 0 &&
+    listInd.length === 0 && 
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
@@ -184,6 +204,7 @@ function FiltrosEgresados({ setHasSearched }) {
     );
     const selectedCategories = list.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
+    const selectIndustries= listInd.length > 0 ? listInd: [];
 
     const filters = {
       name: valueName ? valueName : undefined,
@@ -198,6 +219,10 @@ function FiltrosEgresados({ setHasSearched }) {
       positions:
         selectedPositions.length > 0
           ? selectedPositions.join("&positions=")
+          : undefined,
+      industries:
+        selectIndustries.length > 0
+          ? selectIndustries.join("&industries=")
           : undefined,
       seed: randomizationSeed ? randomizationSeed : undefined,
     };
@@ -257,6 +282,15 @@ function FiltrosEgresados({ setHasSearched }) {
               handleAddPos={handleAddPos}
               listPos={listPos}
               handleRemovePos={handleRemovePos}
+            />
+
+            {/*Busqueda por industrias de interes*/}
+            <FiltrarIndustrias
+              valueInd={valueInd}
+              handleChangeInd={handleChangeInd}
+              handleAddInd={handleAddInd}
+              listInd={listInd}
+              handleRemoveInd={handleRemoveInd}
             />
 
             {/*Busqueda por carreras:*/}

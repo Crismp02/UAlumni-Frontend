@@ -121,7 +121,7 @@ const PantallaEgresados = () => {
               alignItems: "center",
             }}
           >
-            {currentPage > 1 && (
+            {hasSearched && currentPage > 1 && (
               <Button
                 as="b"
                 colorScheme="teal"
@@ -136,7 +136,7 @@ const PantallaEgresados = () => {
               </Button>
             )}
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+            {hasSearched && Array.from({ length: totalPages }, (_, i) => i + 1).map(
               (pageNumber) => (
                 <Button
                   key={pageNumber}
@@ -160,18 +160,20 @@ const PantallaEgresados = () => {
               )
             )}
 
-            <Button
-              as="b"
-              colorScheme="teal"
-              disabled={currentPage === totalPages || isLoading}
-              onClick={handleNextPage}
-              size="lg"
-              variant="ghost"
-              fontSize="3xl"
-              color="darkgreen"
-            >
-              »
-            </Button>
+            {hasSearched && (
+              <Button
+                as="b"
+                colorScheme="teal"
+                disabled={currentPage === totalPages || isLoading}
+                onClick={handleNextPage}
+                size="lg"
+                variant="ghost"
+                fontSize="3xl"
+                color="darkgreen"
+              >
+                »
+              </Button>
+            )}
           </div>
         </Box>
 

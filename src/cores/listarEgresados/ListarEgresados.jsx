@@ -42,21 +42,23 @@ function ListarEgresados({ hasSearched }) {
             <>
             <Text
             fontSize="2xl" 
-            color="red.400"
+            color="gray.400"
             paddingBottom="5"
             >
            ¡Lo Sentimos!
             </Text>            
             <Text
             fontSize="2xl" 
-            color="red.400"
+            color="gray.400"
+            textAlign="center" 
+            width="100%" 
             >
             No hay ningún egresado que coincida con tu descripción 
             </Text>
             <Icon 
               as={ PiSmileySadLight }
               boxSize={32}
-              color="red.300"
+              color="gray.400"
               paddingTop="30px" 
             />
           </>

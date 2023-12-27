@@ -14,6 +14,7 @@ import { useLocation } from "react-router-dom";
 import FiltrarNombre from "./FiltrarNombre";
 import FiltrarSkills from "./FiltrarSkills";
 import FiltrarPositions from "./FiltrarPositions";
+import FiltrarIndustrias from "./FiltrarIndustrias";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "./FiltrosButtons";
 import { useEgresados } from './EgresadosContext';
@@ -153,6 +154,24 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   };
 
   {
+    /*Busqueda por industria de interés*/
+  }
+  const [valueInd, setValueInd] = useState("");
+  const [listInd, setListInd] = useState([]);
+  const handleChangeInd = (event) => setValueInd(event.target.value);
+  const handleAddInd = () => {
+    if (valueInd.trim() !== "") {
+      setListInd((oldList) => [...oldList, valueInd]);
+      setValueInd("");
+    }
+  };
+  const handleRemoveInd = (indexToRemove) => {
+    setListInd((oldList) =>
+      oldList.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
+  {
     /*Busqueda por carrera*/
   }
   const [selectedTags, setSelectedTags] = useState({});
@@ -169,13 +188,14 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   {
     /*Botones de búsqueda y reset*/
   }
-  const [exactMatch, setExactMatch] = useState(false);
+  // const [exactMatch, setExactMatch] = useState(false);
 
-  const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
+  // const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
   const isDisabled =
     !valueName &&
     list.length === 0 &&
     listPos.length === 0 &&
+    listInd.length === 0 && 
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
@@ -203,6 +223,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     );
     const selectedCategories = list.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
+    const selectIndustries= listInd.length > 0 ? listInd: [];
 
     const filters = {
       name: valueName ? valueName : undefined,
@@ -218,6 +239,10 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
         selectedPositions.length > 0
           ? selectedPositions.join("&positions=")
           : undefined,
+          industries:
+          selectIndustries.length > 0
+            ? selectIndustries.join("&industries=")
+            : undefined,
           seed: randomizationSeed ? randomizationSeed : undefined,
 
     };
@@ -257,6 +282,9 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
           marginLeft: "10px",
           width: "40px",
           height: "40px",
+          position: "absolute", 
+          top: "60px", 
+          left: "10px", 
         }}
         marginBottom="5px"
       >
@@ -299,6 +327,15 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
               listPos={listPos}
               handleRemovePos={handleRemovePos}
             />
+
+            {/*Busqueda por industrias de interes*/}
+            <FiltrarIndustrias
+              valueInd={valueInd}
+              handleChangeInd={handleChangeInd}
+              handleAddInd={handleAddInd}
+              listInd={listInd}
+              handleRemoveInd={handleRemoveInd}
+              />
 
             {/*Busqueda por carreras:*/}
             <FiltrarCarreras
