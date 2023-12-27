@@ -1,17 +1,28 @@
-
-import { Box, useDisclosure } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import  { useState, useEffect } from "react";
+import {
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  useDisclosure,
+  IconButton,
+} from "@chakra-ui/react";
+import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
-import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrarNombre from "./FiltrarNombre";
+import FiltrarSkills from "./FiltrarSkills";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrarIndustrias from "./FiltrarIndustrias";
-import FiltrarSkills from "./FiltrarSkills";
+import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "./FiltrosButtons";
-import { useEgresados } from "./EgresadosContext";
+import { useEgresados } from './EgresadosContext';
 import PropTypes from "prop-types";
 
-function FiltrosEgresados({ setHasSearched }) {
+
+
+function FiltrosEgresadosMenu({ setHasSearched }) {
   const {
     fetchPaginatedData,
     isLoading,
@@ -24,11 +35,11 @@ function FiltrosEgresados({ setHasSearched }) {
   const [currentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [egresados] = useState([]);
-  const [randomizationSeed, setRandomizationSeed] = useState(null);
   const [, setIsLoading] = useState(false);
-  // Estado para la semilla
+  const [randomizationSeed, setRandomizationSeed] = useState(null);
   const [seed, setSeed] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
@@ -39,13 +50,16 @@ function FiltrosEgresados({ setHasSearched }) {
     setSelectedCarrera(carreraFromUrl);
   }, [carreraFromUrl]);
 
-  
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const placement = "left";
+  {
+    /*Busqueda por nombre*/
+  }
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 
   {
-    /*Busqueda por habilidades categoria*/
+    /*Busqueda por habilidades*/
   }
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
@@ -54,7 +68,6 @@ function FiltrosEgresados({ setHasSearched }) {
   // Objeto inicial de habilidades
   const [habilidades, setHabilidades] = useState({});
 
-  // Objeto inicial de categorias
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
@@ -170,12 +183,14 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   };
 
+
+
   {
     /*Botones de búsqueda y reset*/
   }
-  const [exactMatch, setExactMatch] = useState(false);
+  // const [exactMatch, setExactMatch] = useState(false);
 
-  const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
+  // const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
   const isDisabled =
     !valueName &&
     list.length === 0 &&
@@ -197,7 +212,10 @@ function FiltrosEgresados({ setHasSearched }) {
 
     // quitar espacios desactivados
     const careerParams = selectedCarrera
-      ? [selectedCarrera, ...selectedCareers]
+      ? [
+          selectedCarrera,
+          ...selectedCareers,
+        ]
       : selectedCareers;
 
     const selectedSkills = list.map(
@@ -221,11 +239,12 @@ function FiltrosEgresados({ setHasSearched }) {
         selectedPositions.length > 0
           ? selectedPositions.join("&positions=")
           : undefined,
-      industries:
-        selectIndustries.length > 0
-          ? selectIndustries.join("&industries=")
-          : undefined,
-      seed: randomizationSeed ? randomizationSeed : undefined,
+          industries:
+          selectIndustries.length > 0
+            ? selectIndustries.join("&industries=")
+            : undefined,
+          seed: randomizationSeed ? randomizationSeed : undefined,
+
     };
 
     const newFilters = Object.fromEntries(
@@ -233,7 +252,7 @@ function FiltrosEgresados({ setHasSearched }) {
     );
 
     try {
-      await fetchPaginatedData(newFilters, 1); // Envía la página actual como 1
+      await fetchPaginatedData(newFilters, 1);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
     } finally {
@@ -241,7 +260,6 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   };
 
-  // Funciones para manejar la paginación
   const handleReset = () => {
     setValueName("");
     setList([]);
@@ -255,8 +273,33 @@ function FiltrosEgresados({ setHasSearched }) {
 
   return (
     <>
-      <Box
-      marginLeft="50px">
+      <Button
+        backgroundColor="#37B4E3"
+        _hover={{ bg: "#247390" }}
+        onClick={onOpen}
+        style={{
+          borderRadius: "30px",
+          marginLeft: "10px",
+          width: "40px",
+          height: "40px",
+          position: "absolute", 
+          top: "60px", 
+          left: "10px", 
+        }}
+        marginBottom="5px"
+      >
+        <HamburgerIcon color="white" />
+      </Button>
+      <Drawer placement={placement} onClose={onClose} isOpen={isOpen} size="md">
+        <DrawerOverlay />
+        <DrawerContent paddingLeft="5px" paddingRight="5px">
+          <DrawerHeader borderBottomWidth="1px">
+            Filtros
+            <IconButton icon={<CloseIcon />} onClick={onClose} float="right" />
+          </DrawerHeader>
+
+          <DrawerBody>
+            {/*Busqueda por nombre*/}
             <FiltrarNombre
               valueName={valueName}
               handleChangeName={handleChangeName}
@@ -292,7 +335,7 @@ function FiltrosEgresados({ setHasSearched }) {
               handleAddInd={handleAddInd}
               listInd={listInd}
               handleRemoveInd={handleRemoveInd}
-            />
+              />
 
             {/*Busqueda por carreras:*/}
             <FiltrarCarreras
@@ -321,13 +364,18 @@ function FiltrosEgresados({ setHasSearched }) {
               setIsHovering={setIsHovering}
               onClose={onClose}
               setHasSearched={setHasSearched}
-            />      
-      </Box>         
+            />
+
+            
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 }
 
-FiltrosEgresados.propTypes = {
+FiltrosEgresadosMenu.propTypes = {
   setHasSearched: PropTypes.func.isRequired,
 };
-export default FiltrosEgresados;
+
+export default FiltrosEgresadosMenu;

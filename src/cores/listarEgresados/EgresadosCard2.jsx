@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 const EgresadoCard2 = ({ egresado }) =>{
 
-    console.log("MIRAAAA",egresado);
     const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
     const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
     const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
@@ -29,8 +28,8 @@ const EgresadoCard2 = ({ egresado }) =>{
 
   return (
     <div>
-            <Box
-        w={["250px", "350px", "540px", "790px", "1000px", "1100px"]}
+        <Box
+        w={["80%", "80%", "80%", "80%", "80%", "80%"]}
         m="auto"
         p={5}
         shadow="md"

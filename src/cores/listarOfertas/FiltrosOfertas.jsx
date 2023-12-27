@@ -40,7 +40,7 @@ function FiltrosOfertas() {
 
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
-  const [list, setList] = useState([]);
+  const [list, setList] = useState([]); 
 
   // Objeto inicial de habilidades
   const [habilidades, setHabilidades] = useState({});
@@ -244,13 +244,13 @@ const filters = {
             </Select>
 
             {/*Filtros exactos:*/}
-            <Checkbox
+            {/* <Checkbox
               marginBottom="10px"
               marginTop="30px"
               as="b"
             >
               Filtrar por coincidencia exacta
-            </Checkbox>
+            </Checkbox> */}
 
             {/*Botones de búsqueda y reset*/}
             <FiltrosButtons
