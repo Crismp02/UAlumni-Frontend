@@ -1,5 +1,5 @@
 
-import { Box, Checkbox, useDisclosure } from "@chakra-ui/react";
+import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import FiltrarCarreras from "./FiltrarCarreras";
@@ -207,7 +207,6 @@ function FiltrosEgresados({ setHasSearched }) {
     const paginationParams = `${page}&per-page=4`;
 
     const filters = {
-      page: paginationParams, // Asegura que siempre se inicie en la página 1 al realizar una búsqueda
       name: valueName ? valueName : undefined,
       careers:
         careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
@@ -333,7 +332,7 @@ function FiltrosEgresados({ setHasSearched }) {
             />
 
             {/*Filtros exactos:*/}
-            <Checkbox
+            {/* <Checkbox
               marginBottom="10px"
               marginTop="10px"
               isChecked={exactMatch}
@@ -341,7 +340,7 @@ function FiltrosEgresados({ setHasSearched }) {
               onChange={handleCheckboxChange}
             >
               Filtrar por coincidencia exacta
-            </Checkbox>
+            </Checkbox> */}
             {/*Botones de búsqueda y reset*/}
             <FiltrosButtons
               handleReset={handleReset}

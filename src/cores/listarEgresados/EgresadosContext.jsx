@@ -8,9 +8,12 @@ export const EgresadosProvider = ({ children }) => {
   const [totalPages, setTotalPages] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchPaginatedData = async (filters) => {
-    // Solo hacemos la solicitud a la API si se proporcionan filtros
-    if (Object.keys(filters).length > 0) {
+  const fetchPaginatedData = async (page = currentPage,filters= {}) => {
+    
+    // Incluye la página actual en los parámetros de consulta
+    filters.page = page;
+    filters.pageSize = 4;
+    
       setIsLoading(true);
       try {
         const queryParams = new URLSearchParams(filters).toString();
@@ -19,14 +22,15 @@ export const EgresadosProvider = ({ children }) => {
           throw new Error("Error al obtener los datos");
         }
         const data = await response.json();
+        console.log("JAMAICA",data);
         setEgresados(data.data.items);
-        setTotalPages(3);
+        setTotalPages(data.data.meta.numberOfPages);
+        setCurrentPage(data.data.meta.pageNumber);
       } catch (error) {
         console.error("Error al obtener datos paginados:", error);
       } finally {
         setIsLoading(false);
       }
-    }
   };
 
   useEffect(() => {

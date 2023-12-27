@@ -214,7 +214,7 @@ function FiltrosOfertas() {
             </Select>
 
             {/*Filtros exactos:*/}
-            <Checkbox
+            {/* <Checkbox
               marginBottom="10px"
               marginTop="30px"
               isChecked={exactMatch}
@@ -222,7 +222,7 @@ function FiltrosOfertas() {
               onChange={handleCheckboxChange}
             >
               Filtrar por coincidencia exacta
-            </Checkbox>
+            </Checkbox> */}
 
             {/*Botones de búsqueda y reset*/}
             <FiltrosButtons

@@ -1,14 +1,15 @@
-import { Box, Center, Text, Icon, useMediaQuery } from "@chakra-ui/react";
-import { FaSearch } from 'react-icons/fa';
-import { useEgresados } from './EgresadosContext';
+
+import { Box, Center, Icon, Text, useMediaQuery } from "@chakra-ui/react";
 import EgresadoCard2 from "./EgresadosCard2";
-import PropTypes from 'prop-types';
 import { MdScreenSearchDesktop } from "react-icons/md";
+import { PiSmileySadLight } from "react-icons/pi";
+import PropTypes from 'prop-types';
+import { useEgresados } from './EgresadosContext';
 
 function ListarEgresados({ hasSearched }) {
-  const { egresados } = useEgresados();
+  const { egresados, isLoading } = useEgresados();
 
-  const [isLargerThan770] = useMediaQuery("(min-width: 770px)");
+  // const [isLargerThan770] = useMediaQuery("(min-width: 770px)");
   const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
 
   return (
@@ -37,7 +38,29 @@ function ListarEgresados({ hasSearched }) {
             color="gray.400"
             paddingTop="30px" />
             </>
-          ) : (
+          ) : egresados.length === 0 && !isLoading ? (
+            <>
+            <Text
+            fontSize="2xl" 
+            color="red.400"
+            paddingBottom="5"
+            >
+           ¡Lo Sentimos!
+            </Text>            
+            <Text
+            fontSize="2xl" 
+            color="red.400"
+            >
+            No hay ningún egresado que coincida con tu descripción 
+            </Text>
+            <Icon 
+              as={ PiSmileySadLight }
+              boxSize={32}
+              color="red.300"
+              paddingTop="30px" 
+            />
+          </>
+        ) : (
             egresados.map((egresado, index) => (
               egresado && <EgresadoCard2 key={index} egresado={egresado} />
             ))
