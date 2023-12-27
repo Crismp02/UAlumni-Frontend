@@ -19,7 +19,7 @@ function FiltrosEgresados({ setHasSearched }) {
     totalPages,
   } = useEgresados();
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(2);
+  const [perPage, setPerPage] = useState(4);
   const [currentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [egresados] = useState([]);
@@ -40,11 +40,6 @@ function FiltrosEgresados({ setHasSearched }) {
 
   
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const placement = "left";
-
-  {
-    /*Busqueda por nombre*/
-  }
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 

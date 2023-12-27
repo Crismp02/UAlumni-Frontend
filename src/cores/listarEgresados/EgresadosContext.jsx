@@ -5,7 +5,8 @@ const EgresadosContext = createContext();
 export const EgresadosProvider = ({ children }) => {
   const [egresados, setEgresados] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(2);
+  // Total de Páginas
+  const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [currentFilters, setCurrentFilters] = useState({
     seed: null, // Inicializa la semilla como null
@@ -19,10 +20,7 @@ export const EgresadosProvider = ({ children }) => {
       setIsLoading(true);
       const queryParams = new URLSearchParams(filters);
       queryParams.set("page", page);
-      queryParams.set("per-page", "2");
-
-      console.log("queryParams2:", queryParams.toString());
-
+      queryParams.set("per-page", "4");
       const url = `http://localhost:3000/alumni/resume?${queryParams}`;
       const response = await fetch(url);
       console.log("url:", url)
@@ -33,8 +31,10 @@ export const EgresadosProvider = ({ children }) => {
 
       const data = await response.json();
       setEgresados(data.data.items);
-      console.log("SEMILLA",data.data.meta.randomizationSeed)
+      // setTotalPages(data.data.meta.numberOfPages);
+      // Se debe calcular el numero total de paginas
       setTotalPages(3);
+
       if (data.data.meta.randomizationSeed) {
         // Actualizar los filtros sin modificar los originales
         setCurrentFilters(prevFilters => ({
@@ -42,10 +42,6 @@ export const EgresadosProvider = ({ children }) => {
           seed: data.data.meta.randomizationSeed,
         }));
       }
-      console.log("Datos obtenidos de la página:", page, data);
-      console.log("Semillas Guardadas", currentFilters.seed)
-
-      
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);
     } finally {
