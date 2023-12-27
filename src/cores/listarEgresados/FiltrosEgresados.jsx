@@ -21,31 +21,24 @@ function FiltrosEgresados({ setHasSearched }) {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(2);
   const [currentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
   const [egresados] = useState([]);
   const [randomizationSeed, setRandomizationSeed] = useState(null);
-
   const [, setIsLoading] = useState(false);
   // Estado para la semilla
   const [seed, setSeed] = useState(0);
-
   const [isHovering, setIsHovering] = useState(false);
-  // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
-
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
-
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
     setSelectedCarrera(carreraFromUrl);
   }, [carreraFromUrl]);
 
-  // {
-  //   /*Const del Drawer*/
-  // }
+  
   const { isOpen, onOpen, onClose } = useDisclosure();
   // const placement = "left";
 
@@ -211,16 +204,12 @@ function FiltrosEgresados({ setHasSearched }) {
         selectedPositions.length > 0
           ? selectedPositions.join("&positions=")
           : undefined,
-      // Agrega la semilla a la URL para paginación
       seed: randomizationSeed ? randomizationSeed : undefined,
     };
 
     const newFilters = Object.fromEntries(
       Object.entries(filters).filter(([, value]) => value !== undefined)
     );
-    // const url = constructURL(newFilters);
-    // const queryParams = new URLSearchParams(newFilters);
-
 
     try {
       await fetchPaginatedData(newFilters, 1); // Envía la página actual como 1
@@ -243,29 +232,8 @@ function FiltrosEgresados({ setHasSearched }) {
     setSelectedCarrera(null);
   };
 
-  // Maneja el cambio de la URL
-  const constructURL = (filters) => {
-    const baseUrl = "http://localhost:3000/alumni/resume?";
-    const url = new URL(baseUrl);
-
-    Object.keys(filters).forEach((key) => {
-      if (Array.isArray(filters[key])) {
-        filters[key].forEach((value) => {
-          url.searchParams.append(key, value);
-        });
-      } else if (key === "page" || key === "per-page") {
-        url.searchParams.set(key, filters[key]);
-      } else {
-        url.searchParams.append(key, filters[key]);
-      }
-    });
-
-    return decodeURIComponent(url.toString());
-  };
-
   return (
     <>
-      
       <Box
       marginLeft="50px">
             <FiltrarNombre

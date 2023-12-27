@@ -177,8 +177,8 @@ const PantallaEgresados = () => {
 
         {isSmallerThan800 && (
           <Box flex="1">
-            <FiltrosEgresadosMenu />
-            {/* Aquí se pueden añadir más componentes si es necesario */}
+            <FiltrosEgresadosMenu setHasSearched={setHasSearched}
+              setCurrentFilters={updateFilters}  />
           </Box>
         )}
       </Flex>

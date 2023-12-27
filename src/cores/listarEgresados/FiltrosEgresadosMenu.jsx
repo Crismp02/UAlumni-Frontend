@@ -17,37 +17,40 @@ import FiltrarPositions from "./FiltrarPositions";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "./FiltrosButtons";
 import { useEgresados } from './EgresadosContext';
+import PropTypes from "prop-types";
 
 
-function FiltrosEgresadosMenu() {
-  const [isHovering, setIsHovering] = useState(false);
-  const [, setIsLoading] = useState(false);
-  const {  setEgresados,    fetchPaginatedData,
+
+function FiltrosEgresadosMenu({ setHasSearched }) {
+  const {
+    fetchPaginatedData,
     isLoading,
     updateEgresadosData,
     setCurrentPage,
-    totalPages, } = useEgresados();
+    totalPages,
+  } = useEgresados();
   const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(2);
+  const [currentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [egresados] = useState([]);
+  const [, setIsLoading] = useState(false);
+  const [randomizationSeed, setRandomizationSeed] = useState(null);
+  const [seed, setSeed] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
-
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
-
-
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
     setSelectedCarrera(carreraFromUrl);
   }, [carreraFromUrl]);
 
-  {
-    /*Const del Drawer*/
-  }
   const { isOpen, onOpen, onClose } = useDisclosure();
   const placement = "left";
-
   {
     /*Busqueda por nombre*/
   }
@@ -215,35 +218,21 @@ function FiltrosEgresadosMenu() {
         selectedPositions.length > 0
           ? selectedPositions.join("&positions=")
           : undefined,
+          seed: randomizationSeed ? randomizationSeed : undefined,
+
     };
 
     const newFilters = Object.fromEntries(
       Object.entries(filters).filter(([, value]) => value !== undefined)
     );
 
-    const url = constructURL(newFilters);
-
-    await fetchPaginatedData(1, newFilters);
-      setCurrentPage(1);
-
     try {
-      console.log(url);
-      setIsLoading(true);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("No hay respuesta del servidor");
-      }
-      const data = await response.json();
-      updateEgresadosData(data.data.items);
-      setPage(1);
-      setCurrentPage(1);
-      console.log("Datos obtenidos:", data);
+      await fetchPaginatedData(newFilters, 1);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
     } finally {
       setIsLoading(false);
     }
-    
   };
 
   const handleReset = () => {
@@ -256,29 +245,6 @@ function FiltrosEgresadosMenu() {
     setSelectedTags({});
     setSelectedCarrera(null);
   };
-
-  // Maneja el cambio de la URL
-  const constructURL = (filters) => {
-    const baseUrl = "http://localhost:3000/alumni/resume";
-    const url = new URL(baseUrl);
-
-    Object.keys(filters).forEach((key) => {
-      if (Array.isArray(filters[key])) {
-        filters[key].forEach((value) => {
-          url.searchParams.append(key, value);
-        });
-      } else if (key === "careers") {
-        url.searchParams.append(key, filters[key]);
-      } else {
-        url.searchParams.set(key, filters[key]);
-      }
-    });
-
-    return decodeURIComponent(url.toString());
-  };
-
-  // normalizar texto de carreras
-
 
   return (
     <>
@@ -360,6 +326,7 @@ function FiltrosEgresadosMenu() {
               isHovering={isHovering}
               setIsHovering={setIsHovering}
               onClose={onClose}
+              setHasSearched={setHasSearched}
             />
 
             
@@ -369,5 +336,9 @@ function FiltrosEgresadosMenu() {
     </>
   );
 }
+
+FiltrosEgresadosMenu.propTypes = {
+  setHasSearched: PropTypes.func.isRequired,
+};
 
 export default FiltrosEgresadosMenu;
