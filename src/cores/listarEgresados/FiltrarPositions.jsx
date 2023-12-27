@@ -130,9 +130,9 @@ export default FiltrarPositions;
 
 // Definir la validación de props
 FiltrarPositions.propTypes = {
-  valuePos:PropTypes.object.isRequired,
-  handleChangePos:PropTypes.object.isRequired,
-  handleAddPos:PropTypes.object.isRequired,
-  listPos:PropTypes.object.isRequired,
-  handleRemovePos:PropTypes.object.isRequired,
+  valuePos:PropTypes.string.isRequired,
+  handleChangePos:PropTypes.func.isRequired,
+  handleAddPos:PropTypes.func.isRequired,
+  listPos:PropTypes.array.isRequired,
+  handleRemovePos:PropTypes.func.isRequired,
 };

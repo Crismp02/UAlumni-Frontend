@@ -87,7 +87,7 @@ function BarraFiltrosEgresados() {
           />
 
           {/*Filtros exactos:*/}
-          <Checkbox
+          {/* <Checkbox
             marginBottom="10px"
             marginTop="10px"
             isChecked={exactMatch}
@@ -95,7 +95,7 @@ function BarraFiltrosEgresados() {
             onChange={handleCheckboxChange}
           >
             Filtrar por coincidencia exacta
-          </Checkbox>
+          </Checkbox> */}
           {/*Botones de búsqueda y reset*/}
           <FiltrosButtons
             handleReset={handleReset}

@@ -39,6 +39,6 @@ export default FiltrarNombre;
 
 // Definir la validación de props
 FiltrarNombre.propTypes = {
-  valueName: PropTypes.object.isRequired,
-  handleChangeName: PropTypes.object.isRequired,
+  valueName: PropTypes.string.isRequired,
+  handleChangeName: PropTypes.func.isRequired,
 };

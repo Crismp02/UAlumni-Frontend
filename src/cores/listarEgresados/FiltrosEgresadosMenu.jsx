@@ -8,7 +8,6 @@ import {
   DrawerContent,
   useDisclosure,
   IconButton,
-  Checkbox,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
@@ -23,7 +22,12 @@ import { useEgresados } from './EgresadosContext';
 function FiltrosEgresadosMenu() {
   const [isHovering, setIsHovering] = useState(false);
   const [, setIsLoading] = useState(false);
-  const {  setEgresados } = useEgresados();
+  const {  setEgresados,    fetchPaginatedData,
+    isLoading,
+    updateEgresadosData,
+    setCurrentPage,
+    totalPages, } = useEgresados();
+  const [page, setPage] = useState(1);
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -70,7 +74,6 @@ function FiltrosEgresadosMenu() {
           throw new Error("Error al obtener los egresados");
         }
         const data = await response.json();
-        console.log("UPAA",data);
         if (Array.isArray(data.data.items)) {
           const categoriasObtenidas = data.data.items.map((item) => item.name);
           setCategorias(categoriasObtenidas);
@@ -220,6 +223,9 @@ function FiltrosEgresadosMenu() {
 
     const url = constructURL(newFilters);
 
+    await fetchPaginatedData(1, newFilters);
+      setCurrentPage(1);
+
     try {
       console.log(url);
       setIsLoading(true);
@@ -228,7 +234,9 @@ function FiltrosEgresadosMenu() {
         throw new Error("No hay respuesta del servidor");
       }
       const data = await response.json();
-      setEgresados(data.data.items);
+      updateEgresadosData(data.data.items);
+      setPage(1);
+      setCurrentPage(1);
       console.log("Datos obtenidos:", data);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
@@ -335,7 +343,7 @@ function FiltrosEgresadosMenu() {
             />
 
             {/*Filtros exactos:*/}
-            <Checkbox
+            {/* <Checkbox
               marginBottom="10px"
               marginTop="10px"
               isChecked={exactMatch}
@@ -343,7 +351,7 @@ function FiltrosEgresadosMenu() {
               onChange={handleCheckboxChange}
             >
               Filtrar por coincidencia exacta
-            </Checkbox>
+            </Checkbox> */}
             {/*Botones de búsqueda y reset*/}
             <FiltrosButtons
               handleReset={handleReset}

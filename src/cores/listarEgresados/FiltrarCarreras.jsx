@@ -60,8 +60,8 @@ export default FiltrarCarreras;
 
 // Definir la validación de props
 FiltrarCarreras.propTypes = {
-  labels: PropTypes.object.isRequired,
-  selectedCarrera: PropTypes.object.isRequired,
-  selectedTags: PropTypes.object.isRequired, 
-  handleClick: PropTypes.object.isRequired,
+  labels: PropTypes.array.isRequired,
+  selectedCarrera: PropTypes.string,
+  selectedTags: PropTypes.object, 
+  handleClick: PropTypes.func.isRequired,
 };

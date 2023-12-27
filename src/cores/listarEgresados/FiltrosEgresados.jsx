@@ -1,4 +1,5 @@
-import { Box, Checkbox, useDisclosure } from "@chakra-ui/react";
+
+import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import FiltrarCarreras from "./FiltrarCarreras";
@@ -264,64 +265,66 @@ function FiltrosEgresados({ setHasSearched }) {
 
   return (
     <>
-      <Box marginLeft="50px">
-        <FiltrarNombre
-          valueName={valueName}
-          handleChangeName={handleChangeName}
-        />
-        {/*Busqueda por habilidad*/}
-        <FiltrarSkills
-          list={list}
-          categoria={categoria}
-          setCategoria={setCategoria}
-          setCategorias={setCategorias}
-          habilidad={habilidad}
-          habilidades={habilidades}
-          setHabilidades={setHabilidades}
-          handleAddCategoria={handleAddCategoria}
-          handleHabilidadChange={handleHabilidadChange}
-          handleRemoveHabilidad={handleRemoveHabilidad}
-          categorias={categorias}
-        />
+      
+      <Box
+      marginLeft="50px">
+            <FiltrarNombre
+              valueName={valueName}
+              handleChangeName={handleChangeName}
+            />
+            {/*Busqueda por habilidad*/}
+            <FiltrarSkills
+              list={list}
+              categoria={categoria}
+              setCategoria={setCategoria}
+              setCategorias={setCategorias}
+              habilidad={habilidad}
+              habilidades={habilidades}
+              setHabilidades={setHabilidades}
+              handleAddCategoria={handleAddCategoria}
+              handleHabilidadChange={handleHabilidadChange}
+              handleRemoveHabilidad={handleRemoveHabilidad}
+              categorias={categorias}
+            />
 
-        {/*Busqueda por posiciones de interes*/}
-        <FiltrarPositions
-          valuePos={valuePos}
-          handleChangePos={handleChangePos}
-          handleAddPos={handleAddPos}
-          listPos={listPos}
-          handleRemovePos={handleRemovePos}
-        />
+            {/*Busqueda por posiciones de interes*/}
+            <FiltrarPositions
+              valuePos={valuePos}
+              handleChangePos={handleChangePos}
+              handleAddPos={handleAddPos}
+              listPos={listPos}
+              handleRemovePos={handleRemovePos}
+            />
 
-        {/*Busqueda por carreras:*/}
-        <FiltrarCarreras
-          labels={carreras}
-          selectedCarrera={selectedCarrera}
-          selectedTags={selectedTags}
-          handleClick={handleClick}
-        />
+            {/*Busqueda por carreras:*/}
+            <FiltrarCarreras
+              labels={carreras}
+              selectedCarrera={selectedCarrera}
+              selectedTags={selectedTags}
+              handleClick={handleClick}
+            />
 
-        {/*Filtros exactos:*/}
-        <Checkbox
-          marginBottom="10px"
-          marginTop="10px"
-          isChecked={exactMatch}
-          as="b"
-          onChange={handleCheckboxChange}
-        >
-          Filtrar por coincidencia exacta
-        </Checkbox>
-        {/*Botones de búsqueda y reset*/}
-        <FiltrosButtons
-          handleReset={handleReset}
-          handleSubmit={handleSubmit}
-          isDisabled={isDisabled}
-          isHovering={isHovering}
-          setIsHovering={setIsHovering}
-          onClose={onClose}
-          setHasSearched={setHasSearched}
-        />
-      </Box>
+            {/*Filtros exactos:*/}
+            {/* <Checkbox
+              marginBottom="10px"
+              marginTop="10px"
+              isChecked={exactMatch}
+              as="b"
+              onChange={handleCheckboxChange}
+            >
+              Filtrar por coincidencia exacta
+            </Checkbox> */}
+            {/*Botones de búsqueda y reset*/}
+            <FiltrosButtons
+              handleReset={handleReset}
+              handleSubmit={handleSubmit}
+              isDisabled={isDisabled}
+              isHovering={isHovering}
+              setIsHovering={setIsHovering}
+              onClose={onClose}
+              setHasSearched={setHasSearched}
+            />      
+      </Box>         
     </>
   );
 }
