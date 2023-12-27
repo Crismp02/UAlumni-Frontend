@@ -5,7 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Faq from "./cores/FQA/Faq";
 import LandingPage from "./cores/landingpage/LandingPage";
-import ListarOfertas from "./cores/listarOfertas/ListarOfertas";
+import ListarOfertasPrincipal from "./cores/listarOfertas/ListarOfertasPrincipal";
 import App from "./cores/listarEgresados/App";
 
 const router = createBrowserRouter([
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/listarOfertas",
-    element: <ListarOfertas/>,
+    element: <ListarOfertasPrincipal/>,
   },
   {
     path: "/PreguntasFrecuentes",

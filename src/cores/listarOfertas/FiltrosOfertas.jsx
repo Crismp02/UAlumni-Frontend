@@ -2,14 +2,14 @@
 import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import FiltrosOfertas from "./FiltrosOfertas";
 import FiltrarNombre from "./FiltrarNombre";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrosButtons from "./FiltrosButtons";
 import { useOfertas } from "./OfertasContext";
 import PropTypes from "prop-types";
+// import { c } from "@chakra-ui/toast/dist/toast.provider-ab09bc2e";
 
-function FiltrosOfertasMenu({ setHasSearched }) {
+function FiltrosOfertas({ setHasSearched }) {
   const{fetchPaginatedData,
   }=useOfertas();
   const [randomizationSeed, ] = useState(null);
@@ -32,6 +32,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     //Busqueda por habilidades categoria
     const [categoria, setCategoria] = useState("");
     const [habilidad, setHabilidad] = useState("");
+    const [carreras, setCarreras] = useState("");
     const [list, setList] = useState([]);
   
     // Objeto inicial de habilidades
@@ -59,6 +60,30 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   
       fetchCategorias();
     }, []);
+
+    // Fetch de las carreras del Alumni
+    useEffect(() => {
+      const fetchCarrerasAlumni = async () => {
+        try {
+          const response = await fetch("http://localhost:3000/alumni/me/resume");
+          if (!response.ok) {
+            throw new Error("Error al obtener las carreras");
+          }
+          const data = await response.json();
+          console.log("carreras obtenidas: ", data.data.items);
+          
+          if (Array.isArray(data.data.items)) {
+            const carrerasObtenidas = data.data.items.map((item) => item.name);
+            setCarreras(carrerasObtenidas);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      };
+    
+      fetchCarrerasAlumni();
+    }, []);
+    
 
     const handleHabilidadChange = (e) => {
       setHabilidad(e.target.value);
@@ -141,3 +166,9 @@ function FiltrosOfertasMenu({ setHasSearched }) {
         
       }
     }
+}
+
+    FiltrosOfertas.propTypes = {
+        setHasSearched: PropTypes.func.isRequired,
+      };
+      export default FiltrosOfertas;

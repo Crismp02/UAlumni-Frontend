@@ -2,7 +2,7 @@ import {OfertasProvider} from './OfertasContext';
 import NavBar from '../../components/Navbar';
 import PantallaOfertas from './PantallaOfertas';
 
-const App = () => {
+const ListarOfertasPrincipal = () => {
     return (
         <OfertasProvider>
         <NavBar />
@@ -11,4 +11,4 @@ const App = () => {
     );
     }
 
-export default App;
+export default ListarOfertasPrincipal;

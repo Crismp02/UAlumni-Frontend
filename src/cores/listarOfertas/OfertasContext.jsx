@@ -14,46 +14,44 @@ export const OfertasProvider = ({ children }) => {
     });
     const [prevFilters, setPrevFilters] = useState({}); // Almacena los filtros previos
     
+    // Resto del código de las funciones fetchPaginatedData y useEffect...
+
     const fetchPaginatedData = async (filters, page) => {
         try {
-            setIsLoading(true);
-            const queryParams = new URLSearchParams(filters);
-            queryParams.set("page", page);
-            queryParams.set("per-page", "4");
-            const url = `http://localhost:3000/alumni/job-offer?${queryParams}`;
-            const response = await fetch(url);
-            console.log("url:", url)
-
-            if (!response.ok) {
-                throw new Error("Error al obtener los datos");
-            }
-
-            const data = await response.json();
-            setOfertas(data.data.items);
-            // setTotalPages(data.data.meta.numberOfPages);
-            // Se debe calcular el numero total de paginas
-            setTotalPages(3);
-
-            if (data.data.meta.randomizationSeed) {
-                // Actualizar los filtros sin modificar los originales
-                setCurrentFilters(prevFilters => ({
-                    ...prevFilters,
-                    seed: data.data.meta.randomizationSeed,
-                }));
-            }
-        } catch (error) {
-            console.error("Error al obtener datos paginados:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (currentPage !== 1 && Object.keys(currentFilters).length > 0) {
-            fetchPaginatedData(currentFilters, currentPage);
-        }
-    }, [currentPage]);
+          setIsLoading(true);
+          const queryParams = new URLSearchParams(filters);
+          queryParams.append("page", page);
+          queryParams.append("per-page", "4");
+          
+          console.log(queryParams.toString(),"queryparams");
+          const url = `http://localhost:3000/job-offers?${queryParams}`;
+          const response = await fetch(url);
+          console.log("url:", url)
     
+          if (!response.ok) {
+            throw new Error("Error al obtener los datos");
+          }
+    
+          const data = await response.json();
+          setOfertas(data.data.items);
+          // setTotalPages(data.data.meta.numberOfPages);
+          // Se debe calcular el numero total de paginas
+          setTotalPages(3);
+    
+          if (data.data.meta.randomizationSeed) {
+            // Actualizar los filtros sin modificar los originales
+            setCurrentFilters(prevFilters => ({
+              ...prevFilters,
+              seed: data.data.meta.randomizationSeed,
+            }));
+          }
+        } catch (error) {
+          console.error("Error al obtener datos paginados:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
     useEffect(() => {
         if (
             JSON.stringify(currentFilters) !== JSON.stringify(prevFilters) &&
@@ -78,7 +76,6 @@ export const OfertasProvider = ({ children }) => {
             {children}
         </OfertasContext.Provider>
     );
-
 };
 
 export const useOfertas = () => {
@@ -87,8 +84,4 @@ export const useOfertas = () => {
         throw new Error("useOfertas debe estar dentro del proveedor OfertasContext");
     }
     return context;
-}
-
-OfertasProvider.propTypes = {
-    children: PropTypes.node.isRequired,
 };
