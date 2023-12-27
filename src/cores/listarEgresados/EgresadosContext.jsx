@@ -7,31 +7,66 @@ export const EgresadosProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(2);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState({
+    seed: null, // Inicializa la semilla como null
+  });
+  const [prevFilters, setPrevFilters] = useState({}); // Almacena los filtros previos
+  
 
-  const fetchPaginatedData = async (filters) => {
-    // Solo hacemos la solicitud a la API si se proporcionan filtros
-    if (Object.keys(filters).length > 0) {
+
+  const fetchPaginatedData = async (filters, page) => {
+    try {
       setIsLoading(true);
-      try {
-        const queryParams = new URLSearchParams(filters).toString();
-        const response = await fetch(`http://localhost:3000/alumni/resume?${queryParams}`);
-        if (!response.ok) {
-          throw new Error("Error al obtener los datos");
-        }
-        const data = await response.json();
-        setEgresados(data.data.items);
-        setTotalPages(3);
-      } catch (error) {
-        console.error("Error al obtener datos paginados:", error);
-      } finally {
-        setIsLoading(false);
+      const queryParams = new URLSearchParams(filters);
+      queryParams.set("page", page);
+      queryParams.set("per-page", "2");
+
+      console.log("queryParams2:", queryParams.toString());
+
+      const url = `http://localhost:3000/alumni/resume?${queryParams}`;
+      const response = await fetch(url);
+      console.log("url:", url)
+
+      if (!response.ok) {
+        throw new Error("Error al obtener los datos");
       }
+
+      const data = await response.json();
+      setEgresados(data.data.items);
+      console.log("SEMILLA",data.data.meta.randomizationSeed)
+      setTotalPages(3);
+      if (data.data.meta.randomizationSeed) {
+        // Actualizar los filtros sin modificar los originales
+        setCurrentFilters(prevFilters => ({
+          ...prevFilters,
+          seed: data.data.meta.randomizationSeed,
+        }));
+      }
+      console.log("Datos obtenidos de la página:", page, data);
+      console.log("Semillas Guardadas", currentFilters.seed)
+
+      
+    } catch (error) {
+      console.error("Error al obtener datos paginados:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPaginatedData(currentPage);
+    if (currentPage !== 1 && Object.keys(currentFilters).length > 0) {
+      fetchPaginatedData(currentFilters, currentPage);
+    }
   }, [currentPage]);
+  
+  useEffect(() => {
+    if (
+      Object.keys(currentFilters).length > 0 &&
+      JSON.stringify(prevFilters) !== JSON.stringify(currentFilters)
+    ) {
+      setPrevFilters(currentFilters);
+    }
+  }, [currentFilters, prevFilters]);
 
   const updateEgresadosData = (data) => {
     setEgresados(data);
@@ -47,7 +82,9 @@ export const EgresadosProvider = ({ children }) => {
         setCurrentPage,
         isLoading,
         setIsLoading,
-        updateEgresadosData, // Agregando la función de actualización al contexto
+        updateEgresadosData,
+        currentFilters,
+        setCurrentFilters,
       }}
     >
       {children}

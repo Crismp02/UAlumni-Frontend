@@ -1,147 +1,189 @@
-
 import { Box, Button, useMediaQuery, Text, Flex } from "@chakra-ui/react";
 import FiltrosEgresados from "./FiltrosEgresados";
 import FiltrosEgresadosMenu from "./FiltrosEgresadosMenu";
 import ListarEgresados from "./ListarEgresados";
 import { useEgresados } from "./EgresadosContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const PantallaEgresados = () => {
+  const {
+    egresados,
+    currentPage,
+    totalPages,
+    isLoading,
+    setIsLoading,
+    setCurrentPage,
+    currentFilters,
+    setCurrentFilters,
+    fetchPaginatedData,
+    updateEgresadosData
+  } = useEgresados();
 
-    // Usamos el hook useEgresados para obtener el estado y las funciones relacionadas con los egresados
-    const { currentPage, totalPages, isLoading, setCurrentPage } = useEgresados();
+  const [hasSearched, setHasSearched] = useState(false);
+  const [filtersChanged, setFiltersChanged] = useState(false);
 
-    // Agregamos un estado para saber si se ha realizado una búsqueda
-    const [hasSearched, setHasSearched] = useState(false);
-
-    // Función para manejar el cambio a la página anterior
-    const handlePreviousPage = () => {
-      if (currentPage > 1 && !isLoading) {
-        setCurrentPage(currentPage - 1);
+  const handlePreviousPage = async () => {
+    if (currentPage > 1 && !isLoading) {
+      setCurrentPage((prevPage) => prevPage - 1);
+      try {
+        setIsLoading(true);
+        // Obtén los filtros actuales que ya incluyen la semilla
+        const newFilters = { ...currentFilters };
+        const prevPage = currentPage - 1;
+  
+        // Realiza la solicitud para la página anterior
+        await fetchPaginatedData(newFilters, prevPage);
+  
         setHasSearched(true);
+      } catch (error) {
+        console.error("Error al obtener la página anterior:", error);
+      } finally {
+        setIsLoading(false);
       }
-    };
-
-    // Función para manejar el cambio a la página siguiente
-    const handleNextPage = () => {
-      if (currentPage < totalPages && !isLoading) {
-        setCurrentPage(currentPage + 1);
+    }
+  };
+  
+  const handleNextPage = async () => {
+    if (currentPage < totalPages && !isLoading) {
+      setCurrentPage((prevPage) => prevPage + 1);
+      try {
+        setIsLoading(true);
+        // Hacer una copia de los filtros antes de actualizar el estado
+        const newFilters = { ...currentFilters };
+        const nextPage = currentPage + 1;
+  
+        // Realizar la solicitud para la página siguiente
+        await fetchPaginatedData(newFilters, nextPage);
+  
         setHasSearched(true);
+      } catch (error) {
+        console.error("Error al obtener la siguiente página:", error);
+      } finally {
+        setIsLoading(false);
       }
-    };
+    }
+  };
+  
 
-    // Usamos el hook useMediaQuery para determinar si el ancho de la pantalla es menor a 800px
-    const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
+  const updateFilters = (newFilters) => {
+    setCurrentFilters(newFilters);
+    setFiltersChanged(true);
+  };
 
-    return (
-      <Box>
+  useEffect(() => {
+    if (hasSearched && filtersChanged) {
+      fetchPaginatedData(currentFilters, currentPage);
+      setHasSearched(false);
+      setFiltersChanged(false);
+    }
+  }, [hasSearched, filtersChanged, fetchPaginatedData, currentFilters, currentPage]);
 
-        <Text
-          fontSize={["lg", "lg", "xl", "4xl"]}
-          color="black"
-          textAlign="center"
-          as="b"
-          paddingTop={["2px", "2px", "2px", "10px"]}
-          marginTop="10px"
-          marginBottom="10px"
-          style={{
-            textDecoration: "underline",
-            textDecorationColor: "green",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          ENCUENTRA A TU EGRESADO
-        </Text>
 
-      {/* Dependiendo del tamaño de la pantalla, renderizamos diferentes componentes */}
-        <Flex flexDirection={isSmallerThan800 ? "column" : "row"}>
+  const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
 
-          {!isSmallerThan800 && (
+  return (
+    <Box>
+      <Text
+        fontSize={["lg", "lg", "xl", "4xl"]}
+        color="black"
+        textAlign="center"
+        as="b"
+        paddingTop={["2px", "2px", "2px", "10px"]}
+        marginTop="10px"
+        marginBottom="10px"
+        style={{
+          textDecoration: "underline",
+          textDecorationColor: "green",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        ENCUENTRA A TU EGRESADO
+      </Text>
 
-            <Box flex="1">
-              <FiltrosEgresados setHasSearched={setHasSearched}/>
-            </Box>
-          )}
+      <Flex flexDirection={isSmallerThan800 ? "column" : "row"}>
+        {!isSmallerThan800 && (
+          <Box flex="1">
+            <FiltrosEgresados
+              setHasSearched={setHasSearched}
+              setCurrentFilters={updateFilters} // Actualizar los filtros en el cambio
+            />
+          </Box>
+        )}
 
-          {isSmallerThan800 ? (
+        <Box flex="2">
+          <ListarEgresados hasSearched={hasSearched} />
 
-            <Box flex="1">
-              <FiltrosEgresadosMenu />
-              {/* Si no se ha realizado una búsqueda, mostramos el mensaje. De lo contrario, mostramos los resultados */}
-              <ListarEgresados hasSearched={hasSearched}/>
-            </Box>
-
-          ) : (
-
-            <Box flex="2">
-              <ListarEgresados hasSearched={hasSearched}/>
-
-              {/* Controles de paginación */}
-              <div
-                style={{
-                display: 'flex', // Hace que los hijos del div se comporten como elementos flexibles
-                justifyContent: 'center', // Centra los elementos flexibles horizontalmente
-                alignItems: 'center' // Centra los elementos flexibles verticalmente
-               }}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {currentPage > 1 && (
+              <Button
+                as="b"
+                colorScheme="teal"
+                disabled={isLoading}
+                onClick={handlePreviousPage}
+                size="lg"
+                variant="ghost"
+                fontSize="3xl"
+                color="darkgreen"
               >
+                «
+              </Button>
+            )}
 
-                  {currentPage > 1 && (
-                    <Button
-                      as="b"
-                      colorScheme='teal'
-                      disabled={isLoading}
-                      onClick={handlePreviousPage}
-                      size='lg'
-                      variant='ghost'
-                      fontSize='3xl' 
-                      color='darkgreen'
-                    >
-                      «   
-                    </Button>
-                  )}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+              (pageNumber) => (
+                <Button
+                  key={pageNumber}
+                  as="b"
+                  colorScheme="teal"
+                  disabled={isLoading}
+                  onClick={() => setCurrentPage(pageNumber)}
+                  size="lg"
+                  variant="ghost"
+                  fontSize="2xl"
+                  color="darkgreen"
+                  fontWeight="bold"
+                  marginRight="1px"
+                  marginLeft="1px"
+                  textDecoration={
+                    pageNumber === currentPage ? "underline" : "none"
+                  }
+                >
+                  {pageNumber}
+                </Button>
+              )
+            )}
 
-                  {/* Generamos un array de números desde 1 hasta totalPages y lo mapeamos */}
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNumber => (
-                    <Button
-                      key={pageNumber}
-                      as="b"
-                      colorScheme='teal'
-                      disabled={isLoading}
-                      onClick={() => setCurrentPage(pageNumber)}
-                      size='lg'
-                      variant='ghost'
-                      fontSize='2xl' 
-                      color='darkgreen'
-                      fontWeight="bold"
-                      marginRight='1px' 
-                      marginLeft='1px' 
-                      textDecoration={pageNumber === currentPage ? 'underline' : 'none'} 
-                    >
-                      {pageNumber}   
-                    </Button>
-                  ))}
+            <Button
+              as="b"
+              colorScheme="teal"
+              disabled={currentPage === totalPages || isLoading}
+              onClick={handleNextPage}
+              size="lg"
+              variant="ghost"
+              fontSize="3xl"
+              color="darkgreen"
+            >
+              »
+            </Button>
+          </div>
+        </Box>
 
-                  <Button
-                    as="b"
-                    colorScheme='teal'
-                    disabled={currentPage === totalPages || isLoading}
-                    onClick={handleNextPage}
-                    size='lg'
-                    variant='ghost'
-                    fontSize='3xl' 
-                    color='darkgreen'
-                  >
-                    »   
-                  </Button>
-
-              </div>
-
-            </Box>
-          )}
-        </Flex>
-      </Box>
-    );
+        {isSmallerThan800 && (
+          <Box flex="1">
+            <FiltrosEgresadosMenu />
+            {/* Aquí se pueden añadir más componentes si es necesario */}
+          </Box>
+        )}
+      </Flex>
+    </Box>
+  );
 };
 
 export default PantallaEgresados;

@@ -1,15 +1,13 @@
-
 import { Box, Checkbox, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrarNombre from "./FiltrarNombre";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrarSkills from "./FiltrarSkills";
 import FiltrosButtons from "./FiltrosButtons";
 import { useEgresados } from "./EgresadosContext";
-import PropTypes from 'prop-types';
-
+import PropTypes from "prop-types";
 
 function FiltrosEgresados({ setHasSearched }) {
   const {
@@ -20,14 +18,15 @@ function FiltrosEgresados({ setHasSearched }) {
     totalPages,
   } = useEgresados();
   const [page, setPage] = useState(1);
-  const [currentPage,] = useState(1);
+  const [perPage, setPerPage] = useState(2);
+  const [currentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [egresados,] = useState([]);
+  const [egresados] = useState([]);
   const [randomizationSeed, setRandomizationSeed] = useState(null);
 
   const [, setIsLoading] = useState(false);
-   // Estado para la semilla
-   const [seed, setSeed] = useState(0);
+  // Estado para la semilla
+  const [seed, setSeed] = useState(0);
 
   const [isHovering, setIsHovering] = useState(false);
   // Obtén la carrera de la URL
@@ -37,7 +36,6 @@ function FiltrosEgresados({ setHasSearched }) {
 
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
-
 
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
@@ -163,8 +161,6 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   };
 
-
-
   {
     /*Botones de búsqueda y reset*/
   }
@@ -191,10 +187,7 @@ function FiltrosEgresados({ setHasSearched }) {
 
     // quitar espacios desactivados
     const careerParams = selectedCarrera
-      ? [
-          selectedCarrera,
-          ...selectedCareers,
-        ]
+      ? [selectedCarrera, ...selectedCareers]
       : selectedCareers;
 
     const selectedSkills = list.map(
@@ -203,11 +196,7 @@ function FiltrosEgresados({ setHasSearched }) {
     const selectedCategories = list.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
 
-    // Agrega parámetros de paginación
-    const paginationParams = `${page}&per-page=4`;
-
     const filters = {
-      page: paginationParams, // Asegura que siempre se inicie en la página 1 al realizar una búsqueda
       name: valueName ? valueName : undefined,
       careers:
         careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
@@ -222,44 +211,26 @@ function FiltrosEgresados({ setHasSearched }) {
           ? selectedPositions.join("&positions=")
           : undefined,
       // Agrega la semilla a la URL para paginación
+      seed: randomizationSeed ? randomizationSeed : undefined,
     };
-
 
     const newFilters = Object.fromEntries(
       Object.entries(filters).filter(([, value]) => value !== undefined)
     );
+    // const url = constructURL(newFilters);
+    // const queryParams = new URLSearchParams(newFilters);
 
-    const url = constructURL(newFilters);
-
-    await fetchPaginatedData(1, newFilters);
-      setCurrentPage(1);
 
     try {
-      console.log(url);
-      setIsLoading(true);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("No hay respuesta del servidor");
-      }
-      const data = await response.json();
-      updateEgresadosData(data.data.items);
-      setPage(1);
-      setCurrentPage(1);
-      console.log("Datos obtenidos:", data);
+      await fetchPaginatedData(newFilters, 1); // Envía la página actual como 1
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
     } finally {
       setIsLoading(false);
     }
-    
   };
 
-
-  // const paginationParams = `${page}&per-page=10`;
-
   // Funciones para manejar la paginación
-
-
   const handleReset = () => {
     setValueName("");
     setList([]);
@@ -273,7 +244,7 @@ function FiltrosEgresados({ setHasSearched }) {
 
   // Maneja el cambio de la URL
   const constructURL = (filters) => {
-    const baseUrl = "http://localhost:3000/alumni/resume";
+    const baseUrl = "http://localhost:3000/alumni/resume?";
     const url = new URL(baseUrl);
 
     Object.keys(filters).forEach((key) => {
@@ -281,10 +252,10 @@ function FiltrosEgresados({ setHasSearched }) {
         filters[key].forEach((value) => {
           url.searchParams.append(key, value);
         });
-      } else if (key === "careers") {
-        url.searchParams.append(key, filters[key]);
-      } else {
+      } else if (key === "page" || key === "per-page") {
         url.searchParams.set(key, filters[key]);
+      } else {
+        url.searchParams.append(key, filters[key]);
       }
     });
 
@@ -293,66 +264,64 @@ function FiltrosEgresados({ setHasSearched }) {
 
   return (
     <>
-      
-      <Box
-      marginLeft="50px">
-            <FiltrarNombre
-              valueName={valueName}
-              handleChangeName={handleChangeName}
-            />
-            {/*Busqueda por habilidad*/}
-            <FiltrarSkills
-              list={list}
-              categoria={categoria}
-              setCategoria={setCategoria}
-              setCategorias={setCategorias}
-              habilidad={habilidad}
-              habilidades={habilidades}
-              setHabilidades={setHabilidades}
-              handleAddCategoria={handleAddCategoria}
-              handleHabilidadChange={handleHabilidadChange}
-              handleRemoveHabilidad={handleRemoveHabilidad}
-              categorias={categorias}
-            />
+      <Box marginLeft="50px">
+        <FiltrarNombre
+          valueName={valueName}
+          handleChangeName={handleChangeName}
+        />
+        {/*Busqueda por habilidad*/}
+        <FiltrarSkills
+          list={list}
+          categoria={categoria}
+          setCategoria={setCategoria}
+          setCategorias={setCategorias}
+          habilidad={habilidad}
+          habilidades={habilidades}
+          setHabilidades={setHabilidades}
+          handleAddCategoria={handleAddCategoria}
+          handleHabilidadChange={handleHabilidadChange}
+          handleRemoveHabilidad={handleRemoveHabilidad}
+          categorias={categorias}
+        />
 
-            {/*Busqueda por posiciones de interes*/}
-            <FiltrarPositions
-              valuePos={valuePos}
-              handleChangePos={handleChangePos}
-              handleAddPos={handleAddPos}
-              listPos={listPos}
-              handleRemovePos={handleRemovePos}
-            />
+        {/*Busqueda por posiciones de interes*/}
+        <FiltrarPositions
+          valuePos={valuePos}
+          handleChangePos={handleChangePos}
+          handleAddPos={handleAddPos}
+          listPos={listPos}
+          handleRemovePos={handleRemovePos}
+        />
 
-            {/*Busqueda por carreras:*/}
-            <FiltrarCarreras
-              labels={carreras}
-              selectedCarrera={selectedCarrera}
-              selectedTags={selectedTags}
-              handleClick={handleClick}
-            />
+        {/*Busqueda por carreras:*/}
+        <FiltrarCarreras
+          labels={carreras}
+          selectedCarrera={selectedCarrera}
+          selectedTags={selectedTags}
+          handleClick={handleClick}
+        />
 
-            {/*Filtros exactos:*/}
-            <Checkbox
-              marginBottom="10px"
-              marginTop="10px"
-              isChecked={exactMatch}
-              as="b"
-              onChange={handleCheckboxChange}
-            >
-              Filtrar por coincidencia exacta
-            </Checkbox>
-            {/*Botones de búsqueda y reset*/}
-            <FiltrosButtons
-              handleReset={handleReset}
-              handleSubmit={handleSubmit}
-              isDisabled={isDisabled}
-              isHovering={isHovering}
-              setIsHovering={setIsHovering}
-              onClose={onClose}
-              setHasSearched={setHasSearched}
-            />      
-      </Box>         
+        {/*Filtros exactos:*/}
+        <Checkbox
+          marginBottom="10px"
+          marginTop="10px"
+          isChecked={exactMatch}
+          as="b"
+          onChange={handleCheckboxChange}
+        >
+          Filtrar por coincidencia exacta
+        </Checkbox>
+        {/*Botones de búsqueda y reset*/}
+        <FiltrosButtons
+          handleReset={handleReset}
+          handleSubmit={handleSubmit}
+          isDisabled={isDisabled}
+          isHovering={isHovering}
+          setIsHovering={setIsHovering}
+          onClose={onClose}
+          setHasSearched={setHasSearched}
+        />
+      </Box>
     </>
   );
 }
