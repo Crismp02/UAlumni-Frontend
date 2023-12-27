@@ -14,20 +14,9 @@ import PropTypes from "prop-types";
 function FiltrosEgresados({ setHasSearched }) {
   const {
     fetchPaginatedData,
-    isLoading,
-    updateEgresadosData,
-    setCurrentPage,
-    totalPages,
   } = useEgresados();
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(4);
-  const [currentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
-  const [egresados] = useState([]);
-  const [randomizationSeed, setRandomizationSeed] = useState(null);
+  const [randomizationSeed, ] = useState(null);
   const [, setIsLoading] = useState(false);
-  // Estado para la semilla
-  const [seed, setSeed] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -40,13 +29,11 @@ function FiltrosEgresados({ setHasSearched }) {
   }, [carreraFromUrl]);
 
   
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onClose } = useDisclosure();
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 
-  {
-    /*Busqueda por habilidades categoria*/
-  }
+  //Busqueda por habilidades categoria
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
@@ -173,9 +160,9 @@ function FiltrosEgresados({ setHasSearched }) {
   {
     /*Botones de búsqueda y reset*/
   }
-  const [exactMatch, setExactMatch] = useState(false);
+  // const [exactMatch, setExactMatch] = useState(false);
 
-  const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
+  // const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
   const isDisabled =
     !valueName &&
     list.length === 0 &&

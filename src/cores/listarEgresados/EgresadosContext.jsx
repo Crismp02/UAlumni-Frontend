@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 
 const EgresadosContext = createContext();
 
@@ -94,4 +95,9 @@ export const useEgresados = () => {
     throw new Error("useEgresados must be used within an EgresadosProvider");
   }
   return context;
+};
+
+//Declaracion de las props:
+EgresadosProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

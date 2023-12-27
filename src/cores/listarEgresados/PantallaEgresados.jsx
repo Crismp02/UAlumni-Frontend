@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 
 const PantallaEgresados = () => {
   const {
-    egresados,
     currentPage,
     totalPages,
     isLoading,
@@ -16,7 +15,6 @@ const PantallaEgresados = () => {
     currentFilters,
     setCurrentFilters,
     fetchPaginatedData,
-    updateEgresadosData
   } = useEgresados();
 
   const [hasSearched, setHasSearched] = useState(false);
