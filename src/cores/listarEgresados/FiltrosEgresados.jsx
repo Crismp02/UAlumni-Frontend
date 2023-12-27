@@ -49,7 +49,7 @@ function FiltrosEgresados({ setHasSearched }) {
       try {
         const response = await fetch("http://localhost:3000/skill-category");
         if (!response.ok) {
-          throw new Error("Error al obtener los egresados");
+          throw new Error("Error al obtener las categorías");
         }
         const data = await response.json();
         if (Array.isArray(data.data.items)) {
@@ -157,12 +157,6 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   };
 
-  {
-    /*Botones de búsqueda y reset*/
-  }
-  // const [exactMatch, setExactMatch] = useState(false);
-
-  // const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
   const isDisabled =
     !valueName &&
     list.length === 0 &&
@@ -170,8 +164,6 @@ function FiltrosEgresados({ setHasSearched }) {
     listInd.length === 0 && 
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
-
-  // const [egresados, setEgresados] = useState([]);
 
   const handleSubmit = async () => {
     if (isDisabled) {
