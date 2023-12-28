@@ -28,34 +28,37 @@ function FiltrarSkills({
 
   const [, setCargandoHabilidades] = useState(false);
 
-  useEffect(() => {
-    if (categoria) {
-      setCargandoHabilidades(true);
-      fetch(`http://localhost:3000/skillCategory/${categoria}/technical-skill`)
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-          throw new Error("Error al obtener las habilidades");
-        })
-        .then((data) => {
-          if (Array.isArray(data.data.items)) {
-            const habilidadesNombres = data.data.items.map((item) => item.name);
-            setHabilidades((prevHabilidades) => ({
-              ...prevHabilidades,
-              [categoria]: habilidadesNombres, // Actualizar las habilidades específicas de la categoría seleccionada
-            }));
-          }
-          console.log("mis habilidades");
-          console.log(habilidades); // Observar los cambios después de actualizar el estado
-          setCargandoHabilidades(false);
-        })
-        .catch((error) => {
-          console.error("Error de fetch:", error);
-          setCargandoHabilidades(false); // Marcar que ha habido un error en la obtención de las habilidades
-        });
-    }
-  }, [categoria, habilidades, setHabilidades]);
+useEffect(() => {
+  if (categoria) {
+    setCargandoHabilidades(true);
+
+    fetch(`http://localhost:3000/skillCategory/${categoria}/technical-skill`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Error al obtener las habilidades");
+      })
+      .then((data) => {
+        if (Array.isArray(data.data.items)) {
+          const habilidadesNombres = data.data.items.map((item) => item.name);
+          setHabilidades((prevHabilidades) => ({
+            ...prevHabilidades,
+            [categoria]: habilidadesNombres, // Actualizar las habilidades específicas de la categoría seleccionada
+          }));
+        }
+        console.log("mis habilidades");
+        console.log(habilidades); // Observar los cambios después de actualizar el estado
+      })
+      .catch((error) => {
+        console.error("Error de fetch:", error);
+      })
+      .finally(() => {
+        setCargandoHabilidades(false);
+      });
+  }
+}, [categoria]); // Solo observar cambios en 'categoria'
+
 
 
   return (

@@ -9,8 +9,7 @@ import FiltrarPositions from "./FiltrarPositions";
 import FiltrosButtons from "./FiltrosButtons";
 import { useOfertas } from "./OfertasContext";
 import PropTypes from "prop-types";
-import FiltrarIndustrias from "../listarEgresados/FiltrarIndustrias";
-import FiltrarSkills from "./FiltrarSkills";
+import FiltrarSkills from "../listarEgresados/FiltrarSkills";
 
 
 
@@ -56,6 +55,7 @@ function FiltrosOfertas({ setHasSearched }) {
           if (Array.isArray(data.data.items)) {
             const categoriasObtenidas = data.data.items.map((item) => item.name);
             setCategorias(categoriasObtenidas);
+            console.log("categoriasObtenidas", categoriasObtenidas);
           }
         } catch (error) {
           console.error("Error:", error);
@@ -71,16 +71,24 @@ function FiltrosOfertas({ setHasSearched }) {
   useEffect(() => {
     async function fetchCarreras() {
       try {
-        const response = await fetch("http://localhost:3000/alumni/me/resume");
+        const response = await fetch("http://localhost:3000/alumni/me/resume",{
+          method: 'GET',
+          credentials: 'include',
+        });
         console.log(response)
         if (!response.ok) {
-          throw new Error("Error al obtener los egresados");
+          throw new Error("Error al obtener las carreras");
         }
         const data = await response.json();
-        if (Array.isArray(data.data.items)) {
-          const carrerasObtenidas = data.data.items.map((item) => item.name);
+        console.log("datos obtenidos",data)
+        console.log(data.data.graduations)
+        if (Array.isArray(data.data.graduations)) {
+          const carrerasObtenidas = data.data.graduations.map((graduation) => graduation.careerName);
           setCarreras(carrerasObtenidas);
+          console.log("carrerasObtenidas", carrerasObtenidas);
         }
+
+        
       } catch (error) {
         console.error("Error:", error);
       }
@@ -134,20 +142,7 @@ function FiltrosOfertas({ setHasSearched }) {
     {
       /*Busqueda por industria de interés*/
     }
-    const [valueInd, setValueInd] = useState("");
-    const [listInd, setListInd] = useState([]);
-    const handleChangeInd = (event) => setValueInd(event.target.value);
-    const handleAddInd = () => {
-      if (valueInd.trim() !== "") {
-        setListInd((oldList) => [...oldList, valueInd]);
-        setValueInd("");
-      }
-    };
-    const handleRemoveInd = (indexToRemove) => {
-      setListInd((oldList) =>
-        oldList.filter((_, index) => index !== indexToRemove)
-      );
-    };
+  
 
   const [selectedTags, setSelectedTags] = useState({});
   const handleClick = (label) => {
@@ -161,8 +156,7 @@ function FiltrosOfertas({ setHasSearched }) {
     const isDisabled =
     !valueName &&
     list.length === 0 &&
-    listPos.length === 0 &&
-    listInd.length === 0 
+    listPos.length === 0
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
     const handleSubmit= async () =>{
@@ -170,23 +164,22 @@ function FiltrosOfertas({ setHasSearched }) {
         return;
       }
 
+      const selectedCareers = Object.keys(selectedTags)
+      .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
+      .map((career) => career);
+
       const selectedSkills = list.map(
         (item) => `${item.categoria}:${item.habilidad}`
       );
       const selectedCategories = list.map((item) => item.categoria);
       const selectedPositions = listPos.length > 0 ? listPos : [];
-      const selectIndustries= listInd.length > 0 ? listInd: [];
 
       const filters={
         company: valueName ? valueName : undefined,
-        // company: selectIndustries.length > 0
-        //   ? selectIndustries.join("&company=")
-        // : undefined,
+        careers: carreras.length > 0 ? carreras.join("&careers=") : undefined,
         skills: selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
-        positions:
-        selectedPositions.length > 0
-          ? selectedPositions.join("&positions=")
-          : undefined, 
+        positions: selectedPositions.length > 0 ? selectedPositions.join("&positions=") : undefined,
+        
       }
       const newFilters = Object.fromEntries(
         Object.entries(filters).filter(([, value]) => value !== undefined)
@@ -242,15 +235,6 @@ function FiltrosOfertas({ setHasSearched }) {
               handleAddPos={handleAddPos}
               listPos={listPos}
               handleRemovePos={handleRemovePos}
-            />
-
-            {/*Busqueda por industrias de interes*/}
-            <FiltrarIndustrias
-              valueInd={valueInd}
-              handleChangeInd={handleChangeInd}
-              handleAddInd={handleAddInd}
-              listInd={listInd}
-              handleRemoveInd={handleRemoveInd}
             />
 
             <FiltrosButtons
