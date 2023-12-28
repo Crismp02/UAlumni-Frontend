@@ -8,7 +8,6 @@ import { useOfertas } from "./OfertasContext";
 
 function ListarOfertas({ hasSearched }) {
   const { ofertas, isLoading } = useOfertas();
-  console.log(hasSearched)
 
   const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
   return (

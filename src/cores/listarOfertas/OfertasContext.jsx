@@ -22,21 +22,14 @@ export const OfertasProvider = ({ children }) => {
       const queryParams = new URLSearchParams(filters);
       queryParams.append("page", page);
       queryParams.append("per-page", "4");
-
-      console.log(queryParams.toString(), "queryparams");
       const url = `http://localhost:3000/job-offers?${queryParams}`;
       const response = await fetch(url);
-      console.log("url:", url);
-      // data a json
-
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
 
       const data = await response.json();
-      console.log(data, "datos obtenidos")
       setOfertas(data.data.items);
-      console.log("CARUPANO",data.data.items);
       // setTotalPages(data.data.meta.numberOfPages);
       // Se debe calcular el numero total de paginas
       setTotalPages(3);

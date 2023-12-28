@@ -10,7 +10,6 @@ function ListarEgresados({ hasSearched }) {
   const { egresados, isLoading } = useEgresados();
 
   const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
-  console.log(hasSearched)
 
   return (
     <div>
