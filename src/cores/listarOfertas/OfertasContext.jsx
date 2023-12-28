@@ -27,12 +27,14 @@ export const OfertasProvider = ({ children }) => {
       const url = `http://localhost:3000/job-offers?${queryParams}`;
       const response = await fetch(url);
       console.log("url:", url);
+      // data a json
 
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
 
       const data = await response.json();
+      console.log(data, "datos obtenidos")
       setOfertas(data.data.items);
       // setTotalPages(data.data.meta.numberOfPages);
       // Se debe calcular el numero total de paginas
