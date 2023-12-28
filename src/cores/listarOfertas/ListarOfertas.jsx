@@ -1,6 +1,6 @@
+
 import { Box, Center, Icon, Text, useMediaQuery } from "@chakra-ui/react";
 import OfertaCard from "./OfertaCard";
-import FiltrosOfertas from "./FiltrosOfertas";
 import { MdScreenSearchDesktop } from "react-icons/md";
 import { PiSmileySadLight } from "react-icons/pi";
 import PropTypes from "prop-types";
@@ -29,13 +29,23 @@ function ListarOfertas({ hasSearched }) {
         >
           {!hasSearched ? (
             <>
-              <Text fontSize="2xl" color="gray.500">
-                ¡Debes escoger al menos un filtro de búsqueda!
+              <Text 
+              fontSize="2xl" 
+              color="gray.500"
+              >¡Debes escoger al menos un filtro de búsqueda!
               </Text>
-            </>
-          ) : (
+              <Icon 
+              as={MdScreenSearchDesktop} 
+              boxSize={32}
+              color="gray.400"
+              paddingTop="30px" />
+              </>
+             ) : ofertas.length === 0 && !isLoading ? (
             <>
-              <Text fontSize="2xl" color="gray.400" paddingBottom="5">
+              <Text 
+              fontSize="2xl" 
+              color="gray.400" 
+              paddingBottom="5">
                 ¡Lo Sentimos!
               </Text>
               <Text
@@ -53,6 +63,10 @@ function ListarOfertas({ hasSearched }) {
                 paddingTop="30px"
               />
             </>
+            ) : (
+            ofertas.map((oferta, index) => (
+              oferta && <OfertaCard key={index} oferta={oferta} />
+            ))
           )}
         </Box>
       </Center>

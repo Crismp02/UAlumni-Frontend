@@ -36,6 +36,7 @@ export const OfertasProvider = ({ children }) => {
       const data = await response.json();
       console.log(data, "datos obtenidos")
       setOfertas(data.data.items);
+      console.log("CARUPANO",data.data.items);
       // setTotalPages(data.data.meta.numberOfPages);
       // Se debe calcular el numero total de paginas
       setTotalPages(3);

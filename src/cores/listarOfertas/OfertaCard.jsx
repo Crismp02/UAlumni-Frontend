@@ -1,12 +1,19 @@
-import React from "react";
-import { Box, Text, Tag, Image } from "@chakra-ui/react";
-import { useMediaQuery } from "@chakra-ui/react";
-import EgresadosLanding from "../../images/egresadosLanding.jpg";
 
-function  OfertaCard(){
+import { Box, Text, Tag, Image, useMediaQuery } from "@chakra-ui/react";
+import EgresadosLanding from "../../images/egresadosLanding.jpg";
+import PropTypes from "prop-types";
+
+function  OfertaCard({oferta}){
     const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
     const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
     const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
+
+    if(!oferta){
+        return null;
+    }
+
+    const {companyName, position, visibleSince    } = oferta;
+
     return (
       <div>
         <Box
@@ -31,8 +38,12 @@ function  OfertaCard(){
             flexDirection="column"
             paddingTop="0px"
           >
-            <Text as="b" fontSize={["sm", "sm", "md", "md"]} textAlign={["center", "center", "left", "left"]} marginTop="10px">Posición de interés</Text>
-            <Text fontSize={["xs", "xs", "sm", "md"]} textAlign={["center", "center", "left", "left"]} marginTop="5px">Nombre empresa</Text>
+            <Text as="b" fontSize={["sm", "sm", "md", "md"]} textAlign={["center", "center", "left", "left"]} marginTop="10px">
+            {position}
+            </Text>
+            <Text fontSize={["xs", "xs", "sm", "md"]} textAlign={["center", "center", "left", "left"]} marginTop="5px">
+            {companyName}
+            </Text>
           </Box>
           <Box
             w={["210px", "185px", "280px", "405px", "510px", "560px"]}
@@ -51,8 +62,9 @@ function  OfertaCard(){
             flexDirection={["column", "column", "row", "row"]}
             justifyContent="flex-end"
           >
-           <Tag backgroundColor="#FBC430"  paddingRight={["0px","0px","12px","12px"]} textAlign="center">Tiempo de publicación</Tag>
-
+           <Tag backgroundColor="#FBC430"  paddingRight={["0px","0px","12px","12px"]} textAlign="center">
+           {visibleSince}
+           </Tag>
           </Box>
           <Text textAlign={["center", "center", "right", "right"]} paddingRight={["0px","0px","12px","12px"]} fontSize={["sm", "sm", "md", "md"]}>VER INFORMACIÓN</Text>
           </Box>
@@ -60,4 +72,13 @@ function  OfertaCard(){
       </div>
     );
 }
+
+//Definir la validación de props
+OfertaCard.propTypes = {
+  publicationDate: PropTypes.string,
+  position: PropTypes.string,
+  company: PropTypes.string,
+};
+
+
 export default OfertaCard;

@@ -10,7 +10,7 @@ const EgresadoCard2 = ({ egresado }) =>{
     const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
 
   if (!egresado) {
-      return null; // o puedes retornar un componente de carga o similar
+      return null; 
     }
     const { names , surnames, resume} = egresado;
     const skillsArray = resume?.technicalSkills || [];

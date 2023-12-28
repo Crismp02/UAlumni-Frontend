@@ -183,7 +183,10 @@ function FiltrosOfertas({ setHasSearched }) {
         //   ? selectIndustries.join("&company=")
         // : undefined,
         skills: selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
-        
+        positions:
+        selectedPositions.length > 0
+          ? selectedPositions.join("&positions=")
+          : undefined, 
       }
       const newFilters = Object.fromEntries(
         Object.entries(filters).filter(([, value]) => value !== undefined)
