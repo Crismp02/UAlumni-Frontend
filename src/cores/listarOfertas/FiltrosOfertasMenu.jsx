@@ -25,7 +25,6 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   const {
     fetchPaginatedData,
     isLoading,
-    updateEgresadosData,
     setCurrentPage,
     totalPages,
   } = useOfertas();
@@ -33,7 +32,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   const [perPage, setPerPage] = useState(4);
   const [currentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(4);
-  const [egresados] = useState([]);
+  const [ofertas] = useState([]);
   const [, setIsLoading] = useState(false);
   const [randomizationSeed, setRandomizationSeed] = useState(null);
   const [seed, setSeed] = useState(0);

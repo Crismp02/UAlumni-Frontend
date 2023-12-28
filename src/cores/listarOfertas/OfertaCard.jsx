@@ -3,7 +3,7 @@ import { Box, Text, Tag, Image, useMediaQuery } from "@chakra-ui/react";
 import EgresadosLanding from "../../images/egresadosLanding.jpg";
 import PropTypes from "prop-types";
 
-function  OfertaCard({oferta}){
+const OfertaCard = ({ oferta }) =>{
     const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
     const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
     const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
@@ -75,9 +75,7 @@ function  OfertaCard({oferta}){
 
 //Definir la validación de props
 OfertaCard.propTypes = {
-  publicationDate: PropTypes.string,
-  position: PropTypes.string,
-  company: PropTypes.string,
+  oferta: PropTypes.object.isRequired,
 };
 
 

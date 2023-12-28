@@ -184,6 +184,8 @@ function FiltrosOfertas({ setHasSearched }) {
       const newFilters = Object.fromEntries(
         Object.entries(filters).filter(([, value]) => value !== undefined)
       );
+
+      
   
       try {
         await fetchPaginatedData(newFilters, 1); // Envía la página actual como 1

@@ -26,7 +26,6 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   const {
     fetchPaginatedData,
     isLoading,
-    updateEgresadosData,
     setCurrentPage,
     totalPages,
   } = useEgresados();

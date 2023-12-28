@@ -70,10 +70,6 @@ export const OfertasProvider = ({ children }) => {
     }
   }, [currentFilters, prevFilters]);
 
-  const updateOfertasData = (data) => {
-    setOfertas(data);
-  };
-
   return (
     <OfertasContext.Provider
       value={{
@@ -84,7 +80,6 @@ export const OfertasProvider = ({ children }) => {
         setCurrentPage,
         isLoading,
         setIsLoading,
-        updateOfertasData,
         currentFilters,
         setCurrentFilters,
       }}

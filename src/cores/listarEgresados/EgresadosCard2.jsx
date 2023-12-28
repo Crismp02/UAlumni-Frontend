@@ -90,4 +90,7 @@ const EgresadoCard2 = ({ egresado }) =>{
 EgresadoCard2.propTypes = {
     egresado: PropTypes.object.isRequired,
 };
+
+
+
 export default EgresadoCard2;

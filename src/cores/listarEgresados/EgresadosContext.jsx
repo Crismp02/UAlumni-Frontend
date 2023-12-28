@@ -32,6 +32,7 @@ export const EgresadosProvider = ({ children }) => {
 
       const data = await response.json();
       setEgresados(data.data.items);
+
       // setTotalPages(data.data.meta.numberOfPages);
       // Se debe calcular el numero total de paginas
       setTotalPages(3);
@@ -65,9 +66,7 @@ export const EgresadosProvider = ({ children }) => {
     }
   }, [currentFilters, prevFilters]);
 
-  const updateEgresadosData = (data) => {
-    setEgresados(data);
-  };
+
 
   return (
     <EgresadosContext.Provider
@@ -79,7 +78,6 @@ export const EgresadosProvider = ({ children }) => {
         setCurrentPage,
         isLoading,
         setIsLoading,
-        updateEgresadosData,
         currentFilters,
         setCurrentFilters,
       }}
