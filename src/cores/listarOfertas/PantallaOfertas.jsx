@@ -109,9 +109,7 @@ const PantallaOfertas = () => {
                 )}
         
                 <Box flex="2">
-                  <
-                    Ofertas hasSearched={hasSearched} />
-        
+                <ListarOfertas hasSearched={hasSearched} />
                   <div
                     style={{
                       display: "flex",

@@ -1,5 +1,4 @@
 import { Box, Button, Tooltip, useMediaQuery } from "@chakra-ui/react";
-import ListarEgresados from "./ListarEgresados";
 
 function FiltrosButtons({
   handleReset,
