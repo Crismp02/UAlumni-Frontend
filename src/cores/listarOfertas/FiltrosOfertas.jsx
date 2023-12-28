@@ -1,5 +1,7 @@
 
-import { Box, useDisclosure } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
+import { Box, Center, Icon, Text, useMediaQuery } from "@chakra-ui/react";
+
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import FiltrarNombre from "./FiltrarNombre";
@@ -7,7 +9,10 @@ import FiltrarPositions from "./FiltrarPositions";
 import FiltrosButtons from "./FiltrosButtons";
 import { useOfertas } from "./OfertasContext";
 import PropTypes from "prop-types";
-// import { c } from "@chakra-ui/toast/dist/toast.provider-ab09bc2e";
+import FiltrarIndustrias from "../listarEgresados/FiltrarIndustrias";
+import FiltrarSkills from "./FiltrarSkills";
+
+
 
 function FiltrosOfertas({ setHasSearched }) {
   const{fetchPaginatedData,
@@ -32,7 +37,6 @@ function FiltrosOfertas({ setHasSearched }) {
     //Busqueda por habilidades categoria
     const [categoria, setCategoria] = useState("");
     const [habilidad, setHabilidad] = useState("");
-    const [carreras, setCarreras] = useState("");
     const [list, setList] = useState([]);
   
     // Objeto inicial de habilidades
@@ -62,27 +66,28 @@ function FiltrosOfertas({ setHasSearched }) {
     }, []);
 
     // Fetch de las carreras del Alumni
-    useEffect(() => {
-      const fetchCarrerasAlumni = async () => {
-        try {
-          const response = await fetch("http://localhost:3000/alumni/me/resume");
-          if (!response.ok) {
-            throw new Error("Error al obtener las carreras");
-          }
-          const data = await response.json();
-          console.log("carreras obtenidas: ", data.data.items);
-          
-          if (Array.isArray(data.data.items)) {
-            const carrerasObtenidas = data.data.items.map((item) => item.name);
-            setCarreras(carrerasObtenidas);
-          }
-        } catch (error) {
-          console.error("Error:", error);
+    const [carreras, setCarreras] = useState([]);
+
+  useEffect(() => {
+    async function fetchCarreras() {
+      try {
+        const response = await fetch("http://localhost:3000/alumni/me/resume");
+        console.log(response)
+        if (!response.ok) {
+          throw new Error("Error al obtener los egresados");
         }
-      };
-    
-      fetchCarrerasAlumni();
-    }, []);
+        const data = await response.json();
+        if (Array.isArray(data.data.items)) {
+          const carrerasObtenidas = data.data.items.map((item) => item.name);
+          setCarreras(carrerasObtenidas);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchCarreras();
+  }, []);
     
 
     const handleHabilidadChange = (e) => {
@@ -144,6 +149,22 @@ function FiltrosOfertas({ setHasSearched }) {
       );
     };
 
+  const [selectedTags, setSelectedTags] = useState({});
+  const handleClick = (label) => {
+    if (selectedCarrera === label) {
+      setSelectedCarrera(null);
+    } else {
+      setSelectedTags((prev) => ({ ...prev, [label]: !prev[label] }));
+    }
+  };
+
+    const isDisabled =
+    !valueName &&
+    list.length === 0 &&
+    listPos.length === 0 &&
+    listInd.length === 0 
+    Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
+
     const handleSubmit= async () =>{
       if (isDisabled){
         return;
@@ -157,18 +178,94 @@ function FiltrosOfertas({ setHasSearched }) {
       const selectIndustries= listInd.length > 0 ? listInd: [];
 
       const filters={
-        company:
-        selectIndustries.length > 0
-          ? selectIndustries.join("&company=")
-        : undefined,
-        skills:
-        selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
+        company: valueName ? valueName : undefined,
+        // company: selectIndustries.length > 0
+        //   ? selectIndustries.join("&company=")
+        // : undefined,
+        skills: selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
         
       }
+      const newFilters = Object.fromEntries(
+        Object.entries(filters).filter(([, value]) => value !== undefined)
+      );
+  
+      try {
+        await fetchPaginatedData(newFilters, 1); // Envía la página actual como 1
+        console.log("se envio el filtro")
+      } catch (error) {
+        console.error("Hubo un error al obtener los datos:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    const handleReset = () => {
+      setValueName("");
+      setList([]);
+      setCategoria("");
+      setHabilidad("");
+      setValuePos("");
+      setListPos([]);
+      setSelectedCarrera(null);
+    };
+
+    return (
+      <>
+      <Box
+      marginLeft="50px">
+            <FiltrarNombre
+              valueName={valueName}
+              handleChangeName={handleChangeName}
+            />
+            {/*Busqueda por habilidad*/}
+            <FiltrarSkills
+              list={list}
+              categoria={categoria}
+              setCategoria={setCategoria}
+              setCategorias={setCategorias}
+              habilidad={habilidad}
+              habilidades={habilidades}
+              setHabilidades={setHabilidades}
+              handleAddCategoria={handleAddCategoria}
+              handleHabilidadChange={handleHabilidadChange}
+              handleRemoveHabilidad={handleRemoveHabilidad}
+              categorias={categorias}
+            />
+
+            {/*Busqueda por posiciones de interes*/}
+            <FiltrarPositions
+              valuePos={valuePos}
+              handleChangePos={handleChangePos}
+              handleAddPos={handleAddPos}
+              listPos={listPos}
+              handleRemovePos={handleRemovePos}
+            />
+
+            {/*Busqueda por industrias de interes*/}
+            <FiltrarIndustrias
+              valueInd={valueInd}
+              handleChangeInd={handleChangeInd}
+              handleAddInd={handleAddInd}
+              listInd={listInd}
+              handleRemoveInd={handleRemoveInd}
+            />
+
+            <FiltrosButtons
+              handleReset={handleReset}
+              handleSubmit={handleSubmit}
+              isDisabled={isDisabled}
+              isHovering={isHovering}
+              setIsHovering={setIsHovering}
+              onClose={onClose}
+              setHasSearched={setHasSearched}
+            />      
+      </Box>         
+    </>
+    )
 }
 
+
     FiltrosOfertas.propTypes = {
-        setHasSearched: PropTypes.func.isRequired,
+      setHasSearched: PropTypes.func.isRequired,
       };
       export default FiltrosOfertas;

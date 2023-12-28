@@ -13,7 +13,7 @@ function FiltrarNombre({ valueName, handleChangeName }){
                 <Input
                   value={valueName}
                   onChange={handleChangeName}
-                  placeholder="Buscar egresado por nombre"
+                  placeholder="Buscar a su empresa por nombre"
                   size="md"
                   marginBottom="30px"
                 />
@@ -24,7 +24,7 @@ function FiltrarNombre({ valueName, handleChangeName }){
                 <Input
                   value={valueName}
                   onChange={handleChangeName}
-                  placeholder="Buscar egresado por nombre"
+                  placeholder="Buscar a su empresa por nombre"
                   size="sm"
                   fontSize="10px"
                   marginBottom="30px"

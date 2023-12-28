@@ -9,7 +9,6 @@ import { useEgresados } from './EgresadosContext';
 function ListarEgresados({ hasSearched }) {
   const { egresados, isLoading } = useEgresados();
 
-  // const [isLargerThan770] = useMediaQuery("(min-width: 770px)");
   const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
 
   return (

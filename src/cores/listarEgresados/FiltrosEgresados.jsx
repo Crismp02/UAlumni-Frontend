@@ -15,8 +15,9 @@ function FiltrosEgresados({ setHasSearched }) {
   const {
     fetchPaginatedData,
   } = useEgresados();
-  const [randomizationSeed, ] = useState(null);
+  const [randomizationSeed,] = useState(null);
   const [, setIsLoading] = useState(false);
+  // Estado para la semilla
   const [isHovering, setIsHovering] = useState(false);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -33,7 +34,9 @@ function FiltrosEgresados({ setHasSearched }) {
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 
-  //Busqueda por habilidades categoria
+  {
+    /*Busqueda por habilidades*/
+  }
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
@@ -41,7 +44,6 @@ function FiltrosEgresados({ setHasSearched }) {
   // Objeto inicial de habilidades
   const [habilidades, setHabilidades] = useState({});
 
-  // Objeto inicial de categorias
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
@@ -49,7 +51,7 @@ function FiltrosEgresados({ setHasSearched }) {
       try {
         const response = await fetch("http://localhost:3000/skill-category");
         if (!response.ok) {
-          throw new Error("Error al obtener las categorías");
+          throw new Error("Error al obtener los egresados");
         }
         const data = await response.json();
         if (Array.isArray(data.data.items)) {
@@ -157,6 +159,9 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   };
 
+  {
+    /*Botones de búsqueda y reset*/
+  }
   const isDisabled =
     !valueName &&
     list.length === 0 &&
@@ -164,6 +169,8 @@ function FiltrosEgresados({ setHasSearched }) {
     listInd.length === 0 && 
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
+
+  // const [egresados, setEgresados] = useState([]);
 
   const handleSubmit = async () => {
     if (isDisabled) {
@@ -281,17 +288,6 @@ function FiltrosEgresados({ setHasSearched }) {
               handleClick={handleClick}
             />
 
-            {/*Filtros exactos:*/}
-            {/* <Checkbox
-              marginBottom="10px"
-              marginTop="10px"
-              isChecked={exactMatch}
-              as="b"
-              onChange={handleCheckboxChange}
-            >
-              Filtrar por coincidencia exacta
-            </Checkbox> */}
-            {/*Botones de búsqueda y reset*/}
             <FiltrosButtons
               handleReset={handleReset}
               handleSubmit={handleSubmit}

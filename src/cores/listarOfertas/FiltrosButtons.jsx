@@ -21,7 +21,7 @@ function FiltrosButtons({ handleReset, handleSubmit, isDisabled, isHovering, set
               }}
               isDisabled={isDisabled}
               onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}d
+              onMouseLeave={() => setIsHovering(false)}
               backgroundColor="#007935"
               color="white"
               as="b"

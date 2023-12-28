@@ -249,11 +249,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     const newFilters = Object.fromEntries(
       Object.entries(filters).filter(([, value]) => value !== undefined)
     );
-
-
     try {
-    console.log("semilla?", newFilters.seed);
-
       await fetchPaginatedData(newFilters, 1);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
