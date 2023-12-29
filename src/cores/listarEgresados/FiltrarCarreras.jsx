@@ -9,7 +9,7 @@ function FiltrarCarreras({ labels, selectedCarrera, selectedTags, handleClick}){
             <Text marginBottom="10px">Carreras:</Text>
             {isLargerThan435 ? (
               <Stack p={{ base: 4, md: "20 20 10 20" }}>
-                <Flex direction="row" justifyContent="center" wrap="wrap">
+                <Flex cursor="pointer" direction="row" justifyContent="center" wrap="wrap">
                   {labels.map((label) => (
                     <Tag
                       key={label}

@@ -20,34 +20,59 @@ export const EgresadosProvider = ({ children }) => {
   const fetchPaginatedData = async (filters, page) => {
     try {
       setIsLoading(true);
+  
       const queryParams = new URLSearchParams(filters);
       queryParams.set("page", page);
       queryParams.set("per-page", "4");
+  
       const url = `http://localhost:3000/alumni/resume?${queryParams}`;
+      
+      console.log(url);
+  
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
-
+  
       const data = await response.json();
       setEgresados(data.data.items);
       setTotalPages(data.data.meta.numberOfPages);
-
+  
       if (data.data.meta.randomizationSeed) {
-
         // Actualizar los filtros sin modificar los originales
         setCurrentFilters(prevFilters => ({
           ...prevFilters,
-          seed: data.data.meta.randomizationSeed,
+          filters: {
+            ...prevFilters.filters,
+            ...filters, // Agrega los nuevos filtros
+          },
+          seed: data.data.meta.randomizationSeed, // Agrega la semilla
         }));
-
       }
+  
+      // Construir la URL con los filtros y la semilla
+      const serializedFilters = new URLSearchParams({
+        ...filters,
+        page: page,
+        "per-page": "4",
+        seed: data.data.meta.randomizationSeed,
+      }).toString();
+  
+      const updatedUrl = `http://localhost:3000/alumni/resume?${serializedFilters}`;
+  
+      const updatedResponse = await fetch(updatedUrl);
+      const datos = await updatedResponse.json();
+      setEgresados(datos.data.items);
+      
+      // Resto del código...
+  
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   useEffect(() => {
     if (currentPage !== 1 && Object.keys(currentFilters).length > 0) {
