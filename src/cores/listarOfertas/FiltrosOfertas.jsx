@@ -77,12 +77,10 @@ function FiltrosOfertas({ setHasSearched }) {
           method: 'GET',
           credentials: 'include',
         });
-        console.log(response)
         if (!response.ok) {
           throw new Error("Error al obtener las carreras");
         }
         const data = await response.json();
-        console.log(data.data.graduations)
         if (Array.isArray(data.data.graduations)) {
           const carrerasObtenidas = data.data.graduations.map((graduation) => graduation.careerName);
           setCarreras(carrerasObtenidas);
@@ -151,50 +149,45 @@ function FiltrosOfertas({ setHasSearched }) {
     listPos.length === 0
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
-    const handleSubmit= async () =>{
-      if (isDisabled){
+    const handleSubmit = async () => {
+      if (isDisabled) {
         return;
       }
-
       const selectedSkills = list.map(
         (item) => `${item.categoria}:${item.habilidad}`
       );
       const selectedCategories = list.map((item) => item.categoria);
       const selectedPositions = listPos.length > 0 ? listPos : [];
-
-      const filters={
-        company: 
-          valueName ? valueName : undefined,
-        careers: 
-          carreras.length > 0 ? carreras.join("&careers=") : undefined,
-        skills: 
-          selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
-        categories:
-          selectedCategories.length > 0
-          ? selectedCategories.join("&categories=")
-          : undefined,
-        positions: 
-          selectedPositions.length > 0 ? selectedPositions.join("&positions=") : undefined,
-        
-        seed: 
-          randomizationSeed ? randomizationSeed : undefined,
-        
+    
+      const params = new URLSearchParams();
+    
+      if (valueName) {
+        params.append('company', valueName);
       }
-      const newFilters = Object.fromEntries(
-        Object.entries(filters).filter(([, value]) => value !== undefined)
-      );
-
-      
-  
+    
+      if (carreras.length > 0) {
+        carreras.forEach((career) => params.append('careers', career));
+      }
+    
+      if (selectedSkills.length > 0) {
+        selectedSkills.forEach((skill) => params.append('skills', skill));
+      }
+    
+      if (selectedPositions.length > 0) {
+        selectedPositions.forEach((position) => params.append('positions', position));
+      }
+    
+      const queryString = params.toString();
+    
       try {
-        await fetchPaginatedData(newFilters, 1); // Envía la página actual como 1
-        console.log("se envio el filtro")
+        await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
       } catch (error) {
         console.error("Hubo un error al obtener los datos:", error);
       } finally {
         setIsLoading(false);
       }
-    }
+    };
+    
 
     const handleReset = () => {
       setValueName("");

@@ -179,57 +179,64 @@ function FiltrosEgresados({ setHasSearched }) {
     if (isDisabled) {
       return;
     }
-
+  
     const selectedCareers = Object.keys(selectedTags)
       .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
       .map((career) => career);
-
+  
     // quitar espacios desactivados
     const careerParams = selectedCarrera
       ? [selectedCarrera, ...selectedCareers]
       : selectedCareers;
-
+  
     const selectedSkills = list.map(
       (item) => `${item.categoria}:${item.habilidad}`
     );
     const selectedCategories = list.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
-    const selectIndustries= listInd.length > 0 ? listInd: [];
-
-    const filters = {
-      name: 
-        valueName ? valueName : undefined,
-      careers:
-        careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
-      skills:
-        selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
-      categories:
-        selectedCategories.length > 0
-          ? selectedCategories.join("&categories=")
-          : undefined,
-      positions:
-        selectedPositions.length > 0
-          ? selectedPositions.join("&positions=")
-          : undefined,
-      industries:
-        selectIndustries.length > 0
-          ? selectIndustries.join("&industries=")
-          : undefined,
-      seed: randomizationSeed ? randomizationSeed : undefined,
-    };
-
-    const newFilters = Object.fromEntries(
-      Object.entries(filters).filter(([, value]) => value !== undefined)
-    );
-
+    const selectIndustries = listInd.length > 0 ? listInd : [];
+  
+    const params = new URLSearchParams();
+  
+    if (valueName) {
+      params.append('name', valueName);
+    }
+  
+    if (careerParams.length > 0) {
+      careerParams.forEach((career) => params.append('careers', career));
+    }
+  
+    if (selectedSkills.length > 0) {
+      selectedSkills.forEach((skill) => params.append('skills', skill));
+    }
+  
+    if (selectedCategories.length > 0) {
+      selectedCategories.forEach((category) => params.append('categories', category));
+    }
+  
+    if (selectedPositions.length > 0) {
+      selectedPositions.forEach((position) => params.append('positions', position));
+    }
+  
+    if (selectIndustries.length > 0) {
+      selectIndustries.forEach((industry) => params.append('industries', industry));
+    }
+  
+    if (randomizationSeed) {
+      params.append('seed', randomizationSeed);
+    }
+  
+    const queryString = params.toString();
+  
     try {
-      await fetchPaginatedData(newFilters, 1); // Envía la página actual como 1
+      await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   // Funciones para manejar la paginación
   const handleReset = () => {

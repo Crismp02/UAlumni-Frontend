@@ -23,12 +23,8 @@ export const OfertasProvider = ({ children }) => {
       const queryParams = new URLSearchParams(filters);
       queryParams.append("page", page);
       queryParams.append("per-page", "4");
-
-      console.log(queryParams.toString(), "queryparams");
       const url = `http://localhost:3000/job-offers?${queryParams}`;
       const response = await fetch(url);
-      console.log("url:", url);
-
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }

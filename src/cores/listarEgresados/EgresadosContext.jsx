@@ -25,8 +25,6 @@ export const EgresadosProvider = ({ children }) => {
       queryParams.set("per-page", "4");
       const url = `http://localhost:3000/alumni/resume?${queryParams}`;
       const response = await fetch(url);
-      console.log("url:", url)
-
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
