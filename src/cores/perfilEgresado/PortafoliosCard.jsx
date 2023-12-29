@@ -125,6 +125,19 @@ const handleCheck = async (e, item) => {
     return;
   }
 
+  const existingTitle = newCardData.find(card => card.title === additionalFields.title);
+  if (existingTitle) {
+    // Mostrar un mensaje de error en un toast
+    toast({
+      title: "Error",
+      description: "Ya existe un portafolio con ese nombre",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
+
     // Preparar los datos para la solicitud POST
     const newData = {
       title: additionalFields.title,
@@ -217,6 +230,7 @@ const handleCheck = async (e, item) => {
     });
     return;
   }
+
 
     // Preparar los datos para la solicitud PATCH
   const newData = {

@@ -156,6 +156,23 @@ const EducacionCard = ({ cardData, setCardData }) => {
       return;
     }
 
+    const TitleExists = newCardData.some(
+      (card) =>
+        card.title === newData.title 
+    );
+
+    if (TitleExists) {
+      // Mostrar un mensaje de error o manejar la situación según lo desees
+      toast({
+        title: "Error",
+        description: "Ese grado de Estudio Realizado ya existe",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Llamar a la función AddHigherEducationStudy con los datos preparados
     const newCard = await AddHigherEducationStudy(newData);
 
@@ -242,34 +259,27 @@ const EducacionCard = ({ cardData, setCardData }) => {
       return;
     }
 
-    // Preparar los datos para la solicitud PATCH
-    const newData = {
-      title: editingCard.title, // Ajusta esto según sea necesario
-      institution: editingCard.institution,
-      endDate: editingCard.endDate,
-      isVisible: true,
-    };
+    // Verificar si la tarjeta ya existe en newCardData
+  const existingCard = newCardData.find(card => card.title === editingCard.title && card.institution === editingCard.institution && card.title !== originalTitle);
+  if (existingCard) {
+    // Mostrar un mensaje de error en un toast
+    toast({
+      title: "Error",
+      description: "Ese estudio realizado ya existe",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
 
-    // Verificar si la tarjeta ya existe
-    const cardExists = cardData.some(
-      (card) =>
-        card.title === newData.title &&
-        card.institution === newData.institution &&
-        card.endDate === newData.endDate &&
-        card.title !== originalTitle // Excluir la tarjeta original que se está editando
-    );
-
-    if (cardExists) {
-      // Mostrar un mensaje de error o manejar la situación según lo desees
-      toast({
-        title: "Error",
-        description: "Ese Estudio Realizado ya existe",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
+      // Preparar los datos para la solicitud PATCH
+      const newData = {
+        title: editingCard.title, // Ajusta esto según sea necesario
+        institution: editingCard.institution,
+        endDate: editingCard.endDate,
+        isVisible: true,
+      };
 
     const updatedCard = await EditHigherEducationStudy(originalTitle, newData);
 
