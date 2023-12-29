@@ -1,4 +1,6 @@
+
 import { Box, Button, Tooltip, useMediaQuery } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 function FiltrosButtons({
   handleReset,
@@ -85,3 +87,15 @@ function FiltrosButtons({
 }
 
 export default FiltrosButtons;
+
+//Validación de las props:
+FiltrosButtons.propTypes = {
+  handleReset: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  isDisabled: PropTypes.bool.isRequired,
+  isHovering: PropTypes.bool.isRequired,
+  setIsHovering: PropTypes.func.isRequired,
+  setIsFocused: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setHasSearched: PropTypes.func.isRequired,
+};

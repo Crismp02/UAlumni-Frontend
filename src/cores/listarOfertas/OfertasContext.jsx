@@ -4,8 +4,10 @@ import PropTypes from "prop-types";
 const OfertasContext = createContext();
 
 export const OfertasProvider = ({ children }) => {
+
   const [ofertas, setOfertas] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+
   // Total de Páginas
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +16,6 @@ export const OfertasProvider = ({ children }) => {
   });
   const [prevFilters, setPrevFilters] = useState({}); // Almacena los filtros previos
 
-  // Resto del código de las funciones fetchPaginatedData y useEffect...
 
   const fetchPaginatedData = async (filters, page) => {
     try {
@@ -27,26 +28,23 @@ export const OfertasProvider = ({ children }) => {
       const url = `http://localhost:3000/job-offers?${queryParams}`;
       const response = await fetch(url);
       console.log("url:", url);
-      // data a json
 
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
 
       const data = await response.json();
-      console.log(data, "datos obtenidos")
       setOfertas(data.data.items);
-      console.log("CARUPANO",data.data.items);
-      // setTotalPages(data.data.meta.numberOfPages);
-      // Se debe calcular el numero total de paginas
-      setTotalPages(3);
+      setTotalPages(data.data.meta.numberOfPages);
 
       if (data.data.meta.randomizationSeed) {
+
         // Actualizar los filtros sin modificar los originales
         setCurrentFilters((prevFilters) => ({
           ...prevFilters,
           seed: data.data.meta.randomizationSeed,
         }));
+        
       }
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);

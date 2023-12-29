@@ -1,7 +1,8 @@
-import React from "react";
 import { Input, Text, useMediaQuery } from "@chakra-ui/react";
+import PropTypes from 'prop-types';
 
-function FiltrarNombre({ valueName, handleChangeName }){
+function FiltrarNombre({ valueName, handleChangeName, placeholderName}){
+
     const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
     return(
         <div>
@@ -13,7 +14,7 @@ function FiltrarNombre({ valueName, handleChangeName }){
                 <Input
                   value={valueName}
                   onChange={handleChangeName}
-                  placeholder="Buscar a su empresa por nombre"
+                  placeholder={placeholderName}
                   size="md"
                   marginBottom="30px"
                 />
@@ -24,9 +25,9 @@ function FiltrarNombre({ valueName, handleChangeName }){
                 <Input
                   value={valueName}
                   onChange={handleChangeName}
-                  placeholder="Buscar a su empresa por nombre"
+                  placeholder={placeholderName}
                   size="sm"
-                  fontSize="10px"
+                  // fontSize="10px"
                   marginBottom="30px"
                 />
               </div>
@@ -35,3 +36,10 @@ function FiltrarNombre({ valueName, handleChangeName }){
     )
 }
 export default FiltrarNombre;
+
+// Definir la validación de props
+FiltrarNombre.propTypes = {
+  valueName: PropTypes.string.isRequired,
+  handleChangeName: PropTypes.func.isRequired,
+  placeholderName: PropTypes.string.isRequired,
+};

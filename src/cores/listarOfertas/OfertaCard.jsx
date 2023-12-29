@@ -1,37 +1,39 @@
 
-import { Box, Text, Tag, Image, useMediaQuery } from "@chakra-ui/react";
-import EgresadosLanding from "../../images/egresadosLanding.jpg";
+import { Box, Text, Tag, Image} from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 const OfertaCard = ({ oferta }) =>{
-    const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
-    const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
-    const [isLargerThan1300] = useMediaQuery("(min-width: 1300px)");
 
     if(!oferta){
         return null;
     }
 
-    const {companyName, position, visibleSince    } = oferta;
+    const {companyLogo, companyName, position, visibleSince} = oferta;
+    console.log("fecha", visibleSince);
+    //Formatear fecha:
+    const date = new Date(visibleSince);
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // Los meses en JavaScript empiezan en 0, por lo que debes sumar 1
+    const year = date.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
 
     return (
       <div>
         <Box
-          w={["250px", "350px", "540px", "790px", "1000px", "1100px"]}
+          w={["80%", "80%", "80%", "80%", "80%", "80%"]}
           m="auto"
           p={5}
           shadow="md"
           borderWidth="1px"
           backgroundColor="white"
           display="flex"
-          flexDirection={["column", "column", "row", "row"]}
+          flexDirection="row"
           marginBottom="10px"
-          alignItems="center"
           padding="2px"
         >
-            <Image borderRadius="full" boxSize="90px" src={EgresadosLanding} alt="Egresados Landing" marginLeft={["0px", "0px", "10px", "10px"]} marginTop={["10px","10px","10px","10px"]} marginBottom={["0px","0px","10px","10px"]}/>
+            <Image borderRadius="full" boxSize="90px" src={`data:image/jpeg;base64,${companyLogo}`} alt="Logo de la Empresa" marginLeft={["0px", "0px", "10px", "10px"]} marginTop={["10px","10px","10px","10px"]} marginBottom={["0px","0px","10px","10px"]}/>
           <Box
-            w={["165px", "165px", "260px", "385px", "490px", "540px"]}
+            w={["115px", "165px", "260px", "385px", "490px", "540px"]}
             m="auto"
             p={5}
             display="flex"
@@ -63,7 +65,7 @@ const OfertaCard = ({ oferta }) =>{
             justifyContent="flex-end"
           >
            <Tag backgroundColor="#FBC430"  paddingRight={["0px","0px","12px","12px"]} textAlign="center">
-           {visibleSince}
+           {formattedDate}
            </Tag>
           </Box>
           <Text textAlign={["center", "center", "right", "right"]} paddingRight={["0px","0px","12px","12px"]} fontSize={["sm", "sm", "md", "md"]}>VER INFORMACIÓN</Text>

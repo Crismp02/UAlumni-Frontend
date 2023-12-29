@@ -3,25 +3,28 @@ import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import FiltrarCarreras from "./FiltrarCarreras";
-import FiltrarNombre from "./FiltrarNombre";
+import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrarIndustrias from "./FiltrarIndustrias";
-import FiltrarSkills from "./FiltrarSkills";
-import FiltrosButtons from "./FiltrosButtons";
+import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
+import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useEgresados } from "./EgresadosContext";
 import PropTypes from "prop-types";
 
+
 function FiltrosEgresados({ setHasSearched }) {
-  const {
-    fetchPaginatedData,
-  } = useEgresados();
+
+  const {fetchPaginatedData} = useEgresados();
+  
   const [randomizationSeed,] = useState(null);
   const [, setIsLoading] = useState(false);
+
   // Estado para la semilla
   const [isHovering, setIsHovering] = useState(false);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
+
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
   // Actualiza la carrera seleccionada cuando cambia la URL
@@ -29,14 +32,12 @@ function FiltrosEgresados({ setHasSearched }) {
     setSelectedCarrera(carreraFromUrl);
   }, [carreraFromUrl]);
 
-  
+  //Busqueda por nombre
   const { onClose } = useDisclosure();
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 
-  {
-    /*Busqueda por habilidades*/
-  }
+  //Busqueda por habilidades categoria
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
@@ -44,9 +45,11 @@ function FiltrosEgresados({ setHasSearched }) {
   // Objeto inicial de habilidades
   const [habilidades, setHabilidades] = useState({});
 
+  // Objeto inicial de categorias
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
+
     async function fetchCategorias() {
       try {
         const response = await fetch("http://localhost:3000/skill-category");
@@ -66,6 +69,7 @@ function FiltrosEgresados({ setHasSearched }) {
     fetchCategorias();
   }, []);
 
+  // Fetch de las carreras del Alumni
   const [carreras, setCarreras] = useState([]);
 
   useEffect(() => {
@@ -111,46 +115,48 @@ function FiltrosEgresados({ setHasSearched }) {
     setList(list.filter((_, i) => i !== index));
   };
 
-  {
-    /*Busqueda por posición de interés*/
-  }
+  //Búsqueda por posición de interés
+
   const [valuePos, setValuePos] = useState("");
   const [listPos, setListPos] = useState([]);
   const handleChangePos = (event) => setValuePos(event.target.value);
+
   const handleAddPos = () => {
     if (valuePos.trim() !== "") {
       setListPos((oldList) => [...oldList, valuePos]);
       setValuePos("");
     }
   };
+
   const handleRemovePos = (indexToRemove) => {
     setListPos((oldList) =>
       oldList.filter((_, index) => index !== indexToRemove)
     );
   };
 
-  {
-    /*Busqueda por industria de interés*/
-  }
+  //Búsqueda por industrias de interés
+
   const [valueInd, setValueInd] = useState("");
   const [listInd, setListInd] = useState([]);
   const handleChangeInd = (event) => setValueInd(event.target.value);
+  
   const handleAddInd = () => {
     if (valueInd.trim() !== "") {
       setListInd((oldList) => [...oldList, valueInd]);
       setValueInd("");
     }
   };
+  
   const handleRemoveInd = (indexToRemove) => {
     setListInd((oldList) =>
       oldList.filter((_, index) => index !== indexToRemove)
     );
   };
 
-  {
-    /*Busqueda por carrera*/
-  }
+  //Búsqueda por carrera
+
   const [selectedTags, setSelectedTags] = useState({});
+
   const handleClick = (label) => {
     if (selectedCarrera === label) {
       setSelectedCarrera(null);
@@ -159,9 +165,8 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   };
 
-  {
-    /*Botones de búsqueda y reset*/
-  }
+  //Botones de búsqueda y reset
+
   const isDisabled =
     !valueName &&
     list.length === 0 &&
@@ -169,8 +174,6 @@ function FiltrosEgresados({ setHasSearched }) {
     listInd.length === 0 && 
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
-
-  // const [egresados, setEgresados] = useState([]);
 
   const handleSubmit = async () => {
     if (isDisabled) {
@@ -194,7 +197,8 @@ function FiltrosEgresados({ setHasSearched }) {
     const selectIndustries= listInd.length > 0 ? listInd: [];
 
     const filters = {
-      name: valueName ? valueName : undefined,
+      name: 
+        valueName ? valueName : undefined,
       careers:
         careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
       skills:
@@ -243,10 +247,13 @@ function FiltrosEgresados({ setHasSearched }) {
     <>
       <Box
       marginLeft="50px">
+
             <FiltrarNombre
               valueName={valueName}
               handleChangeName={handleChangeName}
+              placeholderName="Buscar egresado por nombre"
             />
+
             {/*Busqueda por habilidad*/}
             <FiltrarSkills
               list={list}
@@ -296,7 +303,8 @@ function FiltrosEgresados({ setHasSearched }) {
               setIsHovering={setIsHovering}
               onClose={onClose}
               setHasSearched={setHasSearched}
-            />      
+            />   
+               
       </Box>         
     </>
   );

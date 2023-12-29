@@ -11,12 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
-import FiltrarNombre from "./FiltrarNombre";
-import FiltrarSkills from "./FiltrarSkills";
+import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
+import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrarPositions from "./FiltrarPositions";
 import FiltrarIndustrias from "./FiltrarIndustrias";
 import FiltrarCarreras from "./FiltrarCarreras";
-import FiltrosButtons from "./FiltrosButtons";
+import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useEgresados } from './EgresadosContext';
 import PropTypes from "prop-types";
 

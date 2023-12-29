@@ -6,6 +6,7 @@ const EgresadosContext = createContext();
 export const EgresadosProvider = ({ children }) => {
   const [egresados, setEgresados] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  
   // Total de Páginas
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,17 +33,16 @@ export const EgresadosProvider = ({ children }) => {
 
       const data = await response.json();
       setEgresados(data.data.items);
-
-      // setTotalPages(data.data.meta.numberOfPages);
-      // Se debe calcular el numero total de paginas
-      setTotalPages(3);
+      setTotalPages(data.data.meta.numberOfPages);
 
       if (data.data.meta.randomizationSeed) {
+
         // Actualizar los filtros sin modificar los originales
         setCurrentFilters(prevFilters => ({
           ...prevFilters,
           seed: data.data.meta.randomizationSeed,
         }));
+
       }
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);
@@ -90,7 +90,7 @@ export const EgresadosProvider = ({ children }) => {
 export const useEgresados = () => {
   const context = useContext(EgresadosContext);
   if (!context) {
-    throw new Error("useEgresados must be used within an EgresadosProvider");
+    throw new Error("useEgresados debe estar dentro del proveedor EgresadosContext");
   }
   return context;
 };

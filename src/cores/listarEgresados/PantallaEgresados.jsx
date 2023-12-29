@@ -158,7 +158,7 @@ const PantallaEgresados = () => {
               )
             )}
 
-            {hasSearched && (
+            {hasSearched && totalPages > 1 && (
               <Button
                 as="b"
                 colorScheme="teal"

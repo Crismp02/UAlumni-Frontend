@@ -7,11 +7,11 @@ import {Button,
         IconButton ,  
         } from "@chakra-ui/react";
 import {CloseIcon  } from "@chakra-ui/icons";
-import FiltrarNombre from "./Filtros/FiltrarNombre";
+import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarSkills from "./Filtros/FiltrarSkills/FiltrarSkills";
 import FiltrarPositions from "./Filtros/FiltrarPositions";
 import FiltrarCarreras from "./Filtros/FiltrarCarreras/FiltrarCarreras";
-import FiltrosButtons from "./FiltrosButtons";
+import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 
 function BarraFiltrosEgresados() {
     

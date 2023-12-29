@@ -1,7 +1,7 @@
 import { Box, Text } from "@chakra-ui/layout";
 import { DrawerOverlay } from "@chakra-ui/react";
 import FiltrarNombre from "./FiltrarNombre";
-import FiltrarSkills from "./FiltrarSkills";
+import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrarPositions from "./FiltrarPositions";
 
 export default function PantallaFiltros() {

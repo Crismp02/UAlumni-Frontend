@@ -1,29 +1,31 @@
 
-import { useDisclosure } from "@chakra-ui/react";
-import { Box, Center, Icon, Text, useMediaQuery } from "@chakra-ui/react";
-
+import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import FiltrarNombre from "./FiltrarNombre";
-import FiltrarPositions from "./FiltrarPositions";
-import FiltrosButtons from "./FiltrosButtons";
+import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
+import FiltrarPositions from "../listarEgresados/FiltrarPositions";
+import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from "./OfertasContext";
 import PropTypes from "prop-types";
-import FiltrarSkills from "../listarEgresados/FiltrarSkills";
+import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 
 
 
 function FiltrosOfertas({ setHasSearched }) {
-  const{fetchPaginatedData,
-  }=useOfertas();
-  const [randomizationSeed, ] = useState(null);
+
+  const{fetchPaginatedData}=useOfertas();
+
+  const [randomizationSeed ] = useState(null);
   const [, setIsLoading] = useState(false);
+
   const [isHovering, setIsHovering] = useState(false);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
-  // Estado para la carrera seleccionada
-  const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
+
+  // Estado para la carrera
+  const [,setSelectedCarrera] = useState(carreraFromUrl);
+
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
     setSelectedCarrera(carreraFromUrl);
@@ -45,6 +47,7 @@ function FiltrosOfertas({ setHasSearched }) {
     const [categorias, setCategorias] = useState([]);
 
     useEffect(() => {
+
       async function fetchCategorias() {
         try {
           const response = await fetch("http://localhost:3000/skill-category");
@@ -55,7 +58,6 @@ function FiltrosOfertas({ setHasSearched }) {
           if (Array.isArray(data.data.items)) {
             const categoriasObtenidas = data.data.items.map((item) => item.name);
             setCategorias(categoriasObtenidas);
-            console.log("categoriasObtenidas", categoriasObtenidas);
           }
         } catch (error) {
           console.error("Error:", error);
@@ -80,12 +82,10 @@ function FiltrosOfertas({ setHasSearched }) {
           throw new Error("Error al obtener las carreras");
         }
         const data = await response.json();
-        console.log("datos obtenidos",data)
         console.log(data.data.graduations)
         if (Array.isArray(data.data.graduations)) {
           const carrerasObtenidas = data.data.graduations.map((graduation) => graduation.careerName);
           setCarreras(carrerasObtenidas);
-          console.log("carrerasObtenidas", carrerasObtenidas);
         }
 
         
@@ -121,37 +121,29 @@ function FiltrosOfertas({ setHasSearched }) {
       setList(list.filter((_, i) => i !== index));
     };
 
-    {
-      /*Busqueda por posición de interés*/
-    }
+    //Búsqueda por posición de interés
     const [valuePos, setValuePos] = useState("");
     const [listPos, setListPos] = useState([]);
     const handleChangePos = (event) => setValuePos(event.target.value);
+
     const handleAddPos = () => {
       if (valuePos.trim() !== "") {
         setListPos((oldList) => [...oldList, valuePos]);
         setValuePos("");
       }
     };
+
     const handleRemovePos = (indexToRemove) => {
       setListPos((oldList) =>
         oldList.filter((_, index) => index !== indexToRemove)
       );
     };
-
-    {
-      /*Busqueda por industria de interés*/
-    }
   
+    //Búsqueda por carrera
+    const [selectedTags] = useState({});
 
-  const [selectedTags, setSelectedTags] = useState({});
-  const handleClick = (label) => {
-    if (selectedCarrera === label) {
-      setSelectedCarrera(null);
-    } else {
-      setSelectedTags((prev) => ({ ...prev, [label]: !prev[label] }));
-    }
-  };
+
+    //Botones de búsqueda y reset
 
     const isDisabled =
     !valueName &&
@@ -164,10 +156,6 @@ function FiltrosOfertas({ setHasSearched }) {
         return;
       }
 
-      const selectedCareers = Object.keys(selectedTags)
-      .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
-      .map((career) => career);
-
       const selectedSkills = list.map(
         (item) => `${item.categoria}:${item.habilidad}`
       );
@@ -175,10 +163,21 @@ function FiltrosOfertas({ setHasSearched }) {
       const selectedPositions = listPos.length > 0 ? listPos : [];
 
       const filters={
-        company: valueName ? valueName : undefined,
-        careers: carreras.length > 0 ? carreras.join("&careers=") : undefined,
-        skills: selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
-        positions: selectedPositions.length > 0 ? selectedPositions.join("&positions=") : undefined,
+        company: 
+          valueName ? valueName : undefined,
+        careers: 
+          carreras.length > 0 ? carreras.join("&careers=") : undefined,
+        skills: 
+          selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
+        categories:
+          selectedCategories.length > 0
+          ? selectedCategories.join("&categories=")
+          : undefined,
+        positions: 
+          selectedPositions.length > 0 ? selectedPositions.join("&positions=") : undefined,
+        
+        seed: 
+          randomizationSeed ? randomizationSeed : undefined,
         
       }
       const newFilters = Object.fromEntries(
@@ -211,10 +210,13 @@ function FiltrosOfertas({ setHasSearched }) {
       <>
       <Box
       marginLeft="50px">
+
             <FiltrarNombre
               valueName={valueName}
               handleChangeName={handleChangeName}
+              placeholderName="Buscar a su empresa por nombre"
             />
+
             {/*Busqueda por habilidad*/}
             <FiltrarSkills
               list={list}
@@ -247,7 +249,8 @@ function FiltrosOfertas({ setHasSearched }) {
               setIsHovering={setIsHovering}
               onClose={onClose}
               setHasSearched={setHasSearched}
-            />      
+            />   
+
       </Box>         
     </>
     )
