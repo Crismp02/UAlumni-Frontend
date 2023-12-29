@@ -7,7 +7,6 @@ function DownloadCV({id}) {
     const [pdfUrl, setPdfUrl] = useState(null);
 
     const handleDownload = async () => {
-      console.log(id);
       const blob = await downloadPDF(id);
       const url = URL.createObjectURL(blob);
       setPdfUrl(url);

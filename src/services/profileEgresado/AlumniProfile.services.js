@@ -32,3 +32,20 @@ export const downloadPDF = async (id) => {
         toast.error(`Error: ${error.message}`);
     }
     }
+    export const previewPDF = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/pdf`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await response.blob();
+        if (response.ok) {
+          return data;
+        } else {
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+      }
+    };
+    
