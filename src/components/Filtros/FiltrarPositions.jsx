@@ -1,4 +1,5 @@
 import {useState} from "react";
+import PropTypes from 'prop-types';
 import {
   Input,
   Text,
@@ -9,7 +10,6 @@ import {
   ListItem,
   Tooltip
 } from "@chakra-ui/react";
-import PropTypes from 'prop-types';
 
 function FiltrarPositions({
   valuePos,

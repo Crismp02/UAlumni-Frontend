@@ -3,7 +3,7 @@ import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
-import FiltrarPositions from "../listarEgresados/FiltrarPositions";
+import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from "./OfertasContext";
 import PropTypes from "prop-types";

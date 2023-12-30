@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
-import FiltrarPositions from "./FiltrarPositions";
+import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrarIndustrias from "./FiltrarIndustrias";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";

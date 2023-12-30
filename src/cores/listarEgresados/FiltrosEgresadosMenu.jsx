@@ -13,7 +13,7 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
-import FiltrarPositions from "./FiltrarPositions";
+import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrarIndustrias from "./FiltrarIndustrias";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
