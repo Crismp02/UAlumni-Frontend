@@ -97,12 +97,12 @@ export const EgresadosProvider = ({ children }) => {
       // Actualiza el estado con los nuevos filtros y la semilla si está disponible
       if (data.data.meta.randomizationSeed) {
         setCurrentFilters({
-          ...newFilters,
           seed: data.data.meta.randomizationSeed,
+          ...newFilters,
         });
         setPrevFilters({
-          ...newFilters,
           seed: data.data.meta.randomizationSeed,
+          ...newFilters,
         });
       }
     } catch (error) {

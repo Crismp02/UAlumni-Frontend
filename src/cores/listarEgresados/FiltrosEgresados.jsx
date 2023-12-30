@@ -197,6 +197,10 @@ function FiltrosEgresados({ setHasSearched }) {
     const selectIndustries = listInd.length > 0 ? listInd : [];
   
     const params = new URLSearchParams();
+
+    if (randomizationSeed) {
+      params.append('seed', randomizationSeed);
+    }
   
     if (valueName) {
       params.append('name', valueName);
@@ -222,9 +226,7 @@ function FiltrosEgresados({ setHasSearched }) {
       selectIndustries.forEach((industry) => params.append('industries', industry));
     }
   
-    if (randomizationSeed) {
-      params.append('seed', randomizationSeed);
-    }
+    
 
     
   
