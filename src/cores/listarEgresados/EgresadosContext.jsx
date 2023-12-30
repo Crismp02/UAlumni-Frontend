@@ -6,7 +6,7 @@ const EgresadosContext = createContext();
 export const EgresadosProvider = ({ children }) => {
   const [egresados, setEgresados] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [randomizationSeed, setRandomizationSeed] = useState(0);
+  const [randomizationSeed,] = useState(0);
 
   
   // Total de Páginas
@@ -89,7 +89,7 @@ export const EgresadosProvider = ({ children }) => {
       const data = await response.json();
       setEgresados(data.data.items);
       setTotalPages(data.data.meta.numberOfPages);
-      setRandomizationSeed(data.data.meta.seed);
+      const pageSeed = data.data.meta.seed;
   
       const newFilters = updateFiltersFromQueryString(queryString);
       console.log("newFilters:", newFilters);
@@ -97,11 +97,11 @@ export const EgresadosProvider = ({ children }) => {
       // Actualiza el estado con los nuevos filtros y la semilla si está disponible
       if (data.data.meta.randomizationSeed) {
         setCurrentFilters({
-          seed: data.data.meta.randomizationSeed,
+          seed: pageSeed,
           ...newFilters,
         });
         setPrevFilters({
-          seed: data.data.meta.randomizationSeed,
+          seed: pageSeed,
           ...newFilters,
         });
       }
