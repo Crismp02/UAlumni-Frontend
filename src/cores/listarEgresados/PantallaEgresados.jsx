@@ -28,10 +28,10 @@ const PantallaEgresados = () => {
         // Obtén los filtros actuales que ya incluyen la semilla
         const newFilters = { ...currentFilters };
         const prevPage = currentPage - 1;
-  
+
         // Realiza la solicitud para la página anterior
         await fetchPaginatedData(newFilters, prevPage);
-  
+
         setHasSearched(true);
       } catch (error) {
         console.error("Error al obtener la página anterior:", error);
@@ -40,7 +40,7 @@ const PantallaEgresados = () => {
       }
     }
   };
-  
+
   const handleNextPage = async () => {
     if (currentPage < totalPages && !isLoading) {
       setCurrentPage((prevPage) => prevPage + 1);
@@ -49,11 +49,11 @@ const PantallaEgresados = () => {
         // Hacer una copia de los filtros antes de actualizar el estado
         const newFilters = { ...currentFilters };
         const nextPage = currentPage + 1;
-        console.log("newFilters desde PantallaEgresados:", newFilters)
-  
+        console.log("newFilters desde PantallaEgresados:", newFilters);
+
         // Realizar la solicitud para la página siguiente
         await fetchPaginatedData(newFilters, nextPage);
-  
+
         setHasSearched(true);
       } catch (error) {
         console.error("Error al obtener la siguiente página:", error);
@@ -62,7 +62,6 @@ const PantallaEgresados = () => {
       }
     }
   };
-  
 
   const updateFilters = (newFilters) => {
     setCurrentFilters(newFilters);
@@ -75,8 +74,13 @@ const PantallaEgresados = () => {
       setHasSearched(false);
       setFiltersChanged(false);
     }
-  }, [hasSearched, filtersChanged, fetchPaginatedData, currentFilters, currentPage]);
-
+  }, [
+    hasSearched,
+    filtersChanged,
+    fetchPaginatedData,
+    currentFilters,
+    currentPage,
+  ]);
 
   const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
 
@@ -120,11 +124,11 @@ const PantallaEgresados = () => {
               alignItems: "center",
             }}
           >
-            {hasSearched && currentPage > 1 && (
+            {hasSearched && (
               <Button
                 as="b"
                 colorScheme="teal"
-                disabled={isLoading}
+                disabled={isLoading || currentPage === 1}
                 onClick={handlePreviousPage}
                 size="lg"
                 variant="ghost"
@@ -135,35 +139,42 @@ const PantallaEgresados = () => {
               </Button>
             )}
 
-            {hasSearched && Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNumber) => (
-                <Button
-                  key={pageNumber}
-                  as="b"
-                  colorScheme="teal"
-                  disabled={isLoading}
-                  onClick={() => setCurrentPage(pageNumber)}
-                  size="lg"
-                  variant="ghost"
-                  fontSize="2xl"
-                  color="darkgreen"
-                  fontWeight="bold"
-                  marginRight="1px"
-                  marginLeft="1px"
-                  textDecoration={
-                    pageNumber === currentPage ? "underline" : "none"
-                  }
-                >
-                  {pageNumber}
-                </Button>
-              )
-            )}
+            {hasSearched &&
+              Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (pageNumber) => (
+                  <Button
+                    key={pageNumber}
+                    as="b"
+                    colorScheme="teal"
+                    disabled={isLoading}
+                    onClick={() => {
+                      if (pageNumber < currentPage) {
+                        handlePreviousPage();
+                      } else if (pageNumber > currentPage) {
+                        handleNextPage();
+                      }
+                    }}
+                    size="lg"
+                    variant="ghost"
+                    fontSize="2xl"
+                    color="darkgreen"
+                    fontWeight="bold"
+                    marginRight="1px"
+                    marginLeft="1px"
+                    textDecoration={
+                      pageNumber === currentPage ? "underline" : "none"
+                    }
+                  >
+                    {pageNumber}
+                  </Button>
+                )
+              )}
 
-            {hasSearched && totalPages > 1 && (
+            {hasSearched && currentPage < totalPages && totalPages > 1 && (
               <Button
                 as="b"
                 colorScheme="teal"
-                disabled={currentPage === totalPages || isLoading}
+                disabled={isLoading || currentPage === totalPages}
                 onClick={handleNextPage}
                 size="lg"
                 variant="ghost"
@@ -178,8 +189,10 @@ const PantallaEgresados = () => {
 
         {isSmallerThan800 && (
           <Box flex="1">
-            <FiltrosEgresadosMenu setHasSearched={setHasSearched}
-              setCurrentFilters={updateFilters}  />
+            <FiltrosEgresadosMenu
+              setHasSearched={setHasSearched}
+              setCurrentFilters={updateFilters}
+            />
           </Box>
         )}
       </Flex>

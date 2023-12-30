@@ -34,7 +34,6 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const [ofertas] = useState([]);
   const [, setIsLoading] = useState(false);
-  const [randomizationSeed, setRandomizationSeed] = useState(null);
   const [seed, setSeed] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   // Obtén la carrera de la URL
