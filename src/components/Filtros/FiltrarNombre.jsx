@@ -1,5 +1,5 @@
 import { Input, Text, useMediaQuery } from "@chakra-ui/react";
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; 
 
 function FiltrarNombre({ valueName, handleChangeName, placeholderName}){
 
