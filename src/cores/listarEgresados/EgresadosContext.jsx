@@ -6,72 +6,115 @@ const EgresadosContext = createContext();
 export const EgresadosProvider = ({ children }) => {
   const [egresados, setEgresados] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [randomizationSeed, setRandomizationSeed] = useState(0);
+
   
   // Total de Páginas
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+ 
+
   const [currentFilters, setCurrentFilters] = useState({
-    seed: null, // Inicializa la semilla como null
+    seed:  randomizationSeed,
+    name: [],
+    careers: [], 
+    skills: [],
+    categories: [],
+    positions: [], 
+    industries: [],
   });
-  const [prevFilters, setPrevFilters] = useState({}); // Almacena los filtros previos
+
+  const [prevFilters, setPrevFilters] = useState({
+    seed:  randomizationSeed,
+    name: [],
+    careers: [],
+    skills: [],
+    categories: [],
+    positions: [],
+    industries: [],
+  });
+
+  const convertFiltersToQueryString = (filtersObject) => {
+    const params = new URLSearchParams();
+  
+    for (const key in filtersObject) {
+      if (Array.isArray(filtersObject[key])) {
+        filtersObject[key].forEach((value) => {
+          params.append(key, value);
+        });
+      } else {
+        params.append(key, filtersObject[key]);
+      }
+    }
+  
+    return params.toString();
+  };
+
+  const updateFiltersFromQueryString = (queryString) => {
+    const filters = {};
+    const urlParams = new URLSearchParams(queryString);
+  
+    for (const [key, value] of urlParams) {
+      if (!filters[key]) {
+        filters[key] = [];
+      }
+      filters[key].push(value);
+    }
+  
+    return filters;
+  };
+
   
 
 
   const fetchPaginatedData = async (filters, page) => {
     try {
       setIsLoading(true);
+      let queryString = ''; 
   
-      const queryParams = new URLSearchParams(filters);
-      queryParams.set("page", page);
-      queryParams.set("per-page", "4");
+      if (typeof filters === 'object') {
+        queryString = convertFiltersToQueryString(filters);
+      }else{
+        queryString = filters;
+      }
   
-      const url = `http://localhost:3000/alumni/resume?${queryParams}`;
-      
+      const url = `http://localhost:3000/alumni/resume?page=${page}&per-page=4&${queryString}`;
+  
       console.log(url);
   
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
-  
       const data = await response.json();
       setEgresados(data.data.items);
       setTotalPages(data.data.meta.numberOfPages);
+      setRandomizationSeed(data.data.meta.seed);
   
+      const newFilters = updateFiltersFromQueryString(queryString);
+      console.log("newFilters:", newFilters);
+  
+      // Actualiza el estado con los nuevos filtros y la semilla si está disponible
       if (data.data.meta.randomizationSeed) {
-        // Actualizar los filtros sin modificar los originales
-        setCurrentFilters(prevFilters => ({
-          ...prevFilters,
-          filters: {
-            ...prevFilters.filters,
-            ...filters, // Agrega los nuevos filtros
-          },
-          seed: data.data.meta.randomizationSeed, // Agrega la semilla
-        }));
+        setCurrentFilters({
+          ...newFilters,
+          seed: data.data.meta.randomizationSeed,
+        });
+        setPrevFilters({
+          ...newFilters,
+          seed: data.data.meta.randomizationSeed,
+        });
       }
-  
-      // Construir la URL con los filtros y la semilla
-      const serializedFilters = new URLSearchParams({
-        ...filters,
-        page: page,
-        "per-page": "4",
-        seed: data.data.meta.randomizationSeed,
-      }).toString();
-  
-      const updatedUrl = `http://localhost:3000/alumni/resume?${serializedFilters}`;
-  
-      const updatedResponse = await fetch(updatedUrl);
-      const datos = await updatedResponse.json();
-      setEgresados(datos.data.items);
-      
-      // Resto del código...
-  
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
+
+  
+  
   
 
   useEffect(() => {
@@ -88,8 +131,7 @@ export const EgresadosProvider = ({ children }) => {
       setPrevFilters(currentFilters);
     }
   }, [currentFilters, prevFilters]);
-
-
+  
 
   return (
     <EgresadosContext.Provider
