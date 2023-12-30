@@ -89,7 +89,7 @@ export const EgresadosProvider = ({ children }) => {
       const data = await response.json();
       setEgresados(data.data.items);
       setTotalPages(data.data.meta.numberOfPages);
-      const pageSeed = data.data.meta.seed;
+      const pageSeed = data.data.meta.randomizationSeed;
   
       const newFilters = updateFiltersFromQueryString(queryString);
       console.log("newFilters:", newFilters);
