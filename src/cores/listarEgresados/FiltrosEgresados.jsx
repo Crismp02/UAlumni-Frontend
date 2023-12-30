@@ -16,7 +16,7 @@ function FiltrosEgresados({ setHasSearched }) {
 
   const {fetchPaginatedData} = useEgresados();
   
-  const [randomizationSeed,] = useState(null);
+  const [randomizationSeed,] = useState(0);
   const [, setIsLoading] = useState(false);
 
   // Estado para la semilla
@@ -225,8 +225,12 @@ function FiltrosEgresados({ setHasSearched }) {
     if (randomizationSeed) {
       params.append('seed', randomizationSeed);
     }
+
+    
   
     const queryString = params.toString();
+    console.log("queryyy")
+    console.log(queryString)
   
     try {
       await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
