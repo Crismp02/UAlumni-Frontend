@@ -16,7 +16,7 @@ function FiltrosEgresados({ setHasSearched }) {
 
   const {fetchPaginatedData} = useEgresados();
   
-  const [randomizationSeed,] = useState(0);
+  const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
 
   // Estado para la semilla
@@ -198,8 +198,8 @@ function FiltrosEgresados({ setHasSearched }) {
   
     const params = new URLSearchParams();
 
-    if (randomizationSeed) {
-      params.append('seed', randomizationSeed);
+    if (semilla) {
+      params.append('seed', semilla);
     }
   
     if (valueName) {
