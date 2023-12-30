@@ -132,6 +132,7 @@ export const EgresadosProvider = ({ children }) => {
     ) {
       setPrevFilters(currentFilters);
     }
+   
   }, [currentFilters, prevFilters]);
   
 
