@@ -34,7 +34,6 @@ export const getJobOffer = async (id) => {
             const data = await response.json();
             console.log("a",data)
             if (response.ok) {
-            toast.success("Successfully applied!");
             return data;
             } else {
             throw new Error(data.message);

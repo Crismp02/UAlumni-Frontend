@@ -19,7 +19,7 @@ export const getAlumniProfile = async (id) => {
 
 export const downloadPDF = async (id) => {
     try {
-        const response = await fetch(`${BASE_URL}/alumni/${id}/resume/pdf`, {
+        const response = await fetch(`${BASE_URL}/alumni/${id}/resume/pdf/download`, {
         method: "GET",
         });
         const data = await response.blob();
