@@ -143,7 +143,6 @@ export const EgresadosProvider = ({ children }) => {
     if (currentPage !== 1 && Object.keys(currentFilters).length > 0) {
       fetchPaginatedData(currentFilters, currentPage);
     }
-    console.log(currentPage, "currentPage")
   }, [currentPage]);
   
   useEffect(() => {
@@ -153,8 +152,6 @@ export const EgresadosProvider = ({ children }) => {
     ) {
       setPrevFilters(currentFilters);
     }
-    console.log(currentPage, "currentPage")
-
    
   }, [currentFilters, prevFilters]);
   

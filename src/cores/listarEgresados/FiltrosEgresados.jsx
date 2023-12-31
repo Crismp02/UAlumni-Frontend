@@ -227,12 +227,7 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   
     
-
-    
-  
     const queryString = params.toString();
-    console.log("queryyy")
-    console.log(queryString)
   
     try {
       await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
