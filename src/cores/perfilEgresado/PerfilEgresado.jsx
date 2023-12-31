@@ -8,7 +8,7 @@ import PortafoliosCard from "./PortafoliosCard";
 import ContactoCard from "./ContactoCard";
 import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobreMiCard";
-import { Box, Text, Flex, VStack } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import CustomSwitch from "./Switch";
 import {
@@ -21,10 +21,14 @@ import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
 import DownloadCV from "../perfilEgresadoReclutador/DownloadCV";
 import IndustriasInteresCard from "./IndustriasInteresCard";
 import PosicionesInteresCard from "./PosicionesInteresCard";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowBackIcon } from '@chakra-ui/icons'
 
 function PerfilEgresado() {
   const [isLoading, setIsLoading] = useState(true);
   const [dataProfile, setDataProfile] = useState(null);
+  const location = useLocation();
+const navigate = useNavigate();
 
   const [cardData, setCardData] = useState([]);
 
@@ -84,7 +88,9 @@ function PerfilEgresado() {
           >
             PERFIL
           </Text>
-
+          {location.state && location.state.fromJobOffer && (
+  <Button onClick={() => navigate(-1)} width="80px"><ArrowBackIcon/> <Text fontSize="11px">Volver</Text> </Button>
+)}
           <Box
             width="calc(100vw - 20px)"
             marginLeft="20px"
@@ -92,7 +98,9 @@ function PerfilEgresado() {
             flexDirection="row"
             marginBottom="20px"
           >
+            
             <Box width="70vw" display="flex" flexDirection="column">
+            
               <Text color="#37B4E3" as="b" fontSize={["md", "md", "xl", "2xl"]}>
                 {(
                   dataProfile.data.names +

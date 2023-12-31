@@ -19,9 +19,11 @@ function NavBarEgresados(){
         )}
       </Box>
         {isLargerThan700 ? <Flex>
+          <Link to="/profile">
           <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>PERFIL</Text>
           </Box>
+          </Link>
           <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>OFERTAS</Text>
           </Box>

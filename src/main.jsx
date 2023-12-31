@@ -12,6 +12,7 @@ import UnProtectedRoutes from "./cores/login/UnProtectedRoutes";
 import ProtectedRoutes from "./cores/login/ProtectedRoutes";
 import PerfilEgresado from "./cores/perfilEgresado/PerfilEgresado";
 import PerfilEgresadoReclutador from "./cores/perfilEgresadoReclutador/PerfilEgresadoReclutador";
+import OfertaTrabajo from "./cores/ofertasTrabajo/OfertaTrabajo";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/alumni/:id/profile",
         element: <PerfilEgresadoReclutador/>,
+      },
+      {
+        path: "/job-offer/:id",
+        element: <OfertaTrabajo/>,
       },
     ],
   },
