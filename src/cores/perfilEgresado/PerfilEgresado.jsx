@@ -116,7 +116,7 @@ function PerfilEgresado() {
               alignItems="center"
             >
               <Box display="flex" flexDirection="column">
-                <DownloadCV id={dataProfile.data.id} />
+                <DownloadCV id={dataProfile.data.id} nombre={dataProfile.data.names} apellido={dataProfile.data.surnames} />
                 <Text color="grey">
                   Cantidad de descargas:{" "}
                   {dataProfile.data.resume.numberOfDownloads}

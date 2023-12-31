@@ -3,7 +3,7 @@ import { Button } from "@chakra-ui/react";
 import { downloadPDF } from '../../services/profileEgresado/AlumniProfile.services';
 import { Stack, Text } from "@chakra-ui/react";
 
-function DownloadCV({id}) {
+function DownloadCV({id, nombre, apellido}) {
     const [pdfUrl, setPdfUrl] = useState(null);
 
     const handleDownload = async () => {
@@ -18,7 +18,7 @@ function DownloadCV({id}) {
     onClick={handleDownload} 
     as="a" 
     href={pdfUrl} 
-    download 
+    download={`${nombre.replaceAll(" ","_")}_${apellido.replaceAll(" ","_")}_CV.pdf`} 
     bg="#007935"
     color="white"
     padding={["3", "4", "5"]}

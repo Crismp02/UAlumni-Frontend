@@ -111,10 +111,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
     const fetchSkills = async () => {
       const skills = await getTechnicalSkillVisibility();
       const allVisible = skills.every(skill => skill.isVisible);
-      console.log("a", skills);
       setCheckAll(allVisible);
-      console.log("s", skills);
-      console.log("v", allVisible);
     };
   
     fetchSkills();
@@ -173,9 +170,10 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
     const updatedSkills = newCardData
       .filter((skill) => skill.skillCategoryName === category)
       .map((skill) => ({ ...skill, isVisible: isChecked }));
-    for (const skill of updatedSkills) {
+    updatedSkills.forEach(async (skill) => {
       await editTechnicalSkill(category, skill.skillName, skill);
-    }
+    });
+    await Promise.all(updatedSkills);
 
     setGroupedSkills((prevSkills) => {
       const updatedGroupedSkills = { ...prevSkills };
