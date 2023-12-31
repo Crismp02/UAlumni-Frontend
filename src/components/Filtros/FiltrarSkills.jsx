@@ -47,8 +47,6 @@ useEffect(() => {
             [categoria]: habilidadesNombres, // Actualizar las habilidades específicas de la categoría seleccionada
           }));
         }
-        console.log("mis habilidades");
-        console.log(habilidades); // Observar los cambios después de actualizar el estado
       })
       .catch((error) => {
         console.error("Error de fetch:", error);

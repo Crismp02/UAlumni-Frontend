@@ -9,8 +9,6 @@ const OfertaCard = ({ oferta }) =>{
     }
 
     const {companyLogo, companyName, position, visibleSince} = oferta;
-    console.log("fecha", visibleSince);
-    //Formatear fecha:
     const date = new Date(visibleSince);
     const day = date.getDate();
     const month = date.getMonth() + 1; // Los meses en JavaScript empiezan en 0, por lo que debes sumar 1

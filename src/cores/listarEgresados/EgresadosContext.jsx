@@ -67,52 +67,72 @@ export const EgresadosProvider = ({ children }) => {
   
 
 
+  const obtenerSemilla = async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Error al obtener la semilla");
+    }
+    const data = await response.json();
+    const miSemilla = data.data.meta.randomizationSeed;
+  
+    return miSemilla;
+  };
+  
   const fetchPaginatedData = async (filters, page) => {
     try {
       setIsLoading(true);
-      let queryString = ''; 
+      let queryString = '';
   
       if (typeof filters === 'object') {
         queryString = convertFiltersToQueryString(filters);
-      }else{
+      } else {
         queryString = filters;
       }
   
+      page = page ?? 1;
+  
       const url = `http://localhost:3000/alumni/resume?page=${page}&per-page=4&${queryString}`;
+      const miSemilla = await obtenerSemilla(url);
   
-      console.log(url);
-  
-      const response = await fetch(url);
+      const url2 = queryString.includes('seed=')
+      ? `http://localhost:3000/alumni/resume?page=${page}&per-page=4&seed=${miSemilla}&${queryString.split('&').filter(param => !param.startsWith('seed=')).join('&')}`
+      : `http://localhost:3000/alumni/resume?page=${page}&per-page=4&seed=${miSemilla}&${queryString}`;
+    
+      const response = await fetch(url2);
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
       const data = await response.json();
       setEgresados(data.data.items);
       setTotalPages(data.data.meta.numberOfPages);
-      setSemilla(data.data.meta.randomizationSeed);
-      console.log("data:", data)
-      console.log(semilla)
-      
-      const newFilters = updateFiltersFromQueryString(queryString);
-      console.log("newFilters:", newFilters);
+      setSemilla(miSemilla);
+      setCurrentPage(page);
   
+      const newFilters = updateFiltersFromQueryString(queryString);
       // Actualiza el estado con los nuevos filtros y la semilla si está disponible
       if (data.data.meta.randomizationSeed) {
         setCurrentFilters({
-          seed: semilla,
+          seed: miSemilla,  // Usar la semilla extraída de la primera solicitud
           ...newFilters,
         });
         setPrevFilters({
-          seed: semilla,
+          seed: miSemilla, // Usar la semilla extraída de la primera solicitud
           ...newFilters,
         });
       }
+  
+      // Resto del código de la segunda solicitud y manejo de datos...
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
+  
+  
+  
   
 
   

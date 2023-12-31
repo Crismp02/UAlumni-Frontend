@@ -58,8 +58,6 @@ const PantallaEgresados = () => {
         // Hacer una copia de los filtros antes de actualizar el estado
         const newFilters = { ...currentFilters };
         const nextPage = currentPage + 1;
-        console.log("newFilters desde PantallaEgresados:", newFilters);
-
         // Realizar la solicitud para la página siguiente
         await fetchPaginatedData(newFilters, nextPage);
 
