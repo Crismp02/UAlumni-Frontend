@@ -23,6 +23,7 @@ import {
   deleteTechnicalSkill,
   editTechnicalSkill,
   getSkillCategory,
+  getTechnicalSkillVisibility,
   getTechnicalSkills,
 } from "../../services/auth/MeProfile.services";
 
@@ -103,6 +104,22 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
     });
   }, []);
 
+  const [checkAll, setCheckAll] = useState(false);
+  const [checkedCategories, setCheckedCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      const skills = await getTechnicalSkillVisibility();
+      const allVisible = skills.every(skill => skill.isVisible);
+      console.log("a", skills);
+      setCheckAll(allVisible);
+      console.log("s", skills);
+      console.log("v", allVisible);
+    };
+  
+    fetchSkills();
+  }, [newCardData, checkedCategories]);
+
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
   const [cardTypeToDelete, setCardTypeToDelete] = useState(
@@ -122,35 +139,27 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   const [additionalFields, setAdditionalFields] = useState({}); // Estado para campos adicionales
 
   const handleCheckAll = async (e) => {
+    let updatedData = [...newCardData];
     if (e.target.checked) {
       setCheckedItems(newCardData.map((item) => item.skillName));
-      // Marca todas las categorías
       setCheckedCategories(Object.keys(groupedSkills));
-      // Update all items to be isVisible: true in the backend and local state
-      const updatedData = newCardData.map((item) => ({
-        ...item,
-        isVisible: true,
-      }));
       for (const item of updatedData) {
+        item.isVisible = true;
         await editTechnicalSkill(item.skillCategoryName, item.skillName, item);
       }
-      setNewCardData(updatedData);
     } else {
       setCheckedItems([]);
       setCheckedCategories([]);
-      // Update all items to be isVisible: false in the backend and local state
-      const updatedData = newCardData.map((item) => ({
-        ...item,
-        isVisible: false,
-      }));
       for (const item of updatedData) {
+        item.isVisible = false;
         await editTechnicalSkill(item.skillCategoryName, item.skillName, item);
       }
-      setNewCardData(updatedData);
     }
+    // Actualiza el estado local después de que todas las habilidades técnicas se hayan actualizado en el backend
+    const skills = await getTechnicalSkillVisibility();
+    setNewCardData(skills);
+    setCheckAll(e.target.checked);
   };
-
-  const [checkedCategories, setCheckedCategories] = useState([]);
 
   const handleCategoryCheck = async (e, category) => {
     const isChecked = e.target.checked;
@@ -393,7 +402,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
       <Flex alignItems="left">
         <Checkbox
           colorScheme="green"
-          isChecked={checkedItems.length === newCardData.length}
+          isChecked={checkAll}
           onChange={handleCheckAll}
         />
         <Text

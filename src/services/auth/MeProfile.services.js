@@ -623,6 +623,23 @@ export const editCiapCourse = async (id, newData) => {
       }
     }
 
+    export const getTechnicalSkillVisibility = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/alumni/me/resume/skill-category/technical-skill`, {
+        method: "GET",
+        credentials: "include",
+        });
+        const data = await response.json();
+        if (response.ok) {
+        return data.data.items;
+        } else {
+        throw new Error(data.message);
+        }
+    } catch (error) {
+        toast.error(`Error: ${error.message}`);
+    }
+    }
+
     export const getSkillCategory = async () => {
       try {
         const response = await fetch(`${BASE_URL}/skill-category`, {
