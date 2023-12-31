@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button } from "@chakra-ui/react";
 import { downloadPDF } from "../../services/profileEgresado/AlumniProfile.services";
 import { Stack, Text } from "@chakra-ui/react";
-import { Spinner } from "@chakra-ui/react";
 
 function DownloadCV({ id, nombre, apellido }) {
   const [isLoading, setIsLoading] = useState(false);

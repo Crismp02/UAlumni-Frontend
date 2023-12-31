@@ -80,6 +80,7 @@ function InfoOfferCard({ cardData }) {
               isClosable: true,
             });
             setIsLoading(false);
+            onClose();
           })
           .catch((error) => {
             toast({
@@ -91,6 +92,7 @@ function InfoOfferCard({ cardData }) {
               isClosable: true,
             });
             setIsLoading(false);
+            onClose();
           });
       }
       onCloseSecondModal();
