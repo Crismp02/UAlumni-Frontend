@@ -19,7 +19,7 @@ export const getMeProfile = async () => {
     };
     export const editVisibility = async (newData) => {
         try {
-            const response = await fetch(`${BASE_URL}/alumni/me/resume`, {
+            const response = await fetch(`${BASE_URL}/alumni/me/resume/visibility`, {
               method: 'PATCH',
               credentials: "include",
               headers: {
