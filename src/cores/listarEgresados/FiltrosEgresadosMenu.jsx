@@ -23,19 +23,9 @@ import PropTypes from "prop-types";
 
 
 function FiltrosEgresadosMenu({ setHasSearched }) {
-  const {
-    fetchPaginatedData,
-    isLoading,
-    setCurrentPage,
-    totalPages,
-  } = useEgresados();
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(4);
-  const [currentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
-  const [egresados] = useState([]);
+  const { fetchPaginatedData  } = useEgresados();
   const [, setIsLoading] = useState(false);
-  const [seed, setSeed] = useState(0);
+  const [semilla, ] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   // Obtén la carrera de la URL
   const location = useLocation();
@@ -203,54 +193,58 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     if (isDisabled) {
       return;
     }
-
+  
     const selectedCareers = Object.keys(selectedTags)
       .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
       .map((career) => career);
-
+  
     // quitar espacios desactivados
     const careerParams = selectedCarrera
-      ? [
-          selectedCarrera,
-          ...selectedCareers,
-        ]
+      ? [selectedCarrera, ...selectedCareers]
       : selectedCareers;
-
+  
     const selectedSkills = list.map(
       (item) => `${item.categoria}:${item.habilidad}`
     );
     const selectedCategories = list.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
-    const selectIndustries= listInd.length > 0 ? listInd: [];
+    const selectIndustries = listInd.length > 0 ? listInd : [];
+  
+    const params = new URLSearchParams();
 
-    const filters = {
-      name: valueName ? valueName : undefined,
-      careers:
-        careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
-      skills:
-        selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
-      categories:
-        selectedCategories.length > 0
-          ? selectedCategories.join("&categories=")
-          : undefined,
-      positions:
-        selectedPositions.length > 0
-          ? selectedPositions.join("&positions=")
-          : undefined,
-          industries:
-          selectIndustries.length > 0
-            ? selectIndustries.join("&industries=")
-            : undefined,
-          seed: randomizationSeed ? randomizationSeed : undefined,
-
-    };
-
-    const newFilters = Object.fromEntries(
-      Object.entries(filters).filter(([, value]) => value !== undefined)
-    );
-
+    if (semilla) {
+      params.append('seed', semilla);
+    }
+  
+    if (valueName) {
+      params.append('name', valueName);
+    }
+  
+    if (careerParams.length > 0) {
+      careerParams.forEach((career) => params.append('careers', career));
+    }
+  
+    if (selectedSkills.length > 0) {
+      selectedSkills.forEach((skill) => params.append('skills', skill));
+    }
+  
+    if (selectedCategories.length > 0) {
+      selectedCategories.forEach((category) => params.append('categories', category));
+    }
+  
+    if (selectedPositions.length > 0) {
+      selectedPositions.forEach((position) => params.append('positions', position));
+    }
+  
+    if (selectIndustries.length > 0) {
+      selectIndustries.forEach((industry) => params.append('industries', industry));
+    }
+  
+    
+    const queryString = params.toString();
+  
     try {
-      await fetchPaginatedData(newFilters, 1);
+      await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
     } finally {
