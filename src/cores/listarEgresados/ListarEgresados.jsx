@@ -1,6 +1,6 @@
 
 import { Box, Center, Icon, Text, useMediaQuery } from "@chakra-ui/react";
-import EgresadoCard2 from "./EgresadosCard2";
+import EgresadoCard from "./EgresadosCard";
 import { MdScreenSearchDesktop } from "react-icons/md";
 import { PiSmileySadLight } from "react-icons/pi";
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ import { useEgresados } from './EgresadosContext';
 
 function ListarEgresados({ hasSearched }) {
   const { egresados, isLoading } = useEgresados();
+  console.log("HABLAME",egresados);
 
   const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
 
@@ -63,7 +64,7 @@ function ListarEgresados({ hasSearched }) {
           </>
         ) : (
             egresados.map((egresado, index) => (
-              egresado && <EgresadoCard2 key={index} egresado={egresado} />
+              egresado && <EgresadoCard key={index} egresado={egresado} />
             ))
           )}
           {/* {isLargerThan770 && <EgresadoCard2 />}  */}

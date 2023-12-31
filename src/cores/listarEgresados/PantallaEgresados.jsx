@@ -21,10 +21,14 @@ const PantallaEgresados = () => {
   const [filtersChanged, setFiltersChanged] = useState(false);
 
   const handlePreviousPage = async () => {
+
     if (currentPage > 1 && !isLoading) {
+
       setCurrentPage((prevPage) => prevPage - 1);
+
       try {
         setIsLoading(true);
+
         // Obtén los filtros actuales que ya incluyen la semilla
         const newFilters = { ...currentFilters };
         const prevPage = currentPage - 1;
@@ -33,6 +37,7 @@ const PantallaEgresados = () => {
         await fetchPaginatedData(newFilters, prevPage);
 
         setHasSearched(true);
+
       } catch (error) {
         console.error("Error al obtener la página anterior:", error);
       } finally {
@@ -42,10 +47,14 @@ const PantallaEgresados = () => {
   };
 
   const handleNextPage = async () => {
+
     if (currentPage < totalPages && !isLoading) {
+
       setCurrentPage((prevPage) => prevPage + 1);
+
       try {
         setIsLoading(true);
+        
         // Hacer una copia de los filtros antes de actualizar el estado
         const newFilters = { ...currentFilters };
         const nextPage = currentPage + 1;
@@ -124,11 +133,11 @@ const PantallaEgresados = () => {
               alignItems: "center",
             }}
           >
-            {hasSearched && (
+            {hasSearched && currentPage > 1 &&(
               <Button
                 as="b"
                 colorScheme="teal"
-                disabled={isLoading || currentPage === 1}
+                disabled={isLoading }
                 onClick={handlePreviousPage}
                 size="lg"
                 variant="ghost"
