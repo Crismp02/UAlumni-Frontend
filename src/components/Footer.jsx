@@ -19,7 +19,7 @@ function Footer() {
         width={isLargerThan400 ? "auto" : "100%"}
         height="auto"
         padding="10px"
-        paddingLeft={["20px", "100px"]}
+        paddingLeft={isLargerThan700 ? "5vw" : isLargerThan400 ? "3vw" : "2vw"}
       >
         {isLargerThan700 ? (
           <>
@@ -53,7 +53,7 @@ function Footer() {
         width={isLargerThan400 ? "auto" : "100%"}
         height="auto"
         padding="10px"
-        paddingLeft={["20px", "100px"]}
+        paddingLeft={isLargerThan700 ? "5vw" : isLargerThan400 ? "3vw" : "2vw"}
       >
         {isLargerThan700 ? (
           <>
@@ -91,7 +91,7 @@ function Footer() {
                   CONTACTOS
                 </Text>
                 <Text fontSize="sm" color="white" marginTop="5px">
-                  <a href="mailto:correo@gmail.com">correo@gmail.com</a>
+                  <a href="mailto:correo@gmail.com">ualumni.ucab@gmail.com</a>
                 </Text>
               </Box>
             </Box>
@@ -133,7 +133,7 @@ function Footer() {
                   CONTACTOS
                 </Text>
                 <Text fontSize="13px" color="white" marginTop="5px">
-                  <a href="mailto:correo@gmail.com">correo@gmail.com</a>
+                  <a href="mailto:correo@gmail.com">ualumni.ucab@gmail.com</a>
                 </Text>
               </Box>
             </Box>

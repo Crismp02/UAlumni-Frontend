@@ -1,25 +1,26 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import { BASE_URL } from "../../config";
 
 export const registerUser = async (email, firstName, lastName, password) => {
   try {
-    const response = await fetch('http://localhost:3000/auth/register', {
-      method: 'POST',
+    const response = await fetch(`${BASE_URL}/auth/register`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
-        email: email, 
-        names: firstName, 
-        surnames: lastName, 
-        password: password 
+      body: JSON.stringify({
+        email: email,
+        names: firstName,
+        surnames: lastName,
+        password: password,
       }),
-      credentials: 'include', // This is necessary for cookies to be sent with the request
+      credentials: "include", // This is necessary for cookies to be sent with the request
     });
     const data = await response.json();
-    if (response.ok) {     
+    if (response.ok) {
       return data;
     } else {
-      throw new Error(data.message); 
+      throw new Error(data.message);
     }
   } catch (error) {
     toast.error(`Error: ${error.message}`);
@@ -28,24 +29,25 @@ export const registerUser = async (email, firstName, lastName, password) => {
 
 export const loginUser = async (email, password) => {
   try {
-    const response = await fetch('http://localhost:3000/auth/login', {
-      method: 'POST',
+    console.log(BASE_URL);
+    const response = await fetch(`${BASE_URL}/auth/login`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
-        alumniEmail: email, 
-        password: password 
+      body: JSON.stringify({
+        email: email,
+        password: password,
       }),
-      credentials: 'include', // Esto es necesario para que las cookies se envíen con la solicitud
+      credentials: "include", // Esto es necesario para que las cookies se envíen con la solicitud
     });
 
     const data = await response.json();
-    if (response.ok) { 
-      toast.success('Successfully logged in!');    
+    if (response.ok) {
+      toast.success("Successfully logged in!");
       return data;
     } else {
-      throw new Error(data.message); 
+      throw new Error(data.message);
     }
   } catch (error) {
     toast.error(`Error: ${error.message}`);
@@ -54,16 +56,34 @@ export const loginUser = async (email, password) => {
 
 export const logoutUser = async () => {
   try {
-    const response = await fetch('http://localhost:3000/auth/logout', {
-      method: 'POST',
-      credentials: 'include', // Esto es necesario para que las cookies se envíen con la solicitud
+    const response = await fetch(`${BASE_URL}/auth/logout`, {
+      method: "POST",
+      credentials: "include", // Esto es necesario para que las cookies se envíen con la solicitud
     });
 
-    if (response.ok) { 
-      toast.success('Has cerrado sesión con éxito');    
+    if (response.ok) {
+      toast.success("Has cerrado sesión con éxito");
     } else {
       const data = await response.json();
-      throw new Error(data.message); 
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    toast.error(`Error: ${error.message}`);
+  }
+};
+
+export const checkAuthStatus = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/auth/status`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error(data.message);
     }
   } catch (error) {
     toast.error(`Error: ${error.message}`);

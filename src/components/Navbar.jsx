@@ -2,7 +2,7 @@ import React from "react";
 import { Flex, Box, Text, useMediaQuery, Image } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Logo from "../images/logo.png";
-import Logo2 from "../images/logo2.png";
+import Logo2 from "../images/logo2.png"
 
 function NavBar() {
   const [isLargerThan550] = useMediaQuery("(min-width: 550px)");
