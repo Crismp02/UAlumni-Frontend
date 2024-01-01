@@ -464,6 +464,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
                         paddingRight="8px"
                         borderRadius="4px"
                         color="white"
+                        marginBottom={["10px", "10px", "0px", "0px"]}
                       >
                         {skill.skillName}
                         <TagCloseButton

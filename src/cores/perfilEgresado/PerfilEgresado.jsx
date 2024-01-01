@@ -95,20 +95,20 @@ const navigate = useNavigate();
             width="calc(100vw - 20px)"
             marginLeft="20px"
             display="flex"
-            flexDirection="row"
+            flexDirection={['column', 'column', 'row', 'row']}
             marginBottom="20px"
           >
             
             <Box width="70vw" display="flex" flexDirection="column">
             
-              <Text color="#37B4E3" as="b" fontSize={["md", "md", "xl", "2xl"]}>
+              <Text color="#37B4E3" as="b" fontSize={["lg", "mlg", "xl", "2xl"]}>
                 {(
                   dataProfile.data.names +
                   " " +
                   dataProfile.data.surnames
                 ).toUpperCase()}
               </Text>
-              <Text color="#37B4E3" fontSize={["sm", "sm", "lg", "lg"]}>
+              <Text color="#37B4E3" fontSize={["md", "md", "lg", "lg"]}>
                 {dataProfile &&
                   dataProfile.data.graduations.length > 0 &&
                   dataProfile.data.graduations
@@ -117,26 +117,27 @@ const navigate = useNavigate();
               </Text>
             </Box>
             <Box
+            marginTop={["10px", "10px", "0px", "0px"]}
               display="flex"
-              width="30%"
-              justifyContent="right"
-              paddingRight="20px"
+              width={["90%","30%"]}
+              justifyContent={["center","right"]}
+              paddingRight={["0px", "0px", "20px", "20px"]}
               alignItems="center"
             >
               <Box display="flex" flexDirection="column">
                 <DownloadCV id={dataProfile.data.id} nombre={dataProfile.data.names} apellido={dataProfile.data.surnames} />
-                <Text color="grey">
+                <Text color="grey" fontSize={["12px","12px", "md", "md"]}>
                   Cantidad de descargas:{" "}
                   {dataProfile.data.resume.numberOfDownloads}
                 </Text>
                 <Flex
-                  justifyContent="flex-end"
+                  justifyContent={["center","center","flex-end","flex-end"]}
                   alignItems="center"
                   marginTop="10px"
                 >
                   {switchValue ? (
                     <Text
-                      fontSize="sm"
+                      fontSize={["12px","12px","sm","sm"]}
                       color="black"
                       marginRight="10px"
                       fontWeight="bold"
@@ -145,7 +146,7 @@ const navigate = useNavigate();
                     </Text>
                   ) : (
                     <Text
-                      fontSize="sm"
+                    fontSize={["12px","12px","sm","sm"]}
                       color="black"
                       marginRight="10px"
                       fontWeight="bold"
