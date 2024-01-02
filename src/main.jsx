@@ -7,6 +7,7 @@ import Faq from "./cores/FQA/Faq";
 import LandingPage from "./cores/landingpage/LandingPage";
 import ListarOfertasPrincipal from "./cores/listarOfertas/ListarOfertasPrincipal";
 import App from "./cores/listarEgresados/App";
+import TerminosCondiciones from "./cores/terminos-y-condiciones/terminos-y-condiciones";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/PreguntasFrecuentes",
     element: <Faq/>,
+  },
+  {
+    path: "/terminos-y-condiciones",
+    element: <TerminosCondiciones/>,
   },
 ]);
 
