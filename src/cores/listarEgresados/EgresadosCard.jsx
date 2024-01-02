@@ -1,5 +1,5 @@
 
-import { Box, Text, Tag, useMediaQuery} from "@chakra-ui/react";
+import { Box, Button, Text, Tag, useMediaQuery} from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 
@@ -17,6 +17,7 @@ const EgresadoCard = ({ egresado }) =>{
 
     const skillsArray = resume?.technicalSkills || [];
 
+    //Adaptar las skills al tamaño de la pantalla
     let skillsToShow;
     if (isLargerThan1300) {
       skillsToShow = skillsArray.slice(0, 4);
@@ -28,6 +29,18 @@ const EgresadoCard = ({ egresado }) =>{
       skillsToShow = skillsArray.slice(0, 1);
     }
 
+    //Adaptar las carreras al tamaño de la pantalla
+    let careersToShow;
+    if (isLargerThan1300) {
+      careersToShow = graduations.slice(0, 3);
+    } else if (isLargerThan800) {
+      careersToShow = graduations.slice(0, 2);
+    } else if (isLargerThan1000) {
+      careersToShow = graduations.slice(0, 2);
+    } else {
+      careersToShow = graduations.slice(0, 1);
+    }
+    
   return (
     <div>
 
@@ -89,7 +102,7 @@ const EgresadoCard = ({ egresado }) =>{
                   {skill.skillName}
                 </Tag>
               ))}
-              {skillsToShow.length > 0 && <Text marginLeft="10px">...</Text>}
+              {skillsToShow.length > 4 && <Text marginLeft="10px">...</Text>}
             </Box>
           </Box>
           </Box>
@@ -98,26 +111,27 @@ const EgresadoCard = ({ egresado }) =>{
             display="flex"
             justifyContent="space-between"
             alignItems="flex-start"
-            marginLeft="0px"
+            marginBottom="18px"
             paddingX="20px"
             width="100%">
 
               <Box display="flex" flexDirection="row" flexWrap="wrap"    alignItems="flex-start">
-              {graduations.map((graduation, index) => (
                 <Text
-                  key={index}
                   fontSize={["sm", "sm", "md", "md"]}
                   textAlign="left"
                   mr={2}
                 >
-                  {graduation.careerName}
+                  {careersToShow.map((graduation) => graduation.careerName).join(' / ')}
                 </Text>
-              ))}
              </Box>
 
-              <Text textAlign="right" fontSize={["sm", "sm", "md", "md"]}>
+              <Button 
+                textAlign="right" 
+                fontSize={["sm", "sm", "md", "md"]}
+                colorScheme="teal"
+                variant="ghost">
                 VER PERFIL
-              </Text>
+              </Button>
 
           </Box>
       </Box>

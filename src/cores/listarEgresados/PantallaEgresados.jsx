@@ -141,6 +141,7 @@ const PantallaEgresados = () => {
                 variant="ghost"
                 fontSize="3xl"
                 color="darkgreen"
+                cursor="pointer"
               >
                 «
               </Button>
@@ -168,6 +169,7 @@ const PantallaEgresados = () => {
                     fontWeight="bold"
                     marginRight="1px"
                     marginLeft="1px"
+                    cursor="pointer"
                     textDecoration={
                       pageNumber === currentPage ? "underline" : "none"
                     }
@@ -187,6 +189,7 @@ const PantallaEgresados = () => {
                 variant="ghost"
                 fontSize="3xl"
                 color="darkgreen"
+                cursor="pointer"
               >
                 »
               </Button>

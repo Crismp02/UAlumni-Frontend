@@ -23,32 +23,36 @@ import PropTypes from "prop-types";
 
 
 function FiltrosEgresadosMenu({ setHasSearched }) {
+
   const { fetchPaginatedData  } = useEgresados();
-  const [, setIsLoading] = useState(false);
+
   const [semilla, ] = useState(0);
+  const [, setIsLoading] = useState(false);
+
   const [isHovering, setIsHovering] = useState(false);
-  // Obtén la carrera de la URL
+
+  // Obtener la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
+
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
+
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
     setSelectedCarrera(carreraFromUrl);
   }, [carreraFromUrl]);
 
+  //Constantes del Drawer
   const { isOpen, onOpen, onClose } = useDisclosure();
   const placement = "left";
-  {
-    /*Busqueda por nombre*/
-  }
+
+  //Busqueda por nombre
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 
-  {
-    /*Busqueda por habilidades*/
-  }
+  //Busqueda por habilidades categoria
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
@@ -81,7 +85,9 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   const [carreras, setCarreras] = useState([]);
 
   useEffect(() => {
+
     async function fetchCarreras() {
+
       try {
         const response = await fetch("http://localhost:3000/career");
         if (!response.ok) {
@@ -110,6 +116,14 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     }
   };
 
+  // Estado de habilitación para el botón de categorías
+  const [isCatButtonDisabled, setIsCatButtonDisabled] = useState(true);
+
+  // Actualizar el estado de habilitación cuando cambia la categoría
+  useEffect(() => {
+    setIsCatButtonDisabled(!categoria);
+  }, [categoria]);
+
   const handleAddCategoria = () => {
     if (
       categoria !== "" &&
@@ -123,11 +137,11 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     setList(list.filter((_, i) => i !== index));
   };
 
-  {
-    /*Busqueda por posición de interés*/
-  }
+  //Búsqueda por posición de interés
+
   const [valuePos, setValuePos] = useState("");
   const [listPos, setListPos] = useState([]);
+
   const handleChangePos = (event) => setValuePos(event.target.value);
   const handleAddPos = () => {
     if (valuePos.trim() !== "") {
@@ -135,17 +149,32 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
       setValuePos("");
     }
   };
+
+  const [isPosButtonDisabled, setIsPosButtonDisabled] = useState(true);
+
+  // Actualizar el estado de habilitación cuando cambia el valor de pos
+  useEffect(() => {
+      setIsPosButtonDisabled(!valuePos);
+    }, [valuePos]);
+
   const handleRemovePos = (indexToRemove) => {
     setListPos((oldList) =>
       oldList.filter((_, index) => index !== indexToRemove)
     );
   };
 
-  {
-    /*Busqueda por industria de interés*/
-  }
+  //Búsqueda por industrias de interés
+
   const [valueInd, setValueInd] = useState("");
   const [listInd, setListInd] = useState([]);
+
+  // Estados de habilitación del botón de industrias
+  const [isIndButtonDisabled, setIsIndButtonDisabled] = useState(true);
+  
+  useEffect(() => {
+      setIsIndButtonDisabled(!valueInd);
+    }, [valueInd]);
+
   const handleChangeInd = (event) => setValueInd(event.target.value);
   const handleAddInd = () => {
     if (valueInd.trim() !== "") {
@@ -159,9 +188,8 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     );
   };
 
-  {
-    /*Busqueda por carrera*/
-  }
+  //Búsqueda por carrera
+
   const [selectedTags, setSelectedTags] = useState({});
   const handleClick = (label) => {
     if (selectedCarrera === label) {
@@ -171,14 +199,8 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     }
   };
 
+  //Botones de búsqueda y reset
 
-
-  {
-    /*Botones de búsqueda y reset*/
-  }
-  // const [exactMatch, setExactMatch] = useState(false);
-
-  // const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
   const isDisabled =
     !valueName &&
     list.length === 0 &&
@@ -187,8 +209,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
-  // const [egresados, setEgresados] = useState([]);
-
+  
   const handleSubmit = async () => {
     if (isDisabled) {
       return;
@@ -261,6 +282,8 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     setListPos([]);
     setSelectedTags({});
     setSelectedCarrera(null);
+    setValueInd("");
+    setListInd([]); 
   };
 
   return (
@@ -309,6 +332,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
               handleHabilidadChange={handleHabilidadChange}
               handleRemoveHabilidad={handleRemoveHabilidad}
               categorias={categorias}
+              isDisabled={isCatButtonDisabled}
             />
 
             {/*Busqueda por posiciones de interes*/}
@@ -318,6 +342,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
               handleAddPos={handleAddPos}
               listPos={listPos}
               handleRemovePos={handleRemovePos}
+              isDisabled={isPosButtonDisabled}
             />
 
             {/*Busqueda por industrias de interes*/}
@@ -327,6 +352,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
               handleAddInd={handleAddInd}
               listInd={listInd}
               handleRemoveInd={handleRemoveInd}
+              isDisabled={isIndButtonDisabled}
               />
 
             {/*Busqueda por carreras:*/}

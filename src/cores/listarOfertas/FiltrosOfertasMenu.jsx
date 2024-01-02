@@ -14,7 +14,6 @@ import { useLocation } from "react-router-dom";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
-import FiltrarIndustrias from "../listarEgresados/FiltrarIndustrias";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from './OfertasContext';
 import PropTypes from "prop-types";
@@ -22,42 +21,37 @@ import PropTypes from "prop-types";
 
 
 function FiltrosOfertasMenu({ setHasSearched }) {
-  const {
-    fetchPaginatedData,
-    isLoading,
-    setCurrentPage,
-    totalPages,
-  } = useOfertas();
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(4);
-  const [currentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
-  const [ofertas] = useState([]);
+
+  const { fetchPaginatedData} = useOfertas();
+
+  const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
-  const [seed, setSeed] = useState(0);
+
   const [isHovering, setIsHovering] = useState(false);
+
   // Obtén la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
+
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
+
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
     setSelectedCarrera(carreraFromUrl);
   }, [carreraFromUrl]);
 
+    //Constantes del Drawer
   const { isOpen, onOpen, onClose } = useDisclosure();
   const placement = "left";
-  {
-    /*Busqueda por nombre*/
-  }
+
+  //Busqueda por nombre
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 
-  {
-    /*Busqueda por habilidades*/
-  }
+
+  //Busqueda por habilidades categoria
   const [categoria, setCategoria] = useState("");
   const [habilidad, setHabilidad] = useState("");
   const [list, setList] = useState([]);
@@ -68,7 +62,9 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
+
     async function fetchCategorias() {
+
       try {
         const response = await fetch("http://localhost:3000/skill-category");
         if (!response.ok) {
@@ -82,15 +78,18 @@ function FiltrosOfertasMenu({ setHasSearched }) {
       } catch (error) {
         console.error("Error:", error);
       }
+
     }
 
     fetchCategorias();
   }, []);
 
-  const [carreras, setCarreras] = useState([]);
+  const [, setCarreras] = useState([]);
 
   useEffect(() => {
+
     async function fetchCarreras() {
+
       try {
         const response = await fetch("http://localhost:3000/career");
         if (!response.ok) {
@@ -119,6 +118,14 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     }
   };
 
+  // Estado de habilitación para el botón de categorías
+  const [isCatButtonDisabled, setIsCatButtonDisabled] = useState(true);
+
+  // Actualizar el estado de habilitación cuando cambia la categoría
+  useEffect(() => {
+    setIsCatButtonDisabled(!categoria);
+  }, [categoria]);
+
   const handleAddCategoria = () => {
     if (
       categoria !== "" &&
@@ -132,11 +139,12 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     setList(list.filter((_, i) => i !== index));
   };
 
-  {
-    /*Busqueda por posición de interés*/
-  }
+
+  //Búsqueda por posición de interés
+
   const [valuePos, setValuePos] = useState("");
   const [listPos, setListPos] = useState([]);
+
   const handleChangePos = (event) => setValuePos(event.target.value);
   const handleAddPos = () => {
     if (valuePos.trim() !== "") {
@@ -144,55 +152,29 @@ function FiltrosOfertasMenu({ setHasSearched }) {
       setValuePos("");
     }
   };
+
+  const [isPosButtonDisabled, setIsPosButtonDisabled] = useState(true);
+
+  // Actualizar el estado de habilitación cuando cambia el valor de pos
+  
+  useEffect(() => {
+      setIsPosButtonDisabled(!valuePos);
+    }, [valuePos]);
   const handleRemovePos = (indexToRemove) => {
     setListPos((oldList) =>
       oldList.filter((_, index) => index !== indexToRemove)
     );
   };
 
-  {
-    /*Busqueda por industria de interés*/
-  }
-  const [valueInd, setValueInd] = useState("");
-  const [listInd, setListInd] = useState([]);
-  const handleChangeInd = (event) => setValueInd(event.target.value);
-  const handleAddInd = () => {
-    if (valueInd.trim() !== "") {
-      setListInd((oldList) => [...oldList, valueInd]);
-      setValueInd("");
-    }
-  };
-  const handleRemoveInd = (indexToRemove) => {
-    setListInd((oldList) =>
-      oldList.filter((_, index) => index !== indexToRemove)
-    );
-  };
 
-  {
-    /*Busqueda por carrera*/
-  }
+  //Búsqueda por carrera
+
   const [selectedTags, setSelectedTags] = useState({});
-  const handleClick = (label) => {
-    if (selectedCarrera === label) {
-      setSelectedCarrera(null);
-    } else {
-      setSelectedTags((prev) => ({ ...prev, [label]: !prev[label] }));
-    }
-  };
 
-
-
-  {
-    /*Botones de búsqueda y reset*/
-  }
-  // const [exactMatch, setExactMatch] = useState(false);
-
-  // const handleCheckboxChange = (e) => setExactMatch(e.target.checked);
   const isDisabled =
     !valueName &&
     list.length === 0 &&
     listPos.length === 0 &&
-    listInd.length === 0 && 
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
@@ -203,52 +185,40 @@ function FiltrosOfertasMenu({ setHasSearched }) {
       return;
     }
 
-    const selectedCareers = Object.keys(selectedTags)
-      .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
-      .map((career) => career);
-
-    // quitar espacios desactivados
-    const careerParams = selectedCarrera
-      ? [
-          selectedCarrera,
-          ...selectedCareers,
-        ]
-      : selectedCareers;
 
     const selectedSkills = list.map(
       (item) => `${item.categoria}:${item.habilidad}`
     );
     const selectedCategories = list.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
-    const selectIndustries= listInd.length > 0 ? listInd: [];
 
-    const filters = {
-      name: valueName ? valueName : undefined,
-      careers:
-        careerParams.length > 0 ? careerParams.join("&careers=") : undefined,
-      skills:
-        selectedSkills.length > 0 ? selectedSkills.join("&skills=") : undefined,
-      categories:
-        selectedCategories.length > 0
-          ? selectedCategories.join("&categories=")
-          : undefined,
-      positions:
-        selectedPositions.length > 0
-          ? selectedPositions.join("&positions=")
-          : undefined,
-          industries:
-          selectIndustries.length > 0
-            ? selectIndustries.join("&industries=")
-            : undefined,
-          seed: randomizationSeed ? randomizationSeed : undefined,
+    const params = new URLSearchParams();
 
-    };
+    if (semilla) {
+      params.append('seed', semilla);
+    }
 
-    const newFilters = Object.fromEntries(
-      Object.entries(filters).filter(([, value]) => value !== undefined)
-    );
+    if (valueName) {
+      params.append('company', valueName);
+    }
+
+    if (selectedCategories.length > 0) {
+      selectedCategories.forEach((category) => params.append('categories', category));
+    }
+  
+    if (selectedSkills.length > 0) {
+      selectedSkills.forEach((skill) => params.append('skills', skill));
+    }
+  
+    if (selectedPositions.length > 0) {
+      selectedPositions.forEach((position) => params.append('positions', position));
+    }
+  
+    const queryString = params.toString();
+
+ 
     try {
-      await fetchPaginatedData(newFilters, 1);
+      await fetchPaginatedData(queryString, 1);
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
     } finally {
@@ -299,7 +269,9 @@ function FiltrosOfertasMenu({ setHasSearched }) {
             <FiltrarNombre
               valueName={valueName}
               handleChangeName={handleChangeName}
+              placeholderName="Buscar a su empresa por nombre"
             />
+
             {/*Busqueda por habilidad*/}
             <FiltrarSkills
               list={list}
@@ -313,6 +285,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
               handleHabilidadChange={handleHabilidadChange}
               handleRemoveHabilidad={handleRemoveHabilidad}
               categorias={categorias}
+              isDisabled={isCatButtonDisabled}
             />
 
             {/*Busqueda por posiciones de interes*/}
@@ -322,16 +295,8 @@ function FiltrosOfertasMenu({ setHasSearched }) {
               handleAddPos={handleAddPos}
               listPos={listPos}
               handleRemovePos={handleRemovePos}
+              isDisabled={isPosButtonDisabled}
             />
-
-            {/*Busqueda por industrias de interes*/}
-            <FiltrarIndustrias
-              valueInd={valueInd}
-              handleChangeInd={handleChangeInd}
-              handleAddInd={handleAddInd}
-              listInd={listInd}
-              handleRemoveInd={handleRemoveInd}
-              />
         
             {/*Botones de búsqueda y reset*/}
             <FiltrosButtons
@@ -343,7 +308,6 @@ function FiltrosOfertasMenu({ setHasSearched }) {
               onClose={onClose}
               setHasSearched={setHasSearched}
             />
-
             
           </DrawerBody>
         </DrawerContent>

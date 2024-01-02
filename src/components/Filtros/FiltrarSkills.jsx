@@ -22,6 +22,7 @@ function FiltrarSkills({
   handleHabilidadChange,
   handleRemoveHabilidad,
   categorias,
+  isDisabled,
 }) {
   const [isHovering, setIsHovering] = useState(false);
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
@@ -67,6 +68,7 @@ useEffect(() => {
           <>
             <Select
               placeholder="Categorías de las habilidades"
+              cursor="pointer"
               value={categoria}
               onChange={(e) => setCategoria(e.target.value)}
             >
@@ -76,18 +78,22 @@ useEffect(() => {
                 </option>
               ))}
             </Select>
-            <Tooltip label="Filtrar por categoría completa" isOpen={isHovering}>
+            <Tooltip 
+            label="Selecciona al menos una habilidad" 
+            isOpen={isDisabled && isHovering}
+            >
               <Button
                 onClick={handleAddCategoria}
+                isDisabled={isDisabled}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
-                mt={2}
-                marginLeft="10px"
-                marginBottom="8px"
                 backgroundColor="#007935"
                 color="white"
                 as="b"
                 _hover={{ bg: "#025024" }}
+                mt={2}
+                marginLeft="10px"
+                marginBottom="8px"
               >
                 +
               </Button>
@@ -109,16 +115,17 @@ useEffect(() => {
               ))}
             </Select>
             <Button
-              onClick={handleAddCategoria}
               size="sm"
+              onClick={handleAddCategoria}
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
+              bg="#007935"
+              color="white"
+              as="b"
               mt={2}
               marginLeft="10px"
               marginBottom="8px"
-              backgroundColor="#007935"
-              color="white"
-              as="b"
+              cursor="pointer"
               _hover={{ bg: "#025024" }}
             >
               +
@@ -232,4 +239,5 @@ FiltrarSkills.propTypes = {
   handleHabilidadChange: PropTypes.func.isRequired,
   handleRemoveHabilidad: PropTypes.func.isRequired,
   categorias: PropTypes.array.isRequired,
+  isDisabled: PropTypes.bool.isRequired,
 };

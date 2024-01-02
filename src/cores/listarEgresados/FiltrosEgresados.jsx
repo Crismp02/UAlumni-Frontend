@@ -19,14 +19,16 @@ function FiltrosEgresados({ setHasSearched }) {
   const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
 
-  // Estado para la semilla
   const [isHovering, setIsHovering] = useState(false);
+
+  // Obtener la carrera de la URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const carreraFromUrl = params.get("carrera");
 
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
+
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
     setSelectedCarrera(carreraFromUrl);
@@ -69,6 +71,16 @@ function FiltrosEgresados({ setHasSearched }) {
     fetchCategorias();
   }, []);
 
+    // Estado para las categorías seleccionadas sin habilidades
+    const [selectedCategoriesOnly, setSelectedCategoriesOnly] = useState([]);
+
+    // Actualiza selectedCategoriesOnly cuando se agrega o se elimina una categoría
+    useEffect(() => {
+      const categoriesOnly = list.filter(item => !item.habilidad).map(item => item.categoria);
+      setSelectedCategoriesOnly(categoriesOnly);
+    }, [list]);
+
+
   // Fetch de las carreras del Alumni
   const [carreras, setCarreras] = useState([]);
 
@@ -102,6 +114,14 @@ function FiltrosEgresados({ setHasSearched }) {
     }
   };
 
+  // Estado de habilitación para el botón de categorías
+  const [isCatButtonDisabled, setIsCatButtonDisabled] = useState(true);
+
+  // Actualizar el estado de habilitación cuando cambia la categoría
+  useEffect(() => {
+    setIsCatButtonDisabled(!categoria);
+  }, [categoria]);
+
   const handleAddCategoria = () => {
     if (
       categoria !== "" &&
@@ -120,13 +140,20 @@ function FiltrosEgresados({ setHasSearched }) {
   const [valuePos, setValuePos] = useState("");
   const [listPos, setListPos] = useState([]);
   const handleChangePos = (event) => setValuePos(event.target.value);
-
+  
   const handleAddPos = () => {
     if (valuePos.trim() !== "") {
       setListPos((oldList) => [...oldList, valuePos]);
       setValuePos("");
     }
   };
+
+  const [isPosButtonDisabled, setIsPosButtonDisabled] = useState(true);
+
+  // Actualizar el estado de habilitación cuando cambia el valor de pos
+  useEffect(() => {
+      setIsPosButtonDisabled(!valuePos);
+    }, [valuePos]);
 
   const handleRemovePos = (indexToRemove) => {
     setListPos((oldList) =>
@@ -139,6 +166,13 @@ function FiltrosEgresados({ setHasSearched }) {
   const [valueInd, setValueInd] = useState("");
   const [listInd, setListInd] = useState([]);
   const handleChangeInd = (event) => setValueInd(event.target.value);
+
+  // Estados de habilitación del botón de industrias
+  const [isIndButtonDisabled, setIsIndButtonDisabled] = useState(true);
+  
+  useEffect(() => {
+      setIsIndButtonDisabled(!valueInd);
+    }, [valueInd]);
   
   const handleAddInd = () => {
     if (valueInd.trim() !== "") {
@@ -168,7 +202,7 @@ function FiltrosEgresados({ setHasSearched }) {
   //Botones de búsqueda y reset
 
   const isDisabled =
-    !valueName &&
+    !(valuePos || valueName) &&
     list.length === 0 &&
     listPos.length === 0 &&
     listInd.length === 0 && 
@@ -188,11 +222,19 @@ function FiltrosEgresados({ setHasSearched }) {
     const careerParams = selectedCarrera
       ? [selectedCarrera, ...selectedCareers]
       : selectedCareers;
+    
+    const categoriesWithSkills = list.filter(item => item.habilidad);
+    const categoriesWithoutSkills = list.filter(item => !item.habilidad);
   
-    const selectedSkills = list.map(
+    const selectedSkills = categoriesWithSkills.map(
       (item) => `${item.categoria}:${item.habilidad}`
     );
-    const selectedCategories = list.map((item) => item.categoria);
+
+    const selectedCategories = categoriesWithoutSkills.map((item) => item.categoria);
+
+    console.log("skills", selectedSkills)
+    // const selectedCategories = list.map((item) => item.categoria);
+    console.log("categorias",selectedCategories);
     const selectedPositions = listPos.length > 0 ? listPos : [];
     const selectIndustries = listInd.length > 0 ? listInd : [];
   
@@ -209,15 +251,15 @@ function FiltrosEgresados({ setHasSearched }) {
     if (careerParams.length > 0) {
       careerParams.forEach((career) => params.append('careers', career));
     }
-  
-    if (selectedSkills.length > 0) {
-      selectedSkills.forEach((skill) => params.append('skills', skill));
-    }
-  
+    
     if (selectedCategories.length > 0) {
       selectedCategories.forEach((category) => params.append('categories', category));
     }
-  
+
+    if (selectedSkills.length > 0) {
+      selectedSkills.forEach((skill) => params.append('skills', skill));
+    }
+
     if (selectedPositions.length > 0) {
       selectedPositions.forEach((position) => params.append('positions', position));
     }
@@ -228,7 +270,7 @@ function FiltrosEgresados({ setHasSearched }) {
   
     
     const queryString = params.toString();
-  
+   console.log("Anaco",queryString)
     try {
       await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
     } catch (error) {
@@ -237,8 +279,9 @@ function FiltrosEgresados({ setHasSearched }) {
       setIsLoading(false);
     }
   };
-  
 
+ 
+  
   // Funciones para manejar la paginación
   const handleReset = () => {
     setValueName("");
@@ -249,6 +292,8 @@ function FiltrosEgresados({ setHasSearched }) {
     setListPos([]);
     setSelectedTags({});
     setSelectedCarrera(null);
+    setValueInd("");
+    setListInd([]); 
   };
 
   return (
@@ -275,6 +320,7 @@ function FiltrosEgresados({ setHasSearched }) {
               handleHabilidadChange={handleHabilidadChange}
               handleRemoveHabilidad={handleRemoveHabilidad}
               categorias={categorias}
+              isDisabled={isCatButtonDisabled}
             />
 
             {/*Busqueda por posiciones de interes*/}
@@ -284,6 +330,7 @@ function FiltrosEgresados({ setHasSearched }) {
               handleAddPos={handleAddPos}
               listPos={listPos}
               handleRemovePos={handleRemovePos}
+              isDisabled={isPosButtonDisabled}
             />
 
             {/*Busqueda por industrias de interes*/}
@@ -293,6 +340,7 @@ function FiltrosEgresados({ setHasSearched }) {
               handleAddInd={handleAddInd}
               listInd={listInd}
               handleRemoveInd={handleRemoveInd}
+              isDisabled={isIndButtonDisabled}
             />
 
             {/*Busqueda por carreras:*/}

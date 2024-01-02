@@ -8,7 +8,6 @@ import { useEgresados } from './EgresadosContext';
 
 function ListarEgresados({ hasSearched }) {
   const { egresados, isLoading } = useEgresados();
-  console.log("HABLAME",egresados);
 
   const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
 
@@ -67,8 +66,6 @@ function ListarEgresados({ hasSearched }) {
               egresado && <EgresadoCard key={index} egresado={egresado} />
             ))
           )}
-          {/* {isLargerThan770 && <EgresadoCard2 />}  */}
-          {/* Esto parece ser un placeholder, puedes ajustarlo */}
         </Box>
       </Center>
     </div>

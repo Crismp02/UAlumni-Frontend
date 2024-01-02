@@ -15,7 +15,7 @@ function FiltrosOfertas({ setHasSearched }) {
 
   const{fetchPaginatedData}=useOfertas();
 
-  const [randomizationSeed ] = useState(null);
+  const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
 
   const [isHovering, setIsHovering] = useState(false);
@@ -105,6 +105,14 @@ function FiltrosOfertas({ setHasSearched }) {
         setList([...list, { categoria, habilidad: e.target.value }]);
       }
     };
+
+    // Estado de habilitación para el botón de categorías
+    const [isCatButtonDisabled, setIsCatButtonDisabled] = useState(true);
+
+    // Actualizar el estado de habilitación cuando cambia la categoría
+     useEffect(() => {
+    setIsCatButtonDisabled(!categoria);
+     }, [categoria]);
   
     const handleAddCategoria = () => {
       if (
@@ -120,6 +128,7 @@ function FiltrosOfertas({ setHasSearched }) {
     };
 
     //Búsqueda por posición de interés
+
     const [valuePos, setValuePos] = useState("");
     const [listPos, setListPos] = useState([]);
     const handleChangePos = (event) => setValuePos(event.target.value);
@@ -130,6 +139,13 @@ function FiltrosOfertas({ setHasSearched }) {
         setValuePos("");
       }
     };
+
+    const [isPosButtonDisabled, setIsPosButtonDisabled] = useState(true);
+
+    // Actualizar el estado de habilitación cuando cambia el valor de pos
+    useEffect(() => {
+        setIsPosButtonDisabled(!valuePos);
+      }, [valuePos]);
 
     const handleRemovePos = (indexToRemove) => {
       setListPos((oldList) =>
@@ -160,6 +176,10 @@ function FiltrosOfertas({ setHasSearched }) {
       const selectedPositions = listPos.length > 0 ? listPos : [];
     
       const params = new URLSearchParams();
+
+      if (semilla) {
+        params.append('seed', semilla);
+      }
     
       if (valueName) {
         params.append('company', valueName);
@@ -167,6 +187,10 @@ function FiltrosOfertas({ setHasSearched }) {
     
       if (carreras.length > 0) {
         carreras.forEach((career) => params.append('careers', career));
+      }
+
+      if (selectedCategories.length > 0) {
+        selectedCategories.forEach((category) => params.append('categories', category));
       }
     
       if (selectedSkills.length > 0) {
@@ -223,6 +247,7 @@ function FiltrosOfertas({ setHasSearched }) {
               handleHabilidadChange={handleHabilidadChange}
               handleRemoveHabilidad={handleRemoveHabilidad}
               categorias={categorias}
+              isDisabled={isCatButtonDisabled}
             />
 
             {/*Busqueda por posiciones de interes*/}
@@ -232,6 +257,7 @@ function FiltrosOfertas({ setHasSearched }) {
               handleAddPos={handleAddPos}
               listPos={listPos}
               handleRemovePos={handleRemovePos}
+              isDisabled={isPosButtonDisabled}
             />
 
             <FiltrosButtons

@@ -17,6 +17,7 @@ function FiltrarIndustrias({
     handleAddInd,
     listInd,
     handleRemoveInd,
+    isDisabled,
     }) {
     const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
     const [isHovering, setIsHovering] = useState(false);
@@ -32,21 +33,26 @@ function FiltrarIndustrias({
                 placeholder="Buscar egresado por industria de interés"
                 size="md"
                 />
-                 <Tooltip label="Agregar industria de interés a los filtros" isOpen={isHovering}>
-                <Button
-                onClick={handleAddInd}
-                onMouseEnter={() => setIsHovering(true)}
-                    onMouseLeave={() => setIsHovering(false)}
-                mt={2}
-                marginLeft="10px"
-                marginBottom="8px"
-                backgroundColor="#007935"
-                color="white"
-                as="b"
-                _hover={{ bg: "#025024" }}
-                >
-                +
-                </Button>
+                 <Tooltip 
+                 //label="Agregar industria de interés a los filtros" 
+                 label="Primero escribe una industria" 
+                 isOpen={isDisabled && isHovering}
+                 >
+                  <Button
+                  onClick={handleAddInd}
+                  isDisabled={isDisabled}
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
+                  mt={2}
+                  marginLeft="10px"
+                  marginBottom="8px"
+                  backgroundColor="#007935"
+                  color="white"
+                  as="b"
+                  _hover={{ bg: "#025024" }}
+                  >
+                  +
+                  </Button>
                 </Tooltip>
             </>
             ) : (
@@ -132,5 +138,6 @@ FiltrarIndustrias.propTypes = {
     handleAddInd: PropTypes.func.isRequired,
     listInd: PropTypes.array.isRequired,
     handleRemoveInd: PropTypes.func.isRequired,
+    isDisabled: PropTypes.bool.isRequired,
 }
 export default FiltrarIndustrias;

@@ -17,6 +17,7 @@ function FiltrarPositions({
   handleAddPos,
   listPos,
   handleRemovePos,
+  isDisabled,
 }) {
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
   const [isHovering, setIsHovering] = useState(false);
@@ -32,21 +33,26 @@ function FiltrarPositions({
               placeholder="Buscar egresado por posición de interés"
               size="md"
             />
-             <Tooltip label="Agregar posición de interés a los filtros" isOpen={isHovering}>
-            <Button
-              onClick={handleAddPos}
-              onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-              mt={2}
-              marginLeft="10px"
-              marginBottom="8px"
-              backgroundColor="#007935"
-              color="white"
-              as="b"
-              _hover={{ bg: "#025024" }}
-            >
-              +
-            </Button>
+             <Tooltip 
+             label="Primero escribe una posición de interés" 
+             isOpen={ isDisabled && isHovering}
+             >
+              <Button
+                onClick={handleAddPos}
+                isDisabled={isDisabled}
+                onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
+                mt={2}
+                marginLeft="10px"
+                marginBottom="8px"
+                backgroundColor="#007935"
+                color="white"
+                cursor="pointer"
+                as="b"
+                _hover={{ bg: "#025024" }}
+              >
+                +
+              </Button>
             </Tooltip>
           </>
         ) : (
@@ -57,6 +63,7 @@ function FiltrarPositions({
               onChange={handleChangePos}
               placeholder="Buscar por posición de interés"
               fontSize="10px"
+              cursor="pointer"
               size="sm"
             />
             <Button
@@ -66,6 +73,7 @@ function FiltrarPositions({
               marginBottom="8px"
               backgroundColor="#007935"
               color="white"
+              cursor="pointer"
               as="b"
               size="sm"
               _hover={{ bg: "#025024" }}
@@ -135,4 +143,5 @@ FiltrarPositions.propTypes = {
   handleAddPos:PropTypes.func.isRequired,
   listPos:PropTypes.array.isRequired,
   handleRemovePos:PropTypes.func.isRequired,
+  isDisabled:PropTypes.bool.isRequired,
 };
