@@ -1,13 +1,14 @@
 import React from "react";
 import { useState } from "react";
 import NavBar from "../../components/Navbar";
-import { Image, Box, useMediaQuery } from "@chakra-ui/react";
+import { Image, Box, useMediaQuery, useToast } from "@chakra-ui/react";
 import { loginUser } from "../../services/auth/Auth.services";
 import LoginForm from "./LoginForm";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [isLarger920] = useMediaQuery("(min-width: 920px)");
   const [isLarger1010] = useMediaQuery("(min-width: 1010px)");
@@ -23,10 +24,32 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!email || !password ) {
+      toast({
+        title: "Error al registrarse",
+        description: "Todos los campos son obligatorios",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Validate email
     const emailRegex = /^[A-Z0-9._%+-]+@est.ucab.edu.ve$/i;
     const isValid = emailRegex.test(email);
     setIsEmailValid(isValid);
+
+    if (!isValid) {
+      toast({
+        title: "Error",
+        description: "El email ingresado debe ser un correo UCAB",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
 
     // Submit form if email is valid
     if (isValid) {

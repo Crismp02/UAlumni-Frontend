@@ -3,7 +3,6 @@ import {
   Box,
   Text,
   FormControl,
-  FormErrorMessage,
   Input,
   InputGroup,
   InputRightElement,
@@ -80,9 +79,6 @@ const LoginForm = ({
             h="40px"
             paddingLeft="20px"
           />
-          <FormErrorMessage>
-            {isEmailValid ? "" : "El correo debe ser un correo UCAB"}
-          </FormErrorMessage>
         </FormControl>
         <Text
           fontSize={["md", "md", "md", "lg"]}

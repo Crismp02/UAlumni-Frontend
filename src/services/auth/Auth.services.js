@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
 
-export const registerUser = async (email, firstName, lastName, password) => {
+export const registerUser = async (email, password) => {
   try {
     const response = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
@@ -10,8 +10,6 @@ export const registerUser = async (email, firstName, lastName, password) => {
       },
       body: JSON.stringify({
         email: email,
-        names: firstName,
-        surnames: lastName,
         password: password,
       }),
       credentials: "include", // This is necessary for cookies to be sent with the request
@@ -44,7 +42,7 @@ export const loginUser = async (email, password) => {
 
     const data = await response.json();
     if (response.ok) {
-      toast.success("Successfully logged in!");
+      toast.success("Has iniciado sesión con éxito");
       return data;
     } else {
       throw new Error(data.message);

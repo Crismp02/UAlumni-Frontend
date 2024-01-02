@@ -4,6 +4,7 @@ import {
   Image,
   Box,
   useMediaQuery,
+  useToast
 } from "@chakra-ui/react";
 import { registerUser } from "../../services/auth/Auth.services";
 import RegisterForm from "./RegisterForm";
@@ -13,6 +14,7 @@ function Register() {
   const [isLarger920] = useMediaQuery("(min-width: 920px)");
   const [isLarger1010] = useMediaQuery("(min-width: 1010px)");
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -28,21 +30,47 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!email || !password || !confirmPassword) {
+      toast({
+        title: "Error al registrarse",
+        description: "Todos los campos son obligatorios",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Validate email
     const emailRegex = /^[A-Z0-9._%+-]+@est.ucab.edu.ve$/i;
     const isValid = emailRegex.test(email);
     setIsEmailValid(isValid);
 
+    if (!isValid) {
+      toast({
+        title: "Error",
+        description: "El email ingresado debe ser un correo UCAB",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Validate password
     if (password !== confirmPassword) {
-      // Show some error message
+      toast({
+        title: "Las contraseñas no coinciden.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
       return;
     }
 
     if (isValid) {
       try {
-        const data = await registerUser(email, firstName, lastName, password);
-        console.log(data);
+        const data = await registerUser(email, password);
         if (data){
           navigate("/login")
         }

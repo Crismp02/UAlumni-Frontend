@@ -3,7 +3,6 @@ import {
   Box,
   Text,
   FormControl,
-  FormErrorMessage,
   Input,
   InputGroup,
   InputRightElement,
@@ -23,11 +22,6 @@ const RegisterForm = ({
   show2,
   handleClick2,
   handleSubmit,
-  firstName,
-  setFirstName,
-  lastName,
-  setLastName,
-  confirmPassword,
   setConfirmPassword,
 }) => {
   return (
@@ -72,54 +66,6 @@ const RegisterForm = ({
             as="b"
             paddingBottom="10px"
           >
-            Nombre
-          </Text>
-          <Input
-            id="nombre"
-            type="text"
-            placeholder="Nombre"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            marginBottom="20px"
-            variant="unstyled"
-            backgroundColor="white"
-            border="1px solid #ccc"
-            h="40px"
-            paddingLeft="20px"
-            fontSize={isLarger1010 ? "md" : "12px"}
-          />
-          <Text
-            fontSize={["md", "md", "md", "lg"]}
-            textAlign="start"
-            alignSelf="start"
-            color="white"
-            as="b"
-            paddingBottom="10px"
-          >
-            Apellido
-          </Text>
-          <Input
-            id="apellido"
-            type="text"
-            placeholder="Apellido"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            marginBottom="20px"
-            variant="unstyled"
-            backgroundColor="white"
-            border="1px solid #ccc"
-            h="40px"
-            paddingLeft="20px"
-            fontSize={isLarger1010 ? "md" : "12px"}
-          />
-          <Text
-            fontSize={["md", "md", "md", "lg"]}
-            textAlign="start"
-            alignSelf="start"
-            color="white"
-            as="b"
-            paddingBottom="10px"
-          >
             Correo UCAB
           </Text>
           <Input
@@ -137,9 +83,6 @@ const RegisterForm = ({
             paddingLeft="20px"
             fontSize={isLarger1010 ? "md" : "12px"}
           />
-          <FormErrorMessage>
-            {isEmailValid ? "" : "El correo debe ser un correo UCAB"}
-          </FormErrorMessage>
         </FormControl>
         <Text
           fontSize={["md", "md", "md", "lg"]}
