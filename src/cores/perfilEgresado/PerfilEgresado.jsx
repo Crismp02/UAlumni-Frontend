@@ -8,7 +8,7 @@ import PortafoliosCard from "./PortafoliosCard";
 import ContactoCard from "./ContactoCard";
 import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobreMiCard";
-import { Box, Text, Flex, VStack, Button } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Divider  } from "@chakra-ui/react";
 import { useState } from "react";
 import CustomSwitch from "./Switch";
 import {
@@ -23,10 +23,13 @@ import IndustriasInteresCard from "./IndustriasInteresCard";
 import PosicionesInteresCard from "./PosicionesInteresCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBackIcon } from '@chakra-ui/icons'
+import { differenceInDays } from 'date-fns';
 
 function PerfilEgresado() {
   const [isLoading, setIsLoading] = useState(true);
   const [dataProfile, setDataProfile] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenO, setIsModalOpenO] = useState(false);
   const location = useLocation();
 const navigate = useNavigate();
 
@@ -44,8 +47,25 @@ const navigate = useNavigate();
 
   useEffect(() => {
     if (dataProfile) {
+      const isVisible = dataProfile.data.resume.isVisible;
       // Inicializa el valor del switch con el valor de visibilidad obtenido desde el backend
-      setSwitchValue(dataProfile.data.resume.isVisible);
+      setSwitchValue(isVisible);
+
+      // Si isVisible es false, abre el modal
+    if (!isVisible) {
+      setIsModalOpenO(true);
+    }
+
+      // Calcula la fecha que será exactamente un mes después de visibleSince
+    const visibleSinceDate = new Date(dataProfile.data.resume.visibleSince);
+    const oneMonthLater = new Date(visibleSinceDate.setMonth(visibleSinceDate.getMonth() + 1));
+    const oneWeekBeforeOneMonthLater = new Date(oneMonthLater.setDate(oneMonthLater.getDate() - 7));
+
+    // Compara la fecha actual con oneWeekBeforeOneMonthLater
+    const currentDate = new Date();
+    if (currentDate >= oneWeekBeforeOneMonthLater) {
+      setIsModalOpen(true);
+    }
     }
   }, [dataProfile]);
 
@@ -240,6 +260,48 @@ const navigate = useNavigate();
           </Box>
         </>
       )}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+    <ModalOverlay />
+    <ModalContent>
+      <ModalHeader color="#007935">Aviso</ModalHeader>
+      <Divider orientation="horizontal" />
+      <ModalBody>
+        Falta menos de una semana para que su perfil sea ocultado. Si desea mantenerlo visible, por favor haga click en el botón "Renovar". 
+      </ModalBody>
+      <ModalFooter display="flex" flexDirection="row">
+        <Button color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }} onClick={() => setIsModalOpen(false)} marginRight="10px">
+          Cancelar
+        </Button>
+        <Button bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }} onClick={() => { editVisibility(true);  setIsModalOpen(false); }} >
+          Renovar
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  </Modal>
+  <Modal isOpen={isModalOpenO} onClose={() => setIsModalOpenO(false)}>
+    <ModalOverlay />
+    <ModalContent>
+      <ModalHeader color="#007935">Perfil Oculto</ModalHeader>
+      <Divider orientation="horizontal" />
+      <ModalBody>
+        Su perfil se encuentra oculto. Si desea activarlo, por favor haga click en el botón "Activar". 
+      </ModalBody>
+      <ModalFooter display="flex" flexDirection="row">
+        <Button color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }} onClick={() => setIsModalOpenO(false)} marginRight="10px">
+          Cancelar
+        </Button>
+        <Button bgColor="#007935"
+              color="white"
+              _hover={{ bg: "#025024" }} onClick={() => { editVisibility(true);  setIsModalOpenO(false); setSwitchValue(true);}} >
+          Activar
+        </Button>
+      </ModalFooter>
+    </ModalContent>
+  </Modal>
       <Footer />
     </Box>
   );
