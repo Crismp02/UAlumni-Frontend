@@ -24,7 +24,7 @@ const LoginForm = ({
 }) => {
   return (
     <Box
-      padding={{ base: "20px", md: "40px" }}
+    paddingX={{ base: "20px", md: "40px" }}
       display="flex"
       flexDirection="column"
       alignItems="center"

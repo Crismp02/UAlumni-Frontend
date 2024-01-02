@@ -70,11 +70,10 @@ function Register() {
         backgroundColor="#F5F5F5"
       >
         <Box
-          width={{ base: "100%", sm: "80%", md: "60%", lg: "60%" }}
+          width={{ base: "100%", sm: "80%", md: "70%", lg: "80%" }}
           display="flex"
           flexDirection={isLarger920 ? "row" : "column"}
           backgroundColor="#007935"
-          border="1px solid #ccc"
         >
           <Box
             width={isLarger920 ? "50%" : "100%"}
@@ -93,7 +92,7 @@ function Register() {
 
           <Box
             width={isLarger920 ? "50%" : "100%"}
-            padding={{ base: "20px", md: "40px" }}
+            padding={{ base: "20px", md: "20px" }}
             display="flex"
             flexDirection="column"
             alignItems="center"
