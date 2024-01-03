@@ -71,15 +71,6 @@ function FiltrosEgresados({ setHasSearched }) {
     fetchCategorias();
   }, []);
 
-    // Estado para las categorías seleccionadas sin habilidades
-    const [selectedCategoriesOnly, setSelectedCategoriesOnly] = useState([]);
-
-    // Actualiza selectedCategoriesOnly cuando se agrega o se elimina una categoría
-    useEffect(() => {
-      const categoriesOnly = list.filter(item => !item.habilidad).map(item => item.categoria);
-      setSelectedCategoriesOnly(categoriesOnly);
-    }, [list]);
-
 
   // Fetch de las carreras del Alumni
   const [carreras, setCarreras] = useState([]);
@@ -222,7 +213,8 @@ function FiltrosEgresados({ setHasSearched }) {
     const careerParams = selectedCarrera
       ? [selectedCarrera, ...selectedCareers]
       : selectedCareers;
-    
+
+    // Estado para las categorías seleccionadas con y sin habilidades 
     const categoriesWithSkills = list.filter(item => item.habilidad);
     const categoriesWithoutSkills = list.filter(item => !item.habilidad);
   
@@ -231,10 +223,6 @@ function FiltrosEgresados({ setHasSearched }) {
     );
 
     const selectedCategories = categoriesWithoutSkills.map((item) => item.categoria);
-
-    console.log("skills", selectedSkills)
-    // const selectedCategories = list.map((item) => item.categoria);
-    console.log("categorias",selectedCategories);
     const selectedPositions = listPos.length > 0 ? listPos : [];
     const selectIndustries = listInd.length > 0 ? listInd : [];
   
@@ -270,7 +258,6 @@ function FiltrosEgresados({ setHasSearched }) {
   
     
     const queryString = params.toString();
-   console.log("Anaco",queryString)
     try {
       await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
     } catch (error) {

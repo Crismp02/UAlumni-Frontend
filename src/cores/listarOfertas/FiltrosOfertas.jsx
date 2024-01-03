@@ -8,6 +8,7 @@ import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from "./OfertasContext";
 import PropTypes from "prop-types";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
+import FiltrarContratos from "./FiltrarContratos";
 
 
 
@@ -127,6 +128,60 @@ function FiltrosOfertas({ setHasSearched }) {
       setList(list.filter((_, i) => i !== index));
     };
 
+    //Búsqueda por tipo de contrato
+    const [contrato,setContrato ] = useState("");
+
+    // Objeto inicial de contratos seleccionados
+    const [contratosSeleccionados, setContratosSeleccionados] = useState([]);
+
+    // Objeto inicial de todos los contratos
+    const [todosLosContratos, setTodosLosContratos] = useState([]);
+
+    useEffect(() => {
+
+      fetch(`http://localhost:3000/contract-type`,{
+          method: 'GET',
+          credentials: 'include',
+      })
+      .then((response) => {
+          if (response.ok) {
+              return response.json();
+          }
+          throw new Error("Error al obtener los contratos");
+      })
+      .then((data) => {
+          if (Array.isArray(data.data.items)) {
+              const contratosNombres = data.data.items.map((item) => item.name);
+              setTodosLosContratos(contratosNombres);                                               
+          }
+      })
+      .catch((error) => {
+          console.error("Error de fetch:", error);
+      });
+  }, []);
+
+    const handleAddCon = () =>{
+      if(contrato !== "" && !contratosSeleccionados.includes(contrato)){
+        setContratosSeleccionados((oldList) => [...oldList, {contrato}]);
+        setContrato("");
+      }
+    }
+
+    const handleRemoveCon = (index) => {
+      setContratosSeleccionados(contratosSeleccionados.filter((_, i) => i !== index));
+    };
+
+    // const handleConChange = (e) => {
+    //   setContrato(e.target.value);
+    // }
+
+    const [isConButtonDisabled, setIsConButtonDisabled] = useState(true);
+
+    // Actualizar el estado de habilitación cuando cambia el valor de con
+    useEffect(() => {
+        setIsConButtonDisabled(!contrato);
+      }, [contrato]);
+
     //Búsqueda por posición de interés
 
     const [valuePos, setValuePos] = useState("");
@@ -153,27 +208,29 @@ function FiltrosOfertas({ setHasSearched }) {
       );
     };
   
-    //Búsqueda por carrera
-    const [selectedTags] = useState({});
-
-
     //Botones de búsqueda y reset
 
     const isDisabled =
     !valueName &&
     list.length === 0 &&
-    listPos.length === 0
-    Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
+    listPos.length === 0 &&
+    contratosSeleccionados.length === 0;
 
     const handleSubmit = async () => {
       if (isDisabled) {
         return;
       }
-      const selectedSkills = list.map(
+
+    // Estado para las categorías seleccionadas con y sin habilidades 
+    const categoriesWithSkills = list.filter(item => item.habilidad);
+    const categoriesWithoutSkills = list.filter(item => !item.habilidad);
+
+    const selectedSkills = categoriesWithSkills.map(
         (item) => `${item.categoria}:${item.habilidad}`
       );
-      const selectedCategories = list.map((item) => item.categoria);
-      const selectedPositions = listPos.length > 0 ? listPos : [];
+      
+    const selectedCategories = categoriesWithoutSkills.map((item) => item.categoria);
+    const selectedPositions = listPos.length > 0 ? listPos : [];
     
       const params = new URLSearchParams();
 
@@ -200,6 +257,10 @@ function FiltrosOfertas({ setHasSearched }) {
       if (selectedPositions.length > 0) {
         selectedPositions.forEach((position) => params.append('positions', position));
       }
+
+      if (contratosSeleccionados.length > 0) {
+        contratosSeleccionados.forEach((contrato) => params.append('contracts', contrato.contrato));
+      }
     
       const queryString = params.toString();
     
@@ -221,6 +282,7 @@ function FiltrosOfertas({ setHasSearched }) {
       setValuePos("");
       setListPos([]);
       setSelectedCarrera(null);
+      setContratosSeleccionados([]);
     };
 
     return (
@@ -258,6 +320,17 @@ function FiltrosOfertas({ setHasSearched }) {
               listPos={listPos}
               handleRemovePos={handleRemovePos}
               isDisabled={isPosButtonDisabled}
+            />
+
+            {/*Búsqueda por tipo de contrato*/}
+            <FiltrarContratos
+              contrato={contrato}
+              setContrato={setContrato}
+              contratos={todosLosContratos}
+              contratosSeleccionados={contratosSeleccionados}
+              handleAddCon={handleAddCon}
+              handleRemoveCon={handleRemoveCon}
+              isDisabled={isConButtonDisabled}
             />
 
             <FiltrosButtons

@@ -64,8 +64,6 @@ export const EgresadosProvider = ({ children }) => {
     return filters;
   };
 
-  
-
 
   const obtenerSemilla = async (url) => {
     const response = await fetch(url);
@@ -128,14 +126,6 @@ export const EgresadosProvider = ({ children }) => {
       setIsLoading(false);
     }
   };
-  
-  
-  
-  
-  
-  
-
-  
   
   
 

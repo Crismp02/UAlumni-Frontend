@@ -223,11 +223,16 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     const careerParams = selectedCarrera
       ? [selectedCarrera, ...selectedCareers]
       : selectedCareers;
+
+    // Estado para las categorías seleccionadas con y sin habilidades 
+    const categoriesWithSkills = list.filter(item => item.habilidad);
+    const categoriesWithoutSkills = list.filter(item => !item.habilidad);
   
-    const selectedSkills = list.map(
+    const selectedSkills = categoriesWithSkills.map(
       (item) => `${item.categoria}:${item.habilidad}`
     );
-    const selectedCategories = list.map((item) => item.categoria);
+
+    const selectedCategories = categoriesWithoutSkills.map((item) => item.categoria);
     const selectedPositions = listPos.length > 0 ? listPos : [];
     const selectIndustries = listInd.length > 0 ? listInd : [];
   
@@ -245,12 +250,12 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
       careerParams.forEach((career) => params.append('careers', career));
     }
   
-    if (selectedSkills.length > 0) {
-      selectedSkills.forEach((skill) => params.append('skills', skill));
-    }
-  
     if (selectedCategories.length > 0) {
       selectedCategories.forEach((category) => params.append('categories', category));
+    }
+
+    if (selectedSkills.length > 0) {
+      selectedSkills.forEach((skill) => params.append('skills', skill));
     }
   
     if (selectedPositions.length > 0) {

@@ -63,7 +63,11 @@ useEffect(() => {
   return (
     <div>
       <Text marginBottom="10px">Habilidades:</Text>
-      <Box display="flex" flexDirection="row" alignItems="center">
+      <Box 
+        display="flex" 
+        flexDirection="row" 
+        alignItems="center"
+        >
         {isLargerThan435 ? (
           <>
             <Select

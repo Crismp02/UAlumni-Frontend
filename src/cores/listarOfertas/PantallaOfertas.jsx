@@ -156,7 +156,7 @@ const PantallaOfertas = () => {
                       )
                     )}
         
-                    {hasSearched && (
+                    {hasSearched && currentPage < totalPages && totalPages > 1 && (
                       <Button
                         as="b"
                         colorScheme="teal"
