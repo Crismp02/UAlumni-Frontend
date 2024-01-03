@@ -15,13 +15,11 @@ function Register() {
   const [isLarger1010] = useMediaQuery("(min-width: 1010px)");
   const navigate = useNavigate();
   const toast = useToast();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -67,11 +65,13 @@ function Register() {
       });
       return;
     }
+    setIsLoading(true);
 
     if (isValid) {
       try {
         const data = await registerUser(email, password);
         if (data){
+          setIsLoading(false);
           navigate("/login")
         }
       } catch (error) {
@@ -137,12 +137,9 @@ function Register() {
               handleClick={handleClick}
               show2={show2}
               handleClick2={handleClick2}
-              firstName={firstName}
-              setFirstName={setFirstName}
-              lastName={lastName}
-              setLastName={setLastName}
               confirmPassword={confirmPassword}
               setConfirmPassword={setConfirmPassword}
+              isLoading={isLoading}
             />
           </Box>
         </Box>

@@ -12,7 +12,7 @@ function Login() {
 
   const [isLarger920] = useMediaQuery("(min-width: 920px)");
   const [isLarger1010] = useMediaQuery("(min-width: 1010px)");
-
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -51,11 +51,12 @@ function Login() {
       return;
     }
 
+    setIsLoading(true);
     // Submit form if email is valid
     if (isValid) {
       try {
         const data = await loginUser(email, password);
-        console.log(data);
+        setIsLoading(false);
         if (data) {
           navigate("/profile");
         }
@@ -118,6 +119,7 @@ function Login() {
               show={show}
               setPassword={setPassword}
               handleClick={handleClick}
+              isLoading={isLoading}
             />
           </Box>
         </Box>

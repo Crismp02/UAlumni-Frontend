@@ -20,6 +20,7 @@ const LoginForm = ({
   show,
   setPassword,
   handleClick,
+  isLoading,
 }) => {
   return (
     <Box
@@ -126,6 +127,8 @@ const LoginForm = ({
             type="submit"
             color="#007935"
             fontSize={isLarger1010 ? "md" : "14px"}
+            isLoading={isLoading}
+            loadingText="Iniciando Sesión..."
           >
             Iniciar sesión
           </Button>

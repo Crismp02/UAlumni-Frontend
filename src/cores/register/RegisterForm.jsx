@@ -23,6 +23,7 @@ const RegisterForm = ({
   handleClick2,
   handleSubmit,
   setConfirmPassword,
+  isLoading,
 }) => {
   return (
     <Box
@@ -173,6 +174,8 @@ const RegisterForm = ({
             type="submit"
             color="#007935"
             fontSize={isLarger1010 ? "md" : "14px"}
+            isLoading={isLoading}
+            loadingText="Registrando..."
           >
             Registrarse
           </Button>
