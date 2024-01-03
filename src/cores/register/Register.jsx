@@ -42,9 +42,8 @@ function Register() {
     if (isValid) {
       try {
         const data = await registerUser(email, firstName, lastName, password);
-        console.log(data);
         if (data){
-          navigate("/login")
+          navigate(`/confirm-email-code?email=${email}`)
         }
       } catch (error) {
         console.error(error);
