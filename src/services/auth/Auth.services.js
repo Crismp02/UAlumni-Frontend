@@ -89,3 +89,26 @@ export const checkAuthStatus = async () => {
     toast.error(`Error: ${error.message}`);
   }
 };
+
+export const confirmEmail = async (email, code) => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/auth/verify-registration?token=${code}&email=${email}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    if (response.ok) {
+      toast.success("Email confirmado con éxito");
+      return data;
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    toast.error(`Error: ${error.message}`);
+  }
+};
