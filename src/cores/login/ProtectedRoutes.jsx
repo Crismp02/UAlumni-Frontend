@@ -1,33 +1,36 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { Spinner } from "@chakra-ui/react";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { BASE_URL } from "../../config";
 
 function ProtectedRoutes() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:3000/auth/login-status', {
-      method: 'GET',
-      credentials: 'include', 
-    })
-    .then(response => {
-      if (response.status === 401) {
+    const loginStatusCheck = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/auth/login-status`, {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.status === 401) {
+          navigate("/");
+        }
+      } catch (error) {
         navigate("/");
+        console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      setIsLoading(false);
-    });
+    };
+    loginStatusCheck();
   }, [navigate]);
 
   if (isLoading) {
     return <LoadingSpinner />;
   }
-  
+
   return <Outlet />;
 }
 

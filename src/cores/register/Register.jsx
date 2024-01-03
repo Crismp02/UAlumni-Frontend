@@ -72,7 +72,7 @@ function Register() {
         const data = await registerUser(email, password);
         if (data){
           setIsLoading(false);
-          navigate("/login")
+          navigate(`/confirm-email-code?email=${email}`)
         }
       } catch (error) {
         console.error(error);

@@ -13,6 +13,8 @@ import ProtectedRoutes from "./cores/login/ProtectedRoutes";
 import PerfilEgresado from "./cores/perfilEgresado/PerfilEgresado";
 import PerfilEgresadoReclutador from "./cores/perfilEgresadoReclutador/PerfilEgresadoReclutador";
 import OfertaTrabajo from "./cores/ofertasTrabajo/OfertaTrabajo";
+import ConfirmEmailCode from "./cores/register/ConfirmEmailCode";
+import EmailConfirmation from "./cores/register/EmailConfirmation";
 
 //Rutas de ejemplo, se pueden cambiar
 const router = createBrowserRouter([
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/confirm-email-code",
+        element: <ConfirmEmailCode />
+      },
+      {
+        path: "/confirm-email",
+        element: <EmailConfirmation />
       },
       {
         path: "/alumni/:id/profile",
@@ -54,11 +64,9 @@ const router = createBrowserRouter([
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <ChakraProvider>
       <ToastContainer />
       <RouterProvider router={router} />
     </ChakraProvider>
-  </React.StrictMode>
 );
 
