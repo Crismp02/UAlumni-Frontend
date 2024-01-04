@@ -42,7 +42,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
   // Define idiomas como un estado
   const [idiomas, setIdiomas] = useState([]);
-  const niveles = [0, 1, 2, 3, 4, 5];
+  const niveles = ['A1','A2','B1','B2','C1','C2'];
 
   // Usa useEffect para llamar a getLanguage cuando el componente se monta
   useEffect(() => {
@@ -164,7 +164,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     // Preparar los datos para la solicitud POST
     const newData = {
       languageName: additionalFields.languageName,
-      masteryLevel: parseInt(additionalFields.masteryLevel),
+      masteryLevel: additionalFields.masteryLevel,
       isVisible: true,
     };
 
@@ -270,7 +270,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
     const newData = {
       languageName: editingCard.languageName,
-      masteryLevel: parseInt(editingCard.masteryLevel), // Convertir a número entero
+      masteryLevel: editingCard.masteryLevel, 
       isVisible: true,
     };
 
