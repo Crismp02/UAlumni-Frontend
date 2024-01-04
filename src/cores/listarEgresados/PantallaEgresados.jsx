@@ -4,7 +4,6 @@ import FiltrosEgresadosMenu from "./FiltrosEgresadosMenu";
 import ListarEgresados from "./ListarEgresados";
 import { useEgresados } from "./EgresadosContext";
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 
 const PantallaEgresados = () => {
   const {
@@ -215,9 +214,5 @@ const PantallaEgresados = () => {
 
 export default PantallaEgresados;
 
-// definicion de proptypes
-PantallaEgresados.propTypes = {
-  hasSearched: PropTypes.bool.isRequired,
-  setHasSearched: PropTypes.func.isRequired,
-};
+
 

@@ -95,7 +95,7 @@ FiltrosButtons.propTypes = {
   isDisabled: PropTypes.bool.isRequired,
   isHovering: PropTypes.bool.isRequired,
   setIsHovering: PropTypes.func.isRequired,
-  setIsFocused: PropTypes.func.isRequired,
+  setIsFocused: PropTypes.func,
   onClose: PropTypes.func.isRequired,
   setHasSearched: PropTypes.func.isRequired,
 };
