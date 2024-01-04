@@ -328,7 +328,7 @@ function FiltrosEgresados({ setHasSearched }) {
 
     const queryString = params.toString();
     try {
-      await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
+      await fetchPaginatedData(queryString, 1, null); // Envía la página actual como 1
     } catch (error) {
       console.error("Hubo un error al obtener los datos:", error);
     } finally {

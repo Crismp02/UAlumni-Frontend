@@ -9,6 +9,11 @@ import { useEgresados } from './EgresadosContext';
 function ListarEgresados({ hasSearched }) {
   const { egresados, isLoading } = useEgresados();
 
+  console.log("listar egresados")
+  console.log(hasSearched)
+  console.log(egresados)
+  console.log(isLoading)
+
   const [isSmallerThan800] = useMediaQuery("(min-width: 800px)");
 
   return (
