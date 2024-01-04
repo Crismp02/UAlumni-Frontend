@@ -4,8 +4,9 @@ import FiltrosEgresadosMenu from "./FiltrosEgresadosMenu";
 import ListarEgresados from "./ListarEgresados";
 import { useEgresados } from "./EgresadosContext";
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const PantallaEgresados = (hasSearched, setHasSearched) => {
+const PantallaEgresados = () => {
   const {
     currentPage,
     totalPages,
@@ -16,6 +17,8 @@ const PantallaEgresados = (hasSearched, setHasSearched) => {
     setCurrentFilters,
     fetchPaginatedData,
     semilla,
+    hasSearched,
+    setHasSearched
   } = useEgresados();
 
   const [filtersChanged, setFiltersChanged] = useState(false);
@@ -211,3 +214,10 @@ const PantallaEgresados = (hasSearched, setHasSearched) => {
 };
 
 export default PantallaEgresados;
+
+// definicion de proptypes
+PantallaEgresados.propTypes = {
+  hasSearched: PropTypes.bool.isRequired,
+  setHasSearched: PropTypes.func.isRequired,
+};
+
