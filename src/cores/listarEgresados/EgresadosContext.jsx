@@ -1,12 +1,14 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
+
 const EgresadosContext = createContext();
 
 export const EgresadosProvider = ({ children }) => {
   const [egresados, setEgresados] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [semilla, setSemilla] = useState(0);
+  const [semillaPrevia, setSemillaPrevia] = useState(0);
 
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -79,13 +81,8 @@ export const EgresadosProvider = ({ children }) => {
     try {
       setIsLoading(true);
       setHasSearched(true);
-      console.log("mi filtro")
-      console.log(filters);
-      console.log(page);
       console.log("nuestra semilla");
       console.log(seed);
-
-      console.log("ejecutando fetchPaginatedData");
 
       page = page ?? 1;
 
@@ -104,7 +101,6 @@ export const EgresadosProvider = ({ children }) => {
 
       const urlWithData = `http://localhost:3000/alumni/resume?page=${page}&per-page=4${seedParam}${queryString ? `&${queryString}` : ''}`;
 
-
       console.log(urlWithData);
 
       const response = await fetch(urlWithData);
@@ -114,14 +110,10 @@ export const EgresadosProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      console.log("datos de LocalStorage");
-      console.log(data);
       setEgresados(data.data.items);
       setTotalPages(data.data.meta.numberOfPages);
       setSemilla(seed);
       setCurrentPage(page);
-      console.log("queryString como esta")
-      console.log(queryString)
       const newFilters = updateFiltersFromQueryString(queryString);
       console.log(newFilters)
 
@@ -133,6 +125,9 @@ export const EgresadosProvider = ({ children }) => {
         setPrevFilters({
           ...newFilters,
         });
+        setSemilla(data.data.meta.randomizationSeed);
+        setSemillaPrevia(data.data.meta.randomizationSeed);
+        
       }
 
       // Guardar en localStorage los filtros, semilla y página actual
@@ -152,6 +147,7 @@ export const EgresadosProvider = ({ children }) => {
     const filtersURL = JSON.parse(localStorage.getItem("filtersURL"));
     const seed = JSON.parse(localStorage.getItem("seed"));
     const page = JSON.parse(localStorage.getItem("page"));
+    console.log("semilla desde localStorage", seed)
 
     // convertir en objeto los filtros desde localStorage
     if (filtersURL && seed && page) {
@@ -163,7 +159,7 @@ export const EgresadosProvider = ({ children }) => {
 
   useEffect(() => {
     if (currentPage !== 1 && Object.keys(currentFilters).length > 0) {
-      fetchPaginatedData(currentFilters, currentPage);
+      fetchPaginatedData(currentFilters, currentPage, semilla);
     }
   }, [currentPage]);
 
@@ -174,7 +170,7 @@ export const EgresadosProvider = ({ children }) => {
     ) {
       setPrevFilters(currentFilters);
     }
-  }, [currentFilters, prevFilters]);
+  }, [currentFilters, prevFilters, semilla, semillaPrevia]);
 
   return (
     <EgresadosContext.Provider

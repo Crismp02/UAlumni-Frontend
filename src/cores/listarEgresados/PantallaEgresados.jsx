@@ -35,6 +35,7 @@ const PantallaEgresados = () => {
         // Obtén los filtros actuales que ya incluyen la semilla
         const newFilters = { ...currentFilters };
         const prevPage = currentPage - 1;
+        console.log("semilla desde handlePreviousPage", semilla)
 
         // Realiza la solicitud para la página anterior
         await fetchPaginatedData(newFilters, prevPage, semilla);
@@ -62,6 +63,7 @@ const PantallaEgresados = () => {
         const newFilters = { ...currentFilters };
         const nextPage = currentPage + 1;
         // Realizar la solicitud para la página siguiente
+        console.log("semilla desde handleNextPage", semilla)
         await fetchPaginatedData(newFilters, nextPage, semilla);
 
         setHasSearched(true);
