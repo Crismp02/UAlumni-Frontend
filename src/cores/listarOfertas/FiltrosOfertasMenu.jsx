@@ -10,13 +10,14 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { useLocation } from "react-router-dom";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from './OfertasContext';
 import PropTypes from "prop-types";
+import FiltrarContratos from "./FiltrarContratos";
+
 
 
 
@@ -29,18 +30,6 @@ function FiltrosOfertasMenu({ setHasSearched }) {
 
   const [isHovering, setIsHovering] = useState(false);
 
-  // Obtén la carrera de la URL
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const carreraFromUrl = params.get("carrera");
-
-  // Estado para la carrera seleccionada
-  const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
-
-  // Actualiza la carrera seleccionada cuando cambia la URL
-  useEffect(() => {
-    setSelectedCarrera(carreraFromUrl);
-  }, [carreraFromUrl]);
 
     //Constantes del Drawer
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,6 +49,68 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   const [habilidades, setHabilidades] = useState({});
 
   const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    // Verificar si hay filtros previamente guardados en localStorage
+    const storedFilters = localStorage.getItem("storedFiltersOfertas");
+
+    if (storedFilters) {
+      // Parsear los filtros almacenados
+      const parsedFilters = JSON.parse(storedFilters);
+
+      // preseleccionar nombre
+      if (parsedFilters.name) {
+        setValueName(parsedFilters.name);
+      }
+
+      //preseleccionar categorías que no estén seleccionadas con su skills
+      if (parsedFilters.categories && parsedFilters.categories.length > 0) {
+        const newCategories = parsedFilters.categories.map((category) => ({
+          categoria: category,
+        }));
+
+        setList((oldList) => {
+          const existingCategories = oldList.map((item) => item.categoria);
+          const categoriesToAdd = newCategories.filter(
+            (category) => !existingCategories.includes(category.categoria)
+          );
+          return [...oldList, ...categoriesToAdd];
+        });
+      }
+
+      // Preseleccionar habilidades
+      if (parsedFilters.skills && parsedFilters.skills.length > 0) {
+        setList((oldList) => {
+          const existingSkills = oldList.map(
+            (item) => `${item.categoria}:${item.habilidad}`
+          );
+          const newSkills = parsedFilters.skills.filter(
+            (skill) => !existingSkills.includes(skill)
+          );
+
+          return [
+            ...oldList,
+            ...newSkills.map((skill) => {
+              const [category, skillName] = skill.split(":");
+              return { categoria: category, habilidad: skillName };
+            }),
+          ];
+        });
+      }
+
+      //preseleccionar posiciones de interes
+      if (parsedFilters.positions && parsedFilters.positions.length > 0) {
+        setListPos(parsedFilters.positions);
+      }
+
+      //preseleccionar contratos
+      if (parsedFilters.contracts && parsedFilters.contracts.length > 0) {
+        setContratosSeleccionados(parsedFilters.contracts);
+      }
+
+      
+    }
+  }, []);
 
   useEffect(() => {
 
@@ -82,30 +133,6 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     }
 
     fetchCategorias();
-  }, []);
-
-  const [, setCarreras] = useState([]);
-
-  useEffect(() => {
-
-    async function fetchCarreras() {
-
-      try {
-        const response = await fetch("http://localhost:3000/career");
-        if (!response.ok) {
-          throw new Error("Error al obtener los egresados");
-        }
-        const data = await response.json();
-        if (Array.isArray(data.data.items)) {
-          const carrerasObtenidas = data.data.items.map((item) => item.name);
-          setCarreras(carrerasObtenidas);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-
-    fetchCarreras();
   }, []);
 
   const handleHabilidadChange = (e) => {
@@ -139,6 +166,56 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     setList(list.filter((_, i) => i !== index));
   };
 
+  //Búsqueda por tipo de contrato
+  const [contrato,setContrato ] = useState("");
+
+  // Objeto inicial de contratos seleccionados
+  const [contratosSeleccionados, setContratosSeleccionados] = useState([]);
+
+  // Objeto inicial de todos los contratos
+  const [todosLosContratos, setTodosLosContratos] = useState([]);
+
+  useEffect(() => {
+
+    fetch(`http://localhost:3000/contract-type`,{
+        method: 'GET',
+        credentials: 'include',
+    })
+    .then((response) => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error("Error al obtener los contratos");
+    })
+    .then((data) => {
+        if (Array.isArray(data.data.items)) {
+            const contratosNombres = data.data.items.map((item) => item.name);
+            setTodosLosContratos(contratosNombres);                                               
+        }
+    })
+    .catch((error) => {
+        console.error("Error de fetch:", error);
+    });
+}, []);
+
+  const handleAddCon = () =>{
+    if(contrato !== "" && !contratosSeleccionados.includes(contrato)){
+      setContratosSeleccionados((oldList) => [...oldList, {contrato}]);
+      setContrato("");
+    }
+  }
+
+  const handleRemoveCon = (index) => {
+    setContratosSeleccionados(contratosSeleccionados.filter((_, i) => i !== index));
+  };
+
+  const [isConButtonDisabled, setIsConButtonDisabled] = useState(true);
+
+    // Actualizar el estado de habilitación cuando cambia el valor de con
+    useEffect(() => {
+        setIsConButtonDisabled(!contrato);
+      }, [contrato]);
+
 
   //Búsqueda por posición de interés
 
@@ -167,16 +244,11 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   };
 
 
-  //Búsqueda por carrera
-
-  const [selectedTags, setSelectedTags] = useState({});
 
   const isDisabled =
     !valueName &&
     list.length === 0 &&
-    listPos.length === 0 &&
-    !selectedCarrera &&
-    Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
+    listPos.length === 0 
 
   // const [egresados, setEgresados] = useState([]);
 
@@ -227,6 +299,17 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     } finally {
       setIsLoading(false);
     }
+       // Guardar los filtros en localStorage después de realizar la búsqueda
+       localStorage.setItem(
+        "storedFiltersOfertas",
+        JSON.stringify({
+          name: valueName,
+          categories: selectedCategories,
+          skills: selectedSkills,
+          positions: selectedPositions,
+          contracts: contratosSeleccionados,
+        })
+      );
   };
 
   const handleReset = () => {
@@ -236,8 +319,6 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     setHabilidad("");
     setValuePos("");
     setListPos([]);
-    setSelectedTags({});
-    setSelectedCarrera(null);
   };
 
   return (
@@ -299,6 +380,17 @@ function FiltrosOfertasMenu({ setHasSearched }) {
               listPos={listPos}
               handleRemovePos={handleRemovePos}
               isDisabled={isPosButtonDisabled}
+            />
+
+            {/*Búsqueda por tipo de contrato*/}
+            <FiltrarContratos
+              contrato={contrato}
+              setContrato={setContrato}
+              contratos={todosLosContratos}
+              contratosSeleccionados={contratosSeleccionados}
+              handleAddCon={handleAddCon}
+              handleRemoveCon={handleRemoveCon}
+              isDisabled={isConButtonDisabled}
             />
         
             {/*Botones de búsqueda y reset*/}

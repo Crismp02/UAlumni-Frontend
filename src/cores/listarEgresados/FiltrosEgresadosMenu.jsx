@@ -39,6 +39,74 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
 
+  useEffect(() => {
+    // Verificar si hay filtros previamente guardados en localStorage
+    const storedFilters = localStorage.getItem("storedFiltersEgresados");
+
+    if (storedFilters) {
+      // Parsear los filtros almacenados
+      const parsedFilters = JSON.parse(storedFilters);
+
+      // preseleccionar carreras
+      if (parsedFilters.careerParams && parsedFilters.careerParams.length > 0) {
+        parsedFilters.careerParams.forEach(
+          (career) => (selectedTags[career] = true)
+        );
+        setSelectedTags({ ...selectedTags }); // Actualizar el estado para que se refleje en la interfaz
+      }
+
+      //preseleccionar categorías que no estén seleccionadas con su skills
+      if (parsedFilters.categories && parsedFilters.categories.length > 0) {
+        const newCategories = parsedFilters.categories.map((category) => ({
+          categoria: category,
+        }));
+
+        setList((oldList) => {
+          const existingCategories = oldList.map((item) => item.categoria);
+          const categoriesToAdd = newCategories.filter(
+            (category) => !existingCategories.includes(category.categoria)
+          );
+          return [...oldList, ...categoriesToAdd];
+        });
+      }
+
+      // Preseleccionar habilidades
+      if (parsedFilters.skills && parsedFilters.skills.length > 0) {
+        setList((oldList) => {
+          const existingSkills = oldList.map(
+            (item) => `${item.categoria}:${item.habilidad}`
+          );
+          const newSkills = parsedFilters.skills.filter(
+            (skill) => !existingSkills.includes(skill)
+          );
+
+          return [
+            ...oldList,
+            ...newSkills.map((skill) => {
+              const [category, skillName] = skill.split(":");
+              return { categoria: category, habilidad: skillName };
+            }),
+          ];
+        });
+      }
+
+      //preseleccionar posiciones de interes
+      if (parsedFilters.positions && parsedFilters.positions.length > 0) {
+        setListPos(parsedFilters.positions);
+      }
+
+      // preseleccionar industrias
+      if (parsedFilters.industries && parsedFilters.industries.length > 0) {
+        setListInd(parsedFilters.industries);
+      }
+
+      // preseleccionar nombre
+      if (parsedFilters.name) {
+        setValueName(parsedFilters.name);
+      }
+    }
+  }, []);
+
   // Actualiza la carrera seleccionada cuando cambia la URL
   useEffect(() => {
     setSelectedCarrera(carreraFromUrl);
@@ -276,6 +344,20 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     } finally {
       setIsLoading(false);
     }
+
+     // Guardar los filtros en localStorage después de realizar la búsqueda
+     localStorage.setItem(
+      "storedFiltersEgresados",
+      JSON.stringify({
+        name: valueName,
+        careerParams,
+        categories: selectedCategories,
+        skills: selectedSkills,
+        positions: selectedPositions,
+        industries: selectIndustries,
+      })
+    );
+
   };
 
   const handleReset = () => {

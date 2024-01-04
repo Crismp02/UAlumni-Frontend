@@ -1,7 +1,6 @@
 
 import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
@@ -20,18 +19,6 @@ function FiltrosOfertas({ setHasSearched }) {
   const [, setIsLoading] = useState(false);
 
   const [isHovering, setIsHovering] = useState(false);
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const carreraFromUrl = params.get("carrera");
-
-  // Estado para la carrera
-  const [,setSelectedCarrera] = useState(carreraFromUrl);
-
-  // Actualiza la carrera seleccionada cuando cambia la URL
-  useEffect(() => {
-    setSelectedCarrera(carreraFromUrl);
-  }, [carreraFromUrl]);
-
   const { onClose } = useDisclosure();
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
@@ -46,6 +33,70 @@ function FiltrosOfertas({ setHasSearched }) {
 
     // Objeto inicial de categorias
     const [categorias, setCategorias] = useState([]);
+
+    useEffect(() => {
+      // Verificar si hay filtros previamente guardados en localStorage
+      const storedFilters = localStorage.getItem("storedFiltersOfertas");
+  
+      if (storedFilters) {
+        // Parsear los filtros almacenados
+        const parsedFilters = JSON.parse(storedFilters);
+
+        // preseleccionar nombre
+        if (parsedFilters.name) {
+          setValueName(parsedFilters.name);
+        }
+  
+        //preseleccionar categorías que no estén seleccionadas con su skills
+        if (parsedFilters.categories && parsedFilters.categories.length > 0) {
+          const newCategories = parsedFilters.categories.map((category) => ({
+            categoria: category,
+          }));
+  
+          setList((oldList) => {
+            const existingCategories = oldList.map((item) => item.categoria);
+            const categoriesToAdd = newCategories.filter(
+              (category) => !existingCategories.includes(category.categoria)
+            );
+            return [...oldList, ...categoriesToAdd];
+          });
+        }
+  
+        // Preseleccionar habilidades
+        if (parsedFilters.skills && parsedFilters.skills.length > 0) {
+          setList((oldList) => {
+            const existingSkills = oldList.map(
+              (item) => `${item.categoria}:${item.habilidad}`
+            );
+            const newSkills = parsedFilters.skills.filter(
+              (skill) => !existingSkills.includes(skill)
+            );
+  
+            return [
+              ...oldList,
+              ...newSkills.map((skill) => {
+                const [category, skillName] = skill.split(":");
+                return { categoria: category, habilidad: skillName };
+              }),
+            ];
+          });
+        }
+  
+        //preseleccionar posiciones de interes
+        if (parsedFilters.positions && parsedFilters.positions.length > 0) {
+          setListPos(parsedFilters.positions);
+        }
+
+        //preseleccionar contratos
+        if (parsedFilters.contracts && parsedFilters.contracts.length > 0) {
+          setContratosSeleccionados(parsedFilters.contracts);
+        }
+  
+        
+      }
+    }, []);
+
+
 
     useEffect(() => {
 
@@ -67,35 +118,6 @@ function FiltrosOfertas({ setHasSearched }) {
   
       fetchCategorias();
     }, []);
-
-    // Fetch de las carreras del Alumni
-    const [carreras, setCarreras] = useState([]);
-
-  useEffect(() => {
-    async function fetchCarreras() {
-      try {
-        const response = await fetch("http://localhost:3000/alumni/me/resume",{
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (!response.ok) {
-          throw new Error("Error al obtener las carreras");
-        }
-        const data = await response.json();
-        if (Array.isArray(data.data.graduations)) {
-          const carrerasObtenidas = data.data.graduations.map((graduation) => graduation.careerName);
-          setCarreras(carrerasObtenidas);
-        }
-
-        
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-
-    fetchCarreras();
-  }, []);
-    
 
     const handleHabilidadChange = (e) => {
       setHabilidad(e.target.value);
@@ -242,10 +264,6 @@ function FiltrosOfertas({ setHasSearched }) {
         params.append('company', valueName);
       }
     
-      if (carreras.length > 0) {
-        carreras.forEach((career) => params.append('careers', career));
-      }
-
       if (selectedCategories.length > 0) {
         selectedCategories.forEach((category) => params.append('categories', category));
       }
@@ -271,6 +289,20 @@ function FiltrosOfertas({ setHasSearched }) {
       } finally {
         setIsLoading(false);
       }
+
+       // Guardar los filtros en localStorage después de realizar la búsqueda
+    localStorage.setItem(
+      "storedFiltersOfertas",
+      JSON.stringify({
+        name: valueName,
+        categories: selectedCategories,
+        skills: selectedSkills,
+        positions: selectedPositions,
+        contracts: contratosSeleccionados,
+      })
+    );
+
+
     };
     
 
@@ -281,7 +313,6 @@ function FiltrosOfertas({ setHasSearched }) {
       setHabilidad("");
       setValuePos("");
       setListPos([]);
-      setSelectedCarrera(null);
       setContratosSeleccionados([]);
     };
 
