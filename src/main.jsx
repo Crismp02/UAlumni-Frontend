@@ -46,10 +46,6 @@ const router = createBrowserRouter([
         path: "/alumni/:id/profile",
         element: <PerfilEgresadoReclutador/>,
       },
-      {
-        path: "/job-offer/:id",
-        element: <OfertaTrabajo/>,
-      },
     ],
   },
   {
@@ -59,6 +55,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <PerfilEgresado/>,
+      },
+      {
+        path: "/job-offer/:id",
+        element: <OfertaTrabajo/>,
       },
     ],
   },

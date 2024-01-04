@@ -96,7 +96,7 @@ function PerfilEgresadoReclutador() {
               paddingRight="20px"
               alignItems="center"
             >
-              <DownloadCV id={id} />
+              <DownloadCV id={id} nombre={dataProfile.data.names} apellido={dataProfile.data.surnames}/>
             </Box>
           </Box>
           <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
@@ -172,7 +172,7 @@ function PerfilEgresadoReclutador() {
                     alignItems="center"
                     marginTop="3"
                   >
-                    <DownloadCV id={id} />
+                    <DownloadCV id={id} nombre={dataProfile.data.names} apellido={dataProfile.data.surnames}/>
                   </Box>
                 </CardBody>
               </Card>

@@ -11,6 +11,7 @@ function NavBarEgresados(){
   const [isLargerThan700] = useMediaQuery("(min-width: 700px)");
     return (
         <Flex as="nav" bg={"#007935"} color="white" align="center" justify="space-between" padding="1rem">
+          <Link to="/profile">
         <Box padding="0px">
         {isLargerThan400 ? (
           <Image src={Logo2} alt="Logo" height= "30px" />
@@ -18,6 +19,7 @@ function NavBarEgresados(){
           <Image src={Logo} alt="Logo" height="25px" />
         )}
       </Box>
+      </Link>
         {isLargerThan700 ? <Flex>
           <Link to="/profile">
           <Box marginLeft="2rem">

@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../config";
+import { th } from "date-fns/locale";
 
 export const getMeProfile = async () => {
     try {
@@ -150,11 +151,11 @@ export const editAboutMe = async (newData) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-    
         const data = await response.json();
         return data;
       } catch (error) {
         toast.error(`Error: ${error.message}`);
+        throw error;
       }
     };
 
@@ -244,6 +245,7 @@ export const editAboutMe = async (newData) => {
         return data;
       } catch (error) {
         toast.error(`Error: ${error.message}`);
+        throw error;
       }
     }
 
@@ -348,6 +350,7 @@ export const editAboutMe = async (newData) => {
         return data;
       } catch (error) {
         toast.error(`Error: ${error.message}`);
+        throw error;
       }
     };
 
@@ -521,6 +524,7 @@ export const editCiapCourse = async (id, newData) => {
         return data;
       } catch (error) {
         toast.error(`Error: ${error.message}`);
+        throw error;
       }
     }
 
@@ -602,7 +606,8 @@ export const editCiapCourse = async (id, newData) => {
           return data;
         } catch (error) {
           console.log(error);
-          toast.error(`Error: ${error.message[1]}`);
+          toast.error(`Error: ${error.message}`);
+          throw error;
         }
       }
       
@@ -788,7 +793,8 @@ export const editCiapCourse = async (id, newData) => {
         return data;
       } catch (error) {
         console.log(error);
-        toast.error(`Error: ${error.message[1]}`);
+        toast.error(`Error: ${error.message}`);
+        throw error; 
       }
     }
 
@@ -874,6 +880,7 @@ export const editCiapCourse = async (id, newData) => {
       } catch (error) {
         console.log(error);
         toast.error(`Error: ${error.message}`);
+        throw error;
       }
     }
 

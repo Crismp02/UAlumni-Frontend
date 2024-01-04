@@ -242,6 +242,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
       isVisible: true,
     };
 
+    try {
     const updatedCard = await editPositionOfInterest(originalTitle, newData);
 
     setContent(updatedCard);
@@ -269,6 +270,16 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+  } catch (error) {
+    // Mostrar un mensaje de error si la solicitud falla
+    toast({
+      title: "Error",
+      description: "Hubo un error al editar la industria de interés",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+  }
   };
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas

@@ -228,10 +228,11 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     }
 
     // Preparar los datos para la solicitud PATCH
-    const newData = {
-      industryName: editingCard.industryName, // Ajusta esto según sea necesario
-    };
+  const newData = {
+    industryName: editingCard.industryName, // Ajusta esto según sea necesario
+  };
 
+  try {
     const updatedCard = await editIndustryOfInterest(originalTitle, newData);
 
     setContent(updatedCard);
@@ -259,7 +260,17 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
-  };
+  } catch (error) {
+    // Mostrar un mensaje de error si la solicitud falla
+    toast({
+      title: "Error",
+      description: "Hubo un error al editar la industria de interés",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+};
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas
   const handleAddClick = (cardType) => {
