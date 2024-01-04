@@ -81,8 +81,10 @@ export const EgresadosProvider = ({ children }) => {
   const fetchPaginatedData = async (filters, page, seed) => {
     try {
       setIsLoading(true);
+      setHasSearched(true);
       console.log(filters)
       console.log(page)
+      console.log("nuestra semilla")
       console.log(seed)
 
       console.log("ejecutando fetchPaginatedData")
@@ -95,8 +97,8 @@ export const EgresadosProvider = ({ children }) => {
         const url = `http://localhost:3000/alumni/resume?page=${page}&per-page=4&${queryString}`;
         seed = await obtenerSemilla(url); // Obtener la semilla si no está presente
       }
-  
-      const urlWithData = `http://localhost:3000/alumni/resume?page=${page}&per-page=4&seed=${seed}&${queryString}`;
+    
+      const urlWithData = `http://localhost:3000/alumni/resume?page=${page}&per-page=4&${queryString}`;
 
       console.log(urlWithData)
   
@@ -191,6 +193,7 @@ export const EgresadosProvider = ({ children }) => {
         setCurrentFilters,
         hasSearched,
         setHasSearched,
+        semilla,
       }}
     >
       {children}

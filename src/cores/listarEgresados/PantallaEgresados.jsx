@@ -5,7 +5,7 @@ import ListarEgresados from "./ListarEgresados";
 import { useEgresados } from "./EgresadosContext";
 import { useState, useEffect } from "react";
 
-const PantallaEgresados = () => {
+const PantallaEgresados = (hasSearched, setHasSearched) => {
   const {
     currentPage,
     totalPages,
@@ -15,9 +15,9 @@ const PantallaEgresados = () => {
     currentFilters,
     setCurrentFilters,
     fetchPaginatedData,
+    semilla,
   } = useEgresados();
 
-  const [hasSearched, setHasSearched] = useState(false);
   const [filtersChanged, setFiltersChanged] = useState(false);
 
   const handlePreviousPage = async () => {
@@ -34,7 +34,7 @@ const PantallaEgresados = () => {
         const prevPage = currentPage - 1;
 
         // Realiza la solicitud para la página anterior
-        await fetchPaginatedData(newFilters, prevPage);
+        await fetchPaginatedData(newFilters, prevPage, semilla);
 
         setHasSearched(true);
 
@@ -59,7 +59,7 @@ const PantallaEgresados = () => {
         const newFilters = { ...currentFilters };
         const nextPage = currentPage + 1;
         // Realizar la solicitud para la página siguiente
-        await fetchPaginatedData(newFilters, nextPage);
+        await fetchPaginatedData(newFilters, nextPage, semilla);
 
         setHasSearched(true);
       } catch (error) {
