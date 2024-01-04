@@ -12,9 +12,6 @@ function FiltrosButtons({
   onClose,
   setHasSearched,
 }) {
-  console.log("setHasSearched es una funcion?")
-  console.log(typeof setHasSearched === 'function');
-  console.log(typeof setHasSearched);
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
   return (
     <Box

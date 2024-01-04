@@ -8,6 +8,9 @@ export const OfertasProvider = ({ children }) => {
   const [ofertas, setOfertas] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [semilla, setSemilla] = useState(0);
+  const [semillaPrevia, setSemillaPrevia] = useState(0);
+
+  const [hasSearched, setHasSearched] = useState(false);
 
   // Total de Páginas
   const [totalPages, setTotalPages] = useState(0);
@@ -72,56 +75,73 @@ export const OfertasProvider = ({ children }) => {
     return miSemilla;
   }
 
-  const fetchPaginatedData = async (filters, page) => {
+  const fetchPaginatedData = async (filters, page, seed) => {
     try {
       setIsLoading(true);
-      let queryString ='';
-
-      if (typeof filters == 'object'){
-        queryString = convertFiltersToQueryString(filters);
-      }
-      else{
-        queryString = filters;
-      }
-
+      setHasSearched(true);
       page = page ?? 1;
 
-      const url = `http://localhost:3000/job-offers?page=${page}&per-page=4&${queryString}`;
-      const miSemilla = await obtenerSemilla(url);
+      let queryString =
+        typeof filters === "object"
+          ? convertFiltersToQueryString(filters)
+          : filters;
 
-      const url2 = queryString.includes('seed=')
-        ? `http://localhost:3000/job-offers?page=${page}&per-page=4&seed=${miSemilla}&${queryString.split('&').filter(param => !param.startsWith('seed=')).join('&')}`
-        : `http://localhost:3000/job-offers?page=${page}&per-page=4&seed=${miSemilla}&${queryString}`;
+      if (!seed) {
+        const url = `http://localhost:3000/job-offers?page=${page}&per-page=4&${queryString}`;
+        seed = await obtenerSemilla(url); // Obtener la semilla si no está presente
+      }
 
-      const response = await fetch(url2);
+      const seedParam = seed ? `&seed=${seed}` : '';
+
+
+      const urlWithData = `http://localhost:3000/job-offers?page=${page}&per-page=4${seedParam}${queryString ? `&${queryString}` : ''}`;
+
+      const response = await fetch(urlWithData);
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
+
       const data = await response.json();
       setOfertas(data.data.items);
       setTotalPages(data.data.meta.numberOfPages);
-      setSemilla(miSemilla);
+      setSemilla(seed);
       setCurrentPage(page);
-
       const newFilters = updateFiltersFromQueryString(queryString);
+      // Actualiza el estado con los nuevos filtros y la semilla si está disponible
       if (data.data.meta.randomizationSeed) {
-        // Actualizar los filtros sin modificar los originales
         setCurrentFilters({
-          seed: miSemilla,  // Usar la semilla extraída de la primera solicitud
-          ...newFilters,   
-        });
-        setPrevFilters({
-          seed: miSemilla, // Usar la semilla extraída de la primera solicitud
           ...newFilters,
         });
+        setPrevFilters({
+          ...newFilters,
+        });
+        setSemilla(data.data.meta.randomizationSeed);
+        setSemillaPrevia(data.data.meta.randomizationSeed);
         
       }
+
+      // Guardar en localStorage los filtros, semilla y página actual
+      localStorage.setItem("filtersURLOfertas", JSON.stringify(newFilters));
+      localStorage.setItem("seedOfertas", JSON.stringify(seed));
+      localStorage.setItem("pageOfertas", JSON.stringify(page));
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const filtersURL = JSON.parse(localStorage.getItem("filtersURLOfertas"));
+    const seed = JSON.parse(localStorage.getItem("seedOfertas"));
+    const page = JSON.parse(localStorage.getItem("pageOfertas"));
+    // convertir en objeto los filtros desde localStorage
+    if (filtersURL && seed && page) {
+      fetchPaginatedData(filtersURL, page, seed); // Pasar los filtros y la semilla a fetchPaginatedData
+    }
+  }, []);
+
+
 
   useEffect(() => {
     if (currentPage !== 1 && Object.keys(currentFilters).length > 0) {
@@ -136,7 +156,7 @@ export const OfertasProvider = ({ children }) => {
     ) {
       setPrevFilters(currentFilters);
     }
-  }, [currentFilters, prevFilters]);
+  }, [currentFilters, prevFilters, semilla, semillaPrevia]);
 
   return (
     <OfertasContext.Provider
@@ -150,6 +170,9 @@ export const OfertasProvider = ({ children }) => {
         setIsLoading,
         currentFilters,
         setCurrentFilters,
+        hasSearched,
+        setHasSearched,
+        semilla,
       }}
     >
       {children}

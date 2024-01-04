@@ -81,9 +81,6 @@ export const EgresadosProvider = ({ children }) => {
     try {
       setIsLoading(true);
       setHasSearched(true);
-      console.log("nuestra semilla");
-      console.log(seed);
-
       page = page ?? 1;
 
       let queryString =
@@ -101,10 +98,7 @@ export const EgresadosProvider = ({ children }) => {
 
       const urlWithData = `http://localhost:3000/alumni/resume?page=${page}&per-page=4${seedParam}${queryString ? `&${queryString}` : ''}`;
 
-      console.log(urlWithData);
-
       const response = await fetch(urlWithData);
-      console.log(response);
       if (!response.ok) {
         throw new Error("Error al obtener los datos");
       }
@@ -115,8 +109,6 @@ export const EgresadosProvider = ({ children }) => {
       setSemilla(seed);
       setCurrentPage(page);
       const newFilters = updateFiltersFromQueryString(queryString);
-      console.log(newFilters)
-
       // Actualiza el estado con los nuevos filtros y la semilla si está disponible
       if (data.data.meta.randomizationSeed) {
         setCurrentFilters({
@@ -131,9 +123,9 @@ export const EgresadosProvider = ({ children }) => {
       }
 
       // Guardar en localStorage los filtros, semilla y página actual
-      localStorage.setItem("filtersURL", JSON.stringify(newFilters));
-      localStorage.setItem("seed", JSON.stringify(seed));
-      localStorage.setItem("page", JSON.stringify(page));
+      localStorage.setItem("filtersURLEgresados", JSON.stringify(newFilters));
+      localStorage.setItem("seedEgresados", JSON.stringify(seed));
+      localStorage.setItem("pageEgresados", JSON.stringify(page));
     } catch (error) {
       console.error("Error al obtener datos paginados:", error);
     } finally {
@@ -144,16 +136,12 @@ export const EgresadosProvider = ({ children }) => {
   // useEffect que se ejecuta una sola vez para obtener los filtros y la semilla de localStorage y pagina actual y aplicarlos
 
   useEffect(() => {
-    const filtersURL = JSON.parse(localStorage.getItem("filtersURL"));
-    const seed = JSON.parse(localStorage.getItem("seed"));
-    const page = JSON.parse(localStorage.getItem("page"));
-    console.log("semilla desde localStorage", seed)
-
+    const filtersURL = JSON.parse(localStorage.getItem("filtersURLEgresados"));
+    const seed = JSON.parse(localStorage.getItem("seedEgresados"));
+    const page = JSON.parse(localStorage.getItem("pageEgresados"));
     // convertir en objeto los filtros desde localStorage
     if (filtersURL && seed && page) {
-      console.log("ejecutando useEffect LocalStorage");
       fetchPaginatedData(filtersURL, page, seed); // Pasar los filtros y la semilla a fetchPaginatedData
-      setHasSearched(true);
     }
   }, []);
 
