@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, Box } from "@chakra-ui/react";
+import { Text, Box, Button } from "@chakra-ui/react";
 import NavBarEgresados from "../../components/NavBarEgresados";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -8,11 +8,14 @@ import InfoOfferCard from "./InfoOfferCard";
 import InfoPuestoCard from "./InfoPuestoCard";
 import { getJobOffer } from "../../services/job-offers/Job-offers.services";
 import Footer from "../../components/Footer";
+import { useNavigate } from "react-router-dom";
+import { ArrowBackIcon } from '@chakra-ui/icons'
 
 function OfertaTrabajo() {
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true);
     const [dataJobOffer, setDataJobOffer] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
@@ -57,6 +60,7 @@ function OfertaTrabajo() {
           >
             OFERTA DE TRABAJO
           </Text>
+          <Button onClick={() => navigate(-1)} width="80px"><ArrowBackIcon/> <Text fontSize="11px">Volver</Text> </Button>
           <Box display="flex" flexDirection={{ base: "column", md: "row" }}>
             <Box
               width={{ base: "100%", md: "33.3%" }}

@@ -19,13 +19,17 @@ function NavBarReclutador(){
       </Box>
       </Link>
         {isLargerThan700 ? <Flex>
+          <Link to="/PreguntasFrecuentes">
           <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>FAQ</Text>
           </Box>
+          </Link>
         </Flex> : <Flex>
+        <Link to="/PreguntasFrecuentes">
           <Box marginLeft="1rem">
             <Text fontSize="12px" as='b'>FAQ</Text>
           </Box>
+          </Link>
         </Flex> }
         
       </Flex>

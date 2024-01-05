@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         element: <Faq/>,
       },
       {
-        path: "/terminos-y-condiciones",
+        path: "/TerminosYCondiciones",
         element: <TerminosCondiciones/>,
       },
     ],

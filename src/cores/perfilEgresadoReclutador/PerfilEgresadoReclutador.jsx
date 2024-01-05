@@ -10,18 +10,21 @@ import HabilidadesBlandasCard from "./HabilidadesBlandasCard";
 import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobremiCard";
 import { useParams } from "react-router-dom";
-import { Box, Card, Divider, Text, CardBody } from "@chakra-ui/react";
+import { Box, Card, Divider, Text, CardBody, Button } from "@chakra-ui/react";
 import { getAlumniProfile } from "../../services/profileEgresado/AlumniProfile.services";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
 import DownloadCV from "./DownloadCV";
 import IndustriasInteresCard from "./IndustriasInteresCard";
 import PosicionesInteresCard from "./PosiciónInterésCard";
+import { useNavigate } from "react-router-dom";
+import { ArrowBackIcon } from '@chakra-ui/icons'
 
 function PerfilEgresadoReclutador() {
   const { id } = useParams();
   const [dataProfile, setDataProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -65,7 +68,7 @@ function PerfilEgresadoReclutador() {
           >
             PERFIL
           </Text>
-
+          <Button onClick={() => navigate(-1)} width="80px"><ArrowBackIcon/> <Text fontSize="11px">Volver</Text> </Button>
           <Box
             width="calc(100vw - 20px)"
             marginLeft="20px"

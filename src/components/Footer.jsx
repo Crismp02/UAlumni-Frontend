@@ -1,5 +1,6 @@
 import { Box, Text, useMediaQuery, Icon, Center } from "@chakra-ui/react";
 import { FaInstagram } from "react-icons/fa";
+import { Link } from "react-router-dom";
 function Footer() {
   const [isLargerThan700] = useMediaQuery("(min-width: 700px)");
   const [isLargerThan400] = useMediaQuery("(min-width: 400px)");
@@ -79,12 +80,16 @@ function Footer() {
                 <Text fontSize="sm" as="b" color="white">
                   DUDAS Y CONSULTAS
                 </Text>
+                <Link to="/PreguntasFrecuentes">
                 <Text fontSize="sm" color="white" marginTop="5px">
                   Preguntas frecuentes
                 </Text>
+                </Link>
+                <Link to="/TerminosYCondiciones">
                 <Text fontSize="sm" color="white">
                   Términos y condiciones
                 </Text>
+                </Link>
               </Box>
               <Box width="50%" height="auto" marginLeft="50px">
                 <Text fontSize="sm" as="b" color="white">
@@ -121,12 +126,16 @@ function Footer() {
                 <Text fontSize="sm" as="b" color="white">
                   DUDAS Y CONSULTAS
                 </Text>
+                <Link to="/PreguntasFrecuentes">
                 <Text fontSize="13px" color="white" marginTop="5px">
                   Preguntas frecuentes
                 </Text>
+                </Link>
+                <Link to="/TerminosYCondiciones">
                 <Text fontSize="13px" marginTop="5px" color="white">
                   Términos y condiciones
                 </Text>
+                </Link>
               </Box>
               <Box width="50%" height="auto" marginTop="15px">
                 <Text fontSize="sm" as="b" color="white">

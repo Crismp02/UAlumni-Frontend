@@ -56,6 +56,7 @@ function QuienSoy() {
         </GridItem>
         <GridItem boxSize={["", "", "sm", "sm"]}>
           <Image src={ReclutadoresLanding} alt="reclutadoresLanding" />
+          <Link to="/listarEgresados">
           <Button
             backgroundColor="#007935"
             color="white"
@@ -67,6 +68,7 @@ function QuienSoy() {
           >
             SOY RECLUTADOR
           </Button>
+          </Link>
         </GridItem>
       </Grid>
     </div>

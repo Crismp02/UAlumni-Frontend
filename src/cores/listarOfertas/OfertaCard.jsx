@@ -1,6 +1,7 @@
 
 import { Box, Text, Tag, Image} from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const OfertaCard = ({ oferta }) =>{
 
@@ -8,7 +9,7 @@ const OfertaCard = ({ oferta }) =>{
         return null;
     }
 
-    const {companyLogo, companyName, position, visibleSince} = oferta;
+    const {companyLogo, companyName, position, visibleSince, id} = oferta;
     const date = new Date(visibleSince);
     const day = date.getDate();
     const month = date.getMonth() + 1; // Los meses en JavaScript empiezan en 0, por lo que debes sumar 1
@@ -88,14 +89,17 @@ const OfertaCard = ({ oferta }) =>{
            {formattedDate}
            </Tag>
           </Box>
+          <Link to={`/job-offer/${id}`}>
           <Text 
             textAlign={["center", "center", "center", "right"]} 
             paddingRight={["10px","10px","12px","12px"]} 
             marginRight={["10px", "10px", "0px", "0px"]}
             fontSize={["xs", "sm", "md", "md"]}
+            color="#007935"
             >
               VER INFORMACIÓN
           </Text>
+          </Link>
           </Box>
         </Box>
       </div>

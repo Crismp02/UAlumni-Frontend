@@ -27,11 +27,13 @@ function NavBar() {
       </Link>
       {isLargerThan550 ? (
         <Flex>
+          <Link to="/PreguntasFrecuentes">
           <Box marginLeft="2rem">
             <Text fontSize="md" as="b">
               FAQ
             </Text>
           </Box>
+          </Link>
           <Link to="/register">
             <Box marginLeft="2rem">
               <Text fontSize="md" as="b">
@@ -39,11 +41,13 @@ function NavBar() {
               </Text>
             </Box>
           </Link>
+          <Link to="/listarEgresados">
           <Box marginLeft="2rem">
             <Text fontSize="md" as="b">
               RECLUTADOR
             </Text>
           </Box>
+          </Link>
         </Flex>
       ) : (
         <Flex>

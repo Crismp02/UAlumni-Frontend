@@ -26,27 +26,37 @@ function NavBarEgresados(){
             <Text fontSize="md" as='b'>PERFIL</Text>
           </Box>
           </Link>
+          <Link to="/listarOfertas">
           <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>OFERTAS</Text>
           </Box>
+          </Link>
+          <Link to="/PreguntasFrecuentes">
           <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>FAQ</Text>
           </Box>
+          </Link>
           <Link to="/">
           <Box marginLeft="2rem">
             <Icon as={IoIosLogOut} boxSize="24px" onClick={logoutUser}/>
           </Box>
           </Link>
         </Flex> : <Flex>
+          <Link to= "/profile">
         <Box marginLeft="1rem">
             <Text fontSize="10px" as='b'>PERFIL</Text>
           </Box>
+          </Link>
+          <Link to="/listarOfertas">
           <Box marginLeft="1rem">
             <Text fontSize="10px" as='b'>OFERTAS</Text>
           </Box>
+          </Link>
+          <Link to="/PreguntasFrecuentes">
           <Box marginLeft="1rem">
             <Text fontSize="10px" as='b'>FAQ</Text>
           </Box>
+          </Link>
           <Link to="/">
           <Box marginLeft='1rem'>
           <Icon as={IoIosLogOut} boxSize="18px" onClick={logoutUser}/>

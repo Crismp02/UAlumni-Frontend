@@ -1,6 +1,7 @@
 
 import { Box, Button, Text, Tag, useMediaQuery} from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 
 const EgresadoCard = ({ egresado }) =>{
@@ -14,7 +15,6 @@ const EgresadoCard = ({ egresado }) =>{
     }
 
     const { names , surnames, resume, graduations, id } = egresado;
-    console.log("hola");
 
     const skillsArray = resume?.technicalSkills || [];
 
@@ -126,6 +126,7 @@ const EgresadoCard = ({ egresado }) =>{
                 </Text>
              </Box>
 
+              <Link to={`/alumni/${id}/profile`}>
               <Button 
                 textAlign="right" 
                 fontSize={["sm", "sm", "md", "md"]}
@@ -133,7 +134,7 @@ const EgresadoCard = ({ egresado }) =>{
                 variant="ghost">
                 VER PERFIL
               </Button>
-
+              </Link>
           </Box>
       </Box>
     </div>
