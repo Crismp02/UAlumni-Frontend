@@ -273,16 +273,10 @@ function FiltrosOfertas({ setHasSearched }) {
   
     //Botones de búsqueda y reset
 
-    const isDisabled =
-    !valueName &&
-    list.length === 0 &&
-    listPos.length === 0 &&
-    contratosSeleccionados.length === 0;
+   
 
     const handleSubmit = async () => {
-      if (isDisabled) {
-        return;
-      }
+     
 
     // Estado para las categorías seleccionadas con y sin habilidades 
     const categoriesWithSkills = list.filter(item => item.habilidad);
@@ -413,7 +407,7 @@ function FiltrosOfertas({ setHasSearched }) {
             <FiltrosButtons
               handleReset={handleReset}
               handleSubmit={handleSubmit}
-              isDisabled={isDisabled}
+              isDisabled={false}
               isHovering={isHovering}
               setIsHovering={setIsHovering}
               onClose={onClose}

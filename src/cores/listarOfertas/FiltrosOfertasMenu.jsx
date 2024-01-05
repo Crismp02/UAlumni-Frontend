@@ -286,17 +286,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
 
 
 
-  const isDisabled =
-    !valueName &&
-    list.length === 0 &&
-    listPos.length === 0 
-
-  // const [egresados, setEgresados] = useState([]);
-
   const handleSubmit = async () => {
-    if (isDisabled) {
-      return;
-    }
 
     // Estado para las categorías seleccionadas con y sin habilidades 
     const categoriesWithSkills = list.filter(item => item.habilidad);
@@ -443,7 +433,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
             <FiltrosButtons
               handleReset={handleReset}
               handleSubmit={handleSubmit}
-              isDisabled={isDisabled}
+              isDisabled={false}
               isHovering={isHovering}
               setIsHovering={setIsHovering}
               onClose={onClose}
