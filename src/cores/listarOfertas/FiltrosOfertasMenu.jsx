@@ -17,6 +17,7 @@ import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from './OfertasContext';
 import PropTypes from "prop-types";
 import FiltrarContratos from "./FiltrarContratos";
+import { useLocation } from "react-router-dom";
 
 
 
@@ -27,6 +28,18 @@ function FiltrosOfertasMenu({ setHasSearched }) {
 
   const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const carreraFromUrl = params.get("carrera");
+
+  // Estado para la carrera
+  const [,setSelectedCarrera] = useState(carreraFromUrl);
+
+  // Actualiza la carrera seleccionada cuando cambia la URL
+  useEffect(() => {
+    setSelectedCarrera(carreraFromUrl);
+  }, [carreraFromUrl]);
 
   const [isHovering, setIsHovering] = useState(false);
 
@@ -133,6 +146,34 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     }
 
     fetchCategorias();
+  }, []);
+
+  // Fetch de las carreras del Alumni
+  const [carreras, setCarreras] = useState([]);
+
+  useEffect(() => {
+    async function fetchCarreras() {
+      try {
+        const response = await fetch("http://localhost:3000/alumni/me/resume",{
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (!response.ok) {
+          throw new Error("Error al obtener las carreras");
+        }
+        const data = await response.json();
+        if (Array.isArray(data.data.graduations)) {
+          const carrerasObtenidas = data.data.graduations.map((graduation) => graduation.careerName);
+          setCarreras(carrerasObtenidas);
+        }
+
+
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    fetchCarreras();
   }, []);
 
   const handleHabilidadChange = (e) => {
@@ -277,6 +318,10 @@ function FiltrosOfertasMenu({ setHasSearched }) {
       params.append('company', valueName);
     }
 
+    if (carreras.length > 0) {
+      carreras.forEach((career) => params.append('careers', career));
+    }
+
     if (selectedCategories.length > 0) {
       selectedCategories.forEach((category) => params.append('categories', category));
     }
@@ -318,6 +363,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     setCategoria("");
     setHabilidad("");
     setValuePos("");
+    setSelectedCarrera(null);
     setListPos([]);
   };
 
