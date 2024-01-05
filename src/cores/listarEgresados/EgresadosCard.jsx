@@ -13,7 +13,8 @@ const EgresadoCard = ({ egresado }) =>{
       return null; 
     }
 
-    const { names , surnames, resume, graduations } = egresado;
+    const { names , surnames, resume, graduations, id } = egresado;
+    console.log("hola");
 
     const skillsArray = resume?.technicalSkills || [];
 
