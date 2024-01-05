@@ -50,6 +50,7 @@ function FiltrarIndustrias({
                   color="white"
                   as="b"
                   _hover={{ bg: "#025024" }}
+                  cursor="pointer"
                   >
                   +
                   </Button>

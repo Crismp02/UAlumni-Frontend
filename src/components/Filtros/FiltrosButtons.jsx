@@ -30,6 +30,7 @@ function FiltrosButtons({
         borderColor="#007935"
         color="#007935"
         as="b"
+        cursor="pointer"
       >
         RESTAURAR FILTROS
       </Button>
@@ -53,6 +54,7 @@ function FiltrosButtons({
               color="white"
               as="b"
               _hover={{ bg: "#025024" }}
+              cursor="pointer"
             >
               BUSCAR
             </Button>
@@ -77,6 +79,7 @@ function FiltrosButtons({
             _hover={{ bg: "#025024" }}
             fontSize="12px"
             size="sm"
+            cursor="pointer"
           >
             BUSCAR
           </Button>

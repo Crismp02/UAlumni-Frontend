@@ -121,6 +121,7 @@ const EgresadoCard = ({ egresado }) =>{
                   fontSize={["sm", "sm", "md", "md"]}
                   textAlign="left"
                   mr={2}
+                  textTransform="capitalize"
                 >
                   {careersToShow.map((graduation) => graduation.careerName).join(' / ')}
                 </Text>

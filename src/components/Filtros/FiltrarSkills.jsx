@@ -98,6 +98,7 @@ useEffect(() => {
                 mt={2}
                 marginLeft="10px"
                 marginBottom="8px"
+                cursor="pointer"
               >
                 +
               </Button>

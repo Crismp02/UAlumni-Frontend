@@ -52,6 +52,7 @@ const OfertaCard = ({ oferta }) =>{
               fontSize={["sm", "sm", "md", "md"]} 
               textAlign={["center", "center", "left", "left"]} 
               marginTop="10px"
+              textTransform="capitalize"
               >
             {position}
             </Text>
@@ -59,6 +60,7 @@ const OfertaCard = ({ oferta }) =>{
               fontSize={["xs", "xs", "sm", "md"]} 
               textAlign={["center", "center", "left", "left"]} 
               marginTop="5px"
+              textTransform="capitalize"
               >
             {companyName}
             </Text>
