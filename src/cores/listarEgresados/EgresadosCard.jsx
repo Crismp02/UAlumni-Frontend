@@ -69,7 +69,7 @@ const EgresadoCard = ({ egresado }) =>{
             paddingTop="0px"
           > 
 
-            <Text as="b" fontSize={["sm", "sm", "md", "md"]}>
+            <Text  as="b" fontSize={["sm", "sm", "md", "md"]} textTransform="capitalize">
               {names} {surnames}
             </Text>
           
