@@ -1,67 +1,72 @@
-import React from 'react';
-import { Flex, Box, Text, useMediaQuery } from "@chakra-ui/react"
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Flex, Box, Text, useMediaQuery, Image } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import Logo from "../images/logo.png";
+import Logo2 from "../images/logo2.png"
 
-function NavBar(){
+function NavBar() {
   const [isLargerThan550] = useMediaQuery("(min-width: 550px)");
-    return (
-      <Flex
-        as="nav"
-        bg={"#007935"}
-        color="white"
-        align="center"
-        justify="space-between"
-        padding="1rem"
-      >
-        <Box>
-          <Text fontSize="lg" fontWeight="bold">
-            Logo
-          </Text>
-        </Box>
-        {isLargerThan550 ? (
-          <Flex>
-            <Flex>
-            <Box marginLeft="2rem">
-                <Text fontSize="md" as="b">
-                  FAQ
-                </Text>
-              </Box>
-              <Box marginLeft="2rem">
-                <Text fontSize="md" as="b">
-                  EGRESADO
-                </Text>
-              </Box>
-              <Box marginLeft="2rem">
-                <Link to="/listarEgresados">
-                  <Text fontSize="md" as="b">
-                    RECLUTADOR
-                  </Text>
-                </Link>
-              </Box>
-            </Flex>
-          </Flex>
+  const [isLargerThan400] = useMediaQuery("(min-width: 400px)");
+  return (
+    <Flex
+      as="nav"
+      bg={"#007935"}
+      color="white"
+      align="center"
+      justify="space-between"
+      padding="1rem"
+    >
+      <Link to="/">
+      <Box padding="0px">
+        {isLargerThan400 ? (
+          <Image src={Logo2} alt="Logo" height={["25px", "30px"]} />
         ) : (
-          <Flex>
-            <Box marginLeft="1rem">
-                <Text fontSize="11px" as="b">
-                  FAQ
-                </Text>
-              </Box>
+          <Image src={Logo} alt="Logo" height={["25px", "30px"]} />
+        )}
+      </Box>
+      </Link>
+      {isLargerThan550 ? (
+        <Flex>
+          <Box marginLeft="2rem">
+            <Text fontSize="md" as="b">
+              FAQ
+            </Text>
+          </Box>
+          <Link to="/register">
+            <Box marginLeft="2rem">
+              <Text fontSize="md" as="b">
+                EGRESADO
+              </Text>
+            </Box>
+          </Link>
+          <Box marginLeft="2rem">
+            <Text fontSize="md" as="b">
+              RECLUTADOR
+            </Text>
+          </Box>
+        </Flex>
+      ) : (
+        <Flex>
+          <Box marginLeft="1rem">
+            <Text fontSize="11px" as="b">
+              FAQ
+            </Text>
+          </Box>
+          <Link to="/register">
             <Box marginLeft="1rem">
               <Text fontSize="11px" as="b">
                 EGRESADO
               </Text>
             </Box>
-            <Box marginLeft="1rem">
-              <Link to="/listarEgresados">
-                <Text fontSize="11px" as="b">
-                  RECLUTADOR
-                </Text>
-              </Link>
-            </Box>
-          </Flex>
-        )}
-      </Flex>
-    );
+          </Link>
+          <Box marginLeft="1rem">
+            <Text fontSize="11px" as="b">
+              RECLUTADOR
+            </Text>
+          </Box>
+        </Flex>
+      )}
+    </Flex>
+  );
 }
 export default NavBar;
