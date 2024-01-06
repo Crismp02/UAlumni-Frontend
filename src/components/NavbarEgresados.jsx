@@ -31,7 +31,7 @@ function NavBarEgresados(){
             <Text fontSize="md" as='b'>OFERTAS</Text>
           </Box>
           </Link>
-          <Link to="/PreguntasFrecuentes">
+          <Link to="/FrecuentlyAskedQuestions">
           <Box marginLeft="2rem">
             <Text fontSize="md" as='b'>FAQ</Text>
           </Box>
@@ -52,7 +52,7 @@ function NavBarEgresados(){
             <Text fontSize="10px" as='b'>OFERTAS</Text>
           </Box>
           </Link>
-          <Link to="/PreguntasFrecuentes">
+          <Link to="/FrecuentlyAskedQuestions">
           <Box marginLeft="1rem">
             <Text fontSize="10px" as='b'>FAQ</Text>
           </Box>

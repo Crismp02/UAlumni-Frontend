@@ -19,6 +19,8 @@ import EmailConfirmation from "./cores/register/EmailConfirmation";
 import ListarOfertasPrincipal from "./cores/listarOfertas/ListarOfertasPrincipal";
 import App from "./cores/listarEgresados/App";
 import TerminosCondiciones from "./cores/terminos-y-condiciones/terminos-y-condiciones";
+import TermsAndConditions from "./cores/terminos-y-condiciones/TerminosYCondiciones";
+import FaqEgresados from "./cores/FQA/FaqEgresados";
 
 const router = createBrowserRouter([
   {
@@ -78,6 +80,14 @@ const router = createBrowserRouter([
       {
         path: "/job-offer/:id",
         element: <OfertaTrabajo/>,
+      },
+      {
+        path: "/FrecuentlyAskedQuestions",
+        element: <FaqEgresados/>,
+      },
+      {
+        path: "/TermsAndConditions",
+        element: <TermsAndConditions/>,
       },
     ],
   },

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import NavBarEgresados from "../../components/NavBarEgresados";
-import Footer from "../../components/Footer";
 import ExperienciaLaboralCard from "./ExperienciaLaboralCard";
 import IdiomasCard from "./IdiomasCard";
 import CertificadosCard from "./CertificadosCard";
@@ -24,6 +23,7 @@ import PosicionesInteresCard from "./PosicionesInteresCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { differenceInDays } from 'date-fns';
+import FooterEgresado from "../../components/FooterEgresado";
 
 function PerfilEgresado() {
   const [isLoading, setIsLoading] = useState(true);
@@ -302,7 +302,7 @@ const navigate = useNavigate();
       </ModalFooter>
     </ModalContent>
   </Modal>
-      <Footer />
+      <FooterEgresado />
     </Box>
   );
 }
