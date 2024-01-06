@@ -132,7 +132,8 @@ const EgresadoCard = ({ egresado }) =>{
                 textAlign="right" 
                 fontSize={["sm", "sm", "md", "md"]}
                 colorScheme="teal"
-                variant="ghost">
+                bg="#007935"
+                >
                 VER PERFIL
               </Button>
               </Link>

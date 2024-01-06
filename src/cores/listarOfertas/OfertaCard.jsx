@@ -97,7 +97,9 @@ const OfertaCard = ({ oferta }) =>{
             paddingRight={["10px","10px","12px","12px"]} 
             marginRight={["10px", "10px", "0px", "0px"]}
             fontSize={["xs", "sm", "md", "md"]}
-            color="#007935"
+            color="white"
+            bg="#007935"
+            cursor="pointer"
             >
               VER INFORMACIÓN
           </Text>
