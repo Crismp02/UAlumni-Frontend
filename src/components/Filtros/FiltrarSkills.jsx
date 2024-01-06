@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
+import BASE_URL from '../../config/index';
+
 function FiltrarSkills({
   categoria,
   setCategoria,
@@ -33,7 +35,7 @@ useEffect(() => {
   if (categoria) {
     setCargandoHabilidades(true);
 
-    fetch(`http://localhost:3000/skillCategory/${categoria}/technical-skill`)
+    fetch(`${BASE_URL}/skillCategory/${categoria}/technical-skill`)
       .then((response) => {
         if (response.ok) {
           return response.json();

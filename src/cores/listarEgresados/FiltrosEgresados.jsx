@@ -9,6 +9,7 @@ import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useEgresados } from "./EgresadosContext";
 import PropTypes from "prop-types";
+import BASE_URL from '../../config/index';
 
 function FiltrosEgresados({ setHasSearched }) {
   const { fetchPaginatedData } = useEgresados();
@@ -118,7 +119,7 @@ function FiltrosEgresados({ setHasSearched }) {
   useEffect(() => {
     async function fetchCategorias() {
       try {
-        const response = await fetch("http://localhost:3000/skill-category");
+        const response = await fetch(`${BASE_URL}/skill-category`);
         if (!response.ok) {
           throw new Error("Error al obtener los egresados");
         }
@@ -141,7 +142,7 @@ function FiltrosEgresados({ setHasSearched }) {
   useEffect(() => {
     async function fetchCarreras() {
       try {
-        const response = await fetch("http://localhost:3000/career");
+        const response = await fetch(`${BASE_URL}/career`);
         if (!response.ok) {
           throw new Error("Error al obtener los egresados");
         }

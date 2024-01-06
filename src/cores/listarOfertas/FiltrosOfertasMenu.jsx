@@ -18,6 +18,7 @@ import { useOfertas } from './OfertasContext';
 import PropTypes from "prop-types";
 import FiltrarContratos from "./FiltrarContratos";
 import { useLocation } from "react-router-dom";
+import BASE_URL from '../../config/index';
 
 
 
@@ -130,7 +131,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     async function fetchCategorias() {
 
       try {
-        const response = await fetch("http://localhost:3000/skill-category");
+        const response = await fetch(`${BASE_URL}/skill-category`);
         if (!response.ok) {
           throw new Error("Error al obtener los egresados");
         }
@@ -154,7 +155,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
   useEffect(() => {
     async function fetchCarreras() {
       try {
-        const response = await fetch("http://localhost:3000/alumni/me/resume",{
+        const response = await fetch(`${BASE_URL}/alumni/me/resume`,{
           method: 'GET',
           credentials: 'include',
         });
@@ -218,7 +219,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
 
   useEffect(() => {
 
-    fetch(`http://localhost:3000/contract-type`,{
+    fetch(`${BASE_URL}/contract-type`,{
         method: 'GET',
         credentials: 'include',
     })

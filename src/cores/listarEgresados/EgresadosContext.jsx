@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import BASE_URL from '../../config/index';
 
 
 const EgresadosContext = createContext();
@@ -89,14 +90,14 @@ export const EgresadosProvider = ({ children }) => {
           : filters;
 
       if (!seed) {
-        const url = `http://localhost:3000/alumni/resume?page=${page}&per-page=4&${queryString}`;
+        const url = `${BASE_URL}/alumni/resume?page=${page}&per-page=4&${queryString}`;
         seed = await obtenerSemilla(url); // Obtener la semilla si no está presente
       }
 
       const seedParam = seed ? `&seed=${seed}` : '';
 
 
-      const urlWithData = `http://localhost:3000/alumni/resume?page=${page}&per-page=4${seedParam}${queryString ? `&${queryString}` : ''}`;
+      const urlWithData = `${BASE_URL}/alumni/resume?page=${page}&per-page=4${seedParam}${queryString ? `&${queryString}` : ''}`;
 
       const response = await fetch(urlWithData);
       if (!response.ok) {
