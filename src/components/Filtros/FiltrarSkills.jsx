@@ -10,8 +10,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
-
-import BASE_URL from '../../config/index';
+import { BASE_URL } from "../../config";
 
 function FiltrarSkills({
   categoria,

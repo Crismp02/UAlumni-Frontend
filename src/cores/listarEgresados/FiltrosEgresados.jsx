@@ -9,7 +9,7 @@ import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useEgresados } from "./EgresadosContext";
 import PropTypes from "prop-types";
-import BASE_URL from '../../config/index';
+import { BASE_URL } from "../../config";
 
 function FiltrosEgresados({ setHasSearched }) {
   const { fetchPaginatedData } = useEgresados();

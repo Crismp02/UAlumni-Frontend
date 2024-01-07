@@ -9,9 +9,7 @@ import PropTypes from "prop-types";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrarContratos from "./FiltrarContratos";
 import { useLocation } from "react-router-dom";
-import BASE_URL from '../../config/index';
-
-
+import { BASE_URL } from "../../config";
 
 function FiltrosOfertas({ setHasSearched }) {
 

@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import BASE_URL from '../../config/index';
-
+import { BASE_URL } from "../../config";
 
 const EgresadosContext = createContext();
 
