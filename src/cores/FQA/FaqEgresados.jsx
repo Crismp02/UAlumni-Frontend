@@ -11,6 +11,7 @@ function FaqEgresados() {
         backgroundColor: "#F5F5F5",
         display: "flex",
         flexDirection: "column",
+        minHeight: "100vh",
       }}
     >
       <NavBarEgresados />
@@ -40,6 +41,7 @@ function FaqEgresados() {
         gap={[10, 10, 6, 6]}
         gridTemplateColumns="35% 65%"
         marginBottom="-100px"
+        flexGrow="1"
       >
         {/*mensaje de ¿Aún tienes dudas?*/}
         <GridItem boxSize={["xs", "xs", "sm", "sm"]} gridColumn="1 / 2">

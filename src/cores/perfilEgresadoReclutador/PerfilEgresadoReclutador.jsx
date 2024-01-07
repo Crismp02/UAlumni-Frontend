@@ -50,7 +50,7 @@ function PerfilEgresadoReclutador() {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <>
+        <Box flexGrow="1">
           <Text
             fontSize={["lg", "lg", "xl", "4xl"]}
             color="black"
@@ -181,7 +181,7 @@ function PerfilEgresadoReclutador() {
               </Card>
             </Box>
           </Box>
-        </>
+        </Box>
       )}
       <Footer />
     </Box>

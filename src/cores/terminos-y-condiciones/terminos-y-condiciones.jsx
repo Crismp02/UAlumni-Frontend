@@ -15,6 +15,7 @@ function TerminosCondiciones() {
       backgroundColor="#F5F5F5"
       display="flex"
       flexDirection="column"
+      minHeight="100vh"
     >
       <NavBar />
       <Text
@@ -41,6 +42,8 @@ function TerminosCondiciones() {
         mx="auto"
         px={4}
         paddingBottom={["20px", "20px", "40px", "80px"]}
+        flexGrow="1"
+        marginBottom="-40px"
       >
         {/* Agrega aquí tu texto de términos y condiciones */}
         <Text textAlign="justify">
