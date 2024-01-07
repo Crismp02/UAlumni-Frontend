@@ -24,6 +24,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import { differenceInDays } from 'date-fns';
 import FooterEgresado from "../../components/FooterEgresado";
+import DownloadMyCV from "./DownloadMyCV";
 
 function PerfilEgresado() {
   const [isLoading, setIsLoading] = useState(true);
@@ -145,7 +146,7 @@ const navigate = useNavigate();
               alignItems="center"
             >
               <Box display="flex" flexDirection="column">
-                <DownloadCV id={dataProfile.data.id} nombre={dataProfile.data.names} apellido={dataProfile.data.surnames} />
+                <DownloadMyCV nombre={dataProfile.data.names} apellido={dataProfile.data.surnames} />
                 <Text color="grey" fontSize={["12px","12px", "md", "md"]}>
                   Cantidad de descargas:{" "}
                   {dataProfile.data.resume.numberOfDownloads}
