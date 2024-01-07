@@ -13,7 +13,6 @@ function Carreras(){
           flexDirection: "column",
           backgroundColor: "#F5F5F5",
           marginTop: "120px",
-          paddingBottom: "40px",
         }}
       >
         {isLargerThan700 ? <Text fontSize="4xl" textAlign="center" as="b" paddingTop="40px">

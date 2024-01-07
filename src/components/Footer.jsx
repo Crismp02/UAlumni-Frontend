@@ -14,6 +14,7 @@ function Footer() {
         flexDirection: isLargerThan400 ? "row" : "column",
         justifyContent: "space-between",
         borderTop: "4px solid #007935",
+        marginTop: "40px",
       }}
     >
       <Box
