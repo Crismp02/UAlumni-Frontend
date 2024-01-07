@@ -436,14 +436,6 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
 
           {Array.isArray(newCardData) && newCardData.length > 0 ? (
             newCardData.map((item, index) => {
-              const dateS = new Date(item.startDate);
-              const formattedDateS = `${dateS.getDate()}/${
-                dateS.getMonth() + 1
-              }/${dateS.getFullYear()}`;
-              const dateE = new Date(item.endDate);
-              const formattedDateE = `${dateE.getDate()}/${
-                dateE.getMonth() + 1
-              }/${dateE.getFullYear()}`;
               return (
                 <Flex key={index} alignItems="center" marginTop="3">
                   <Checkbox
@@ -472,7 +464,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                           alignItems="center"
                           marginTop="5px"
                         >
-                          {formattedDateS} - {formattedDateE}
+                          {`${addDays(new Date(item.startDate),1).getDate()}/${addDays(new Date(item.startDate),1).getMonth()+1}/${addDays(new Date(item.startDate),1).getFullYear()}`} - {`${addDays(new Date(item.endDate),1).getDate()}/${addDays(new Date(item.endDate),1).getMonth()+1}/${addDays(new Date(item.endDate),1).getFullYear()}`}
                         </Text>
                       </Flex>
                       <Flex>

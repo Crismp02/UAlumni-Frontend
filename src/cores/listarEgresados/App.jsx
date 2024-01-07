@@ -1,12 +1,12 @@
 import { EgresadosProvider } from './EgresadosContext';
-import NavBar from '../../components/Navbar';
 import PantallaEgresados from './PantallaEgresados';
 import Footer from '../../components/Footer';
+import NavBarReclutador from '../../components/NavBarReclutador';
 
 const App = () => {
   return (
     <EgresadosProvider>
-      <NavBar />
+      <NavBarReclutador/>
       <PantallaEgresados />
       <Footer/>
     </EgresadosProvider>
