@@ -27,6 +27,7 @@ function Register() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
     if (!email || !password || !confirmPassword) {
       toast({
@@ -36,7 +37,7 @@ function Register() {
         duration: 9000,
         isClosable: true,
       });
-      return;
+      return setIsLoading(false);;
     }
 
     // Validate email
@@ -52,7 +53,7 @@ function Register() {
         duration: 9000,
         isClosable: true,
       });
-      return;
+      return setIsLoading(false);;
     }
 
     // Validate password
@@ -63,9 +64,8 @@ function Register() {
         duration: 9000,
         isClosable: true,
       });
-      return;
+      return setIsLoading(false);
     }
-    setIsLoading(true);
 
     if (isValid) {
       try {
@@ -76,6 +76,8 @@ function Register() {
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };

@@ -56,12 +56,14 @@ function Login() {
     if (isValid) {
       try {
         const data = await loginUser(email, password);
-        setIsLoading(false);
         if (data) {
+          setIsLoading(false);
           navigate("/profile");
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };

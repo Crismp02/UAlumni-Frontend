@@ -2,22 +2,33 @@ import React, { useState } from "react";
 import { Button } from "@chakra-ui/react";
 import { downloadPDF } from "../../services/profileEgresado/AlumniProfile.services";
 import { Stack, Text } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 
 function DownloadCV({ id, nombre, apellido }) {
   const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
 
   const handleDownload = async () => {
     setIsLoading(true);
-    const blob = await downloadPDF(id);
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${nombre.replaceAll(" ", "_")}_${apellido.replaceAll(
-      " ",
-      "_"
-    )}_CV.pdf`;
-    link.click();
-    setIsLoading(false);
+    try {
+      const blob = await downloadPDF(id);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${nombre.replaceAll(" ", "_")}_${apellido.replaceAll(" ", "_")}_CV.pdf`;
+      link.click();
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error al descargar el PDF",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
