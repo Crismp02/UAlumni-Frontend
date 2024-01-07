@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { format, addDays } from "date-fns";
 import { Text, Box, Flex, Card, CardBody, Divider } from "@chakra-ui/react";
 
 const EducacionCard = ({ cardData }) => {
@@ -41,7 +42,7 @@ const EducacionCard = ({ cardData }) => {
                       alignItems="center"
                       marginTop="5px"
                     >
-                      {new Date(item.endDate).getFullYear()}
+                       {addDays(new Date(item.endDate), 1).getFullYear()}
                     </Text>
                   </Flex>
                   <Text>{item.institution}</Text>

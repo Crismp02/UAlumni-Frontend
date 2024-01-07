@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { addDays } from "date-fns";
 import {
   Text,
   Box,
@@ -47,7 +48,7 @@ const ExperienciaLaboralCard = ({ cardData }) => {
     <Flex justifyContent="space-between" alignItems="center">
       <Text fontWeight="bold" fontSize="15px">{item.companyName}</Text>
       <Text justifyContent="space-between" alignItems="center" marginTop="5px">
-         {formattedDateS} - {formattedDateE} 
+      {`${addDays(new Date(item.startDate),1).getDate()}/${addDays(new Date(item.startDate),1).getMonth()+1}/${addDays(new Date(item.startDate),1).getFullYear()}`} - {`${addDays(new Date(item.endDate),1).getDate()}/${addDays(new Date(item.endDate),1).getMonth()+1}/${addDays(new Date(item.endDate),1).getFullYear()}`}
       </Text>
     </Flex>
     <Flex >
