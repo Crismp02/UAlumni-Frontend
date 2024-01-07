@@ -82,14 +82,14 @@ function Footer() {
                   DUDAS Y CONSULTAS
                 </Text>
                 <Link to="/PreguntasFrecuentes">
-                <Text fontSize="sm" color="white" marginTop="5px">
-                  Preguntas frecuentes
-                </Text>
+                  <Text fontSize="sm" color="white" marginTop="5px">
+                    Preguntas frecuentes
+                  </Text>
                 </Link>
                 <Link to="/TerminosYCondiciones">
-                <Text fontSize="sm" color="white">
-                  Términos y condiciones
-                </Text>
+                  <Text fontSize="sm" color="white">
+                    Términos y condiciones
+                  </Text>
                 </Link>
               </Box>
               <Box width="50%" height="auto" marginLeft="50px">
@@ -128,21 +128,36 @@ function Footer() {
                   DUDAS Y CONSULTAS
                 </Text>
                 <Link to="/PreguntasFrecuentes">
-                <Text fontSize="13px" color="white" marginTop="5px">
-                  Preguntas frecuentes
-                </Text>
+                  <Text
+                    fontSize="13px"
+                    color="white"
+                    marginTop="5px"
+                    textDecoration="underline"
+                  >
+                    Preguntas frecuentes
+                  </Text>
                 </Link>
                 <Link to="/TerminosYCondiciones">
-                <Text fontSize="13px" marginTop="5px" color="white">
-                  Términos y condiciones
-                </Text>
+                  <Text
+                    fontSize="13px"
+                    marginTop="5px"
+                    color="white"
+                    textDecoration="underline"
+                  >
+                    Términos y condiciones
+                  </Text>
                 </Link>
               </Box>
               <Box width="50%" height="auto" marginTop="15px">
                 <Text fontSize="sm" as="b" color="white">
                   CONTACTOS
                 </Text>
-                <Text fontSize="13px" color="white" marginTop="5px">
+                <Text
+                  fontSize="13px"
+                  color="white"
+                  marginTop="5px"
+                  textDecoration="underline"
+                >
                   <a href="mailto:correo@gmail.com">ualumni.ucab@gmail.com</a>
                 </Text>
               </Box>
