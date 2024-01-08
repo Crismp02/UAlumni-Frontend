@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Button,
@@ -11,11 +10,33 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../../config";
 
-
-
-
 function Carreras() {
-const [carreras, setCarreras] = useState([]);
+  const [carreras, setCarreras] = useState([]);
+
+  // Función para manejar el almacenamiento en localStorage
+  const handleCarreraSeleccionada = (carreraSeleccionada) => {
+    // Almacenamiento para filtersURLEgresados
+    const filtersURLEgresados = {
+      careers: [carreraSeleccionada],
+    };
+    localStorage.setItem(
+      "filtersURLEgresados",
+      JSON.stringify(filtersURLEgresados)
+    );
+
+    // Almacenamiento para pageEgresados
+    localStorage.setItem("pageEgresados", "1");
+
+    // Almacenamiento para storedFiltersEgresados
+    const storedFiltersEgresados = {
+      careerParams: [carreraSeleccionada],
+    };
+    localStorage.setItem(
+      "storedFiltersEgresados",
+      JSON.stringify(storedFiltersEgresados)
+    );
+
+  };
 
   // Hacer el useEffect de las carreras
   useEffect(() => {
@@ -29,9 +50,8 @@ const [carreras, setCarreras] = useState([]);
         if (Array.isArray(data.data.items)) {
           const carrerasObtenidas = data.data.items.map((item) => item.name);
           setCarreras(carrerasObtenidas);
-          console.log(carrerasObtenidas)
+          console.log(carrerasObtenidas);
         }
-        console.log("hola")
       } catch (error) {
         console.error("Error:", error);
       }
@@ -62,18 +82,24 @@ const [carreras, setCarreras] = useState([]);
         </Text>
       )}
 
-<Stack p={{ base: 2, md: "20 20 5 20" }}>
+      <Stack p={{ base: 2, md: "20 20 5 20" }}>
         <Flex direction="row" justifyContent="center" wrap="wrap">
           {carreras.map((carrera, index) => (
             <Box key={index} my={2} mx={8}>
-              <Button
-                backgroundColor="#37B4E3"
-                color="white"
-                _hover={{ bg: "#247390" }}
-                size="md"
-              >
-                {carrera}
-              </Button>
+              <Link to="/listarEgresados">
+                <Button
+                  backgroundColor="#37B4E3"
+                  color="white"
+                  _hover={{ bg: "#247390" }}
+                  size="md"
+                  onClick={() => {
+                    const carreraSeleccionada = carrera;
+                    handleCarreraSeleccionada(carreraSeleccionada);
+                  }}
+                >
+                  {carrera}
+                </Button>
+              </Link>
             </Box>
           ))}
         </Flex>

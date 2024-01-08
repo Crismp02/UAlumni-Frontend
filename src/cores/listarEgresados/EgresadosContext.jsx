@@ -140,7 +140,7 @@ export const EgresadosProvider = ({ children }) => {
     const seed = JSON.parse(localStorage.getItem("seedEgresados"));
     const page = JSON.parse(localStorage.getItem("pageEgresados"));
     // convertir en objeto los filtros desde localStorage
-    if (filtersURL && seed && page) {
+    if (filtersURL && page) {
       fetchPaginatedData(filtersURL, page, seed); // Pasar los filtros y la semilla a fetchPaginatedData
     }
   }, []);
