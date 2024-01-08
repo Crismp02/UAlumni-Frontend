@@ -128,6 +128,17 @@ const EducacionCard = ({ cardData, setCardData }) => {
       return;
     }
 
+    if (additionalFields.endDate > new Date().toISOString().split("T")[0]) {
+      toast({
+        title: "Error",
+        description: "La fecha de finalización no puede ser mayor a la fecha actual",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Preparar los datos para la solicitud POST
     const newData = {
       title: additionalFields.title,
@@ -252,6 +263,16 @@ const EducacionCard = ({ cardData, setCardData }) => {
       toast({
         title: "Error",
         description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (editingCard.endDate > new Date().toISOString().split("T")[0]) {
+      toast({
+        title: "Error",
+        description: "La fecha de finalización no puede ser mayor a la fecha actual",
         status: "error",
         duration: 3000,
         isClosable: true,

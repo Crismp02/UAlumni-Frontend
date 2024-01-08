@@ -137,6 +137,39 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       return;
     }
 
+    if (additionalFields.startDate > additionalFields.endDate) {
+      toast({
+        title: "Error",
+        description: "La fecha de inicio no puede ser mayor a la fecha de finalización",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (additionalFields.startDate > new Date().toISOString().split("T")[0]) {
+      toast({
+        title: "Error",
+        description: "La fecha de inicio no puede ser mayor a la fecha actual",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (additionalFields.endDate > new Date().toISOString().split("T")[0]) {
+      toast({
+        title: "Error",
+        description: "La fecha de finalización no puede ser mayor a la fecha actual",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Preparar los datos para la solicitud POST
     const newData = {
       companyName: additionalFields.companyName,
@@ -255,6 +288,39 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       toast({
         title: "Error",
         description: "Los campos no pueden estar vacíos",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (editingCard.startDate > editingCard.endDate) {
+      toast({
+        title: "Error",
+        description: "La fecha de inicio no puede ser mayor a la fecha de finalización",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (editingCard.startDate > new Date().toISOString().split("T")[0]) {
+      toast({
+        title: "Error",
+        description: "La fecha de inicio no puede ser mayor a la fecha actual",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (editingCard.endDate > new Date().toISOString().split("T")[0]) {
+      toast({
+        title: "Error",
+        description: "La fecha de finalización no puede ser mayor a la fecha actual",
         status: "error",
         duration: 3000,
         isClosable: true,
