@@ -523,6 +523,7 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
+        console.log(error)
         toast.error(`Error: ${error.message}`);
         throw error;
       }
@@ -805,7 +806,6 @@ export const editCiapCourse = async (id, newData) => {
         credentials: "include", 
         });
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
         return (data.data);
         } else {
@@ -891,7 +891,6 @@ export const editCiapCourse = async (id, newData) => {
         credentials: "include", 
         });
         const data = await response.json();
-        console.log(data);
         if (response.ok) {
         return (data.data);
         } else {
