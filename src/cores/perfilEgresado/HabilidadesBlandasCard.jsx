@@ -34,11 +34,14 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
 
   useEffect(() => {
     setNewCardData(cardData);
-    const checkedItems = cardData
-      .filter((item) => item.isVisible)
-      .map((item) => item.industryName);
-    setCheckedItems(checkedItems);
   }, [cardData]);
+
+  useEffect(() => {
+    const checkedItems = newCardData
+      .filter((item) => item.isVisible)
+      .map((item) => item.skillName);
+    setCheckedItems(checkedItems);
+  }, [newCardData]);
 
   const [softSkills, setSoftSkills] = useState([]);
   useEffect(() => {

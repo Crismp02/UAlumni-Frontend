@@ -28,16 +28,17 @@ import {
 const CertificadosCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
-
+  
   useEffect(() => {
     setNewCardData(cardData);
+  }, [cardData]);
 
-    // Inicializa checkedItems con los títulos de los cursos que son visibles
-    const initialCheckedItems = cardData
+  useEffect(() => {
+    const checkedItems = newCardData
       .filter((item) => item.isVisible)
       .map((item) => item.id);
-    setCheckedItems(initialCheckedItems);
-  }, [cardData]);
+    setCheckedItems(checkedItems);
+  }, [newCardData]);
 
   const [courses, setCourses] = useState([]);
   useEffect(() => {

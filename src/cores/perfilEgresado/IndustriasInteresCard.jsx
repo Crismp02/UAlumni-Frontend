@@ -31,11 +31,14 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
 
   useEffect(() => {
     setNewCardData(cardData);
-    const checkedItems = cardData
+  }, [cardData]);
+
+  useEffect(() => {
+    const checkedItems = newCardData
       .filter((item) => item.isVisible)
       .map((item) => item.industryName);
     setCheckedItems(checkedItems);
-  }, [cardData]);
+  }, [newCardData]);
 
   const toast = useToast();
 
