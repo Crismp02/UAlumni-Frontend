@@ -26,11 +26,16 @@ const PortafoliosCard = ({cardData, setCardData}) => {
  const [newCardData, setNewCardData] = useState(cardData);
  const [checkedItems, setCheckedItems] = useState([]);
 
- useEffect(() => {
+useEffect(() => {
   setNewCardData(cardData);
-  const checkedItems = cardData.filter(item => item.isVisible).map(item => item.title);
-  setCheckedItems(checkedItems);
 }, [cardData]);
+
+useEffect(() => {
+  const checkedItems = newCardData
+    .filter((item) => item.isVisible)
+    .map((item) => item.title);
+  setCheckedItems(checkedItems);
+}, [newCardData]);
 
  const toast = useToast();
   

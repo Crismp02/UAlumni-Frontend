@@ -31,11 +31,14 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
 
   useEffect(() => {
     setNewCardData(cardData);
-    const checkedItems = cardData
+  }, [cardData]);
+
+  useEffect(() => {
+    const checkedItems = newCardData
       .filter((item) => item.isVisible)
       .map((item) => item.positionName);
     setCheckedItems(checkedItems);
-  }, [cardData]);
+  }, [newCardData]);
 
   const toast = useToast();
 
@@ -243,43 +246,44 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
     };
 
     try {
-    const updatedCard = await editPositionOfInterest(originalTitle, newData);
+      const updatedCard = await editPositionOfInterest(originalTitle, newData);
 
-    setContent(updatedCard);
+      setContent(updatedCard);
 
-    // Actualizar cardData con los nuevos datos
-    const updatedCardData = newCardData.map((card) => {
-      if (card.positionName === originalTitle) {
-        return { ...card, positionName: newData.positionName };
-      } else {
-        return card;
-      }
-    });
-    setNewCardData(updatedCardData);
+      // Actualizar cardData con los nuevos datos
+      const updatedCardData = newCardData.map((card) => {
+        if (card.positionName === originalTitle) {
+          return { ...card, positionName: newData.positionName };
+        } else {
+          return card;
+        }
+      });
 
-    // Mostrar un toast de éxito
-    toast({
-      title: "Éxito",
-      description: "La posición de interés ha sido editada con éxito",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
+      setNewCardData(updatedCardData);
 
-    setShowEditModal(false);
-    // agregar cada uno de los estados de edicion
-    setShowIcons(false);
-    setEditMode(true);
-  } catch (error) {
-    // Mostrar un mensaje de error si la solicitud falla
-    toast({
-      title: "Error",
-      description: "Hubo un error al editar la industria de interés",
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-    });
-  }
+      // Mostrar un toast de éxito
+      toast({
+        title: "Éxito",
+        description: "La posición de interés ha sido editada con éxito",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      setShowEditModal(false);
+      // agregar cada uno de los estados de edicion
+      setShowIcons(false);
+      setEditMode(true);
+    } catch (error) {
+      // Mostrar un mensaje de error si la solicitud falla
+      toast({
+        title: "Error",
+        description: "Hubo un error al editar la industria de interés",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas
@@ -455,12 +459,12 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
             ))
           ) : (
             <Box
-            marginTop="10px"
-            border="2px solid #007935"
-            borderTop="none"
-            borderRight="none"
-            borderBottom="none"
-            paddingLeft="2"
+              marginTop="10px"
+              border="2px solid #007935"
+              borderTop="none"
+              borderRight="none"
+              borderBottom="none"
+              paddingLeft="2"
             >
               <Text color="grey">
                 En esta sección, puedes añadir posiciones de interés.
@@ -474,9 +478,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
       <Modal isOpen={showEditModal} onClose={handleCancelEdit}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader color="#007935">
-            Editar posición de interés
-          </ModalHeader>
+          <ModalHeader color="#007935">Editar posición de interés</ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (

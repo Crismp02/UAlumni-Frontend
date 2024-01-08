@@ -34,11 +34,14 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
   useEffect(() => {
     setNewCardData(cardData);
-    const checkedItems = cardData
+  }, [cardData]);
+
+  useEffect(() => {
+    const checkedItems = newCardData
       .filter((item) => item.isVisible)
       .map((item) => item.languageName);
     setCheckedItems(checkedItems);
-  }, [cardData]);
+  }, [newCardData]);
 
   // Define idiomas como un estado
   const [idiomas, setIdiomas] = useState([]);
