@@ -144,7 +144,7 @@ function FiltrosEgresados({ setHasSearched }) {
       try {
         const response = await fetch(`${BASE_URL}/career`);
         if (!response.ok) {
-          throw new Error("Error al obtener los egresados");
+          throw new Error("Error al obtener las carreras");
         }
         const data = await response.json();
         if (Array.isArray(data.data.items)) {
