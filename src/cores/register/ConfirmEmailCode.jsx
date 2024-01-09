@@ -8,15 +8,18 @@ import {
   useMediaQuery,
   Image,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { confirmEmail } from "../../services/auth/Auth.services";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function ConfirmEmailCode() {
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email");
   const navigate = useNavigate();
   const [isLarger920] = useMediaQuery("(min-width: 920px)");
+  const toast = useToast();
 
   const handleSubmit = async (value) => {
     try {
@@ -25,6 +28,23 @@ function ConfirmEmailCode() {
         navigate("/login");
       }
     } catch (error) {
+      if (Number(error.message) === 400){
+        toast({
+          title: "Error",
+          description: "El código ingresado es incorrecto",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+        return; 
+      }
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
       navigate("/register");
     }
   };
@@ -92,7 +112,7 @@ function ConfirmEmailCode() {
               backgroundColor="white"
               marginBottom="30px"
             />
-            <HStack>
+            <HStack marginBottom="20px">
               <PinInput
                 otp
                 onComplete={handleSubmit}
@@ -117,6 +137,9 @@ function ConfirmEmailCode() {
                 />
               </PinInput>
             </HStack>
+            <Link to="/register">
+            <Text color="white" as="u">Volver al registro</Text>
+          </Link>
           </Box>
         </Box>
       </Box>

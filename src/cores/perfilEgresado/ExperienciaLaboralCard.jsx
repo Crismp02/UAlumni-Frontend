@@ -430,7 +430,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContent") {
         await DeleteWorkExperience(cardToDelete);
-        const updatedCardData = cardData.filter(
+        const updatedCardData = newCardData.filter(
           (card) => card.number !== cardToDelete
         );
         setNewCardData(updatedCardData);
@@ -438,19 +438,34 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         setEditMode(true);
         toast({
           title: "Éxito",
-          description: "El Estudio Realizado ha sido eliminado con éxito",
+          description: "La experiencia laboral ha sido eliminado con éxito",
           status: "success",
           duration: 3000,
           isClosable: true,
         });
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description:
+            "Ha ocurrido un problema al eliminar la experiencia laboral",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description:
+          "Ha ocurrido un problema al eliminar la experiencia laboral",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
     }
   };
 

@@ -357,16 +357,22 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
           (card) => card.skillName !== cardToDelete.skillName
         );
         setNewCardData(updatedCardData);
-
+  
         // Actualizar groupedSkills
         setGroupedSkills((prevGroupedSkills) => {
           const newGroupedSkills = { ...prevGroupedSkills };
           newGroupedSkills[cardToDelete.skillCategoryName] = newGroupedSkills[
             cardToDelete.skillCategoryName
           ].filter((skill) => skill.skillName !== cardToDelete.skillName);
+  
+          
+          if (newGroupedSkills[cardToDelete.skillCategoryName].length === 0) {
+            delete newGroupedSkills[cardToDelete.skillCategoryName];
+          }
+  
           return newGroupedSkills;
         });
-
+  
         setShowIcons(false);
         setEditMode(true);
         toast({

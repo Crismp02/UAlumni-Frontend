@@ -13,7 +13,7 @@ export const getAlumniProfile = async (id) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        throw error;
     }
     };
 
@@ -29,7 +29,7 @@ export const downloadPDF = async (id) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+      throw error;
     }
     }
     export const downloadMyPDF = async () => {
@@ -45,7 +45,7 @@ export const downloadPDF = async (id) => {
           throw new Error(data.message);
         }
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        throw error;
       }
     }
     export const previewPDF = async () => {
@@ -61,7 +61,7 @@ export const downloadPDF = async (id) => {
           throw new Error(data.message);
         }
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        throw error;
       }
     };
     

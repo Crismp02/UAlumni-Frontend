@@ -15,7 +15,7 @@ export const getMeProfile = async () => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     };
     export const editVisibility = async (newData) => {
@@ -37,7 +37,7 @@ export const getMeProfile = async () => {
             const data = await response.json();
             return data;
           } catch (error) {
-            toast.error(`Error: ${error.message}`);
+            toast.error("Ha ocurrido un error");
           }
         };
 
@@ -61,7 +61,7 @@ export const getMeProfile = async () => {
             const data = await response.json();
             return data;
           } catch (error) {
-            toast.error(`Error: ${error.message}`);
+            toast.error("Ha ocurrido un error");
           }
     };
 
@@ -86,7 +86,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     };
 
@@ -103,7 +103,7 @@ export const editAboutMe = async (newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     };
 
@@ -129,7 +129,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -154,7 +154,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
         throw error;
       }
     };
@@ -173,7 +173,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     };
 
@@ -200,7 +200,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -217,7 +217,7 @@ export const editAboutMe = async (newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     };
 
@@ -244,7 +244,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
         throw error;
       }
     }
@@ -263,7 +263,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -280,7 +280,7 @@ export const editAboutMe = async (newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     };
 
@@ -306,7 +306,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     };
 
@@ -323,7 +323,7 @@ export const editAboutMe = async (newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -349,7 +349,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
         throw error;
       }
     };
@@ -368,7 +368,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -385,7 +385,7 @@ export const editAboutMe = async (newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -409,7 +409,7 @@ export const editAboutMe = async (newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -432,7 +432,7 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     };
 
@@ -449,7 +449,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -477,7 +477,7 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -495,7 +495,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -524,7 +524,7 @@ export const editCiapCourse = async (id, newData) => {
         return data;
       } catch (error) {
         console.log(error)
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
         throw error;
       }
     }
@@ -542,7 +542,7 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -559,7 +559,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -607,7 +607,7 @@ export const editCiapCourse = async (id, newData) => {
           return data;
         } catch (error) {
           console.log(error);
-          toast.error(`Error: ${error.message}`);
+          toast.error("Ha ocurrido un error");
           throw error;
         }
       }
@@ -625,7 +625,7 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -642,7 +642,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -659,7 +659,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -676,7 +676,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -744,7 +744,7 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -794,7 +794,7 @@ export const editCiapCourse = async (id, newData) => {
         return data;
       } catch (error) {
         console.log(error);
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
         throw error; 
       }
     }
@@ -812,7 +812,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -829,7 +829,7 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -854,7 +854,7 @@ export const editCiapCourse = async (id, newData) => {
         return data;
       } catch (error) {
         console.log(error);
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }
 
@@ -879,7 +879,7 @@ export const editCiapCourse = async (id, newData) => {
         return data;
       } catch (error) {
         console.log(error);
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
         throw error;
       }
     }
@@ -897,7 +897,7 @@ export const editCiapCourse = async (id, newData) => {
         throw new Error(data.message);
         }
     } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
     }
     }
 
@@ -914,6 +914,6 @@ export const editCiapCourse = async (id, newData) => {
         const data = await response.json();
         return data;
       } catch (error) {
-        toast.error(`Error: ${error.message}`);
+        toast.error("Ha ocurrido un error");
       }
     }

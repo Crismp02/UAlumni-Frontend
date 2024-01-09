@@ -70,24 +70,6 @@ export const logoutUser = async () => {
   }
 };
 
-export const checkAuthStatus = async () => {
-  try {
-    const response = await fetch(`${BASE_URL}/auth/status`, {
-      method: "GET",
-      credentials: "include",
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      return data;
-    } else {
-      throw new Error(data.message);
-    }
-  } catch (error) {
-    toast.error(`Error: ${error.message}`);
-  }
-};
-
 export const confirmEmail = async (email, code) => {
   try {
     const response = await fetch(
@@ -104,9 +86,9 @@ export const confirmEmail = async (email, code) => {
       toast.success("Email confirmado con éxito");
       return data;
     } else {
-      throw new Error(data.message);
+      throw new Error(data.statusCode);
     }
   } catch (error) {
-    toast.error(`Error: ${error.message}`);
+    throw error;
   }
 };

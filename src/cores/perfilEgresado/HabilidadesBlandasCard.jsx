@@ -110,26 +110,30 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
       return;
     }
 
+  
+
+    // Preparar los datos para la solicitud POST
+    const newData = {
+      skillName: additionalFields.skillName,
+    };
+
+    
     // Verificar si el curso ya existe en newCardData
     const existingSoftSkill = newCardData.find(
-      (softSkills) => softSkills.name === additionalFields.skillName
-    );
+      (softSkill) => softSkill.skillName === newData.skillName
+      );
+
     if (existingSoftSkill) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       toast({
         title: "Error",
-        description: "El curso ya ha sido agregado",
+        description: "La habilidad blanda ya ha sido agregada",
         status: "error",
         duration: 3000,
         isClosable: true,
       });
       return;
     }
-
-    // Preparar los datos para la solicitud POST
-    const newData = {
-      skillName: additionalFields.skillName,
-    };
 
     // Llamar a la función AddCiapCourse con los datos preparados
     const newCard = await AddSoftSkill(newData);
@@ -226,7 +230,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentHabilidades") {
         await deleteSoftSkill(cardToDelete);
-        const updatedCardData = cardData.filter(
+        const updatedCardData = newCardData.filter(
           (card) => card.skillName !== cardToDelete
         );
         setNewCardData(updatedCardData);
@@ -240,13 +244,28 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
           isClosable: true,
         });
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description:
+            "Ha ocurrido un problema al eliminar la habilidad blanda",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description:
+          "Ha ocurrido un problema al eliminar la habilidad blanda",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
     }
   };
 

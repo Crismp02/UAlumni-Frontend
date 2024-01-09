@@ -369,7 +369,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContent") {
         await DeleteHigherEducationStudy(cardToDelete);
-        const updatedCardData = cardData.filter(
+        const updatedCardData = newCardData.filter(
           (card) => card.title !== cardToDelete
         );
         setNewCardData(updatedCardData);
@@ -383,13 +383,27 @@ const EducacionCard = ({ cardData, setCardData }) => {
           isClosable: true,
         });
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description:
+            "Ha ocurrido un problema al eliminar el estudio realizado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description:
+          "Ha ocurrido un problema al eliminar el estudio realizado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

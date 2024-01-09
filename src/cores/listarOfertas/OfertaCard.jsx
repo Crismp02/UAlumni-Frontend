@@ -77,33 +77,39 @@ const OfertaCard = ({ oferta }) =>{
             w={["100%", "100%", "80%", "80%", "80%", "80%"]}
             m="auto"
             p={5}
-            gap={["5px", "5px", "8px", "8px"]}
+            gap={["5px", "5px", "8px", "15px"]}
             marginBottom={["10px", "10px", "0px", "0px"]}
             display="flex"
-            flexDirection={["column", "column", "row", "row"]}
-            justifyContent="flex-end"
+            flexDirection={["column", "column", "column", "column"]}
+            justifyContent="center"
+            alignItems="center"
           >
            <Tag 
+           display="flex"
+           justifyContent="center"
            backgroundColor="#FBC430"  
-           paddingRight={["5px","2px","5px","5px","10px","10px"]} 
            textAlign="center"
+           width="90px"
            fontSize={["xs", "xs","xs","sm","sm","lg"]}>
            {formattedDate}
            </Tag>
-          </Box>
-          <Link to={`/job-offer/${id}`}>
+           <Link to={`/job-offer/${id}`}>
           <Text 
-            textAlign={["center", "center", "center", "right"]} 
-            paddingRight={["10px","10px","12px","12px"]} 
+            textAlign={["center", "center", "center", "center"]} 
             marginRight={["10px", "10px", "0px", "0px"]}
             fontSize={["xs", "sm", "md", "md"]}
+            width="170px"
             color="white"
             bg="#007935"
             cursor="pointer"
+            borderRadius="10px"
+            _hover={{ bg: "#025024" }}
             >
               VER INFORMACIÓN
           </Text>
           </Link>
+          </Box>
+          
           </Box>
         </Box>
       </div>
