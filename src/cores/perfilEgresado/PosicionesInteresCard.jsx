@@ -391,7 +391,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
               >
                 Posiciones de Interés
               </Text>
-              <Tooltip label="Indica las industrias en las que te gustaría trabajar. (Ej: Medicina)" isOpen={openVisibleTooltip} fontSize={["12px", "12px", "sm", "sm"]}
+              <Tooltip label="Indica los cargos en los que te gustaría trabajar. (Ej: Secretaria)" isOpen={openVisibleTooltip} fontSize={["12px", "12px", "sm", "sm"]}
                   hasArrow={true}>
                     <InfoIcon
                       cursor="pointer"
