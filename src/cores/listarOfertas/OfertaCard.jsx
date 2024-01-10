@@ -93,13 +93,14 @@ const OfertaCard = ({ oferta }) =>{
           </Box>
           <Link to={`/job-offer/${id}`}>
           <Text 
-            textAlign={["center", "center", "center", "right"]} 
+            textAlign={["center", "center", "center", "center"]} 
             paddingRight={["10px","10px","12px","12px"]} 
-            marginRight={["10px", "10px", "0px", "0px"]}
+            marginRight={["10px", "10px", "2px", "2px"]}
             fontSize={["xs", "sm", "md", "md"]}
             color="white"
             bg="#007935"
             cursor="pointer"
+            borderRadius="5px"
             >
               VER INFORMACIÓN
           </Text>
