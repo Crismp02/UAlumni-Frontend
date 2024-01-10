@@ -15,6 +15,7 @@ import {
   CardBody,
   Divider,
   Checkbox,
+  Tooltip
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -24,10 +25,12 @@ import {
   editIndustryOfInterest,
   getIndustryOfInterestItem,
 } from "../../services/auth/MeProfile.services";
+import { InfoIcon } from '@chakra-ui/icons'
 
 const IndustriasInteresCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [openVisibleTooltip, setOpenVisibleTooltip] = useState(false); 
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -155,7 +158,10 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     // Llamar a la función AddPortfolioItem con los datos preparados
     const newCard = await AddIndustryOfInterest(newData);
 
-    // Mostrar un toast de éxito
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
+      // Mostrar un toast de éxito
     toast({
       title: "Éxito",
       description: "La industria de interés ha sido creada con éxito",
@@ -163,10 +169,6 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       duration: 3000,
       isClosable: true,
     });
-
-    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
-    if (newCard) {
-      setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
@@ -250,6 +252,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     });
     setNewCardData(updatedCardData);
 
+    if(updatedCard){
     // Mostrar un toast de éxito
     toast({
       title: "Éxito",
@@ -258,6 +261,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       duration: 3000,
       isClosable: true,
     });
+    }
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
@@ -360,7 +364,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Flex alignItems="left">
+            <Flex alignItems="center">
               <Checkbox
                 colorScheme="green"
                 isChecked={checkedItems.length === newCardData.length}
@@ -377,6 +381,17 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
               >
                 Industrias de Interés
               </Text>
+              <Tooltip label="Indica las industrias en las que te gustaría trabajar. (Ej: Medicina)" isOpen={openVisibleTooltip} fontSize={["12px", "12px", "sm", "sm"]}
+                  hasArrow={true}>
+                    <InfoIcon
+                      cursor="pointer"
+                      color="#37B4E3"
+                      marginLeft="10px"
+                      onClick={()=> {
+                        setOpenVisibleTooltip(!openVisibleTooltip)
+                        console.log(openVisibleTooltip)}}
+                    />
+                  </Tooltip>
             </Flex>
             <AddIcon
               onClick={() => handleAddClick("IndustriasInteres")}

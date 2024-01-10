@@ -63,11 +63,13 @@ function NavBar() {
               </Text>
             </Box>
           </Link>
+          <Link to="/listarEgresados">
           <Box marginLeft="1rem">
             <Text fontSize="11px" as="b">
               RECLUTADOR
             </Text>
           </Box>
+          </Link>
         </Flex>
       )}
     </Flex>

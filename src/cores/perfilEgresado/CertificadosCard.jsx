@@ -166,6 +166,13 @@ const CertificadosCard = ({ cardData, setCardData }) => {
           { id: additionalFields.id, name: newData.name },
         ]);
       }
+      toast({
+        title: "Éxito",
+        description: "El certificado se ha añadido con éxito",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales

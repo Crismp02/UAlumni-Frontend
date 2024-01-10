@@ -691,7 +691,7 @@ export const editCiapCourse = async (id, newData) => {
           body: JSON.stringify({
             skillCategoryName: newData.skillCategoryName,
             skillName: newData.skillName,
-            isVisible: false,
+            isVisible: newData.isVisible,
           }),
         });
        

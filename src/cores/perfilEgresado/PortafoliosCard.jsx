@@ -152,8 +152,11 @@ const handleCheck = async (e, item) => {
   
     // Llamar a la función AddPortfolioItem con los datos preparados
     const newCard = await AddPortfolioItem(newData);
-
-    // Mostrar un toast de éxito
+  
+    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
+    if (newCard) {
+      setNewCardData(prevCardData => [...prevCardData, newCard.data]);
+      // Mostrar un toast de éxito
   toast({
     title: "Éxito",
     description: "El portafolio ha sido creado con éxito",
@@ -161,10 +164,6 @@ const handleCheck = async (e, item) => {
     duration: 3000,
     isClosable: true,
   });
-  
-    // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
-    if (newCard) {
-      setNewCardData(prevCardData => [...prevCardData, newCard.data]);
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
@@ -258,6 +257,7 @@ const handleCheck = async (e, item) => {
     });
     setNewCardData(updatedCardData);
 
+    if(updatedCard){
     // Mostrar un toast de éxito
   toast({
     title: "Éxito",
@@ -266,6 +266,7 @@ const handleCheck = async (e, item) => {
     duration: 3000,
     isClosable: true,
   });
+    }
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion

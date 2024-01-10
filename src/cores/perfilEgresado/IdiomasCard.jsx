@@ -177,8 +177,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
     if (newCard) {
       setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
-    }
-    // Mostrar un toast de éxito
+      // Mostrar un toast de éxito
     toast({
       title: "Éxito",
       description: "El idioma ha sido añadido con éxito",
@@ -186,6 +185,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       duration: 3000,
       isClosable: true,
     });
+    }
+    
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
@@ -277,17 +278,11 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       isVisible: true,
     };
 
+    try{
     const updatedCard = await editLanguage(originalTitle, newData);
-    // Mostrar un toast de éxito
-    toast({
-      title: "Éxito",
-      description: "El idioma ha sido editado con éxito",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
 
     setContent(updatedCard);
+
     // Actualizar cardData con los nuevos datos
     const updatedCardData = cardData.map((card) => {
       if (card.languageName === originalTitle) {
@@ -300,12 +295,32 @@ const IdiomasCard = ({ cardData, setCardData }) => {
         return card;
       }
     });
+    if(updatedCard){
+      // Mostrar un toast de éxito
+    toast({
+      title: "Éxito",
+      description: "El idioma ha sido editado con éxito",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+    }
     setNewCardData(updatedCardData);
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+  } catch (error) {
+      // Mostrar un mensaje de error si la solicitud falla
+      toast({
+        title: "Error",
+        description: "Hubo un error al editar el idioma",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas

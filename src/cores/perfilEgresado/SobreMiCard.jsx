@@ -76,6 +76,16 @@ const SobremiCard = ({ cardData: initialCardData }) => {
 
     // Actualizar cardContent con updatedCard
     setCardContent(updatedCard);
+    
+    if(updatedCard){
+      toast({
+        title: "Éxito",
+        description: "La información de contacto se ha editado con éxito",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
 
     // Actualizar cardData con la nueva descripción
     setCardData(newData.aboutMe); // Aquí es donde se cambió el código

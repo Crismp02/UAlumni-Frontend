@@ -143,7 +143,8 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     if (additionalFields.startDate > additionalFields.endDate) {
       toast({
         title: "Error",
-        description: "La fecha de inicio no puede ser mayor a la fecha de finalización",
+        description:
+          "La fecha de inicio no puede ser mayor a la fecha de finalización",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -165,7 +166,8 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     if (additionalFields.endDate > new Date().toISOString().split("T")[0]) {
       toast({
         title: "Error",
-        description: "La fecha de finalización no puede ser mayor a la fecha actual",
+        description:
+          "La fecha de finalización no puede ser mayor a la fecha actual",
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -211,15 +213,15 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
     if (newCard) {
       setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
+      // Mostrar un toast de éxito
+      toast({
+        title: "Éxito",
+        description: "La experiencia laboral se ha añadido con éxito",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     }
-    // Mostrar un toast de éxito
-    toast({
-      title: "Éxito",
-      description: "La experiencia laboral se ha añadido con éxito",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
@@ -385,6 +387,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     });
 
     setNewCardData(updatedCardData);
+    if (updatedCard) {
     // Mostrar un toast de éxito
     toast({
       title: "Éxito",
@@ -393,6 +396,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       duration: 3000,
       isClosable: true,
     });
+    }
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion

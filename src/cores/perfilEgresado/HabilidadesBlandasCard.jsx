@@ -154,6 +154,14 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
           { name: additionalFields.skillName },
         ]);
       }
+      // Mostrar un toast de éxito
+    toast({
+      title: "Éxito",
+      description: "La habilidad blanda se ha añadido con éxito",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales

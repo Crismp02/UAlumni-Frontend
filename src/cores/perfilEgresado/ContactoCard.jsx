@@ -70,6 +70,16 @@ const ContactoCard = ({ cardData: initialCardData }) => {
     // Llamar a la función editContactInfo para hacer la solicitud PATCH
     const updatedCard = await editContactInfo(newData);
 
+    if (updatedCard){
+      toast({
+        title: "Éxito",
+        description: "La información de contacto se ha editado con éxito",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+
     // Actualizar cardContent con updatedCard
     setCardContent(updatedCard);
 

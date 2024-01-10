@@ -193,8 +193,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
     // Si la solicitud es exitosa, actualizar el estado cardData con los nuevos datos
     if (newCard) {
       setNewCardData((prevCardData) => [...prevCardData, newCard.data]);
-    }
-    // Mostrar un toast de éxito
+      // Mostrar un toast de éxito
     toast({
       title: "Éxito",
       description: "El Estudio Realizado se ha añadido con éxito",
@@ -202,6 +201,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
       duration: 3000,
       isClosable: true,
     });
+    }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
@@ -324,6 +324,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
     });
 
     setNewCardData(updatedCardData);
+    if (updatedCard){
     // Mostrar un toast de éxito
     toast({
       title: "Éxito",
@@ -331,7 +332,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
       status: "success",
       duration: 3000,
       isClosable: true,
-    });
+    });}
 
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion

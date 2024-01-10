@@ -7,7 +7,7 @@ import PortafoliosCard from "./PortafoliosCard";
 import ContactoCard from "./ContactoCard";
 import EducacionCard from "./EducacionCard";
 import SobremiCard from "./SobreMiCard";
-import { Box, Text, Flex, VStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Divider  } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Divider, Tooltip  } from "@chakra-ui/react";
 import { useState } from "react";
 import CustomSwitch from "./Switch";
 import {
@@ -23,6 +23,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import FooterEgresado from "../../components/FooterEgresado";
 import DownloadMyCV from "./DownloadMyCV";
+import { InfoIcon } from '@chakra-ui/icons'
 
 function PerfilEgresado() {
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +31,7 @@ function PerfilEgresado() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpenO, setIsModalOpenO] = useState(false);
   const location = useLocation();
+  const [openVisibleTooltip, setOpenVisibleTooltip] = useState(false); 
 const navigate = useNavigate();
 
   const [cardData, setCardData] = useState([]);
@@ -108,19 +110,23 @@ const navigate = useNavigate();
             PERFIL
           </Text>
           {location.state && location.state.fromJobOffer && (
-  <Button onClick={() => navigate(-1)} width="80px"><ArrowBackIcon/> <Text fontSize="11px">Volver</Text> </Button>
-)}
+            <Button onClick={() => navigate(-1)} width="80px">
+              <ArrowBackIcon /> <Text fontSize="11px">Volver</Text>{" "}
+            </Button>
+          )}
           <Box
             width="calc(100vw - 20px)"
             marginLeft="20px"
             display="flex"
-            flexDirection={['column', 'column', 'row', 'row']}
+            flexDirection={["column", "column", "row", "row"]}
             marginBottom="20px"
           >
-            
             <Box width="70vw" display="flex" flexDirection="column">
-            
-              <Text color="#37B4E3" as="b" fontSize={["lg", "mlg", "xl", "2xl"]}>
+              <Text
+                color="#37B4E3"
+                as="b"
+                fontSize={["lg", "mlg", "xl", "2xl"]}
+              >
                 {(
                   dataProfile.data.names +
                   " " +
@@ -136,27 +142,41 @@ const navigate = useNavigate();
               </Text>
             </Box>
             <Box
-            marginTop={["10px", "10px", "0px", "0px"]}
+              marginTop={["10px", "10px", "0px", "0px"]}
               display="flex"
-              width={["90%","30%"]}
-              justifyContent={["center","right"]}
+              width={["90%", "30%"]}
+              justifyContent={["center", "right"]}
               paddingRight={["0px", "0px", "20px", "20px"]}
               alignItems="center"
             >
               <Box display="flex" flexDirection="column">
-                <DownloadMyCV nombre={dataProfile.data.names} apellido={dataProfile.data.surnames} />
-                <Text color="grey" fontSize={["12px","12px", "md", "md"]}>
+                <DownloadMyCV
+                  nombre={dataProfile.data.names}
+                  apellido={dataProfile.data.surnames}
+                />
+                <Text color="grey" fontSize={["12px", "12px", "md", "md"]}>
                   Cantidad de descargas:{" "}
                   {dataProfile.data.resume.numberOfDownloads}
                 </Text>
                 <Flex
-                  justifyContent={["center","center","flex-end","flex-end"]}
+                  justifyContent={["center", "center", "flex-end", "flex-end"]}
                   alignItems="center"
                   marginTop="10px"
                 >
+                  <Tooltip label="Cuando tu perfil se encuentre público podrás aparecer en búsquedas de reclutadores" isOpen={openVisibleTooltip} fontSize={["12px", "12px", "sm", "sm"]}
+                  hasArrow={true}>
+                    <InfoIcon
+                      cursor="pointer"
+                      color="#37B4E3"
+                      marginRight="7px"
+                      onClick={()=> {
+                        setOpenVisibleTooltip(!openVisibleTooltip)
+                        console.log(openVisibleTooltip)}}
+                    />
+                  </Tooltip>
                   {switchValue ? (
                     <Text
-                      fontSize={["12px","12px","sm","sm"]}
+                      fontSize={["12px", "12px", "sm", "sm"]}
                       color="black"
                       marginRight="10px"
                       fontWeight="bold"
@@ -165,7 +185,7 @@ const navigate = useNavigate();
                     </Text>
                   ) : (
                     <Text
-                    fontSize={["12px","12px","sm","sm"]}
+                      fontSize={["12px", "12px", "sm", "sm"]}
                       color="black"
                       marginRight="10px"
                       fontWeight="bold"
@@ -260,47 +280,70 @@ const navigate = useNavigate();
         </>
       )}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-    <ModalOverlay />
-    <ModalContent>
-      <ModalHeader color="#007935">Aviso</ModalHeader>
-      <Divider orientation="horizontal" />
-      <ModalBody>
-        Falta menos de una semana para que su perfil sea ocultado. Si desea mantenerlo visible, por favor haga click en el botón "Renovar". 
-      </ModalBody>
-      <ModalFooter display="flex" flexDirection="row">
-        <Button color="#007935"
-              style={{ borderColor: "#007935", borderWidth: "2px" }} onClick={() => setIsModalOpen(false)} marginRight="10px">
-          Cancelar
-        </Button>
-        <Button bgColor="#007935"
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader color="#007935">Aviso</ModalHeader>
+          <Divider orientation="horizontal" />
+          <ModalBody>
+            Falta menos de una semana para que su perfil sea ocultado. Si desea
+            mantenerlo visible, por favor haga click en el botón "Renovar".
+          </ModalBody>
+          <ModalFooter display="flex" flexDirection="row">
+            <Button
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+              onClick={() => setIsModalOpen(false)}
+              marginRight="10px"
+            >
+              Cancelar
+            </Button>
+            <Button
+              bgColor="#007935"
               color="white"
-              _hover={{ bg: "#025024" }} onClick={() => { editVisibility(true);  setIsModalOpen(false); }} >
-          Renovar
-        </Button>
-      </ModalFooter>
-    </ModalContent>
-  </Modal>
-  <Modal isOpen={isModalOpenO} onClose={() => setIsModalOpenO(false)}>
-    <ModalOverlay />
-    <ModalContent>
-      <ModalHeader color="#007935">Perfil Oculto</ModalHeader>
-      <Divider orientation="horizontal" />
-      <ModalBody>
-        Su perfil se encuentra oculto. Si desea activarlo, por favor haga click en el botón "Activar". 
-      </ModalBody>
-      <ModalFooter display="flex" flexDirection="row">
-        <Button color="#007935"
-              style={{ borderColor: "#007935", borderWidth: "2px" }} onClick={() => setIsModalOpenO(false)} marginRight="10px">
-          Cancelar
-        </Button>
-        <Button bgColor="#007935"
+              _hover={{ bg: "#025024" }}
+              onClick={() => {
+                editVisibility(true);
+                setIsModalOpen(false);
+              }}
+            >
+              Renovar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isModalOpenO} onClose={() => setIsModalOpenO(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader color="#007935">Perfil Oculto</ModalHeader>
+          <Divider orientation="horizontal" />
+          <ModalBody>
+            Su perfil se encuentra oculto. Si desea activarlo, por favor haga
+            click en el botón "Activar".
+          </ModalBody>
+          <ModalFooter display="flex" flexDirection="row">
+            <Button
+              color="#007935"
+              style={{ borderColor: "#007935", borderWidth: "2px" }}
+              onClick={() => setIsModalOpenO(false)}
+              marginRight="10px"
+            >
+              Cancelar
+            </Button>
+            <Button
+              bgColor="#007935"
               color="white"
-              _hover={{ bg: "#025024" }} onClick={() => { editVisibility(true);  setIsModalOpenO(false); setSwitchValue(true);}} >
-          Activar
-        </Button>
-      </ModalFooter>
-    </ModalContent>
-  </Modal>
+              _hover={{ bg: "#025024" }}
+              onClick={() => {
+                editVisibility(true);
+                setIsModalOpenO(false);
+                setSwitchValue(true);
+              }}
+            >
+              Activar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <FooterEgresado />
     </Box>
   );

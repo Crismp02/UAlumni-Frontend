@@ -217,10 +217,17 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
       return;
     }
 
+    const existSkillCategory = groupedSkills.hasOwnProperty(additionalFields.categoryName);
+    let isVisibleCategory = false;
+    if (existSkillCategory) { 
+      isVisibleCategory = groupedSkills[additionalFields.categoryName][0].isVisible;
+    }
+
     // Preparar los datos para la solicitud POST
     const newData = {
       skillCategoryName: additionalFields.categoryName,
       skillName: additionalFields.name,
+      isVisible: isVisibleCategory,
     };
 
     // Llamar a la función AddCiapCourse con los datos preparados
@@ -277,11 +284,20 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
 
         return newGroupedSkills;
       });
+      // Mostrar un toast de éxito
+    toast({
+      title: "Éxito",
+      description: "La habilidad técnica se ha añadido con éxito",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setSelectedCategory('');
   };
 
   const handleFieldChange = (fieldName, value) => {
