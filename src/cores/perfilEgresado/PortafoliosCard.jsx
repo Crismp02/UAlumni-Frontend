@@ -14,7 +14,7 @@ import {
   Card,
   CardBody,
   Divider,
-  Checkbox
+  Checkbox,
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
 import { AddIcon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useToast } from "@chakra-ui/react";
@@ -351,7 +351,7 @@ const handleCheck = async (e, item) => {
     <Card marginTop="20px">
     <CardBody p="10px">
     <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-    <Flex alignItems="left">
+    <Flex alignItems="center">
     <Checkbox colorScheme="green" isChecked={checkedItems.length === newCardData.length} onChange={handleCheckAll} />
   <Text
     fontWeight="bold"

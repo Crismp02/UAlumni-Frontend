@@ -16,8 +16,9 @@ import {
   Divider,
   Flex,
   Checkbox,
+  Tooltip
 } from "@chakra-ui/react"; // Ajusta la importación según tu librería de componentes
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, InfoIcon } from "@chakra-ui/icons";
 import {
   AddTechnicalSkill,
   deleteTechnicalSkill,
@@ -31,6 +32,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   const toast = useToast();
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [openVisibleTooltip, setOpenVisibleTooltip] = useState(false); 
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -419,7 +421,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
       alignItems="center"
       justifyContent="space-between"
     >
-      <Flex alignItems="left">
+      <Flex alignItems="center">
         <Checkbox
           colorScheme="green"
           isChecked={checkAll}
@@ -436,6 +438,17 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
         >
           Habilidades Técnicas
         </Text>
+        <Tooltip label="Las categorías son etiquetas para agrupar del mismo tipo" isOpen={openVisibleTooltip} fontSize={["12px", "12px", "sm", "sm"]}
+                  hasArrow={true}>
+                    <InfoIcon
+                      cursor="pointer"
+                      color="#37B4E3"
+                      marginLeft="10px"
+                      onClick={()=> {
+                        setOpenVisibleTooltip(!openVisibleTooltip)
+                        console.log(openVisibleTooltip)}}
+                    />
+                  </Tooltip>
       </Flex>
       <AddIcon
         onClick={() => handleAddClick("Técnicas")}

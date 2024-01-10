@@ -374,7 +374,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Flex alignItems="left">
+            <Flex alignItems="center">
               <Checkbox
                 colorScheme="green"
                 isChecked={checkedItems.length === newCardData.length}
