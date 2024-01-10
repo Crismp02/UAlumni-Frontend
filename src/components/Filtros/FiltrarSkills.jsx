@@ -8,6 +8,8 @@ import {
   Box,
   Tooltip,
   useMediaQuery,
+  Tag,
+  TagCloseButton
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { BASE_URL } from "../../config";
@@ -165,19 +167,23 @@ useEffect(() => {
           >
             {list.map((item, index) => (
               <ListItem key={index}>
-                {item.categoria}
+                <Tag
+                        bg="#37B4E3"
+                        fontSize="12px"
+                        paddingLeft="2"
+                        paddingTop="1px"
+                        paddingBottom="1px"
+                        paddingRight="8px"
+                        borderRadius="4px"
+                        color="white"
+                        marginBottom="5px"
+                      >
+                        {item.categoria}
                 {item.habilidad && `: ${item.habilidad}`}
-                <Button
-                  onClick={() => handleRemoveHabilidad(index)}
-                  mt={1}
-                  marginLeft="20px"
-                  marginBottom="8px"
-                  backgroundColor="#EDF2F6"
-                  color="black"
-                  size="xs"
-                >
-                  x
-                </Button>
+                        <TagCloseButton
+                          onClick={() => handleRemoveHabilidad(index)}
+                        />
+                      </Tag>
               </ListItem>
             ))}
           </List>
@@ -210,19 +216,23 @@ useEffect(() => {
           >
             {list.map((item, index) => (
               <ListItem key={index} fontSize="12px">
-                {item.categoria}
+                <Tag
+                        bg="#37B4E3"
+                        fontSize="12px"
+                        paddingLeft="2"
+                        paddingTop="1px"
+                        paddingBottom="1px"
+                        paddingRight="8px"
+                        borderRadius="4px"
+                        color="white"
+                        marginBottom="5px"
+                      >
+                        {item.categoria}
                 {item.habilidad && `: ${item.habilidad}`}
-                <Button
-                  onClick={() => handleRemoveHabilidad(index)}
-                  mt={1}
-                  marginLeft="20px"
-                  marginBottom="8px"
-                  backgroundColor="#EDF2F6"
-                  color="black"
-                  size="xs"
-                >
-                  x
-                </Button>
+                        <TagCloseButton
+                          onClick={() => handleRemoveHabilidad(index)}
+                        />
+                      </Tag>
               </ListItem>
             ))}
           </List>

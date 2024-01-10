@@ -7,7 +7,7 @@ import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from "./OfertasContext";
 import PropTypes from "prop-types";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
-import FiltrarContratos from "./FiltrarContratos";
+import FiltrarContratos from "./filtrarContratos";
 import { useLocation } from "react-router-dom";
 import { BASE_URL } from "../../config";
 

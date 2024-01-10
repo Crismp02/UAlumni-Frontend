@@ -8,7 +8,9 @@ import {
   Button,
   List,
   ListItem,
-  Tooltip
+  Tooltip,
+  Tag,
+  TagCloseButton
 } from "@chakra-ui/react";
 
 function FiltrarPositions({
@@ -95,18 +97,22 @@ function FiltrarPositions({
           <>
             {listPos.map((item, index) => (
               <ListItem key={index}>
-                {item}
-                <Button
-                  onClick={() => handleRemovePos(index)}
-                  mt={1}
-                  marginLeft="20px"
-                  marginBottom="8px"
-                  backgroundColor="#EDF2F6"
-                  color="black"
-                  size="xs"
-                >
-                  x
-                </Button>
+                <Tag
+                        bg="#37B4E3"
+                        fontSize="12px"
+                        paddingLeft="2"
+                        paddingTop="1px"
+                        paddingBottom="1px"
+                        paddingRight="8px"
+                        borderRadius="4px"
+                        color="white"
+                        marginBottom="5px"
+                      >
+                        {item}
+                        <TagCloseButton
+                          onClick={() => handleRemovePos(index)}
+                        />
+                      </Tag>
               </ListItem>
             ))}
           </>
@@ -114,18 +120,22 @@ function FiltrarPositions({
           <>
             {listPos.map((item, index) => (
               <ListItem key={index} fontSize="12px">
-                {item}
-                <Button
-                  onClick={() => handleRemovePos(index)}
-                  mt={1}
-                  marginLeft="20px"
-                  marginBottom="8px"
-                  backgroundColor="#EDF2F6"
-                  color="black"
-                  size="xs"
-                >
-                  x
-                </Button>
+                <Tag
+                        bg="#37B4E3"
+                        fontSize="12px"
+                        paddingLeft="2"
+                        paddingTop="1px"
+                        paddingBottom="1px"
+                        paddingRight="8px"
+                        borderRadius="4px"
+                        color="white"
+                        marginBottom="5px"
+                      >
+                        {item}
+                        <TagCloseButton
+                          onClick={() => handleRemovePos(index)}
+                        />
+                      </Tag>
               </ListItem>
             ))}
           </>
