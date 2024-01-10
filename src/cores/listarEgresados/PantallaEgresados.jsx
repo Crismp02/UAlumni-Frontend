@@ -94,7 +94,7 @@ const PantallaEgresados = () => {
   const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
 
   return (
-    <Box>
+    <Box width="100vw">
       <Text
         fontSize={["lg", "lg", "xl", "4xl"]}
         color="black"
@@ -113,9 +113,9 @@ const PantallaEgresados = () => {
         ENCUENTRA A TU EGRESADO
       </Text>
 
-      <Flex flexDirection={isSmallerThan800 ? "column" : "row"}>
+      <Box display="flex" flexDirection={isSmallerThan800 ? "column" : "row"} width="100%">
         {!isSmallerThan800 && (
-          <Box flex="1">
+          <Box width="33.3%">
             <FiltrosEgresados
               setHasSearched={setHasSearched}
               setCurrentFilters={updateFilters} // Actualizar los filtros en el cambio
@@ -123,7 +123,7 @@ const PantallaEgresados = () => {
           </Box>
         )}
 
-        <Box flex="2">
+        <Box width={["100%", "100%", "100%", "66.6%", "66.6%"]}>
           <ListarEgresados hasSearched={hasSearched} />
 
           <div
@@ -199,15 +199,13 @@ const PantallaEgresados = () => {
           </div>
         </Box>
 
-        {isSmallerThan800 && (
-          <Box flex="1">
+          <Box display={isSmallerThan800 ? "" : "none"} >
             <FiltrosEgresadosMenu
               setHasSearched={setHasSearched}
               setCurrentFilters={updateFilters}
             />
           </Box>
-        )}
-      </Flex>
+      </Box>
     </Box>
   );
 };

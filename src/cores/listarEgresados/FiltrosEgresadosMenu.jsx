@@ -380,11 +380,10 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
         onClick={onOpen}
         style={{
           borderRadius: "30px",
-          marginLeft: "10px",
           width: "40px",
           height: "40px",
           position: "absolute", 
-          top: "60px", 
+          top: "65px", 
           left: "10px", 
         }}
         marginBottom="5px"
