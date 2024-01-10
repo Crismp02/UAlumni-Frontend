@@ -24,7 +24,7 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!email || !password ) {
+    if (!email || !password) {
       toast({
         title: "Error al registrarse",
         description: "Todos los campos son obligatorios",
@@ -58,6 +58,8 @@ function Login() {
         const data = await loginUser(email, password);
         setIsLoading(false);
         if (data) {
+          // Limpiar todo el LocalStorage
+          localStorage.clear();
           navigate("/profile");
         }
       } catch (error) {
