@@ -136,11 +136,44 @@ export const OfertasProvider = ({ children }) => {
     const filtersURL = JSON.parse(localStorage.getItem("filtersURLOfertas"));
     const seed = JSON.parse(localStorage.getItem("seedOfertas"));
     const page = JSON.parse(localStorage.getItem("pageOfertas"));
-    // convertir en objeto los filtros desde localStorage
+  
     if (filtersURL && seed && page) {
-      fetchPaginatedData(filtersURL, page, seed); // Pasar los filtros y la semilla a fetchPaginatedData
+      fetchPaginatedData(filtersURL, page, seed);
+    } else {
+      const obtenerCarreraActual = async () => {
+        try {
+          const response = await fetch(`${BASE_URL}/alumni/me/resume`, {
+            method: 'GET',
+            credentials: 'include',
+          });
+  
+          if (!response.ok) {
+            throw new Error("Error al obtener la carrera actual");
+          }
+  
+          const data = await response.json();
+  
+          if (Array.isArray(data.data.graduations)) {
+            const carreraActual = data.data.graduations.map((graduation) => graduation.careerName);
+            const filtersURLOfertas = {
+              "careers": carreraActual // carreraActual ya es un array, no es necesario usar [carreraActual]
+            };
+  
+            const filtersJSON = JSON.stringify(filtersURLOfertas);
+            localStorage.setItem('filtersURLOfertas', filtersJSON);
+  
+            fetchPaginatedData(filtersURLOfertas, 1); // Llamar a fetchPaginatedData con los filtros obtenidos
+          }
+        } catch (error) {
+          console.error("Error al obtener la carrera actual", error);
+          // Manejar el error aquí si es necesario
+        }
+      };
+  
+      obtenerCarreraActual(); // ¡No olvides llamar a esta función para obtener la carrera actual!
     }
   }, []);
+  
 
 
 
