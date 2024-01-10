@@ -127,7 +127,6 @@ export const EgresadosProvider = ({ children }) => {
       localStorage.setItem("seedEgresados", JSON.stringify(seed));
       localStorage.setItem("pageEgresados", JSON.stringify(page));
     } catch (error) {
-      console.error("Error al obtener datos paginados:", error);
     } finally {
       setIsLoading(false);
     }

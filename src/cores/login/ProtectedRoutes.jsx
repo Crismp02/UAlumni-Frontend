@@ -19,7 +19,6 @@ function ProtectedRoutes() {
         }
       } catch (error) {
         navigate("/");
-        console.error("Error:", error);
       } finally {
         setIsLoading(false);
       }

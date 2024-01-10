@@ -8,6 +8,7 @@ import {
   DrawerContent,
   useDisclosure,
   IconButton,
+  useToast
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
@@ -16,14 +17,14 @@ import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useOfertas } from './OfertasContext';
 import PropTypes from "prop-types";
-import FiltrarContratos from "./FiltrarContratos";
+import FiltrarContratos from "./filtrarContratos";
 import { useLocation } from "react-router-dom";
 import { BASE_URL } from "../../config";
 
 function FiltrosOfertasMenu({ setHasSearched }) {
 
   const { fetchPaginatedData} = useOfertas();
-
+const toast = useToast();
   const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
 
@@ -138,7 +139,13 @@ function FiltrosOfertasMenu({ setHasSearched }) {
           setCategorias(categoriasObtenidas);
         }
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
 
     }
@@ -167,7 +174,13 @@ function FiltrosOfertasMenu({ setHasSearched }) {
 
 
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
 
@@ -233,7 +246,13 @@ function FiltrosOfertasMenu({ setHasSearched }) {
         }
     })
     .catch((error) => {
-        console.error("Error de fetch:", error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     });
 }, []);
 
@@ -328,7 +347,13 @@ function FiltrosOfertasMenu({ setHasSearched }) {
     try {
       await fetchPaginatedData(queryString, 1);
     } catch (error) {
-      console.error("Hubo un error al obtener los datos:", error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }

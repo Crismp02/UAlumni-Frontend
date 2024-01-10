@@ -10,7 +10,6 @@ export const OfertasProvider = ({ children }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [semilla, setSemilla] = useState(0);
   const [semillaPrevia, setSemillaPrevia] = useState(0);
-
   const [hasSearched, setHasSearched] = useState(false);
 
   // Total de Páginas
@@ -126,7 +125,6 @@ export const OfertasProvider = ({ children }) => {
       localStorage.setItem("seedOfertas", JSON.stringify(seed));
       localStorage.setItem("pageOfertas", JSON.stringify(page));
     } catch (error) {
-      console.error("Error al obtener datos paginados:", error);
     } finally {
       setIsLoading(false);
     }
@@ -165,8 +163,6 @@ export const OfertasProvider = ({ children }) => {
             fetchPaginatedData(filtersURLOfertas, 1); // Llamar a fetchPaginatedData con los filtros obtenidos
           }
         } catch (error) {
-          console.error("Error al obtener la carrera actual", error);
-          // Manejar el error aquí si es necesario
         }
       };
   

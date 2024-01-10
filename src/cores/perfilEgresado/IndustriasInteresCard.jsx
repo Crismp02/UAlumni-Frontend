@@ -113,7 +113,13 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       );
     } catch (error) {
       // Handle error
-      console.error("Error updating item:", error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -301,7 +307,13 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
-      console.error("ID de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -388,8 +400,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                       color="#37B4E3"
                       marginLeft="10px"
                       onClick={()=> {
-                        setOpenVisibleTooltip(!openVisibleTooltip)
-                        console.log(openVisibleTooltip)}}
+                        setOpenVisibleTooltip(!openVisibleTooltip)}}
                     />
                   </Tooltip>
             </Flex>

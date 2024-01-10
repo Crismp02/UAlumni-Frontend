@@ -103,7 +103,13 @@ const CertificadosCard = ({ cardData, setCardData }) => {
       );
     } catch (error) {
       // Handle error
-      console.error("Error updating item:", error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

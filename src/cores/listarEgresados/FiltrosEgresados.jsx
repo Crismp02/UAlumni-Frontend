@@ -11,9 +11,9 @@ import { useEgresados } from "./EgresadosContext";
 import PropTypes from "prop-types";
 import { BASE_URL } from "../../config";
 
+
 function FiltrosEgresados({ setHasSearched }) {
   const { fetchPaginatedData } = useEgresados();
-
   const [semilla] = useState(0);
   const [, setIsLoading] = useState(false);
 
@@ -129,7 +129,6 @@ function FiltrosEgresados({ setHasSearched }) {
           setCategorias(categoriasObtenidas);
         }
       } catch (error) {
-        console.error("Error:", error);
       }
     }
 
@@ -152,7 +151,6 @@ function FiltrosEgresados({ setHasSearched }) {
           setCarreras(carrerasObtenidas);
         }
       } catch (error) {
-        console.error("Error:", error);
       }
     }
 
@@ -331,7 +329,6 @@ function FiltrosEgresados({ setHasSearched }) {
     try {
       await fetchPaginatedData(queryString, 1, null); // Envía la página actual como 1
     } catch (error) {
-      console.error("Hubo un error al obtener los datos:", error);
     } finally {
       setIsLoading(false);
     }

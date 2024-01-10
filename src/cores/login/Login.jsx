@@ -62,7 +62,13 @@ function Login() {
           navigate("/profile");
         }
       } catch (error) {
-        console.error(error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       } finally {
         setIsLoading(false);
       }

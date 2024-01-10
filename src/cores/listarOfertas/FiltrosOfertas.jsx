@@ -1,5 +1,5 @@
 
-import { Box, useDisclosure } from "@chakra-ui/react";
+import { Box, useDisclosure, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
@@ -14,7 +14,7 @@ import { BASE_URL } from "../../config";
 function FiltrosOfertas({ setHasSearched }) {
 
   const{fetchPaginatedData}=useOfertas();
-
+ const toast = useToast();
   const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
 
@@ -124,7 +124,13 @@ function FiltrosOfertas({ setHasSearched }) {
             setCategorias(categoriasObtenidas);
           }
         } catch (error) {
-          console.error("Error:", error);
+          toast({
+            title: "Error",
+            description: "Ha ocurrido un error inesperado",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
         }
       }
   
@@ -152,7 +158,13 @@ function FiltrosOfertas({ setHasSearched }) {
 
         
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
 
@@ -218,7 +230,13 @@ function FiltrosOfertas({ setHasSearched }) {
           }
       })
       .catch((error) => {
-          console.error("Error de fetch:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       });
   }, []);
 
@@ -323,7 +341,13 @@ function FiltrosOfertas({ setHasSearched }) {
       try {
         await fetchPaginatedData(queryString, 1); // Envía la página actual como 1
       } catch (error) {
-        console.error("Hubo un error al obtener los datos:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       } finally {
         setIsLoading(false);
       }

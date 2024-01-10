@@ -13,7 +13,13 @@ export function useAuth() {
         const response = await loginUser(email, password);
         setAuthed(true);
       } catch (error) {
-        console.error(error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     },
     async logout() {
@@ -23,7 +29,13 @@ export function useAuth() {
           setAuthed(false);
         }
       } catch (error) {
-        console.error(error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     },
   };

@@ -124,7 +124,13 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       );
     } catch (error) {
       // Handle error
-      console.error("Error updating item:", error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -344,7 +350,13 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
-      console.error("ID de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -369,7 +381,13 @@ const IdiomasCard = ({ cardData, setCardData }) => {
           isClosable: true,
         });
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
 
@@ -377,7 +395,13 @@ const IdiomasCard = ({ cardData, setCardData }) => {
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

@@ -111,7 +111,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       );
     } catch (error) {
       // Handle error
-      console.error("Error updating item:", error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -426,7 +432,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
-      console.error("ID de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

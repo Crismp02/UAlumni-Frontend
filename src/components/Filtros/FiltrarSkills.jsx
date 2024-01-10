@@ -9,7 +9,8 @@ import {
   Tooltip,
   useMediaQuery,
   Tag,
-  TagCloseButton
+  TagCloseButton,
+  useToast
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { BASE_URL } from "../../config";
@@ -29,8 +30,8 @@ function FiltrarSkills({
 }) {
   const [isHovering, setIsHovering] = useState(false);
   const [isLargerThan435] = useMediaQuery("(min-width: 435px)");
-
   const [, setCargandoHabilidades] = useState(false);
+  const toast = useToast();
 
 useEffect(() => {
   if (categoria) {
@@ -53,7 +54,13 @@ useEffect(() => {
         }
       })
       .catch((error) => {
-        console.error("Error de fetch:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       })
       .finally(() => {
         setCargandoHabilidades(false);

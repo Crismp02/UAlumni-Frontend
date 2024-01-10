@@ -19,7 +19,6 @@ function UnProtectedRoutes() {
           navigate("/profile");
         }
       } catch (error) {
-        console.error("Error:", error);
       } finally {
         setIsLoading(false);
       }

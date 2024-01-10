@@ -5,6 +5,7 @@ import {
   Stack,
   Text,
   useMediaQuery,
+  useToast
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -12,7 +13,8 @@ import { BASE_URL } from "../../config";
 
 function Carreras() {
   const [carreras, setCarreras] = useState([]);
-
+  const toast = useToast();
+  
   // Función para manejar el almacenamiento en localStorage
   const handleCarreraSeleccionada = (carreraSeleccionada) => {
     // Almacenamiento para filtersURLEgresados
@@ -50,10 +52,15 @@ function Carreras() {
         if (Array.isArray(data.data.items)) {
           const carrerasObtenidas = data.data.items.map((item) => item.name);
           setCarreras(carrerasObtenidas);
-          console.log(carrerasObtenidas);
         }
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
 

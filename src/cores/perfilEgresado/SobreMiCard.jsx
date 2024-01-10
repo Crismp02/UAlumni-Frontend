@@ -116,7 +116,13 @@ const SobremiCard = ({ cardData: initialCardData }) => {
         setShowIcons(false);
         setEditMode(true);
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
 
@@ -124,7 +130,13 @@ const SobremiCard = ({ cardData: initialCardData }) => {
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

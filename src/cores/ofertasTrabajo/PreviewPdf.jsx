@@ -15,7 +15,6 @@ export const PreviewPdf = () => {
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
     }catch (error) {
-      console.error(error);
       toast({
         title: "Error",
         description: "Ha ocurrido un error al mostrar la vista previa del PDF",

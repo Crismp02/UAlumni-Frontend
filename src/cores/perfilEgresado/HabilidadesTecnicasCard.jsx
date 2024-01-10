@@ -324,7 +324,13 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
     // Validar que los campos no estén vacíos
     if (editedCard.habilidad.trim() === "") {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error("No puede estar vacío");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -401,13 +407,25 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
           isClosable: true,
         });
       } else {
-        console.error("Tipo de tarjeta no reconocido.");
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
     } else {
-      console.error("ID de tarjeta o tipo de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 
@@ -446,7 +464,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
                       marginLeft="10px"
                       onClick={()=> {
                         setOpenVisibleTooltip(!openVisibleTooltip)
-                        console.log(openVisibleTooltip)}}
+                        }}
                     />
                   </Tooltip>
       </Flex>

@@ -8,6 +8,7 @@ import {
   DrawerContent,
   useDisclosure,
   IconButton,
+  useToast
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
@@ -27,7 +28,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
 
   const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
-
+  const toast = useToast();
   const [isHovering, setIsHovering] = useState(false);
 
   // Obtener la carrera de la URL
@@ -142,7 +143,13 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
           setCategorias(categoriasObtenidas);
         }
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
 
@@ -166,7 +173,13 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
           setCarreras(carrerasObtenidas);
         }
       } catch (error) {
-        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
 
@@ -339,7 +352,13 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     try {
       await fetchPaginatedData(queryString, 1, null); // Envía la página actual como 1
     } catch (error) {
-      console.error("Hubo un error al obtener los datos:", error);
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }

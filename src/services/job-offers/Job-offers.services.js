@@ -18,7 +18,6 @@ export const getJobOffer = async (id) => {
     }
 
     export const postJobApplication = async (id) => {
-        console.log(new Date().toISOString())
         try {
             const response = await fetch(`${BASE_URL}/alumni/me/job-applications`, {
             method: "POST",
@@ -32,7 +31,6 @@ export const getJobOffer = async (id) => {
             credentials: "include", // Esto es necesario para que las cookies se envíen con la solicitud
             });
             const data = await response.json();
-            console.log("a",data)
             if (response.ok) {
             return data;
             } else {

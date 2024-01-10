@@ -18,7 +18,6 @@ function DownloadCV({ id, nombre, apellido }) {
       link.download = `${nombre.replaceAll(" ", "_")}_${apellido.replaceAll(" ", "_")}_CV.pdf`;
       link.click();
     } catch (error) {
-      console.error(error);
       toast({
         title: "Error",
         description: "Ha ocurrido un error al descargar el PDF",

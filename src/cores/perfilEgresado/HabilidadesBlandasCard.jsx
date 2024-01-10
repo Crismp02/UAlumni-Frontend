@@ -191,7 +191,13 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
     // Validar que los campos no estén vacíos
     if (editedCard.habilidad.trim() === "") {
       // Mostrar un mensaje de error o manejar la situación según lo desees
-      console.error("No puede estar vacío");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
@@ -230,7 +236,13 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
       setCardTypeToDelete(cardType);
       setShowDeleteModal(true);
     } else {
-      console.error("ID de tarjeta es nulo.");
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
 

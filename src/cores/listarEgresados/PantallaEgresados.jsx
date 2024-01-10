@@ -1,4 +1,4 @@
-import { Box, Button, useMediaQuery, Text, Flex } from "@chakra-ui/react";
+import { Box, Button, useMediaQuery, Text, Flex, useToast } from "@chakra-ui/react";
 import FiltrosEgresados from "./FiltrosEgresados";
 import FiltrosEgresadosMenu from "./FiltrosEgresadosMenu";
 import ListarEgresados from "./ListarEgresados";
@@ -21,7 +21,7 @@ const PantallaEgresados = () => {
   } = useEgresados();
 
   const [filtersChanged, setFiltersChanged] = useState(false);
-
+const toast = useToast();
   const handlePreviousPage = async () => {
 
     if (currentPage > 1 && !isLoading) {
@@ -41,7 +41,13 @@ const PantallaEgresados = () => {
         setHasSearched(true);
 
       } catch (error) {
-        console.error("Error al obtener la página anterior:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       } finally {
         setIsLoading(false);
       }
@@ -65,7 +71,13 @@ const PantallaEgresados = () => {
 
         setHasSearched(true);
       } catch (error) {
-        console.error("Error al obtener la siguiente página:", error);
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       } finally {
         setIsLoading(false);
       }
