@@ -82,12 +82,12 @@ function Footer() {
                   DUDAS Y CONSULTAS
                 </Text>
                 <Link to="/PreguntasFrecuentes">
-                  <Text fontSize="sm" color="white" marginTop="5px">
+                  <Text fontSize="sm" color="white" marginTop="5px" textDecoration="underline">
                     Preguntas frecuentes
                   </Text>
                 </Link>
                 <Link to="/TerminosYCondiciones">
-                  <Text fontSize="sm" color="white">
+                  <Text fontSize="sm" color="white" textDecoration="underline">
                     Términos y condiciones
                   </Text>
                 </Link>
@@ -96,7 +96,7 @@ function Footer() {
                 <Text fontSize="sm" as="b" color="white">
                   CONTACTOS
                 </Text>
-                <Text fontSize="sm" color="white" marginTop="5px">
+                <Text fontSize="sm" color="white" marginTop="5px" textDecoration="underline">
                   <a href="mailto:correo@gmail.com">ualumni.ucab@gmail.com</a>
                 </Text>
               </Box>

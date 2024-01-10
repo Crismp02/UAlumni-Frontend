@@ -17,12 +17,10 @@ import {
 import LoadingSpinner from "../../components/LoadingSpinner";
 import HabilidadesBlandasCard from "./HabilidadesBlandasCard";
 import HabilidadesTecnicasCard from "./HabilidadesTecnicasCard";
-import DownloadCV from "../perfilEgresadoReclutador/DownloadCV";
 import IndustriasInteresCard from "./IndustriasInteresCard";
 import PosicionesInteresCard from "./PosicionesInteresCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowBackIcon } from '@chakra-ui/icons'
-import { differenceInDays } from 'date-fns';
 import FooterEgresado from "../../components/FooterEgresado";
 import DownloadMyCV from "./DownloadMyCV";
 
