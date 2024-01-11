@@ -522,6 +522,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
                   placeholder="Nombre de la posición de interés..."
                   size="lg"
                   marginBottom="4"
+                  maxLength={100}
                 />
               </>
             )}
@@ -567,6 +568,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
                 }
                 placeholder="Nombre de la posición de interés"
                 marginBottom="10px"
+                maxLength={100}
               />
             </>
           </ModalBody>

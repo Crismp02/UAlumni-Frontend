@@ -585,6 +585,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
                   placeholder="Grado del estudio"
                   size="lg"
                   marginBottom="4"
+                  maxLength={100}
                 />
                 <Text marginTop="2px" as="b">
                   Institución del estudio
@@ -601,6 +602,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
                   placeholder="Editar institución..."
                   size="lg"
                   marginBottom="4"
+                  maxLength={100}
                 />
                 <Text marginTop="2px" as="b">
                   Fecha de finalización
@@ -661,6 +663,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
                 onChange={(e) => handleFieldChange("title", e.target.value)}
                 placeholder="Grado del estudio"
                 marginBottom="10px"
+                maxLength={100}
               />
               <Text marginTop="2px" as="b">
                 Institución del estudio
@@ -672,6 +675,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
                 }
                 placeholder="Institución del estudio"
                 marginBottom="10px"
+                maxLength={100}
               />
               <Text marginTop="2px" as="b">
                 Fecha de finalización

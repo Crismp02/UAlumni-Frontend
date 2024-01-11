@@ -392,8 +392,8 @@ const toast = useToast();
           width: "40px",
           height: "40px",
           position: "absolute", 
-          top: "60px", 
-          left: "10px", 
+          top: "65px", 
+          left: "0px", 
         }}
         marginBottom="5px"
       >

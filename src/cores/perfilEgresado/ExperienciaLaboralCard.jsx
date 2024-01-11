@@ -701,6 +701,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                   placeholder="Nombre de la empresa"
                   size="lg"
                   marginBottom="4"
+                  maxLength={50}
                 />
                 <Text marginTop="2px" as="b">
                   Posición
@@ -717,6 +718,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                   placeholder="Posición"
                   size="lg"
                   marginBottom="4"
+                  maxLength={50}
                 />
                 <Text marginTop="2px" as="b">
                   Descripción
@@ -733,6 +735,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                   placeholder="Descripción"
                   size="lg"
                   marginBottom="4"
+                  maxLength={2000}
                 />
                 <Text marginTop="2px" as="b">
                   Fecha inicio
@@ -811,6 +814,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                 }
                 placeholder="Nombre de la empresa"
                 marginBottom="10px"
+                maxLength={50}
               />
               <Text marginTop="2px" as="b">
                 Posición
@@ -820,6 +824,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                 onChange={(e) => handleFieldChange("position", e.target.value)}
                 placeholder="Posición"
                 marginBottom="10px"
+                maxLength={50}
               />
               <Text marginTop="2px" as="b">
                 Descripción
@@ -831,6 +836,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                 onChange={(e) =>
                   handleFieldChange("description", e.target.value)
                 }
+                maxLength={2000}
               />
               <Text marginTop="2px" as="b">
                 Fecha inicio

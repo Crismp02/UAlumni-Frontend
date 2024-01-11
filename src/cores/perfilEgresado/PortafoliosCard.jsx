@@ -476,6 +476,7 @@ const handleCheck = async (e, item) => {
                   placeholder="Titulo del portafolio"
                   size="lg"
                   marginBottom="4"
+                  maxLength={100}
                 />
                 <Text marginTop="8px" as="b">
                   Link del portafolio
@@ -534,6 +535,7 @@ const handleCheck = async (e, item) => {
                   onChange={(e) => handleFieldChange("title", e.target.value)}
                   placeholder="Título del portafolio"
                   marginBottom="10px"
+                  maxLength={100}
                 />
  <Text marginTop="8px" as="b">
                   Link del portafolio

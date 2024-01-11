@@ -179,6 +179,7 @@ const ContactoCard = ({ cardData: initialCardData }) => {
                       placeholder="Ciudad, Estado, País"
                       size="lg"
                       marginBottom="4"
+                      maxLength={100}
                     />
                   </>
                 )}

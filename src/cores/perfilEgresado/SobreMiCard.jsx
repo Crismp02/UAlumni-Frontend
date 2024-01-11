@@ -220,6 +220,7 @@ const SobremiCard = ({ cardData: initialCardData }) => {
                   minHeight="200px" // Establece una altura mínima para mostrar el contenido
                   resize="vertical" // Permite el redimensionamiento vertical si el contenido supera la altura mínima
                   marginBottom="4"
+                  maxLength={3000}
                 />
               </>
             )}

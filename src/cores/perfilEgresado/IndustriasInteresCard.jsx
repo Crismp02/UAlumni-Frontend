@@ -515,6 +515,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                   placeholder="Nombre de la industria de interés..."
                   size="lg"
                   marginBottom="4"
+                  maxLength={100}
                 />
               </>
             )}
@@ -564,6 +565,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                 }
                 placeholder="Nombre de la industria de interés"
                 marginBottom="10px"
+                maxLength={100}
               />
             </>
           </ModalBody>
