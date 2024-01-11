@@ -120,7 +120,7 @@ const LoginForm = ({
           <Button
             backgroundColor="white"
             _hover={{ bg: "#025024", color: "white" }}
-            width={{ base: "100%", sm: "60%", md: "50%" }}
+            width={{ base: "100%", sm: "60%", md: "54%" }}
             marginTop="40px"
             paddingTop="10px"
             paddingBottom="10px"

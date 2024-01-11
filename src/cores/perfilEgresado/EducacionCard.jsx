@@ -148,6 +148,17 @@ const EducacionCard = ({ cardData, setCardData }) => {
       return;
     }
 
+    if (new Date(additionalFields.endDate).getFullYear() < 1950){
+      toast({
+        title: "Error",
+        description: "El año de la fecha de finalización no puede ser menor a 1950",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
     // Preparar los datos para la solicitud POST
     const newData = {
       title: additionalFields.title,
@@ -282,6 +293,16 @@ const EducacionCard = ({ cardData, setCardData }) => {
       toast({
         title: "Error",
         description: "La fecha de finalización no puede ser mayor a la fecha actual",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (new Date(editingCard.endDate).getFullYear() < 1950){
+      toast({
+        title: "Error",
+        description: "El año de la fecha de finalización no puede ser menor a 1950",
         status: "error",
         duration: 3000,
         isClosable: true,

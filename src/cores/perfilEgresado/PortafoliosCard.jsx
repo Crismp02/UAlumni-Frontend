@@ -408,7 +408,9 @@ const handleCheck = async (e, item) => {
             <Flex justifyContent="space-between">
               <Text fontWeight="bold" fontSize="15px">{item.title}</Text>
             </Flex>
+            <Box wordBreak="break-all">
             <Text as="i" fontSize="15px">{item.sourceLink}</Text>
+            </Box>
           </Box>
           <Box>
             <Flex justifyContent="flex-end">

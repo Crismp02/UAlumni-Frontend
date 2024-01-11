@@ -18,11 +18,17 @@ export const registerUser = async (email, password) => {
     if (response.ok) {
       return data;
     } else {
-      throw new Error(data.message);
+      const error = new Error(data.message);
+    error.status = response.status; // Add the status to the error
+    throw error;
     }
   } catch (error) {
-    toast.error(`Error: ${error.message}`);
-  }
+    if (error.status === 400){
+    if (error.message.startsWith("There is no alumni")) {
+    toast.error(`Error: No existe ningún alumni con el email ${email}`);
+  } else if (error.message.startsWith("The alumni with")){
+    toast.error(`Error: El alumni con el email ${email} ya fue registrado`);
+  }}}
 };
 
 export const loginUser = async (email, password) => {
