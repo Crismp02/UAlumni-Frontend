@@ -1,18 +1,16 @@
-import { Box, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Box, Text, Flex } from "@chakra-ui/react";
 import FaqData from "./FaqData";
 import Footer from "../../components/Footer";
 import NavBarEgresados from "../../components/NavBarEgresados";
 
 function FaqEgresados() {
   return (
-    <div
-      style={{
-        width: "100%",
-        backgroundColor: "#F5F5F5",
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
+    <Box
+    width="100vw"
+    backgroundColor="#F5F5F5"
+    display="flex"
+    flexDirection="column"
+    minHeight="100vh"
     >
       <NavBarEgresados />
       <Text
@@ -34,23 +32,22 @@ function FaqEgresados() {
       </Text>
 
       {/*División de la pantalla en las preguntas y el mensaje de ¿Aún tienes dudas?*/}
-      <Grid
-        justifyContent="center"
+      <Flex
+        justifyContent="space-around"
+        alignItems={["center", "center", "start", "start"]}
+        gap={[5, 5, 0, 0]}
         paddingTop="40px"
-        gridAutoFlow={["row", "row", "column", "column"]}
-        gap={[10, 10, 6, 6]}
-        gridTemplateColumns="35% 65%"
-        marginBottom="-100px"
         flexGrow="1"
+        flexDirection={["column", "column", "row", "row"]}
+        width="100%"
+        paddingX= {[2, 5, 10, 10]}
       >
         {/*mensaje de ¿Aún tienes dudas?*/}
-        <GridItem boxSize={["xs", "xs", "sm", "sm"]} gridColumn="1 / 2">
+        <Box width={["70%", "65%", "35%", "30%"]}>
           {/* {isLargerThan600 ? */}
           <Box
             backgroundColor="white"
             borderRadius="10px"
-            marginLeft="50px"
-            width={["45%", "60%", "70%", "90%", "100%"]}
           >
             <Box
               display="flex"
@@ -72,6 +69,7 @@ function FaqEgresados() {
               color="black"
               px="20px"
               paddingTop="10px"
+              textAlign="center"
             >
               Si no encuentras una solución a tu problema puedes contactárnos
               por nuestro correo
@@ -92,16 +90,16 @@ function FaqEgresados() {
               ualumni.ucab@gmail.com
             </Text>
           </Box>
-        </GridItem>
+        </Box>
 
         {/*Preguntas con sus respuestas*/}
-        <GridItem boxSize={["md", "md", "lg", "2xl"]} gridColumn="2 / 3">
+        <Box width={["95%", "85%", "60%", "60%"]}>
           <FaqData />
-        </GridItem>
-      </Grid>
+        </Box>
+      </Flex>
 
       <Footer />
-    </div>
+    </Box>
   );
 }
 
