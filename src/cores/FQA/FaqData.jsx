@@ -21,17 +21,13 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo crear un currículum?
+              ¿De qué sede de la UCAB son los egresados que se muestran en la plataforma?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Para crear un currículum, debes iniciar sesión en la plataforma y
-            hacer clic en el botón Crear currículum. Se te pedirá que
-            proporciones información sobre tu experiencia laboral, educación y
-            habilidades. También puedes agregar certificaciones y áreas de
-            interés.
+            Los egresados encontrados en la plataforma son de la UCAB extensión Guayana.
           </AccordionPanel>
         </AccordionItem>
       </div>
@@ -46,16 +42,14 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo editar un currículum existente?
+              ¿Qué información puedo encontrar en los perfiles de los egresados?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Para editar un currículum existente, debes iniciar sesión en la
-            plataforma y hacer clic en el botón Mis currículums. Luego, haz clic
-            en el currículum que deseas editar. Se te darán opciones para editar
-            la información de tu currículum.
+Datos personales: nombre, apellido, carrera y dirección.
+Industrias de interés, posiciones de interés, portafolios, idiomas y su nivel de conocimiento, habilidades blandas, experiencia laboral, estudios realizados, habilidades técnicas y certificados de cursos del CIAP.
           </AccordionPanel>
         </AccordionItem>
       </div>
@@ -70,15 +64,13 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo ocultar o hacer visible mi perfil?
+              ¿Puedo descargar los CV de los egresados?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Para ocultar o hacer visible tu perfil, inicia sesión en la
-            plataforma y haz clic en el botón Mi perfil. Luego, haz clic en el
-            botón Ocultar perfil Mostrar perfil.
+          Sí, puede descargar los CV de los egresados. Para hacerlo, haga clic en el botón "Descargar CV" que se encuentra en el perfil del egresado.
           </AccordionPanel>
         </AccordionItem>
       </div>
@@ -94,15 +86,14 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo agregar habilidades a mi perfil?
+              ¿Cómo puedo filtrar los resultados de búsqueda?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Para agregar habilidades a tu perfil, inicia sesión en la plataforma
-            y haz clic en el botón Mi perfil. Luego, haz clic en la pestaña
-            Habilidades y escribe las habilidades que deseas agregar.
+          Puede filtrar los resultados de búsqueda de acuerdo a los siguientes criterios:
+Nombre, habilidades técnicas, posiciones de interés, industrias de interés y carreras.
           </AccordionPanel>
         </AccordionItem>
       </div>
@@ -117,16 +108,13 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo agregar certificaciones a mi perfil?
+              ¿Cómo puedo obtener la información de contacto de los egresados?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Para agregar certificaciones a tu perfil, inicia sesión en la
-            plataforma y haz clic en el botón Mi perfil. Luego, haz clic en la
-            pestaña Certificaciones y proporciona la información de tus
-            certificaciones.
+            Puede obetener la información de contacto descargando el CV de su perfil.
           </AccordionPanel>
         </AccordionItem>
       </div>
@@ -141,15 +129,13 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo ver las descargas de mi currículum?
+              ¿Hay algún costo asociado al uso de la plataforma?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Para ver las descargas de tu currículum, inicia sesión en la
-            plataforma y haz clic en el botón Mi perfil. Luego, haz clic en la
-            pestaña Descargas.
+          No, el uso de la plataforma es gratuito.
           </AccordionPanel>
         </AccordionItem>
       </div>
@@ -164,16 +150,13 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo aplicar a una oferta de trabajo?
+              ¿Cuál es la política de privacidad de la plataforma?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Para aplicar a una oferta de trabajo, inicia sesión en la plataforma
-            y haz clic en el botón Ofertas de trabajo. Luego, haz clic en la
-            oferta de trabajo a la que deseas aplicar. Se te pedirá que cargues
-            tu currículum y una carta de presentación.
+          La política de privacidad de la plataforma se encuentra disponible en la plataforma, en la sección de términos y condiciones, ubicada al final de la página.
           </AccordionPanel>
         </AccordionItem>
       </div>
@@ -188,16 +171,13 @@ function FaqData() {
           <h2>
             <AccordionButton backgroundColor="white">
               <Box as="b" flex="1" textAlign="left">
-                ¿Cómo puedo cancelar el envío de mi solicitud de empleo?
+              ¿Cómo puedo obtener ayuda si tengo algún problema con la plataforma?
               </Box>
               <AccordionIcon />
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4} backgroundColor="white">
-            Si deseas cancelar el envío de tu solicitud de empleo, inicia sesión
-            en la plataforma y haz clic en el botón Ofertas de trabajo. Luego,
-            haz clic en la oferta de trabajo a la que solicitaste empleo. Se te
-            pedirá que confirmes que deseas cancelar la solicitud.
+          Puede obtener ayuda si tiene algún problema con la plataforma contactando al equipo de soporte. Para hacerlo, puede enviar un correo electrónico a ualumni.ucab@gmail.com
           </AccordionPanel>
         </AccordionItem>
       </div>

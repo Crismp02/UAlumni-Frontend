@@ -50,11 +50,15 @@ export const loginUser = async (email, password) => {
       toast.success("Has iniciado sesión con éxito");
       return data;
     } else {
-      throw new Error(data.message);
+      const error = new Error(data.message);
+    error.status = response.status; // Add the status to the error
+    throw error;
     }
   } catch (error) {
-    toast.error(`Error: ${error.message}`);
-  }
+    if (error.status === 401){
+      if (error.message.startsWith("Invalid credentials")) {
+      toast.error(`Error: Credenciales inválidas`);
+    }}}
 };
 
 export const logoutUser = async () => {

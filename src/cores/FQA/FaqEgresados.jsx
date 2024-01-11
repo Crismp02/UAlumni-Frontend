@@ -1,7 +1,7 @@
 import { Box, Text, Flex } from "@chakra-ui/react";
-import FaqData from "./FaqData";
 import Footer from "../../components/Footer";
 import NavBarEgresados from "../../components/NavBarEgresados";
+import FaqDataE from "./FaqDataE";
 
 function FaqEgresados() {
   return (
@@ -94,7 +94,7 @@ function FaqEgresados() {
 
         {/*Preguntas con sus respuestas*/}
         <Box width={["95%", "85%", "60%", "60%"]}>
-          <FaqData />
+          <FaqDataE />
         </Box>
       </Flex>
 
