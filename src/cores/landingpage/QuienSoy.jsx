@@ -6,6 +6,8 @@ import {
   Image,
   Button,
   useMediaQuery,
+  Flex,
+  Box,
 } from "@chakra-ui/react";
 import EgresadosLanding from "../../images/egresadosLanding.jpg";
 import ReclutadoresLanding from "../../images/reclutadoreslanding.jpg";
@@ -32,13 +34,14 @@ function QuienSoy() {
           ¿QUIÉN SOY?
         </Text>
       )}
-      <Grid
-        justifyContent="center"
-        paddingTop="40px"
-        gridAutoFlow={["row", "row", "column", "column"]}
-        gap={[10, 10, 6, 6]}
+      <Flex
+        justifyContent={["space-around","space-around","center", "center"]}
+        flexDirection={["column", "column", "row", "row"]}
+        gap={[38, 38, 8, 8]}
+        alignItems="center"
+        height={["800px", "800px", "lg", "lg"]}
       >
-        <GridItem boxSize={["", "", "sm", "sm"]}>
+        <Box boxSize={["300px", "300px", "sm", "sm"]}>
           <Image src={EgresadosLanding} alt="egresadosLanding" />
           <Link to="/register">
             <Button
@@ -46,15 +49,15 @@ function QuienSoy() {
               color="white"
               _hover={{ bg: "#025024" }}
               width="100%"
-              marginTop="20px"
               paddingTop="10px"
               paddingBottom="10px"
+              marginTop="20px"
             >
               SOY EGRESADO
             </Button>
           </Link>
-        </GridItem>
-        <GridItem boxSize={["", "", "sm", "sm"]}>
+        </Box>
+        <Box boxSize={["300px", "300px", "sm", "sm"]}>
           <Image src={ReclutadoresLanding} alt="reclutadoresLanding" />
           <Link to="/listarEgresados">
           <Button
@@ -62,15 +65,15 @@ function QuienSoy() {
             color="white"
             _hover={{ bg: "#025024" }}
             width="100%"
-            marginTop="20px"
+            marginTop="22px"
             paddingTop="10px"
             paddingBottom="10px"
           >
             SOY RECLUTADOR
           </Button>
           </Link>
-        </GridItem>
-      </Grid>
+        </Box>
+      </Flex>
     </div>
   );
 }

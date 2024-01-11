@@ -51,11 +51,13 @@ function NavBar() {
         </Flex>
       ) : (
         <Flex>
+          <Link to="/PreguntasFrecuentes">
           <Box marginLeft="1rem">
             <Text fontSize="11px" as="b">
               FAQ
             </Text>
           </Box>
+          </Link>
           <Link to="/register">
             <Box marginLeft="1rem">
               <Text fontSize="11px" as="b">

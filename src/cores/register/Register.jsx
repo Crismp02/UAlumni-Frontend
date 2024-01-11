@@ -103,14 +103,15 @@ function Register() {
         justifyContent="center"
         alignItems="center"
         minHeight="100vh"
-        paddingX={{ base: "20px", md: "0" }}
         backgroundColor="#F5F5F5"
+        padding={{ base: "20px", md: "0" }}
       >
         <Box
           width={{ base: "100%", sm: "80%", md: "70%", lg: "80%" }}
           display="flex"
           flexDirection={isLarger920 ? "row" : "column"}
           backgroundColor="#007935"
+          
         >
           <Box
             width={isLarger920 ? "50%" : "100%"}

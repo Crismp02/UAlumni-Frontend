@@ -87,7 +87,7 @@ function Login() {
         justifyContent="center"
         alignItems="center"
         minHeight="100vh"
-        paddingX={{ base: "20px", md: "0" }}
+        padding={{ base: "20px", md: "0" }}
         backgroundColor="#F5F5F5"
       >
         <Box

@@ -75,7 +75,7 @@ function Carreras() {
         justifyContent: "center",
         flexDirection: "column",
         backgroundColor: "#F5F5F5",
-        marginTop: "120px",
+        marginTop: "40px",
         paddingBottom: "40px",
       }}
     >
