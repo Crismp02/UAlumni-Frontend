@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import NavBarReclutador from "../../components/NavBarReclutador";
+import NavBarReclutador from "../../components/NavbarReclutador";
 import Footer from "../../components/Footer";
 import ExperienciaLaboralCard from "./ExperienciaLaboralCard";
 import IdiomasCard from "./IdiomasCard";

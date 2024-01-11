@@ -1,6 +1,6 @@
 import {OfertasProvider} from './OfertasContext';
 import PantallaOfertas from './PantallaOfertas';
-import NavBarEgresados from '../../components/NavBarEgresados';
+import NavBarEgresados from '../../components/NavbarEgresados';
 import FooterEgresado from '../../components/FooterEgresado';
 
 const ListarOfertasPrincipal = () => {

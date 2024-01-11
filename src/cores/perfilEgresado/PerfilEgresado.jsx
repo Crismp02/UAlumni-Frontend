@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import NavBarEgresados from "../../components/NavBarEgresados";
+import NavBarEgresados from "../../components/NavbarEgresados";
 import ExperienciaLaboralCard from "./ExperienciaLaboralCard";
 import IdiomasCard from "./IdiomasCard";
 import CertificadosCard from "./CertificadosCard";

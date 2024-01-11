@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, Box, Button } from "@chakra-ui/react";
-import NavBarEgresados from "../../components/NavBarEgresados";
+import NavBarEgresados from "../../components/NavbarEgresados";
 import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import CompanyCard from "./CompanyCard";

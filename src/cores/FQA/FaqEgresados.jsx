@@ -1,6 +1,6 @@
 import { Box, Text, Flex } from "@chakra-ui/react";
 import Footer from "../../components/Footer";
-import NavBarEgresados from "../../components/NavBarEgresados";
+import NavBarEgresados from "../../components/NavbarEgresados";
 import FaqDataE from "./FaqDataE";
 
 function FaqEgresados() {
