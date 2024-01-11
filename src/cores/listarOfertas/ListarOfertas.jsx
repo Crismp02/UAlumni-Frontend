@@ -15,14 +15,16 @@ function ListarOfertas({ hasSearched }) {
     <div>
       <Center>
         <Box
-          w={isSmallerThan800 ? "95%" : ["80%", "80%", "80%", "80%", "80%", "80%"]}
-          h={["50rem", "50rem"]}
+          w={isSmallerThan800 ? "95%" : ["95%", "95%", "95%", "95%", "80%", "80%"]}
+          h="35rem"
           backgroundColor="#F5F5F5"
           marginBottom="10px"
           display="flex"
           flexDirection="column"
-          justifyContent="center"
+          justifyContent="flex-start"
           alignItems="center"
+          gap="15px"
+          paddingTop="25px"
         >
           {isLoading ? (
             <LoadingSpinner />

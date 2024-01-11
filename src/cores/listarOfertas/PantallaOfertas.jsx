@@ -133,6 +133,7 @@ const PantallaOfertas = () => {
                 size="lg"
                 variant="ghost"
                 fontSize="3xl"
+                cursor="pointer"
                 color="darkgreen"
               >
                 «
@@ -155,6 +156,7 @@ const PantallaOfertas = () => {
                     fontWeight="bold"
                     marginRight="1px"
                     marginLeft="1px"
+                    cursor="pointer"
                     textDecoration={
                       pageNumber === currentPage ? "underline" : "none"
                     }
@@ -174,6 +176,7 @@ const PantallaOfertas = () => {
                 variant="ghost"
                 fontSize="3xl"
                 color="darkgreen"
+                cursor="pointer"
               >
                 »
               </Button>

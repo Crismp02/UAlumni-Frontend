@@ -17,17 +17,15 @@ const OfertaCard = ({ oferta }) =>{
     const formattedDate = `${day}-${month}-${year}`;
 
     return (
-      <div>
         <Box
-          w={["80%", "80%", "80%", "80%", "80%", "80%"]}
-          m="auto"
+          w={["95%", "95%", "90%", "90%", "90%", "90%"]}
+          mx="auto"
           p={5}
           shadow="md"
           borderWidth="1px"
           backgroundColor="white"
           display="flex"
           flexDirection="row"
-          marginBottom="10px"
           padding="2px"
         >
             <Image 
@@ -97,8 +95,8 @@ const OfertaCard = ({ oferta }) =>{
           <Text 
             textAlign={["center", "center", "center", "center"]} 
             marginRight={["10px", "10px", "0px", "0px"]}
-            fontSize={["xs", "sm", "md", "md"]}
-            width="170px"
+            fontSize={["sm", "sm", "smaller", "md", "md"]}
+            width={["130px", "130px", "130px", "150px", "170px"]}
             color="white"
             bg="#007935"
             cursor="pointer"
@@ -112,7 +110,6 @@ const OfertaCard = ({ oferta }) =>{
           
           </Box>
         </Box>
-      </div>
     );
 }
 
