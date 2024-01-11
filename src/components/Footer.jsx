@@ -39,10 +39,10 @@ function Footer() {
         <Box
           height={["auto", "auto", "100%", "100%"]}
           display="flex"
-          flexDirection="row"
+          flexDirection={["column", "row", "row", "row"]}
           marginTop="15px"
         >
-          <Box width="50%" height="auto">
+          <Box width={["100%", "50%", "50%", "50%"]} height="auto">
             <Text fontSize="sm" as="b" color="white" textAlign="center">
               DUDAS Y CONSULTAS
             </Text>
@@ -62,7 +62,7 @@ function Footer() {
               </Text>
             </Link>
           </Box>
-          <Box width="50%" height="auto">
+          <Box width={["100%", "50%", "50%", "50%"]} height="auto">
             <Text fontSize="sm" as="b" color="white" textAlign="center">
               CONTACTOS
             </Text>

@@ -39,7 +39,7 @@ function FooterEgresado() {
         <Box
           height={["auto", "auto", "100%", "100%"]}
           display="flex"
-          flexDirection="row"
+          flexDirection={["column", "column", "row", "row"]}
           marginTop="15px"
         >
           <Box width="50%" height="auto">
