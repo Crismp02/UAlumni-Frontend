@@ -1,30 +1,19 @@
-import { useState, useEffect } from "react";
+import { Box } from "@chakra-ui/react";
 import NavBar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import QuienSoy from "./QuienSoy";
 import Carreras from "./Carreras";
 import UAlumni from "./Ualumni";
-import LoadingSpinner from "../../components/LoadingSpinner";
 
 function LandingPage() {
-  const [isLoading, setIsLoading] = useState(true); 
-  
-  useEffect(() => {
-      setIsLoading(false);
-    }, []);
-
   return (
-    <div>
-      <NavBar/>
-      {isLoading ? <LoadingSpinner /> : (
-        <>
-          <UAlumni/>
-          <QuienSoy/>
-          <Carreras/>
-        </>
-      )}
-      <Footer/>
-    </div>
+    <Box minHeight="100vh">
+      <NavBar />
+      <UAlumni />
+      <QuienSoy />
+      <Carreras />
+      <Footer />
+    </Box>
   );
 }
 export default LandingPage;

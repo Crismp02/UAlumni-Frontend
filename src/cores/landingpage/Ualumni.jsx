@@ -18,6 +18,8 @@ function UAlumni(){
           display="flex"
           alignItems="center"
           justifyContent="center"
+          width="100vw"
+          minHeight={["20vh", "40vh", "70vh", "90vh", "100vh"]}
         >
           <Image
             src={EgresadosFoto}
@@ -33,7 +35,6 @@ function UAlumni(){
             padding="8px"
             backgroundClip="content-box"
             width={["100%", "90%", "70%", "45%"]}
-            // height={["90%", "90%","70%", "50%"]}
             zIndex="2"
           >
             <Text
