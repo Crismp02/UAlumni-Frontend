@@ -32,7 +32,7 @@ function FiltrarPositions({
             <Input
               value={valuePos}
               onChange={handleChangePos}
-              placeholder="Buscar egresado por posición de interés"
+              placeholder="Buscar por posición de interés"
               size="md"
             />
              <Tooltip 
