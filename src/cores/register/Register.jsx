@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { registerUser } from "../../services/auth/Auth.services";
 import RegisterForm from "./RegisterForm";
+import LoginImage from "../../images/loginImage.jpg";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
@@ -118,7 +119,7 @@ function Register() {
             justifyContent="center"
           >
             <Image
-              src="src\images\loginImage.jpg"
+              src={LoginImage}
               alt="Imagen Ucabista"
               width="100%"
               height="100%"

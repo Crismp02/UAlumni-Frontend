@@ -4,6 +4,7 @@ import NavBar from "../../components/Navbar";
 import { Image, Box, useMediaQuery, useToast } from "@chakra-ui/react";
 import { loginUser } from "../../services/auth/Auth.services";
 import LoginForm from "./LoginForm";
+import LoginImage from "../../images/loginImage.jpg"
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -103,7 +104,7 @@ function Login() {
             justifyContent="center"
           >
             <Image
-              src="src\images\loginImage.jpg"
+              src={LoginImage}
               alt="Imagen Ucabista"
               width="100%"
               height="100%"
