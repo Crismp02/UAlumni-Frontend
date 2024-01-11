@@ -4,7 +4,7 @@ import {
     // useMediaQuery,
   } from "@chakra-ui/react";
   import Footer from "../../components/Footer";
-import NavBarEgresados from "../../components/NavBarEgresados";
+  import NavBarEgresados from "../../components/NavBarEgresados";
   
   function TerminosCondiciones() {
     // const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
