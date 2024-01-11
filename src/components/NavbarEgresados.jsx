@@ -1,4 +1,3 @@
-import React from 'react';
 import { Flex, Box, Text, useMediaQuery, Image, Icon} from "@chakra-ui/react"
 import { Link } from "react-router-dom";
 import Logo from "../images/logo.png";
