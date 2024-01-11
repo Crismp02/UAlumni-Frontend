@@ -368,7 +368,7 @@ function FiltrosOfertasMenu({ setHasSearched }) {
           height: "40px",
           position: "absolute", 
           top: "65px", 
-          left: "10px", 
+          left: "0px", 
         }}
         marginBottom="5px"
       >
