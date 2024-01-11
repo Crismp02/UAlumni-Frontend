@@ -21,7 +21,7 @@ function ListarOfertas({ hasSearched }) {
           marginBottom="10px"
           display="flex"
           flexDirection="column"
-          justifyContent="flex-start"
+          justifyContent={ofertas && ofertas.length === 0 ? "center" : ""}
           alignItems="center"
           gap="15px"
           paddingTop="25px"
