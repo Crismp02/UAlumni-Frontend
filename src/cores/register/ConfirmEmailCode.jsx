@@ -13,6 +13,7 @@ import {
 import { confirmEmail } from "../../services/auth/Auth.services";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import LoginImage from "../../images/loginImage.jpg";
 
 function ConfirmEmailCode() {
   const [searchParams] = useSearchParams();
@@ -74,7 +75,7 @@ function ConfirmEmailCode() {
             justifyContent="center"
           >
             <Image
-              src="src\images\loginImage.jpg"
+              src={LoginImage}
               alt="Imagen Ucabista"
               width="100%"
               height="100%"
