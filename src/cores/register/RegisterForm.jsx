@@ -101,7 +101,6 @@ const RegisterForm = ({
             onChange={(e) => setPassword(e.target.value)}
             marginBottom="20px"
             type={show ? "text" : "password"}
-            inputMode="none"
             variant="unstyled"
             backgroundColor="white"
             border="1px solid #ccc"
@@ -140,7 +139,6 @@ const RegisterForm = ({
             id="confirmarContraseña"
             marginBottom="20px"
             type={show2 ? "text" : "password"}
-            inputMode="none"
             variant="unstyled"
             backgroundColor="white"
             border="1px solid #ccc"
