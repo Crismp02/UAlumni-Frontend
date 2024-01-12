@@ -170,7 +170,12 @@ const navigate = useNavigate();
                       color="#37B4E3"
                       marginRight="7px"
                       onClick={()=> {
-                        setOpenVisibleTooltip(!openVisibleTooltip)}}
+                        setOpenVisibleTooltip(!openVisibleTooltip);
+                        if (!openVisibleTooltip) {
+                          setTimeout(() => {
+                            setOpenVisibleTooltip(false);
+                          }, 2000);
+                        }}}
                     />
                   </Tooltip>
                   {switchValue ? (

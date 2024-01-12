@@ -410,7 +410,12 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
                       color="#37B4E3"
                       marginLeft="10px"
                       onClick={()=> {
-                        setOpenVisibleTooltip(!openVisibleTooltip)}}
+                        setOpenVisibleTooltip(!openVisibleTooltip);
+                        if (!openVisibleTooltip) {
+                          setTimeout(() => {
+                            setOpenVisibleTooltip(false);
+                          }, 2000);
+                        }}}
                     />
                   </Tooltip>
             </Flex>
