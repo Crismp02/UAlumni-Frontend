@@ -141,7 +141,7 @@ function FiltrosEgresados({ setHasSearched }) {
   useEffect(() => {
     async function fetchCarreras() {
       try {
-        const response = await fetch(`${BASE_URL}/career`);
+        const response = await fetch(`${BASE_URL}/career?per-page=12`);
         if (!response.ok) {
           throw new Error("Error al obtener las carreras");
         }
