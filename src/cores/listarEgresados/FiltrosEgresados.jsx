@@ -194,8 +194,6 @@ function FiltrosEgresados({ setHasSearched }) {
   }, [categoria]);
 
   const handleAddCategoria = () => {
-    console.log("alo")
-    console.log(categoria)
     if (categoria !== "" && !list.some((item) => item.categoria === categoria)) {
       console.log("entro")
       setList((oldList) => [...oldList, { categoria, habilidad: "" }]);
