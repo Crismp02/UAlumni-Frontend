@@ -127,6 +127,7 @@ export const EgresadosProvider = ({ children }) => {
       localStorage.setItem("seedEgresados", JSON.stringify(seed));
       localStorage.setItem("pageEgresados", JSON.stringify(page));
     } catch (error) {
+      console.log(error)
     } finally {
       setIsLoading(false);
     }

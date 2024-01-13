@@ -18,6 +18,7 @@ function FiltrosButtons({
       display="flex"
       flexDirection={isLargerThan435 ? "row" : "column"}
       justifyContent="flex-end"
+      marginBottom="30px"
     >
       <Button
         onClick={handleReset}

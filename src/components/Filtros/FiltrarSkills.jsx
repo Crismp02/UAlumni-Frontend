@@ -61,6 +61,7 @@ useEffect(() => {
           duration: 3000,
           isClosable: true,
         });
+        console.log(error)
       })
       .finally(() => {
         setCargandoHabilidades(false);
@@ -98,7 +99,6 @@ useEffect(() => {
             >
               <Button
                 onClick={handleAddCategoria}
-                isDisabled={isDisabled}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
                 backgroundColor="#007935"
@@ -197,7 +197,7 @@ useEffect(() => {
         </>
       ) : (
         <>
-          {categoria && (
+          {categoria && habilidades[categoria] && habilidades[categoria].length > 0 && (
             <Select
               placeholder="Habilidad"
               value={habilidad}

@@ -1,11 +1,11 @@
-import { Box, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { Box, useDisclosure, useToast } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
+import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrarIndustrias from "./FiltrarIndustrias";
-import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useEgresados } from "./EgresadosContext";
 import PropTypes from "prop-types";
@@ -13,11 +13,16 @@ import { BASE_URL } from "../../config";
 
 
 function FiltrosEgresados({ setHasSearched }) {
-  const { fetchPaginatedData } = useEgresados();
-  const [semilla] = useState(0);
-  const [, setIsLoading] = useState(false);
 
+  const { onClose } = useDisclosure();
+
+  const { fetchPaginatedData } = useEgresados();
+
+  const [semilla, ] = useState(0);
+  const [, setIsLoading] = useState(false);
+  const toast = useToast();
   const [isHovering, setIsHovering] = useState(false);
+
 
   // Obtener la carrera de la URL
   const location = useLocation();
@@ -33,7 +38,6 @@ function FiltrosEgresados({ setHasSearched }) {
   }, [carreraFromUrl]);
 
   //Busqueda por nombre
-  const { onClose } = useDisclosure();
   const [valueName, setValueName] = useState("");
   const handleChangeName = (event) => setValueName(event.target.value);
 
@@ -129,6 +133,13 @@ function FiltrosEgresados({ setHasSearched }) {
           setCategorias(categoriasObtenidas);
         }
       } catch (error) {
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
 
@@ -151,6 +162,13 @@ function FiltrosEgresados({ setHasSearched }) {
           setCarreras(carrerasObtenidas);
         }
       } catch (error) {
+        toast({
+          title: "Error",
+          description: "Ha ocurrido un error inesperado",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
 
@@ -176,10 +194,10 @@ function FiltrosEgresados({ setHasSearched }) {
   }, [categoria]);
 
   const handleAddCategoria = () => {
-    if (
-      categoria !== "" &&
-      !list.some((item) => item.categoria === categoria)
-    ) {
+    console.log("alo")
+    console.log(categoria)
+    if (categoria !== "" && !list.some((item) => item.categoria === categoria)) {
+      console.log("entro")
       setList((oldList) => [...oldList, { categoria, habilidad: "" }]);
       setCategoria("");
     }
@@ -218,6 +236,7 @@ function FiltrosEgresados({ setHasSearched }) {
 
   const [valueInd, setValueInd] = useState("");
   const [listInd, setListInd] = useState([]);
+
   const handleChangeInd = (event) => setValueInd(event.target.value);
 
   // Estados de habilitación del botón de industrias
@@ -252,7 +271,6 @@ function FiltrosEgresados({ setHasSearched }) {
   };
 
   //Botones de búsqueda y reset
-
   const isDisabled =
     !(valuePos || valueName) &&
     list.length === 0 &&
@@ -329,6 +347,13 @@ function FiltrosEgresados({ setHasSearched }) {
     try {
       await fetchPaginatedData(queryString, 1, null); // Envía la página actual como 1
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "Ha ocurrido un error inesperado",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setIsLoading(false);
     }

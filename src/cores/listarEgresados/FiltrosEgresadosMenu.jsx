@@ -12,11 +12,11 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useLocation } from "react-router-dom";
+import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrarNombre from "../../components/Filtros/FiltrarNombre";
 import FiltrarSkills from "../../components/Filtros/FiltrarSkills";
 import FiltrarPositions from "../../components/Filtros/FiltrarPositions";
 import FiltrarIndustrias from "./FiltrarIndustrias";
-import FiltrarCarreras from "./FiltrarCarreras";
 import FiltrosButtons from "../../components/Filtros/FiltrosButtons";
 import { useEgresados } from './EgresadosContext';
 import PropTypes from "prop-types";
@@ -24,12 +24,17 @@ import { BASE_URL } from "../../config";
 
 function FiltrosEgresadosMenu({ setHasSearched }) {
 
-  const { fetchPaginatedData  } = useEgresados();
+  //Constantes del Drawer
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const placement = "left";
+
+  const { fetchPaginatedData } = useEgresados();
 
   const [semilla, ] = useState(0);
   const [, setIsLoading] = useState(false);
   const toast = useToast();
   const [isHovering, setIsHovering] = useState(false);
+
 
   // Obtener la carrera de la URL
   const location = useLocation();
@@ -38,6 +43,26 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
 
   // Estado para la carrera seleccionada
   const [selectedCarrera, setSelectedCarrera] = useState(carreraFromUrl);
+
+  // Actualiza la carrera seleccionada cuando cambia la URL
+  useEffect(() => {
+    setSelectedCarrera(carreraFromUrl);
+  }, [carreraFromUrl]);
+
+  //Busqueda por nombre
+  const [valueName, setValueName] = useState("");
+  const handleChangeName = (event) => setValueName(event.target.value);
+
+  //Busqueda por habilidades categoria
+  const [categoria, setCategoria] = useState("");
+  const [habilidad, setHabilidad] = useState("");
+  const [list, setList] = useState([]);
+
+  // Objeto inicial de habilidades
+  const [habilidades, setHabilidades] = useState({});
+
+  // Objeto inicial de categorias
+  const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
     // Verificar si hay filtros previamente guardados en localStorage
@@ -107,29 +132,6 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     }
   }, []);
 
-  // Actualiza la carrera seleccionada cuando cambia la URL
-  useEffect(() => {
-    setSelectedCarrera(carreraFromUrl);
-  }, [carreraFromUrl]);
-
-  //Constantes del Drawer
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const placement = "left";
-
-  //Busqueda por nombre
-  const [valueName, setValueName] = useState("");
-  const handleChangeName = (event) => setValueName(event.target.value);
-
-  //Busqueda por habilidades categoria
-  const [categoria, setCategoria] = useState("");
-  const [habilidad, setHabilidad] = useState("");
-  const [list, setList] = useState([]);
-
-  // Objeto inicial de habilidades
-  const [habilidades, setHabilidades] = useState({});
-
-  const [categorias, setCategorias] = useState([]);
-
   useEffect(() => {
     async function fetchCategorias() {
       try {
@@ -156,16 +158,15 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     fetchCategorias();
   }, []);
 
+  // Fetch de las carreras del Alumni
   const [carreras, setCarreras] = useState([]);
 
   useEffect(() => {
-
     async function fetchCarreras() {
-
       try {
         const response = await fetch(`${BASE_URL}/career?per-page=12`);
         if (!response.ok) {
-          throw new Error("Error al obtener los egresados");
+          throw new Error("Error al obtener las carreras");
         }
         const data = await response.json();
         if (Array.isArray(data.data.items)) {
@@ -221,8 +222,8 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
 
   const [valuePos, setValuePos] = useState("");
   const [listPos, setListPos] = useState([]);
-
   const handleChangePos = (event) => setValuePos(event.target.value);
+
   const handleAddPos = () => {
     if (valuePos.trim() !== "") {
       setListPos((oldList) => [...oldList, valuePos]);
@@ -234,8 +235,8 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
 
   // Actualizar el estado de habilitación cuando cambia el valor de pos
   useEffect(() => {
-      setIsPosButtonDisabled(!valuePos);
-    }, [valuePos]);
+    setIsPosButtonDisabled(!valuePos);
+  }, [valuePos]);
 
   const handleRemovePos = (indexToRemove) => {
     setListPos((oldList) =>
@@ -248,20 +249,22 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   const [valueInd, setValueInd] = useState("");
   const [listInd, setListInd] = useState([]);
 
+  const handleChangeInd = (event) => setValueInd(event.target.value);
+
   // Estados de habilitación del botón de industrias
   const [isIndButtonDisabled, setIsIndButtonDisabled] = useState(true);
-  
-  useEffect(() => {
-      setIsIndButtonDisabled(!valueInd);
-    }, [valueInd]);
 
-  const handleChangeInd = (event) => setValueInd(event.target.value);
+  useEffect(() => {
+    setIsIndButtonDisabled(!valueInd);
+  }, [valueInd]);
+
   const handleAddInd = () => {
     if (valueInd.trim() !== "") {
       setListInd((oldList) => [...oldList, valueInd]);
       setValueInd("");
     }
   };
+
   const handleRemoveInd = (indexToRemove) => {
     setListInd((oldList) =>
       oldList.filter((_, index) => index !== indexToRemove)
@@ -269,8 +272,8 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   };
 
   //Búsqueda por carrera
-
   const [selectedTags, setSelectedTags] = useState({});
+
   const handleClick = (label) => {
     if (selectedCarrera === label) {
       setSelectedCarrera(null);
@@ -280,75 +283,79 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
   };
 
   //Botones de búsqueda y reset
-
   const isDisabled =
-    !valueName &&
+    !(valuePos || valueName) &&
     list.length === 0 &&
     listPos.length === 0 &&
-    listInd.length === 0 && 
+    listInd.length === 0 &&
     !selectedCarrera &&
     Object.keys(selectedTags).every((tag) => !selectedTags[tag]);
 
-  
   const handleSubmit = async () => {
     if (isDisabled) {
       return;
     }
-  
+
     const selectedCareers = Object.keys(selectedTags)
       .filter((tag) => selectedTags[tag] && tag !== selectedCarrera)
       .map((career) => career);
-  
+
     // quitar espacios desactivados
     const careerParams = selectedCarrera
       ? [selectedCarrera, ...selectedCareers]
       : selectedCareers;
 
-    // Estado para las categorías seleccionadas con y sin habilidades 
-    const categoriesWithSkills = list.filter(item => item.habilidad);
-    const categoriesWithoutSkills = list.filter(item => !item.habilidad);
-  
+    // Estado para las categorías seleccionadas con y sin habilidades
+    const categoriesWithSkills = list.filter((item) => item.habilidad);
+    const categoriesWithoutSkills = list.filter((item) => !item.habilidad);
+
     const selectedSkills = categoriesWithSkills.map(
       (item) => `${item.categoria}:${item.habilidad}`
     );
 
-    const selectedCategories = categoriesWithoutSkills.map((item) => item.categoria);
+    const selectedCategories = categoriesWithoutSkills.map(
+      (item) => item.categoria
+    );
     const selectedPositions = listPos.length > 0 ? listPos : [];
     const selectIndustries = listInd.length > 0 ? listInd : [];
-  
+
     const params = new URLSearchParams();
 
     if (semilla) {
-      params.append('seed', semilla);
+      params.append("seed", semilla);
     }
-  
+
     if (valueName) {
-      params.append('name', valueName);
+      params.append("name", valueName);
     }
-  
+
     if (careerParams.length > 0) {
-      careerParams.forEach((career) => params.append('careers', career));
+      careerParams.forEach((career) => params.append("careers", career));
     }
-  
+
     if (selectedCategories.length > 0) {
-      selectedCategories.forEach((category) => params.append('categories', category));
+      selectedCategories.forEach((category) =>
+        params.append("categories", category)
+      );
     }
 
     if (selectedSkills.length > 0) {
-      selectedSkills.forEach((skill) => params.append('skills', skill));
+      selectedSkills.forEach((skill) => params.append("skills", skill));
     }
-  
+
     if (selectedPositions.length > 0) {
-      selectedPositions.forEach((position) => params.append('positions', position));
+      selectedPositions.forEach((position) =>
+        params.append("positions", position)
+      );
     }
-  
+
     if (selectIndustries.length > 0) {
-      selectIndustries.forEach((industry) => params.append('industries', industry));
+      selectIndustries.forEach((industry) =>
+        params.append("industries", industry)
+      );
     }
-  
-    
+
     const queryString = params.toString();
-  
     try {
       await fetchPaginatedData(queryString, 1, null); // Envía la página actual como 1
     } catch (error) {
@@ -363,8 +370,8 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
       setIsLoading(false);
     }
 
-     // Guardar los filtros en localStorage después de realizar la búsqueda
-     localStorage.setItem(
+    // Guardar los filtros en localStorage después de realizar la búsqueda
+    localStorage.setItem(
       "storedFiltersEgresados",
       JSON.stringify({
         name: valueName,
@@ -375,9 +382,9 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
         industries: selectIndustries,
       })
     );
-
   };
 
+  // Funciones para manejar la paginación
   const handleReset = () => {
     setValueName("");
     setList([]);
@@ -388,7 +395,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
     setSelectedTags({});
     setSelectedCarrera(null);
     setValueInd("");
-    setListInd([]); 
+    setListInd([]);
   };
 
   return (
@@ -422,6 +429,7 @@ function FiltrosEgresadosMenu({ setHasSearched }) {
             <FiltrarNombre
               valueName={valueName}
               handleChangeName={handleChangeName}
+              placeholderName="Buscar egresado por nombre"
             />
             {/*Busqueda por habilidad*/}
             <FiltrarSkills
