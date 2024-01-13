@@ -58,7 +58,6 @@ function Login() {
       try {
         const data = await loginUser(email, password);
         if (data) {
-          setIsLoading(false);
           // Limpiar todo el LocalStorage
           localStorage.clear();
           navigate("/profile");
