@@ -99,6 +99,7 @@ useEffect(() => {
             >
               <Button
                 onClick={handleAddCategoria}
+                isDisabled={isDisabled}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
                 backgroundColor="#007935"
@@ -132,6 +133,7 @@ useEffect(() => {
             <Button
               size="sm"
               onClick={handleAddCategoria}
+              isDisabled={isDisabled}
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
               bg="#007935"
