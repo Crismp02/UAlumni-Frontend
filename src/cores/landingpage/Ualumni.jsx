@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text, Image, useMediaQuery } from "@chakra-ui/react";
-import EgresadosFoto from "../../images/egresados.jpg";
-import { Link } from "react-router-dom";
+import ucabLanding from "../../images/ucabLanding.jpg";
+
 
 function UAlumni(){
     const [isLargerThan600] = useMediaQuery("(min-width: 600px)");
@@ -22,7 +22,7 @@ function UAlumni(){
           minHeight={["20vh", "40vh", "70vh", "90vh", "100vh"]}
         >
           <Image
-            src={EgresadosFoto}
+            src={ucabLanding}
             alt="Egresados"
             width="100%"
             height="auto"
