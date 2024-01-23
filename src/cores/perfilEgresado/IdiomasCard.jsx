@@ -494,6 +494,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
                       bg="#FBC430"
                       color="black"
                       padding="1"
+                      paddingLeft="10px"
+                      paddingRight="10px"
                       borderRadius="8"
                       fontSize="12px"
                     >
