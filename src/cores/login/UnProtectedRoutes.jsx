@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import { BASE_URL } from "../../config";
+import { Flex } from "@chakra-ui/react";
 
 function UnProtectedRoutes() {
   const navigate = useNavigate();
@@ -27,7 +28,10 @@ function UnProtectedRoutes() {
   }, [navigate]);
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <Flex alignItems="center" height="100vh" width="100vw">
+        <LoadingSpinner />
+      </Flex>);
   }
 
   return <Outlet />;
