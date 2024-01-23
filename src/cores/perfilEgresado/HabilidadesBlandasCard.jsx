@@ -31,6 +31,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
   const toast = useToast();
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -97,6 +98,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddSkill = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (!additionalFields.skillName || additionalFields.skillName === null) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
@@ -107,6 +109,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -132,6 +135,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -167,6 +171,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setIsLoading(false);
   };
 
   const handleFieldChange = (fieldName, value) => {
@@ -247,6 +252,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentHabilidades") {
         await deleteSoftSkill(cardToDelete);
@@ -272,6 +278,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
       setShowDeleteModal(false);
@@ -285,6 +292,7 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
   };
@@ -424,6 +432,8 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -455,6 +465,8 @@ const HabilidadesBlandasCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>

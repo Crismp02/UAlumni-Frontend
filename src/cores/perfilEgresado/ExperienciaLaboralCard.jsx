@@ -30,6 +30,7 @@ import {
 const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -122,6 +123,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddWorkExperience = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !additionalFields.companyName ||
@@ -131,9 +133,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
       !additionalFields.description ||
       additionalFields.description.trim() === "" ||
       !additionalFields.startDate ||
-      additionalFields.startDate.trim() === "" ||
-      !additionalFields.endDate ||
-      additionalFields.endDate.trim() === ""
+      additionalFields.startDate.trim() === "" 
     ) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
       toast({
@@ -143,9 +143,11 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
+    if (additionalFields.endDate) {
     if (additionalFields.startDate > additionalFields.endDate) {
       toast({
         title: "Error",
@@ -155,6 +157,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -166,6 +169,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -178,8 +182,10 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
+  }
 
     if (new Date(additionalFields.startDate).getFullYear() < 1950){
       toast({
@@ -189,6 +195,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -200,6 +207,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -232,6 +240,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -254,6 +263,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setIsLoading(false);
   };
 
   const handleFieldChange = (fieldName, value) => {
@@ -285,11 +295,13 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     const formattedDateS = format(dateSPlusOneDay, "yyyy-MM-dd");
     cardToEdit.startDate = formattedDateS;
 
+    if (cardToEdit.endDate) {
     // Formatear la fecha y agregar un día
     const dateE = new Date(cardToEdit.endDate);
     const dateEPlusOneDay = addDays(dateE, 1);
     const formattedDateE = format(dateEPlusOneDay, "yyyy-MM-dd");
     cardToEdit.endDate = formattedDateE;
+    }
 
     setEditingCard(cardToEdit);
     setOriginalTitle(workExperienceNumber); // Guardar el título original
@@ -305,18 +317,17 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   const [content, setContent] = useState(null);
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       editingCard.companyName.trim() === "" ||
       editingCard.position.trim() === "" ||
       editingCard.description.trim() === "" ||
       editingCard.startDate.trim() === "" ||
-      editingCard.endDate.trim() === "" ||
       editingCard.companyName.trim() === null ||
       editingCard.position.trim() === null ||
       editingCard.description.trim() === null ||
-      editingCard.startDate.trim() === null ||
-      editingCard.endDate.trim() === null
+      editingCard.startDate.trim() === null
     ) {
       toast({
         title: "Error",
@@ -325,9 +336,11 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
+    if (editingCard.endDate) {
     if (editingCard.startDate > editingCard.endDate) {
       toast({
         title: "Error",
@@ -336,6 +349,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -347,6 +361,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -358,8 +373,9 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
-    }
+    }}
 
     if (new Date(editingCard.startDate).getFullYear() < 1950){
       toast({
@@ -369,6 +385,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -380,6 +397,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -413,6 +431,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -452,6 +471,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+    setIsLoading(false);
   };
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas
@@ -487,6 +507,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContent") {
         await DeleteWorkExperience(cardToDelete);
@@ -512,10 +533,12 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
+      setIsLoading(false);
     } else {
       toast({
         title: "Error",
@@ -525,6 +548,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
   };
@@ -608,7 +632,24 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                           alignItems="center"
                           marginTop="5px"
                         >
-                          {`${addDays(new Date(item.startDate),1).getDate()}/${addDays(new Date(item.startDate),1).getMonth()+1}/${addDays(new Date(item.startDate),1).getFullYear()}`} - {`${addDays(new Date(item.endDate),1).getDate()}/${addDays(new Date(item.endDate),1).getMonth()+1}/${addDays(new Date(item.endDate),1).getFullYear()}`}
+                          {`${addDays(new Date(item.startDate), 1).getDate()}/${
+                            addDays(new Date(item.startDate), 1).getMonth() + 1
+                          }/${addDays(
+                            new Date(item.startDate),
+                            1
+                          ).getFullYear()}`}
+                          {item.endDate
+                            ? ` - ${addDays(
+                                new Date(item.endDate),
+                                1
+                              ).getDate()}/${
+                                addDays(new Date(item.endDate), 1).getMonth() +
+                                1
+                              }/${addDays(
+                                new Date(item.endDate),
+                                1
+                              ).getFullYear()}`
+                            : " - Actualidad"}
                         </Text>
                       </Flex>
                       <Flex>
@@ -754,7 +795,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                   type="date"
                 />
                 <Text marginTop="2px" as="b">
-                  Fecha final
+                  Fecha final (opcional)
                 </Text>
                 <Input
                   value={editingCard.endDate}
@@ -780,6 +821,8 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -849,7 +892,7 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
                 marginBottom="10px"
               />
               <Text marginTop="2px" as="b">
-                Fecha final
+                Fecha final (opcional)
               </Text>
               <Input
                 value={additionalFields.endDate || ""}
@@ -868,6 +911,8 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -900,6 +945,8 @@ const ExperienciaLaboralCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>

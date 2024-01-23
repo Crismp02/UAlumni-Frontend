@@ -27,6 +27,7 @@ const OfertaCard = ({ oferta }) =>{
           display="flex"
           flexDirection="row"
           padding="2px"
+          borderRadius="10px"
         >
             <Image 
               borderRadius="full" 

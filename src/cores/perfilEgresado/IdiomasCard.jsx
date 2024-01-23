@@ -31,6 +31,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -135,6 +136,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddLanguage = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !additionalFields.languageName ||
@@ -150,11 +152,12 @@ const IdiomasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
     // Verificar si el idioma ya existe
-    const languageExists = cardData.some(
+    const languageExists = newCardData.find(
       (card) => card.languageName === additionalFields.languageName
     );
 
@@ -167,6 +170,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -197,6 +201,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setIsLoading(false);
   };
 
   const handleFieldChange = (fieldName, value) => {
@@ -241,6 +246,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
 
   const [content, setContent] = useState(null);
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !editingCard.languageName ||
@@ -256,6 +262,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -275,6 +282,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -290,7 +298,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     setContent(updatedCard);
 
     // Actualizar cardData con los nuevos datos
-    const updatedCardData = cardData.map((card) => {
+    const updatedCardData = newCardData.map((card) => {
       if (card.languageName === originalTitle) {
         return {
           ...card,
@@ -312,7 +320,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
     });
     }
     setNewCardData(updatedCardData);
-
+    setIsLoading(false);
     setShowEditModal(false);
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
@@ -326,6 +334,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -361,6 +370,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentIdiomas") {
         await DeleteLanguage(cardToDelete);
@@ -388,12 +398,14 @@ const IdiomasCard = ({ cardData, setCardData }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
 
       // Cerrar el modal y limpiar el estado
       setShowDeleteModal(false);
       setCardToDelete(null);
+      setIsLoading(false);
     } else {
       toast({
         title: "Error",
@@ -402,6 +414,7 @@ const IdiomasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -596,6 +609,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -664,6 +679,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -694,6 +711,8 @@ const IdiomasCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>

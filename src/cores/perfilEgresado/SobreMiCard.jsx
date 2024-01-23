@@ -22,6 +22,7 @@ import { editAboutMe } from "../../services/auth/MeProfile.services";
 const SobremiCard = ({ cardData: initialCardData }) => {
   const [cardData, setCardData] = useState(initialCardData);
   const [cardContent, setCardContent] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [editMode, setEditMode] = useState(true);
   const [cardToDelete, setCardToDelete] = useState(null);
@@ -49,6 +50,7 @@ const SobremiCard = ({ cardData: initialCardData }) => {
   };
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     // Validar que el campo de descripción no esté vacío
     if (
       editingCard.descripcion.trim() === "" ||
@@ -62,6 +64,7 @@ const SobremiCard = ({ cardData: initialCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -94,6 +97,7 @@ const SobremiCard = ({ cardData: initialCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+    setIsLoading(false);
   };
 
   const handleCancelDelete = () => {
@@ -233,6 +237,8 @@ const SobremiCard = ({ cardData: initialCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>

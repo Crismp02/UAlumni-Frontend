@@ -31,6 +31,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
   const [openVisibleTooltip, setOpenVisibleTooltip] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -124,6 +125,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddPortfolioItem = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !additionalFields.industryName ||
@@ -137,6 +139,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -148,11 +151,12 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       // Mostrar un mensaje de error en un toast
       toast({
         title: "Error",
-        description: "Esa industria de interés ya existe",
+        description: "Esa área de interés ya existe",
         status: "error",
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -170,7 +174,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       // Mostrar un toast de éxito
     toast({
       title: "Éxito",
-      description: "La industria de interés ha sido creada con éxito",
+      description: "El área de interés ha sido creada con éxito",
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -180,6 +184,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setIsLoading(false);
   };
 
   const handleFieldChange = (field, value) => {
@@ -206,6 +211,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
   const [content, setContent] = useState(null);
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       editingCard.industryName.trim() === "" ||
@@ -219,6 +225,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -230,11 +237,12 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
       // Mostrar un mensaje de error en un toast
       toast({
         title: "Error",
-        description: "Esa industria de interés ya existe",
+        description: "EEl área de interés ya existe",
         status: "error",
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -262,7 +270,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     // Mostrar un toast de éxito
     toast({
       title: "Éxito",
-      description: "La industria de interés ha sido editada con éxito",
+      description: "El área de interés ha sido editada con éxito",
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -273,15 +281,17 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+    setIsLoading(false);
   } catch (error) {
     // Mostrar un mensaje de error si la solicitud falla
     toast({
       title: "Error",
-      description: "Hubo un error al editar la industria de interés",
+      description: "Hubo un error al editar el área de interés",
       status: "error",
       duration: 3000,
       isClosable: true,
     });
+    setIsLoading(false);
   }
 };
 
@@ -318,6 +328,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentPortafolios") {
         await deleteIndustryOfInterest(cardToDelete);
@@ -327,10 +338,9 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         setNewCardData(updatedCardData);
         setShowIcons(false);
         setEditMode(true);
-
         toast({
           title: "Éxito",
-          description: "La industria de interés ha sido eliminada con éxito",
+          description: "El área de interés ha sido eliminada con éxito",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -339,24 +349,27 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         toast({
           title: "Error",
           description:
-            "Ha ocurrido un problema al eliminar la industria de interés",
+            "Ha ocurrido un problema al eliminar el área de interés",
           status: "error",
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
+      setIsLoading(false);
     } else {
       toast({
         title: "Error",
         description:
-          "Ha ocurrido un problema al eliminar la industria de interés",
+          "Ha ocurrido un problema al eliminar el área de interés",
         status: "error",
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -391,9 +404,9 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                 alignItems="center"
                 color="#007935"
               >
-                Industrias de Interés
+                Áreas de Interés
               </Text>
-              <Tooltip label="Indica las industrias en las que te gustaría trabajar. (Ej: Medicina)" isOpen={openVisibleTooltip} fontSize={["12px", "12px", "sm", "sm"]}
+              <Tooltip label="Indica las áreas en las que te gustaría trabajar. (Ej: Medicina)" isOpen={openVisibleTooltip} fontSize={["12px", "12px", "sm", "sm"]}
                   hasArrow={true}>
                     <InfoIcon
                       cursor="pointer"
@@ -487,7 +500,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
             paddingLeft="2"
             >
               <Text color="grey">
-                En esta sección, puedes añadir industrias de interés.
+                En esta sección, puedes añadir áreas de interés.
               </Text>
             </Box>
           )}
@@ -499,14 +512,14 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Editar industria de interés
+            Editar área de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
             {editingCard && (
               <>
                 <Text marginTop="2px" as="b">
-                  Nombre de la industria de interés
+                  Nombre del área de interés
                 </Text>
                 <Input
                   marginTop="2px"
@@ -517,7 +530,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                       industryName: e.target.value,
                     }))
                   }
-                  placeholder="Nombre de la industria de interés..."
+                  placeholder="Nombre del área de interés..."
                   size="lg"
                   marginBottom="4"
                   maxLength={100}
@@ -533,6 +546,8 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -553,14 +568,14 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Agregar industria de interés
+            Agregar área de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
             {/* campos correspondientes al tipo de tarjeta */}
             <>
               <Text marginTop="2px" as="b">
-                Nombre de la industria de interés
+                Nombre del área de interés
               </Text>
               <Input
                 marginTop="2px"
@@ -568,7 +583,7 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
                 onChange={(e) =>
                   handleFieldChange("industryName", e.target.value)
                 }
-                placeholder="Nombre de la industria de interés"
+                placeholder="Nombre del área de interés"
                 marginBottom="10px"
                 maxLength={100}
               />
@@ -582,6 +597,8 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -601,11 +618,11 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader color="#007935">
-            Eliminar industria de interés
+            Eliminar área de interés
           </ModalHeader>
           <Divider orientation="horizontal" />
           <ModalBody>
-            ¿Está seguro de que desea eliminar esta industria de interés?
+            ¿Está seguro de que desea eliminar esta área de interés?
           </ModalBody>
           <ModalFooter>
             <Button
@@ -614,6 +631,8 @@ const IndustriasInteresCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>

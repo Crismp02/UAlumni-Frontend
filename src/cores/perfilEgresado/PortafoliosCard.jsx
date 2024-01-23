@@ -24,11 +24,13 @@ import {
   EditPortfolioItem,
   getPortfolioItem,
 } from "../../services/auth/MeProfile.services";
-import { Link } from "react-router-dom";
+import { set } from "date-fns";
 
 const PortafoliosCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -118,6 +120,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddPortfolioItem = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !additionalFields.title ||
@@ -133,8 +136,31 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
+
+    // Validar que sourceLink es una URL válida
+  const urlPattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+    "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+    "(\\:\\d+)?(\\/[-a-z\\d%_.~+:@!$(),*\\[\\]{}|^`<>]*)*" + // port and path
+    "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+    "(\\#[-a-z\\d_]*)?$", // fragment locator
+    "i"
+  );// fragment locator
+  if (!urlPattern.test(additionalFields.sourceLink)) {
+    toast({
+      title: "Error",
+      description: "El enlace fuente no es una URL válida",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    setIsLoading(false);
+    return;
+  }
 
     // Verificar si la tarjeta ya existe en newCardData
     const existingCard = newCardData.find(
@@ -151,6 +177,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -166,6 +193,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -195,6 +223,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setIsLoading(false);
   };
 
   const handleFieldChange = (field, value) => {
@@ -229,6 +258,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
   const [content, setContent] = useState(null);
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       editingCard.title.trim() === "" ||
@@ -244,8 +274,32 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
+
+     // Validar que sourceLink es una URL válida
+     const urlPattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+      "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+      "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+      "(\\:\\d+)?(\\/[-a-z\\d%_.~+:@!$(),*\\[\\]{}|^`<>]*)*" + // port and path
+      "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$", // fragment locator
+      "i"
+    );// fragment locator
+
+  if (!urlPattern.test(editingCard.sourceLink)) {
+    toast({
+      title: "Error",
+      description: "El enlace fuente no es una URL válida",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    setIsLoading(false);
+    return;
+  }
 
     // Verificar si la tarjeta ya existe en newCardData
     const existingCard = newCardData.find(
@@ -263,6 +317,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -306,6 +361,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+    setIsLoading(false);
   };
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas
@@ -341,6 +397,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentPortafolios") {
         await DeletePortfolioItem(cardToDelete);
@@ -366,10 +423,12 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
+      setIsLoading(false);
     } else {
       toast({
         title: "Error",
@@ -378,6 +437,7 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -565,6 +625,8 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -622,6 +684,8 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -652,6 +716,8 @@ const PortafoliosCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>

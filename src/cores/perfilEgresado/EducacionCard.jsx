@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { format, addDays } from "date-fns";
+import { format, addDays, set } from "date-fns";
 import {
   Text,
   Modal,
@@ -29,6 +29,7 @@ import {
 const EducacionCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -117,6 +118,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddEducation = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !additionalFields.title ||
@@ -134,6 +136,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -145,6 +148,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -156,6 +160,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -184,6 +189,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -201,6 +207,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -223,6 +230,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setIsLoading(false);
   };
 
   const handleFieldChange = (fieldName, value) => {
@@ -269,6 +277,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
   const [content, setContent] = useState(null);
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       editingCard.title.trim() === "" ||
@@ -287,6 +296,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
     if (editingCard.endDate > new Date().toISOString().split("T")[0]) {
@@ -297,6 +307,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
     if (new Date(editingCard.endDate).getFullYear() < 1950){
@@ -307,6 +318,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -321,6 +333,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
       duration: 3000,
       isClosable: true,
     });
+    setIsLoading(false);
     return;
   }
 
@@ -365,6 +378,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+    setIsLoading(false);
   };
 
   // Función genérica para manejar la apertura del modal para agregar tarjetas
@@ -400,6 +414,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContent") {
         await DeleteHigherEducationStudy(cardToDelete);
@@ -425,10 +440,12 @@ const EducacionCard = ({ cardData, setCardData }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
+      setIsLoading(false);
     } else {
       toast({
         title: "Error",
@@ -438,6 +455,7 @@ const EducacionCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -631,6 +649,8 @@ const EducacionCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -696,6 +716,8 @@ const EducacionCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -726,6 +748,8 @@ const EducacionCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>

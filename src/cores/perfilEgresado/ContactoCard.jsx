@@ -18,10 +18,13 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import { editContactInfo } from "../../services/auth/MeProfile.services";
+import { set } from "date-fns";
+import { is } from "date-fns/locale";
 
 const ContactoCard = ({ cardData: initialCardData }) => {
   const toast = useToast();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [cardData, setCardData] = useState(initialCardData);
   const [cardContent, setCardContent] = useState([]);
 
@@ -46,6 +49,7 @@ const ContactoCard = ({ cardData: initialCardData }) => {
   };
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     if (
       !editingCard &&
       !editingCard.address &&
@@ -59,6 +63,7 @@ const ContactoCard = ({ cardData: initialCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -69,6 +74,7 @@ const ContactoCard = ({ cardData: initialCardData }) => {
 
     // Llamar a la función editContactInfo para hacer la solicitud PATCH
     const updatedCard = await editContactInfo(newData);
+
 
     if (updatedCard){
       toast({
@@ -90,6 +96,7 @@ const ContactoCard = ({ cardData: initialCardData }) => {
     // agregar cada uno de los estados de edicion
     setShowIcons(false);
     setEditMode(true);
+    setIsLoading(false);
   };
 
   const handleCancelEdit = () => {
@@ -198,6 +205,8 @@ const ContactoCard = ({ cardData: initialCardData }) => {
                       setShowEditModal
                     )
                   }
+                  isLoading={isLoading}
+            loadingText="Guardando..."
                 >
                   Guardar
                 </Button>

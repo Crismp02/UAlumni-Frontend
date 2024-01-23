@@ -25,11 +25,13 @@ import {
   editPositionOfInterest,
   getPositionOfInterestItem,
 } from "../../services/auth/MeProfile.services";
+import { set } from "date-fns";
 
 const PosicionesInteresCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
-  const [openVisibleTooltip, setOpenVisibleTooltip] = useState(false); 
+  const [openVisibleTooltip, setOpenVisibleTooltip] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -123,6 +125,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddPortfolioItem = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !additionalFields.positionName ||
@@ -136,6 +139,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -152,6 +156,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -180,6 +185,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
     // Cerrar el modal de agregar y restablecer los campos adicionales
     setShowAddModal(false);
     setAdditionalFields({});
+    setIsLoading(false);
   };
 
   const handleFieldChange = (field, value) => {
@@ -214,6 +220,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
   const [content, setContent] = useState(null);
 
   const handleSaveEdit = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       editingCard.positionName.trim() === "" ||
@@ -227,6 +234,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -243,6 +251,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -283,6 +292,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
       // agregar cada uno de los estados de edicion
       setShowIcons(false);
       setEditMode(true);
+      setIsLoading(false);
     } catch (error) {
       // Mostrar un mensaje de error si la solicitud falla
       toast({
@@ -292,6 +302,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -328,6 +339,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentPortafolios") {
         await deletePositionOfInterest(cardToDelete);
@@ -354,10 +366,12 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
       setShowDeleteModal(false);
       setCardToDelete(null);
+      setIsLoading(false); 
     } else {
       toast({
         title: "Error",
@@ -367,6 +381,7 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -540,6 +555,8 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -585,6 +602,8 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -617,6 +636,8 @@ const PosicionesInteresCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>

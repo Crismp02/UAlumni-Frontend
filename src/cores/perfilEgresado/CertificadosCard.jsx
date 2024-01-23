@@ -28,6 +28,7 @@ import {
 const CertificadosCard = ({ cardData, setCardData }) => {
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   
   useEffect(() => {
     setNewCardData(cardData);
@@ -114,6 +115,7 @@ const CertificadosCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddCourse = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (!additionalFields.id || additionalFields.id === null) {
       // Mostrar un mensaje de error o manejar la situación según lo desees
@@ -124,6 +126,7 @@ const CertificadosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -140,6 +143,7 @@ const CertificadosCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -182,6 +186,7 @@ const CertificadosCard = ({ cardData, setCardData }) => {
     }
 
     // Cerrar el modal de agregar y restablecer los campos adicionales
+    setIsLoading(false);
     setShowAddModal(false);
     setAdditionalFields({});
   };

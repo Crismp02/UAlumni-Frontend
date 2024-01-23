@@ -27,12 +27,14 @@ import {
   getTechnicalSkillVisibility,
   getTechnicalSkills,
 } from "../../services/auth/MeProfile.services";
+import { set } from "date-fns";
 
 const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   const toast = useToast();
   const [newCardData, setNewCardData] = useState(cardData);
   const [checkedItems, setCheckedItems] = useState([]);
   const [openVisibleTooltip, setOpenVisibleTooltip] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setNewCardData(cardData);
@@ -185,6 +187,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   };
 
   const handleAddSkill = async () => {
+    setIsLoading(true);
     // Validar que los campos no estén vacíos
     if (
       !additionalFields.categoryName ||
@@ -200,6 +203,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -216,6 +220,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -300,6 +305,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
     setShowAddModal(false);
     setAdditionalFields({});
     setSelectedCategory('');
+    setIsLoading(false);
   };
 
   const handleFieldChange = (fieldName, value) => {
@@ -370,6 +376,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   };
 
   const handleConfirmDelete = async (cardToDelete, cardTypeToDelete) => {
+    setIsLoading(true);
     if (cardToDelete !== null && cardTypeToDelete !== null) {
       if (cardTypeToDelete === "cardContentHabilidades") {
         // Pasa los parámetros skillCategory y skillName a deleteTechnicalSkill
@@ -399,6 +406,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
   
         setShowIcons(false);
         setEditMode(true);
+        setIsLoading(false);
         toast({
           title: "Éxito",
           description: "La habilidad técnica ha sido eliminada con éxito",
@@ -414,6 +422,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
           duration: 3000,
           isClosable: true,
         });
+        setIsLoading(false);
         return;
       }
       setShowDeleteModal(false);
@@ -426,6 +435,7 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
         duration: 3000,
         isClosable: true,
       });
+      setIsLoading(false);
     }
   };
 
@@ -609,6 +619,8 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
               bgColor="#007935"
               color="white"
               _hover={{ bg: "#025024" }}
+              isLoading={isLoading}
+              loadingText="Guardando..."
             >
               Guardar
             </Button>
@@ -640,6 +652,8 @@ const HabilidadesTecnicasCard = ({ cardData, setCardData }) => {
               onClick={() =>
                 handleConfirmDelete(cardToDelete, cardTypeToDelete)
               }
+              isLoading={isLoading}
+              loadingText="Eliminando..."
             >
               Eliminar
             </Button>
