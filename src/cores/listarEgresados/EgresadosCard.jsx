@@ -51,11 +51,12 @@ const EgresadoCard = ({ egresado }) => {
       marginBottom="10px"
       padding="2px"
       borderRadius="10px"
+      overflow="hidden"
     >
-      <Box display="flex">
+      <Box display="flex" justifyContent="space-between">
         <Box
-          w={["50%", "165px", "260px", "385px", "490px", "540px"]}
-          m="auto"
+          maxW="50%"
+          justifyContent="center"
           p={5}
           display="flex"
           flexDirection="column"
@@ -70,10 +71,9 @@ const EgresadoCard = ({ egresado }) => {
           </Text>
         </Box>
         <Box
-          w={["50%", "200px", "270px", "395px", "500px", "550px"]}
-          m="auto"
+          flexGrow="1"
           p={5}
-          gap={["5px", "5px", "8px", "8px"]}
+          gap={["5px", "5px", "12px", "12px"]}
           marginBottom={["10px", "10px", "0px", "0px"]}
           display="flex"
           flexDirection="row"
@@ -84,7 +84,6 @@ const EgresadoCard = ({ egresado }) => {
             <Tag
               key={index}
               backgroundColor="#FBC430"
-              marginLeft="5px"
               padding="6px"
               overflow="hidden"
               textOverflow="ellipsis"
@@ -93,7 +92,7 @@ const EgresadoCard = ({ egresado }) => {
               {skill.skillName}
             </Tag>
           ))}
-          {skillsArray.length > skillsToShow.length && <Text marginLeft="10px">...</Text>}
+          {skillsArray.length > skillsToShow.length && <Text>...</Text>}
         </Box>
       </Box>
 
