@@ -19,7 +19,7 @@ function UAlumni(){
           alignItems="center"
           justifyContent="center"
           width="100vw"
-          minHeight={["20vh", "40vh", "70vh", "90vh", "100vh"]}
+          minHeight="50vw"
         >
           <Image
             src={ucabLanding}
