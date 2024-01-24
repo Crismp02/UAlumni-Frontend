@@ -88,7 +88,7 @@ const OfertaCard = ({ oferta }) => {
             justifyContent="center"
             backgroundColor="#FBC430"
             textAlign="center"
-            width="90px"
+            paddingX={["5px", "15px"]}
             fontSize={["xs", "xs", "xs", "sm", "sm", "lg"]}
           >
             {formattedDate}
